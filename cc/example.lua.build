@@ -851,6 +851,9 @@ print(" -> Loading: utils_config_Config") function MODULE_utils_config_Config()
 	    }
 	end
 	function Config:serializeJson()
+	    for k, v in pairs(self:toTable()) do
+	        print(k, v)
+	    end
 	    return textutils.serializeJSON(self:toTable())
 	end
 	function Config.deserializeJson(json)
@@ -925,7 +928,6 @@ print(" -> Loading: turtle_Turtle") function MODULE_turtle_Turtle()
 	end
 	Turtle.CURRENT_POSITION = Turtle.getGpsPosition()
 	Turtle.CURRENT_DIRECTION = Turtle.CONFIG.homeDirection  -- TODO: work out what the current direction is on startup
-	print("POST_SETUP")
 	function Turtle.forward()
 	    if Turtle.getBlockInFront() == nil then return false end
 	    turtle.forward()
