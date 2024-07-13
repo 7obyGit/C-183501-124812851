@@ -853,7 +853,7 @@ print(" -> Loading: utils_config_Config") function MODULE_utils_config_Config()
 	function Config:serializeJson()
 	    print("START TEST")
 	    for k, v in pairs(self:toTable()) do
-	        print(k, v)
+	        print(k, v, type(v))
 	    end
 	    print("MID TEST")
 	    local content = self:toTable()
