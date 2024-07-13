@@ -915,14 +915,17 @@ print(" -> Loading: turtle_Turtle") function MODULE_turtle_Turtle()
 	local file = utils_other_file
 	local Inventory = turtle_Inventory
 	local Blocks    = utils_blocks_Blocks
+	print("PRE_CONFIG")
 	local Turtle = {}
 	Turtle.CONFIG = Config.load()
+	print("POST_CONFIG")
 	function Turtle.getGpsPosition()
 	    local x, y, z = gps.locate()
 	    return Vector3.new(x, y, z)
 	end
 	Turtle.CURRENT_POSITION = Turtle.getGpsPosition()
 	Turtle.CURRENT_DIRECTION = Turtle.CONFIG.homeDirection  -- TODO: work out what the current direction is on startup
+	print("POST_SETUP")
 	function Turtle.forward()
 	    if Turtle.getBlockInFront() == nil then return false end
 	    turtle.forward()
