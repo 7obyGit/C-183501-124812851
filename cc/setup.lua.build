@@ -856,7 +856,9 @@ print(" -> Loading: utils_config_Config") function MODULE_utils_config_Config()
 	        print(k, v)
 	    end
 	    print("END TEST")
-	    return textutils.serializeJSON(self:toTable())
+	    local text = textutils.serializeJSON(self:toTable())
+	    print("TEXT", text)
+	    return text
 	end
 	function Config.deserializeJson(json)
 	    local configAttributes = textutils.unserializeJSON(json)
