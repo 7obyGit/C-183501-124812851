@@ -1,0 +1,2216 @@
+print("Loading Modules...")
+print(" -> Loading: utils_other_file") function MODULE_utils_other_file()
+	return {
+	    readText = function (path)
+	        local file = fs.open(path, "r")
+	        if file == nil then
+	            return nil
+	        end
+	        local content = file.readAll()
+	        file.close()
+	        return content
+	    end,
+	    writeText = function (path, content)
+	        local file = fs.open(path, "w")
+	        file.write(content)
+	        file.close()
+	    end,
+	}
+end
+local utils_other_file = MODULE_utils_other_file()
+
+
+print(" -> Loading: jobs_Job") function MODULE_jobs_Job()
+	local Job = {}
+	Job.EXAMPLE = "ExampleJob"
+	Job.IDLE = "IdleJob"
+	Job.SETUP = "SetupJob"
+	Job.QUARRY = "QuarryJob"
+	Job.STORAGE = "StorageJob"
+	return Job
+end
+local jobs_Job = MODULE_jobs_Job()
+
+
+print(" -> Loading: utils_config_JobConfig") function MODULE_utils_config_JobConfig()
+	local file = utils_other_file
+	local Job       = jobs_Job
+	local JobConfig = {}
+	JobConfig.__index = JobConfig
+	function JobConfig.new()
+	    local self = setmetatable({
+	        name = "My Computer",
+	        job = Job.IDLE,
+	        state = {},  -- Data specific to a job that is saved between runs
+	    }, JobConfig)
+	    return self
+	end
+	function JobConfig.fromTable(table)
+	    local self = JobConfig.new()
+	    self.name = table.name or self.name
+	    self.job = table.job or self.job
+	    self.state = table.state or self.state
+	    return self
+	end
+	function JobConfig:toTable()
+	    return {
+	        name = self.name,
+	        job = self.job,
+	        state = self.state,
+	    }
+	end
+	function JobConfig:serializeJson()
+	    return textutils.serializeJSON(self:toTable())
+	end
+	function JobConfig.deserializeJson(json)
+	    local configAttributes = textutils.unserializeJSON(json)
+	    local config = JobConfig.fromTable(configAttributes)
+	    return config
+	end
+	function JobConfig:save()
+	    file.writeText("job.json", self:serializeJson())
+	end
+	function JobConfig.load()
+	    local config = nil
+	    local content = file.readText("job.json")
+	    if content == nil then
+	        config = JobConfig.new()
+	    else
+	        config = JobConfig.deserializeJson(content)
+	    end
+	    config:save()  -- Save any default values that were missing
+	    return config
+	end
+	function JobConfig:get(key, defaultValue)
+	    return self.state[key] or defaultValue
+	end
+	function JobConfig:set(key, value)
+	    self.state[key] = value
+	    self:save()
+	end
+	return JobConfig
+end
+local utils_config_JobConfig = MODULE_utils_config_JobConfig()
+
+
+print(" -> Loading: utils_controlflow_Parallel") function MODULE_utils_controlflow_Parallel()
+	local Parallel = {}
+	Parallel.__index = Parallel
+	function Parallel.new()
+	    local self = setmetatable({}, Parallel)
+	    self.tasks = {}
+	    return self
+	end
+	function Parallel:addTask(task)
+	    table.insert(self.tasks, task)
+	end
+	function Parallel:run()
+	    parallel.waitForAll(table.unpack(self.tasks))
+	end
+	function Parallel:waitForAny()
+	    parallel.waitForAny(table.unpack(self.tasks))
+	end
+	function Parallel:waitForAll()
+	    parallel.waitForAll(table.unpack(self.tasks))
+	end
+	return Parallel
+end
+local utils_controlflow_Parallel = MODULE_utils_controlflow_Parallel()
+
+
+print(" -> Loading: jobs_definitions_misc_ExampleJob") function MODULE_jobs_definitions_misc_ExampleJob()
+	local ExampleJob = {}
+	ExampleJob.__index = ExampleJob
+	function ExampleJob.new()
+	    local self = setmetatable({}, ExampleJob)
+	    self.alive = true
+	    return self
+	end
+	function ExampleJob:onStart()
+	end
+	function ExampleJob:onResume()
+	end
+	function ExampleJob:inProgress()
+	    return self.alive
+	end
+	function ExampleJob:onStep()
+	    self.alive = false
+	end
+	function ExampleJob:onComplete()
+	end
+	return ExampleJob
+end
+local jobs_definitions_misc_ExampleJob = MODULE_jobs_definitions_misc_ExampleJob()
+
+
+print(" -> Loading: utils_blocks_Blocks") function MODULE_utils_blocks_Blocks()
+	local Blocks = {
+	    ANY = "any",
+	    stone = "minecraft:stone",
+	    iron_block = "minecraft:iron_block",
+	    gold_block = "minecraft:gold_block",
+	    diamond_block = "minecraft:diamond_block",
+	    emerald_block = "minecraft:emerald_block",
+	    redstone_block = "minecraft:redstone_block",
+	    lapis_block = "minecraft:lapis_block",
+	    coal_block = "minecraft:coal_block",
+	    chest = "minecraft:chest",
+	    barrel = "minecraft:barrel",
+	    furnace = "minecraft:furnace",
+	    crafting_table = "minecraft:crafting_table",
+	    anvil = "minecraft:anvil",
+	    enchanting_table = "minecraft:enchanting_table",
+	    brewing_stand = "minecraft:brewing_stand",
+	    blast_furnace = "minecraft:blast_furnace",
+	    smoker = "minecraft:smoker",
+	    loom = "minecraft:loom",
+	    cartography_table = "minecraft:cartography_table",
+	    stonecutter = "minecraft:stonecutter",
+	    grindstone = "minecraft:grindstone",
+	    smithing_table = "minecraft:smithing_table",
+	    lectern = "minecraft:lectern",
+	    beehive = "minecraft:beehive",
+	    bee_nest = "minecraft:bee_nest",
+	    composter = "minecraft:composter",
+	    bell = "minecraft:bell",
+	    jukebox = "minecraft:jukebox",
+	    note_block = "minecraft:note_block",
+	    end_portal_frame = "minecraft:end_portal_frame",
+	    end_portal = "minecraft:end_portal",
+	    end_gateway = "minecraft:end_gateway",
+	    oak_planks = "minecraft:oak_planks",
+	    spruce_planks = "minecraft:spruce_planks",
+	    birch_planks = "minecraft:birch_planks",
+	    jungle_planks = "minecraft:jungle_planks",
+	    acacia_planks = "minecraft:acacia_planks",
+	    dark_oak_planks = "minecraft:dark_oak_planks",
+	    crimson_planks = "minecraft:crimson_planks",
+	    warped_planks = "minecraft:warped_planks",
+	    oak_log = "minecraft:oak_log",
+	    spruce_log = "minecraft:spruce_log",
+	    birch_log = "minecraft:birch_log",
+	    jungle_log = "minecraft:jungle_log",
+	    acacia_log = "minecraft:acacia_log",
+	    dark_oak_log = "minecraft:dark_oak_log",
+	    crimson_stem = "minecraft:crimson_stem",
+	    warped_stem = "minecraft:warped_stem",
+	    oak_wood = "minecraft:oak_wood",
+	    spruce_wood = "minecraft:spruce_wood",
+	    birch_wood = "minecraft:birch_wood",
+	    jungle_wood = "minecraft:jungle_wood",
+	    acacia_wood = "minecraft:acacia_wood",
+	    dark_oak_wood = "minecraft:dark_oak_wood",
+	    crimson_hyphae = "minecraft:crimson_hyphae",
+	    warped_hyphae = "minecraft:warped_hyphae",
+	    oak_leaves = "minecraft:oak_leaves",
+	    spruce_leaves = "minecraft:spruce_leaves",
+	    birch_leaves = "minecraft:birch_leaves",
+	    jungle_leaves = "minecraft:jungle_leaves",
+	    acacia_leaves = "minecraft:acacia_leaves",
+	    dark_oak_leaves = "minecraft:dark_oak_leaves",
+	    crimson_leaves = "minecraft:crimson_leaves",
+	    warped_leaves = "minecraft:warped_leaves",
+	    oak_sapling = "minecraft:oak_sapling",
+	    spruce_sapling = "minecraft:spruce_sapling",
+	    birch_sapling = "minecraft:birch_sapling",
+	    jungle_sapling = "minecraft:jungle_sapling",
+	    acacia_sapling = "minecraft:acacia_sapling",
+	    dark_oak_sapling = "minecraft:dark_oak_sapling",
+	    crimson_fungus = "minecraft:crimson_fungus",
+	    warped_fungus = "minecraft:warped_fungus",
+	    oak_fence = "minecraft:oak_fence",
+	    spruce_fence = "minecraft:spruce_fence",
+	    birch_fence = "minecraft:birch_fence",
+	    jungle_fence = "minecraft:jungle_fence",
+	    acacia_fence = "minecraft:acacia_fence",
+	    dark_oak_fence = "minecraft:dark_oak_fence",
+	    crimson_fence = "minecraft:crimson_fence",
+	    warped_fence = "minecraft:warped_fence",
+	    oak_fence_gate = "minecraft:oak_fence_gate",
+	    spruce_fence_gate = "minecraft:spruce_fence_gate",
+	    birch_fence_gate = "minecraft:birch_fence_gate",
+	    jungle_fence_gate = "minecraft:jungle_fence_gate",
+	    acacia_fence_gate = "minecraft:acacia_fence_gate",
+	    dark_oak_fence_gate = "minecraft:dark_oak_fence_gate",
+	    crimson_fence_gate = "minecraft:crimson_fence_gate",
+	    warped_fence_gate = "minecraft:warped_fence_gate",
+	    oak_stairs = "minecraft:oak_stairs",
+	    spruce_stairs = "minecraft:spruce_stairs",
+	    birch_stairs = "minecraft:birch_stairs",
+	    jungle_stairs = "minecraft:jungle_stairs",
+	    acacia_stairs = "minecraft:acacia_stairs",
+	    dark_oak_stairs = "minecraft:dark_oak_stairs",
+	    crimson_stairs = "minecraft:crimson_stairs",
+	    warped_stairs = "minecraft:warped_stairs",
+	    oak_slab = "minecraft:oak_slab",
+	    spruce_slab = "minecraft:spruce_slab",
+	    birch_slab = "minecraft:birch_slab",
+	    jungle_slab = "minecraft:jungle_slab",
+	    acacia_slab = "minecraft:acacia_slab",
+	    dark_oak_slab = "minecraft:dark_oak_slab",
+	    crimson_slab = "minecraft:crimson_slab",
+	    warped_slab = "minecraft:warped_slab",
+	    oak_button = "minecraft:oak_button",
+	    spruce_button = "minecraft:spruce_button",
+	    birch_button = "minecraft:birch_button",
+	    jungle_button = "minecraft:jungle_button",
+	    acacia_button = "minecraft:acacia_button",
+	    dark_oak_button = "minecraft:dark_oak_button",
+	    crimson_button = "minecraft:crimson_button",
+	    warped_button = "minecraft:warped_button",
+	    oak_pressure_plate = "minecraft:oak_pressure_plate",
+	    spruce_pressure_plate = "minecraft:spruce_pressure_plate",
+	    birch_pressure_plate = "minecraft:birch_pressure_plate",
+	    jungle_pressure_plate = "minecraft:jungle_pressure_plate",
+	    acacia_pressure_plate = "minecraft:acacia_pressure_plate",
+	    dark_oak_pressure_plate = "minecraft:dark_oak_pressure_plate",
+	    crimson_pressure_plate = "minecraft:crimson_pressure_plate",
+	    warped_pressure_plate = "minecraft:warped_pressure_plate",
+	    oak_door = "minecraft:oak_door",
+	    spruce_door = "minecraft:spruce_door",
+	    birch_door = "minecraft:birch_door",
+	    jungle_door = "minecraft:jungle_door",
+	    acacia_door = "minecraft:acacia_door",
+	    dark_oak_door = "minecraft:dark_oak_door",
+	    crimson_door = "minecraft:crimson_door",
+	    warped_door = "minecraft:warped_door",
+	    oak_trapdoor = "minecraft:oak_trapdoor",
+	    spruce_trapdoor = "minecraft:spruce_trapdoor",
+	    birch_trapdoor = "minecraft:birch_trapdoor",
+	    jungle_trapdoor = "minecraft:jungle_trapdoor",
+	    acacia_trapdoor = "minecraft:acacia_trapdoor",
+	    dark_oak_trapdoor = "minecraft:dark_oak_trapdoor",
+	    crimson_trapdoor = "minecraft:crimson_trapdoor",
+	    warped_trapdoor = "minecraft:warped_trapdoor",
+	    oak_sign = "minecraft:oak_sign",
+	    spruce_sign = "minecraft:spruce_sign",
+	    birch_sign = "minecraft:birch_sign",
+	    jungle_sign = "minecraft:jungle_sign",
+	    acacia_sign = "minecraft:acacia_sign",
+	    bone_meal = "minecraft:bone_meal",
+	    white_wool = "minecraft:white_wool",
+	    orange_wool = "minecraft:orange_wool",
+	    magenta_wool = "minecraft:magenta_wool",
+	    light_blue_wool = "minecraft:light_blue_wool",
+	    yellow_wool = "minecraft:yellow_wool",
+	    lime_wool = "minecraft:lime_wool",
+	    pink_wool = "minecraft:pink_wool",
+	    gray_wool = "minecraft:gray_wool",
+	    light_gray_wool = "minecraft:light_gray_wool",
+	    cyan_wool = "minecraft:cyan_wool",
+	    purple_wool = "minecraft:purple_wool",
+	    blue_wool = "minecraft:blue_wool",
+	    brown_wool = "minecraft:brown_wool",
+	    green_wool = "minecraft:green_wool",
+	    red_wool = "minecraft:red_wool",
+	    black_wool = "minecraft:black_wool",
+	    white_carpet = "minecraft:white_carpet",
+	    orange_carpet = "minecraft:orange_carpet",
+	    magenta_carpet = "minecraft:magenta_carpet",
+	    light_blue_carpet = "minecraft:light_blue_carpet",
+	    yellow_carpet = "minecraft:yellow_carpet",
+	    lime_carpet = "minecraft:lime_carpet",
+	    pink_carpet = "minecraft:pink_carpet",
+	    gray_carpet = "minecraft:gray_carpet",
+	    light_gray_carpet = "minecraft:light_gray_carpet",
+	    cyan_carpet = "minecraft:cyan_carpet",
+	    purple_carpet = "minecraft:purple_carpet",
+	    blue_carpet = "minecraft:blue_carpet",
+	    brown_carpet = "minecraft:brown_carpet",
+	    green_carpet = "minecraft:green_carpet",
+	    red_carpet = "minecraft:red_carpet",
+	    black_carpet = "minecraft:black_carpet",
+	    white_bed = "minecraft:white_bed",
+	    orange_bed = "minecraft:orange_bed",
+	    magenta_bed = "minecraft:magenta_bed",
+	    light_blue_bed = "minecraft:light_blue_bed",
+	    yellow_bed = "minecraft:yellow_bed",
+	    lime_bed = "minecraft:lime_bed",
+	    pink_bed = "minecraft:pink_bed",
+	    gray_bed = "minecraft:gray_bed",
+	    light_gray_bed = "minecraft:light_gray_bed",
+	    cyan_bed = "minecraft:cyan_bed",
+	    purple_bed = "minecraft:purple_bed",
+	    blue_bed = "minecraft:blue_bed",
+	    brown_bed = "minecraft:brown_bed",
+	    green_bed = "minecraft:green_bed",
+	    red_bed = "minecraft:red_bed",
+	    black_bed = "minecraft:black_bed",
+	    white_banner = "minecraft:white_banner",
+	    orange_banner = "minecraft:orange_banner",
+	    magenta_banner = "minecraft:magenta_banner",
+	    light_blue_banner = "minecraft:light_blue_banner",
+	    yellow_banner = "minecraft:yellow_banner",
+	    lime_banner = "minecraft:lime_banner",
+	    pink_banner = "minecraft:pink_banner",
+	    gray_banner = "minecraft:gray_banner",
+	    light_gray_banner = "minecraft:light_gray_banner",
+	    cyan_banner = "minecraft:cyan_banner",
+	    purple_banner = "minecraft:purple_banner",
+	    blue_banner = "minecraft:blue_banner",
+	    brown_banner = "minecraft:brown_banner",
+	    green_banner = "minecraft:green_banner",
+	    red_banner = "minecraft:red_banner",
+	    black_banner = "minecraft:black_banner",
+	    white_shulker_box = "minecraft:white_shulker_box",
+	    orange_shulker_box = "minecraft:orange_shulker_box",
+	    magenta_shulker_box = "minecraft:magenta_shulker_box",
+	    light_blue_shulker_box = "minecraft:light_blue_shulker_box",
+	    yellow_shulker_box = "minecraft:yellow_shulker_box",
+	    lime_shulker_box = "minecraft:lime_shulker_box",
+	    pink_shulker_box = "minecraft:pink_shulker_box",
+	    gray_shulker_box = "minecraft:gray_shulker_box",
+	    light_gray_shulker_box = "minecraft:light_gray_shulker_box",
+	    cyan_shulker_box = "minecraft:cyan_shulker_box",
+	    purple_shulker_box = "minecraft:purple_shulker_box",
+	    blue_shulker_box = "minecraft:blue_shulker_box",
+	    brown_shulker_box = "minecraft:brown_shulker_box",
+	    green_shulker_box = "minecraft:green_shulker_box",
+	    red_shulker_box = "minecraft:red_shulker_box",
+	    black_shulker_box = "minecraft:black_shulker_box",
+	    white_concrete = "minecraft:white_concrete",
+	    orange_concrete = "minecraft:orange_concrete",
+	    magenta_concrete = "minecraft:magenta_concrete",
+	    light_blue_concrete = "minecraft:light_blue_concrete",
+	    yellow_concrete = "minecraft:yellow_concrete",
+	    lime_concrete = "minecraft:lime_concrete",
+	    pink_concrete = "minecraft:pink_concrete",
+	    gray_concrete = "minecraft:gray_concrete",
+	    light_gray_concrete = "minecraft:light_gray_concrete",
+	    cyan_concrete = "minecraft:cyan_concrete",
+	    purple_concrete = "minecraft:purple_concrete",
+	    blue_concrete = "minecraft:blue_concrete",
+	    brown_concrete = "minecraft:brown_concrete",
+	    green_concrete = "minecraft:green_concrete",
+	    red_concrete = "minecraft:red_concrete",
+	    black_concrete = "minecraft:black_concrete",
+	    white_concrete_powder = "minecraft:white_concrete_powder",
+	    orange_concrete_powder = "minecraft:orange_concrete_powder",
+	    magenta_concrete_powder = "minecraft:magenta_concrete_powder",
+	    light_blue_concrete_powder = "minecraft:light_blue_concrete_powder",
+	    yellow_concrete_powder = "minecraft:yellow_concrete_powder",
+	    lime_concrete_powder = "minecraft:lime_concrete_powder",
+	    pink_concrete_powder = "minecraft:pink_concrete_powder",
+	    gray_concrete_powder = "minecraft:gray_concrete_powder",
+	    light_gray_concrete_powder = "minecraft:light_gray_concrete_powder",
+	    cyan_concrete_powder = "minecraft:cyan_concrete_powder",
+	    purple_concrete_powder = "minecraft:purple_concrete_powder",
+	    blue_concrete_powder = "minecraft:blue_concrete_powder",
+	    brown_concrete_powder = "minecraft:brown_concrete_powder",
+	    green_concrete_powder = "minecraft:green_concrete_powder",
+	    red_concrete_powder = "minecraft:red_concrete_powder",
+	    black_concrete_powder = "minecraft:black_concrete_powder",
+	    white_glazed_terracotta = "minecraft:white_glazed_terracotta",
+	    orange_glazed_terracotta = "minecraft:orange_glazed_terracotta",
+	    magenta_glazed_terracotta = "minecraft:magenta_glazed_terracotta",
+	    light_blue_glazed_terracotta = "minecraft:light_blue_glazed_terracotta",
+	    yellow_glazed_terracotta = "minecraft:yellow_glazed_terracotta",
+	    lime_glazed_terracotta = "minecraft:lime_glazed_terracotta",
+	    pink_glazed_terracotta = "minecraft:pink_glazed_terracotta",
+	    gray_glazed_terracotta = "minecraft:gray_glazed_terracotta",
+	    light_gray_glazed_terracotta = "minecraft:light_gray_glazed_terracotta",
+	    cyan_glazed_terracotta = "minecraft:cyan_glazed_terracotta",
+	    purple_glazed_terracotta = "minecraft:purple_glazed_terracotta",
+	    blue_glazed_terracotta = "minecraft:blue_glazed_terracotta",
+	    brown_glazed_terracotta = "minecraft:brown_glazed_terracotta",
+	    green_glazed_terracotta = "minecraft:green_glazed_terracotta",
+	    red_glazed_terracotta = "minecraft:red_glazed_terracotta",
+	    black_glazed_terracotta = "minecraft:black_glazed_terracotta",
+	    white_stained_glass = "minecraft:white_stained_glass",
+	    orange_stained_glass = "minecraft:orange_stained_glass",
+	    magenta_stained_glass = "minecraft:magenta_stained_glass",
+	    light_blue_stained_glass = "minecraft:light_blue_stained_glass",
+	    yellow_stained_glass = "minecraft:yellow_stained_glass",
+	    lime_stained_glass = "minecraft:lime_stained_glass",
+	    pink_stained_glass = "minecraft:pink_stained_glass",
+	    gray_stained_glass = "minecraft:gray_stained_glass",
+	    light_gray_stained_glass = "minecraft:light_gray_stained_glass",
+	    cyan_stained_glass = "minecraft:cyan_stained_glass",
+	    purple_stained_glass = "minecraft:purple_stained_glass",
+	    blue_stained_glass = "minecraft:blue_stained_glass",
+	    brown_stained_glass = "minecraft:brown_stained_glass",
+	    green_stained_glass = "minecraft:green_stained_glass",
+	    red_stained_glass = "minecraft:red_stained_glass",
+	    black_stained_glass = "minecraft:black_stained_glass",
+	    white_stained_glass_pane = "minecraft:white_stained_glass_pane",
+	    orange_stained_glass_pane = "minecraft:orange_stained_glass_pane",
+	    magenta_stained_glass_pane = "minecraft:magenta_stained_glass_pane",
+	    light_blue_stained_glass_pane = "minecraft:light_blue_stained_glass_pane",
+	    yellow_stained_glass_pane = "minecraft:yellow_stained_glass_pane",
+	    lime_stained_glass_pane = "minecraft:lime_stained_glass_pane",
+	    pink_stained_glass_pane = "minecraft:pink_stained_glass_pane",
+	    gray_stained_glass_pane = "minecraft:gray_stained_glass_pane",
+	    light_gray_stained_glass_pane = "minecraft:light_gray_stained_glass_pane",
+	    cyan_stained_glass_pane = "minecraft:cyan_stained_glass_pane",
+	    purple_stained_glass_pane = "minecraft:purple_stained_glass_pane",
+	    blue_stained_glass_pane = "minecraft:blue_stained_glass_pane",
+	    brown_stained_glass_pane = "minecraft:brown_stained_glass_pane",
+	    green_stained_glass_pane = "minecraft:green_stained_glass_pane",
+	    red_stained_glass_pane = "minecraft:red_stained_glass_pane",
+	    black_stained_glass_pane = "minecraft:black_stained_glass_pane",
+	    white_terracotta = "minecraft:white_terracotta",
+	    orange_terracotta = "minecraft:orange_terracotta",
+	    magenta_terracotta = "minecraft:magenta_terracotta",
+	    light_blue_terracotta = "minecraft:light_blue_terracotta",
+	    yellow_terracotta = "minecraft:yellow_terracotta",
+	    lime_terracotta = "minecraft:lime_terracotta",
+	    pink_terracotta = "minecraft:pink_terracotta",
+	    gray_terracotta = "minecraft:gray_terracotta",
+	    light_gray_terracotta = "minecraft:light_gray_terracotta",
+	    cyan_terracotta = "minecraft:cyan_terracotta",
+	    purple_terracotta = "minecraft:purple_terracotta",
+	    blue_terracotta = "minecraft:blue_terracotta",
+	    brown_terracotta = "minecraft:brown_terracotta",
+	    green_terracotta = "minecraft:green_terracotta",
+	    red_terracotta = "minecraft:red_terracotta",
+	    black_terracotta = "minecraft:black_terracotta",
+	    quartz_block = "minecraft:quartz_block",
+	    obsidian = "minecraft:obsidian",
+	    glowstone = "minecraft:glowstone",
+	    netherrack = "minecraft:netherrack",
+	    soul_sand = "minecraft:soul_sand",
+	    sand = "minecraft:sand",
+	    gravel = "minecraft:gravel",
+	    dirt = "minecraft:dirt",
+	    grass_block = "minecraft:grass_block",
+	    stone_bricks = "minecraft:stone_bricks",
+	    stone_brick_stairs = "minecraft:stone_brick_stairs",
+	    stone_brick_slab = "minecraft:stone_brick_slab",
+	    stone_brick_wall = "minecraft:stone_brick_wall",
+	    mossy_stone_bricks = "minecraft:mossy_stone_bricks",
+	    cracked_stone_bricks = "minecraft:cracked_stone_bricks",
+	    chiseled_stone_bricks = "minecraft:chiseled_stone_bricks",
+	    cobblestone = "minecraft:cobblestone",
+	    mossy_cobblestone = "minecraft:mossy_cobblestone",
+	    chiseled_sandstone = "minecraft:chiseled_sandstone",
+	    cut_sandstone = "minecraft:cut_sandstone",
+	    smooth_sandstone = "minecraft:smooth_sandstone",
+	    sandstone = "minecraft:sandstone",
+	    red_sand = "minecraft:red_sand",
+	    red_sandstone = "minecraft:red_sandstone",
+	    smooth_red_sandstone = "minecraft:smooth_red_sandstone",
+	    cut_red_sandstone = "minecraft:cut_red_sandstone",
+	    chiseled_red_sandstone = "minecraft:chiseled_red_sandstone",
+	    red_sandstone_stairs = "minecraft:red_sandstone_stairs",
+	    red_sandstone_slab = "minecraft:red_sandstone_slab",
+	    red_sandstone_wall = "minecraft:red_sandstone_wall",
+	    smooth_red_sandstone_slab = "minecraft:smooth_red_sandstone_slab",
+	    smooth_red_sandstone_stairs = "minecraft:smooth_red_sandstone_stairs",
+	    smooth_red_sandstone_wall = "minecraft:smooth_red_sandstone_wall",
+	    cut_red_sandstone_slab = "minecraft:cut_red_sandstone_slab",
+	    cut_red_sandstone_stairs = "minecraft:cut_red_sandstone_stairs",
+	    cut_red_sandstone_wall = "minecraft:cut_red_sandstone_wall",
+	    chiseled_red_sandstone_slab = "minecraft:chiseled_red_sandstone_slab",
+	    chiseled_red_sandstone_stairs = "minecraft:chiseled_red_sandstone_stairs",
+	    chiseled_red_sandstone_wall = "minecraft:chiseled_red_sandstone_wall",
+	    rotten_flesh = "minecraft:rotten_flesh",
+	    string = "minecraft:string",
+	    spider_eye = "minecraft:spider_eye",
+	    fermented_spider_eye = "minecraft:fermented_spider_eye",
+	    blaze_powder = "minecraft:blaze_powder",
+	    magma_cream = "minecraft:magma_cream",
+	    ghast_tear = "minecraft:ghast_tear",
+	    ender_pearl = "minecraft:ender_pearl",
+	    ender_eye = "minecraft:ender_eye",
+	    nether_star = "minecraft:nether_star",
+	    nether_wart = "minecraft:nether_wart",
+	    nether_brick = "minecraft:nether_brick",
+	    nether_brick_fence = "minecraft:nether_brick_fence",
+	    nether_brick_stairs = "minecraft:nether_brick_stairs",
+	    nether_brick_slab = "minecraft:nether_brick_slab",
+	    nether_brick_wall = "minecraft:nether_brick_wall",
+	    nether_brick_block = "minecraft:nether_brick_block",
+	    nether_bricks = "minecraft:nether_bricks",
+	    nether_quartz = "minecraft:nether_quartz",
+	    nether_quartz_ore = "minecraft:nether_quartz_ore",
+	    quartz_pillar = "minecraft:quartz_pillar",
+	    quartz_bricks = "minecraft:quartz_bricks",
+	    quartz_wall = "minecraft:quartz_wall",
+	    quartz_ore = "minecraft:quartz_ore",
+	    quartz = "minecraft:quartz",
+	    quartz_slab = "minecraft:quartz_slab",
+	    quartz_stairs = "minecraft:quartz_stairs",
+	}
+	return Blocks
+end
+local utils_blocks_Blocks = MODULE_utils_blocks_Blocks()
+
+
+print(" -> Loading: utils_movement_Rotations") function MODULE_utils_movement_Rotations()
+	Rotations = {}
+	Rotations.NONE = "None"
+	Rotations.UP = "Up"
+	Rotations.DOWN = "Down"
+	Rotations.LEFT = "Left"
+	Rotations.RIGHT = "Right"
+	function Rotations.opposite(direction)
+	    if direction == Rotations.UP then
+	        return Rotations.DOWN
+	    elseif direction == Rotations.DOWN then
+	        return Rotations.UP
+	    elseif direction == Rotations.LEFT then
+	        return Rotations.RIGHT
+	    elseif direction == Rotations.RIGHT then
+	        return Rotations.LEFT
+	    end
+	end
+	return Rotations
+end
+local utils_movement_Rotations = MODULE_utils_movement_Rotations()
+
+
+print(" -> Loading: utils_movement_Direction") function MODULE_utils_movement_Direction()
+	local Rotations = utils_movement_Rotations
+	local Direction = {}
+	Direction.__index = Direction
+	Direction.NORTH = "North"  -- -z
+	Direction.EAST = "East"  -- +x
+	Direction.SOUTH = "South"  -- +z
+	Direction.WEST = "West"  -- -x
+	Direction.UP = "Up"  -- +y
+	Direction.DOWN = "Down"  -- -y
+	function Direction.opposite(direction)
+	    if direction == Direction.NORTH then
+	        return Direction.SOUTH
+	    elseif direction == Direction.SOUTH then
+	        return Direction.NORTH
+	    elseif direction == Direction.EAST then
+	        return Direction.WEST
+	    elseif direction == Direction.WEST then
+	        return Direction.EAST
+	    elseif direction == Direction.UP then
+	        return Direction.DOWN
+	    elseif direction == Direction.DOWN then
+	        return Direction.UP
+	    end
+	end
+	function Direction.nextLeft(direction)
+	    if direction == Direction.NORTH then
+	        return Direction.WEST
+	    elseif direction == Direction.WEST then
+	        return Direction.SOUTH
+	    elseif direction == Direction.SOUTH then
+	        return Direction.EAST
+	    elseif direction == Direction.EAST then
+	        return Direction.NORTH
+	    end
+	end
+	function Direction.nextRight(direction)
+	    if direction == Direction.NORTH then
+	        return Direction.EAST
+	    elseif direction == Direction.EAST then
+	        return Direction.SOUTH
+	    elseif direction == Direction.SOUTH then
+	        return Direction.WEST
+	    elseif direction == Direction.WEST then
+	        return Direction.NORTH
+	    end
+	end
+	function Direction.getBestDirectionToTurn(currentDirection, targetDirection)
+	    if currentDirection == targetDirection then
+	        return Rotations.NONE
+	    elseif Direction.nextLeft(currentDirection) == targetDirection then
+	        return Rotations.LEFT
+	    elseif Direction.nextRight(currentDirection) == targetDirection then
+	        return Rotations.RIGHT
+	    else
+	        return Rotations.LEFT  -- Both are acceptable, pick a default
+	    end
+	end
+	return Direction
+end
+local utils_movement_Direction = MODULE_utils_movement_Direction()
+
+
+print(" -> Loading: utils_math_Vector3") function MODULE_utils_math_Vector3()
+	local Direction = utils_movement_Direction
+	local Vector3 = {}
+	Vector3.__index = Vector3
+	function Vector3.new(x, y, z)
+	    return setmetatable({x = x or 0, y = y or 0, z = z or 0}, Vector3)
+	end
+	function Vector3.fromTable(tbl)
+	    return Vector3.new(tbl.x, tbl.y, tbl.z)
+	end
+	function Vector3:toTable()
+	    return {x = self.x, y = self.y, z = self.z}
+	end
+	function Vector3:equals(other)
+	    return self.x == other.x and self.y == other.y and self.z == other.z
+	end
+	function Vector3:copy()
+	    return Vector3.new(self.x, self.y, self.z)
+	end
+	function Vector3:add(other)
+	    return Vector3.new(self.x + other.x, self.y + other.y, self.z + other.z)
+	end
+	function Vector3:addInDirection(direction, distance)
+	    distance = distance or 1
+	    local result = self:copy()
+	    if direction == Direction.NORTH then
+	        result.z = result.z - distance
+	    elseif direction == Direction.SOUTH then
+	        result.z = result.z + distance
+	    elseif direction == Direction.EAST then
+	        result.x = result.x + distance
+	    elseif direction == Direction.WEST then
+	        result.x = result.x - distance
+	    elseif direction == Direction.UP then
+	        result.y = result.y + distance
+	    elseif direction == Direction.DOWN then
+	        result.y = result.y - distance
+	    end
+	    return result
+	end
+	function Vector3:sub(other)
+	    return Vector3.new(self.x - other.x, self.y - other.y, self.z - other.z)
+	end
+	function Vector3:mul(scalar)
+	    return Vector3.new(self.x * scalar, self.y * scalar, self.z * scalar)
+	end
+	function Vector3:dot(other)
+	    return self.x * other.x + self.y * other.y + self.z * other.z
+	end
+	function Vector3:cross(other)
+	    return Vector3.new(
+	        self.y * other.z - self.z * other.y,
+	        self.z * other.x - self.x * other.z,
+	        self.x * other.y - self.y * other.x
+	    )
+	end
+	function Vector3:magnitude()
+	    return math.sqrt(self.x^2 + self.y^2 + self.z^2)
+	end
+	function Vector3:normalize()
+	    local mag = self:magnitude()
+	    if mag > 0 then
+	        return Vector3.new(self.x / mag, self.y / mag, self.z / mag)
+	    else
+	        return Vector3.new(0, 0, 0)
+	    end
+	end
+	function Vector3:serialize()
+	    return string.format("%.6f,%.6f,%.6f", self.x, self.y, self.z)
+	end
+	function Vector3.deserialize(str)
+	    local x, y, z = str:match("([^,]+),([^,]+),([^,]+)")
+	    return Vector3.new(tonumber(x), tonumber(y), tonumber(z))
+	end
+	function Vector3:__tostring()
+	    return string.format("Vector3(%.2f, %.2f, %.2f)", self.x, self.y, self.z)
+	end
+	return Vector3
+end
+local utils_math_Vector3 = MODULE_utils_math_Vector3()
+
+
+print(" -> Loading: utils_text_Text") function MODULE_utils_text_Text()
+	local Text = {}
+	function Text.contains(text, pattern)
+	    return text:find(pattern) ~= nil
+	end
+	function Text.split(input, delimiter)
+	    local result = {}
+	    for match in (input .. delimiter):gmatch("(.-)" .. delimiter) do
+	        table.insert(result, match)
+	    end
+	    return result
+	end
+	function Text.getDisplayName(minecraftName)
+	    local displayName = minecraftName
+	    local parts = Text.split(displayName, ":")
+	    if #parts == 2 then
+	        displayName = parts[2]
+	    end
+	    displayName = displayName:gsub("_", " ")
+	    displayName = displayName:gsub("(%l)(%w*)", function(a,b) return string.upper(a)..b end)
+	    return displayName
+	end
+	function Text.levenshtein(str1, str2)
+	    local len1, len2 = #str1, #str2
+	    local matrix = {}
+	    for i = 0, len1 do
+	        matrix[i] = { [0] = i }
+	    end
+	    for j = 0, len2 do
+	        matrix[0][j] = j
+	    end
+	    for i = 1, len1 do
+	        for j = 1, len2 do
+	            local cost = (str1:sub(i, i) == str2:sub(j, j)) and 0 or 1
+	            matrix[i][j] = math.min(
+	                matrix[i - 1][j] + 1,    -- deletion
+	                matrix[i][j - 1] + 1,    -- insertion
+	                matrix[i - 1][j - 1] + cost -- substitution
+	            )
+	        end
+	    end
+	    return matrix[len1][len2]
+	end
+	function Text.simplifyIdentifier(id)
+	    return id:match(":(.*)"):gsub("_", " ")
+	end
+	function Text.getClosestMatch(input, identifiers)
+	    local bestMatch = nil
+	    local bestScore = math.huge
+	    for _, id in pairs(identifiers) do
+	        local simplifiedId = Text.simplifyIdentifier(id)
+	        local score = Text.levenshtein(input, simplifiedId)
+	        if score < bestScore then
+	            bestScore = score
+	            bestMatch = id
+	        end
+	    end
+	    return bestMatch, bestScore
+	end
+	return Text
+end
+local utils_text_Text = MODULE_utils_text_Text()
+
+
+print(" -> Loading: utils_blocks_Block") function MODULE_utils_blocks_Block()
+	local Blocks = utils_blocks_Blocks
+	local Vector3= utils_math_Vector3
+	local Text = utils_text_Text
+	local blockLookupTable = {}
+	for blocksKey, blockName in pairs(Blocks) do
+	    blockLookupTable[blockName] = blocksKey
+	end
+	local Block = {}
+	Block.__index = Block
+	function Block.new(name, position, state, tags)
+	    if Block.exists(name) == false then
+	        error("Block with name " .. name .. " does not exist")
+	    end
+	    return setmetatable({
+	        name = name,
+	        position = position or Vector3.new(0, 0, 0),
+	        state = state or {},
+	        tags = tags or {},
+	    }, Block)
+	end
+	function Block.exists(name)
+	    return blockLookupTable[name] ~= nil
+	end
+	function Block:__tostring()
+	    return string.format(
+	        "Block(%s, %s)",
+	        self.name,
+	        self.position
+	    )
+	end
+	function Block.getClosestMatch(name, customBlocksList)
+	    local closestMatch, score = Text.getClosestMatch(name, customBlocksList or Blocks)
+	    return {name = name, closestMatch = closestMatch, score = score}
+	end
+	return Block
+end
+local utils_blocks_Block = MODULE_utils_blocks_Block()
+
+
+print(" -> Loading: utils_config_Config") function MODULE_utils_config_Config()
+	local Vector3 = utils_math_Vector3
+	local file = utils_other_file
+	local Direction = utils_movement_Direction
+	local Job       = jobs_Job
+	local Blocks = utils_blocks_Blocks
+	local Config = {}
+	Config.__index = Config
+	function Config.new()
+	    local self = setmetatable({
+	        turtleName = "MyTurtle",
+	        job = Job.SETUP,
+	        homePosition = Vector3:new({x = 0, y = 0, z = 0}),
+	        homeDirection = Direction.NORTH,
+	        fuelMinimum = 64,
+	        fuelTarget = 256,
+	        fuelItem = Blocks.coal_block,
+	    }, Config)
+	    return self
+	end
+	function Config.fromTable(table)
+	    local self = Config.new()
+	    self.turtleName = table.turtleName or self.turtleName
+	    self.task = table.task or self.tasks
+	    self.homePosition = Vector3.fromTable(table.homePosition) or self.homePosition
+	    self.homeDirection = table.homeDirection or self.homeDirection
+	    self.fuelMinimum = table.fuelMinimum or self.fuelMinimum
+	    self.fuelTarget = table.fuelTarget or self.fuelTarget
+	    self.fuelItem = table.fuelItem or self.fuelItem
+	    return self
+	end
+	function Config:toTable()
+	    return {
+	        turtleName = self.turtleName,
+	        task = self.task,
+	        homePosition = self.homePosition:toTable(),
+	        homeDirection = self.homeDirection,
+	        fuelMinimum = self.fuelMinimum,
+	        fuelTarget = self.fuelTarget,
+	        fuelItem = self.fuelItem,
+	    }
+	end
+	function Config:serializeJson()
+	    return textutils.serializeJSON(self:toTable())
+	end
+	function Config.deserializeJson(json)
+	    local configAttributes = textutils.unserializeJSON(json)
+	    local config = Config.fromTable(configAttributes)
+	    return config
+	end
+	function Config:save()
+	   file.writeText("config.json", self:serializeJson())
+	end
+	function Config.load()
+	    local config = nil
+	    local content = file.readText("config.json")
+	    if content == nil then
+	        config = Config.new()
+	    else
+	        config = Config.deserializeJson(content)
+	    end
+	    config:save()  -- Save any default values that were missing
+	    return config
+	end
+	return Config
+end
+local utils_config_Config = MODULE_utils_config_Config()
+
+
+print(" -> Loading: turtle_Inventory") function MODULE_turtle_Inventory()
+	local Inventory = {}
+	function Inventory.isFull()
+	    return Inventory.getEmptySlot() == nil
+	end
+	function Inventory.isEmpty()
+	    return Inventory.isFull() == false
+	end
+	function Inventory.getEmptySlot()
+	    for i = 1, 16 do
+	        if turtle.getItemCount(i) == 0 then
+	            return i
+	        end
+	    end
+	    return nil
+	end
+	function Inventory.getSlotWithItem(name)
+	    for i = 1, 16 do
+	        local item = turtle.getItemDetail(i)
+	        if item ~= nil and item.name == name then
+	            return i
+	        end
+	    end
+	    return nil
+	end
+	return Inventory
+end
+local turtle_Inventory = MODULE_turtle_Inventory()
+
+
+print(" -> Loading: turtle_Turtle") function MODULE_turtle_Turtle()
+	local Block   = utils_blocks_Block
+	local Vector3 = utils_math_Vector3
+	local Direction = utils_movement_Direction
+	local Config = utils_config_Config
+	local file = utils_other_file
+	local Inventory = turtle_Inventory
+	local Blocks    = utils_blocks_Blocks
+	local Turtle = {}
+	Turtle.CONFIG = Config.load()
+	function Turtle.getGpsPosition()
+	    local x, y, z = gps.locate()
+	    return Vector3.new(x, y, z)
+	end
+	Turtle.CURRENT_POSITION = Turtle.getGpsPosition()
+	Turtle.CURRENT_DIRECTION = Turtle.CONFIG.homeDirection  -- TODO: work out what the current direction is on startup
+	function Turtle.forward()
+	    if Turtle.getBlockInFront() == nil then return false end
+	    turtle.forward()
+	    Turtle.CURRENT_POSITION = Turtle.CURRENT_POSITION:addInDirection(Turtle.CURRENT_DIRECTION, 1)
+	    return true
+	end
+	function Turtle.up()
+	    if Turtle.getBlockAbove() == nil then return false end
+	    turtle.up()
+	    Turtle.CURRENT_POSITION = Turtle.CURRENT_POSITION:addInDirection(Direction.UP, 1)
+	    return true
+	end
+	function Turtle.down()
+	    if Turtle.getBlockBelow() == nil then return false end
+	    turtle.down()
+	    Turtle.CURRENT_POSITION = Turtle.CURRENT_POSITION:addInDirection(Direction.DOWN, 1)
+	    return true
+	end
+	function Turtle.refuel()
+	    if turtle.getFuelLevel() >= Turtle.CONFIG.fuelTarget then
+	        return
+	    end
+	    Turtle.suckAll()
+	    local slot = nil
+	    slot = 0
+	    while turtle.getFuelLevel() < Turtle.CONFIG.fuelTarget and slot ~= nil do
+	        slot = Inventory.getSlotWithItem(Turtle.CONFIG.fuelItem)
+	        turtle.select(slot)
+	        turtle.refuel()
+	    end
+	end
+	function Turtle.turnTo(direction)
+	    local bestDirectionToTurn = Direction.getBestDirectionToTurn(Turtle.CURRENT_DIRECTION, direction)
+	    if bestDirectionToTurn == Rotations.LEFT then
+	        while Turtle.CURRENT_DIRECTION ~= direction do
+	            turtle.turnLeft()
+	            Turtle.CURRENT_DIRECTION = Direction.nextLeft(Turtle.CURRENT_DIRECTION)
+	        end
+	    elseif bestDirectionToTurn == Rotations.RIGHT then
+	        while Turtle.CURRENT_DIRECTION ~= direction do
+	            turtle.turnRight()
+	            Turtle.CURRENT_DIRECTION = Direction.nextRight(Turtle.CURRENT_DIRECTION)
+	        end
+	    end
+	end
+	function Turtle.turnLeft()
+	    turtle.turnLeft()
+	    Turtle.CURRENT_DIRECTION = Direction.nextLeft(Turtle.CURRENT_DIRECTION)
+	end
+	function Turtle.turnRight()
+	    turtle.turnRight()
+	    Turtle.CURRENT_DIRECTION = Direction.nextRight(Turtle.CURRENT_DIRECTION)
+	end
+	function Turtle.goTo(destination)
+	    local distance = destination:sub(Turtle.CURRENT_POSITION)
+	    if distance.y > 0 then
+	        for i = 1, distance.y do
+	            turtle.up()
+	        end
+	    elseif distance.y < 0 then
+	        for i = 1, math.abs(distance.y) do
+	            turtle.down()
+	        end
+	    end
+	    if distance.x > 0 then
+	        Turtle.turnTo(Direction.EAST)
+	        for i = 1, distance.x do
+	            turtle.forward()
+	        end
+	    elseif distance.x < 0 then
+	        Turtle.turnTo(Direction.WEST)
+	        for i = 1, math.abs(distance.x) do
+	            turtle.back()
+	        end
+	    end
+	    if distance.z > 0 then
+	        Turtle.turnTo(Direction.SOUTH)
+	        for i = 1, distance.z do
+	            turtle.forward()
+	        end
+	    elseif distance.z < 0 then
+	        Turtle.turnTo(Direction.NORTH)
+	        for i = 1, math.abs(distance.z) do
+	            turtle.back()
+	        end
+	    end
+	end
+	function Turtle.goHome()
+	    Turtle.goTo(Turtle.CONFIG.homePosition)
+	    Turtle.turnTo(Turtle.CONFIG.homeDirection)
+	end
+	function Turtle.getBlockInFront()
+	    local present, data = turtle.inspect()
+	    if present == false then
+	        return nil
+	    end
+	    local blockPosition = Turtle.CURRENT_POSITION:addInDirection(Turtle.CURRENT_DIRECTION, 1)
+	    return Block.new(data.name, blockPosition, data.state, data.tags)
+	end
+	function Turtle.getBlockAbove()
+	    local present, data = turtle.inspectUp()
+	    if present == false then
+	        return nil
+	    end
+	    local blockPosition = Turtle.CURRENT_POSITION:addInDirection(Direction.UP, 1)
+	    return Block.new(data.name, blockPosition, data.state, data.tags)
+	end
+	function Turtle.getBlockBelow()
+	    local present, data = turtle.inspectDown()
+	    if present == false then
+	        return nil
+	    end
+	    local blockPosition = Turtle.CURRENT_POSITION:addInDirection(Direction.DOWN, 1)
+	    return Block.new(data.name, blockPosition, data.state, data.tags)
+	end
+	function Turtle.suckLeft(count)
+	    Turtle.turnLeft()
+	    turtle.suck(count)
+	    Turtle.turnRight()
+	end
+	function Turtle.suckRight(count)
+	    Turtle.turnRight()
+	    turtle.suck(count)
+	    Turtle.turnLeft()
+	end
+	function Turtle.suckAll(count)
+	    turtle.suckUp(count)
+	    turtle.suckDown(count)
+	    for i = 1, 4 do
+	        Turtle.turnRight()
+	        turtle.suck(count)
+	    end
+	end
+	function Turtle.tryDrop(slot, count)
+	    local block = Turtle.getBlockInFront()
+	    if block == nil or block.name ~= Blocks.chest then
+	        return false
+	    end
+	    turtle.select(slot)
+	    turtle.drop(count)
+	    return true
+	end
+	function Turtle.tryDropUp(slot, count)
+	    local block = Turtle.getBlockAbove()
+	    if block == nil or block.name ~= Blocks.chest then
+	        return false
+	    end
+	    turtle.select(slot)
+	    turtle.dropUp(count)
+	    return true
+	end
+	function Turtle.tryDropDown(slot, count)
+	    local block = Turtle.getBlockBelow()
+	    if block == nil or block.name ~= Blocks.chest then
+	        return false
+	    end
+	    turtle.select(slot)
+	    turtle.dropDown(count)
+	    return true
+	end
+	function Turtle.tryDropAll(slot, count)
+	    if Turtle.tryDropDown(slot, count) then
+	        return true
+	    elseif Turtle.tryDropUp(slot, count) then
+	        return true
+	    end
+	    for i = 1, 4 do
+	        Turtle.turnRight()
+	        if Turtle.tryDrop(slot, count) then
+	            return true
+	        end
+	    end
+	    return false
+	end
+	return Turtle
+end
+local turtle_Turtle = MODULE_turtle_Turtle()
+
+
+print(" -> Loading: jobs_definitions_misc_IdleJob") function MODULE_jobs_definitions_misc_IdleJob()
+	local Turtle = turtle_Turtle
+	local IdleJob = {}
+	IdleJob.__index = IdleJob
+	function IdleJob.new()
+	    local self = setmetatable({}, IdleJob)
+	    self.alive = true
+	    return self
+	end
+	function IdleJob:onStart()
+	    print("Starting the IdleJob")
+	end
+	function IdleJob:onResume()
+	    print("Resuming the IdleJob")
+	end
+	function IdleJob:inProgress()
+	    return self.alive
+	end
+	function IdleJob:onStep()
+	    print("Hello world in the IdleJob")
+	    self.alive = false
+	end
+	function IdleJob:onComplete()
+	    print("Finished the IdleJob")
+	end
+	return IdleJob
+end
+local jobs_definitions_misc_IdleJob = MODULE_jobs_definitions_misc_IdleJob()
+
+
+print(" -> Loading: jobs_definitions_misc_QuarryJob") function MODULE_jobs_definitions_misc_QuarryJob()
+	local Turtle = turtle_Turtle
+	local QuarryJob = {}
+	QuarryJob.__index = QuarryJob
+	function QuarryJob.new()
+	    local self = setmetatable({}, QuarryJob)
+	    self.alive = true
+	    return self
+	end
+	function QuarryJob:onStart()
+	    print("Starting the QuarryJob")
+	end
+	function QuarryJob:onResume()
+	    print("Resuming the QuarryJob")
+	end
+	function QuarryJob:inProgress()
+	    return self.alive
+	end
+	function QuarryJob:onStep()
+	    print("Hello world in the QuarryJob")
+	    self.alive = false
+	end
+	function QuarryJob:onComplete()
+	    print("Finished the QuarryJob")
+	end
+	return QuarryJob
+end
+local jobs_definitions_misc_QuarryJob = MODULE_jobs_definitions_misc_QuarryJob()
+
+
+print(" -> Loading: jobs_definitions_misc_SetupJob") function MODULE_jobs_definitions_misc_SetupJob()
+	local Turtle = turtle_Turtle
+	local SetupJob = {}
+	SetupJob.__index = SetupJob
+	function SetupJob.new()
+	    local self = setmetatable({}, SetupJob)
+	    self.alive = true
+	    return self
+	end
+	function SetupJob:onStart()
+	    Turtle.CONFIG.homePosition = Turtle.CURRENT_POSITION
+	    print(" -> Home position set to " .. Turtle.CURRENT_POSITION:__tostring())
+	    Turtle.CONFIG.homeDirection = Turtle.CURRENT_DIRECTION
+	    print(" -> Home direction set to " .. Turtle.CURRENT_DIRECTION)
+	    Turtle.CONFIG:save()
+	end
+	function SetupJob:onResume()
+	end
+	function SetupJob:inProgress()
+	    return self.alive
+	end
+	function SetupJob:onStep()
+	    self.alive = false
+	end
+	function SetupJob:onComplete()
+	    Turtle:goHome()
+	end
+	return SetupJob
+end
+local jobs_definitions_misc_SetupJob = MODULE_jobs_definitions_misc_SetupJob()
+
+
+print(" -> Loading: utils_blocks_BlockIndicators") function MODULE_utils_blocks_BlockIndicators()
+	local Blocks = utils_blocks_Blocks
+	local BlockIndicators = {}
+	BlockIndicators.INPUT = Blocks.green_wool
+	BlockIndicators.OUTPUT = Blocks.red_wool
+	BlockIndicators.DIRECTION = Blocks.white_wool
+	BlockIndicators.ACTION_STOP = Blocks.red_wool
+	BlockIndicators.ACTION_HOME = Blocks.cyan_wool
+	BlockIndicators.ACTION_MOVE = Blocks.green_wool
+	BlockIndicators.ACTION_BREAK = Blocks.brown_wool
+	BlockIndicators.ACTION_PLACE = Blocks.pink_wool
+	BlockIndicators.ACTION_MARKER = Blocks.magenta_wool
+	BlockIndicators.ACTION_DROP = Blocks.purple_wool
+	BlockIndicators.ACTION_REFUEL = Blocks.black_wool
+	return BlockIndicators
+end
+local utils_blocks_BlockIndicators = MODULE_utils_blocks_BlockIndicators()
+
+
+print(" -> Loading: utils_storage_ContainerIndex") function MODULE_utils_storage_ContainerIndex()
+	local ContainerIndex = {}
+	ContainerIndex.__index = ContainerIndex
+	function ContainerIndex.new(slotCount)
+	    local self = setmetatable({}, ContainerIndex)
+	    self.slotCount = slotCount
+	    self.slotIndex = {}  -- slotIndex[slot] = {name = itemName, count = itemCount}
+	    self.itemIndex = {}  -- itemIndex[itemName] = {slot1 = itemCount1, slot2 = itemCount2, ...}
+	    return self
+	end
+	function ContainerIndex:addSlot(slot, itemName, itemCount)
+	    self.slotIndex[slot] = {name = itemName, count = itemCount}
+	    if self.itemIndex[itemName] == nil then
+	        self.itemIndex[itemName] = {}
+	    end
+	    self.itemIndex[itemName][slot] = itemCount
+	end
+	function ContainerIndex:getSlot(slot)
+	    local slotIndexValue = self.slotIndex[slot]
+	    if slotIndexValue == nil then
+	        return nil
+	    end
+	    return {slot = slot, name = slotIndexValue.name, count = slotIndexValue.count}
+	end
+	function ContainerIndex:getSlotWithItem(itemName)
+	    local slots = self:getSlotsWithItem(itemName)
+	    if #slots == 0 then
+	        return nil
+	    end
+	    return slots[1]
+	end
+	function ContainerIndex:getSlotsWithItem(itemName)
+	    local slots = {}
+	    local itemSlots = self.itemIndex[itemName]
+	    if itemSlots == nil then
+	        return slots
+	    end
+	    for slot, itemCount in pairs(itemSlots) do
+	        table.insert(slots, {slot = slot, name = itemName, count = itemCount})
+	    end
+	    return slots
+	end
+	function ContainerIndex:getEmptySlot()
+	    for slot = 1, self.slotCount do
+	        if self.slotIndex[slot] == nil then
+	            return slot
+	        end
+	    end
+	    return nil
+	end
+	function ContainerIndex:getEmptySlots()
+	    local slots = {}
+	    for slot = 1, self.slotCount do
+	        if self.slotIndex[slot] == nil then
+	            table.insert(slots, slot)
+	        end
+	    end
+	    return slots
+	end
+	function ContainerIndex:getUsedSlots()
+	    local slots = {}
+	    for slot = 1, self.slotCount do
+	        if self.slotIndex[slot] ~= nil then
+	            table.insert(slots, slot)
+	        end
+	    end
+	    return slots
+	end
+	function ContainerIndex:hasItem(itemName)
+	    return self.itemIndex[itemName] ~= nil
+	end
+	function ContainerIndex:getItemDetail(itemName)
+	    if not self:hasItem(itemName) then
+	        return nil
+	    end
+	    local slots = self:getSlotsWithItem(itemName)
+	    local itemCount = 0
+	    for _, slot in pairs(slots) do
+	        itemCount = itemCount + slot.count
+	    end
+	    return {name = itemName, count = itemCount, slots = slots}
+	end
+	function ContainerIndex:updateSlot(slot, itemName, itemCount)
+	    if slot == nil then
+	        error("Slot should not be nil")
+	    end
+	    if self.slotIndex[slot] == nil then
+	        self:addSlot(slot, itemName, itemCount)
+	    end
+	    self.slotIndex[slot] = {name = itemName, count = itemCount}
+	    self.itemIndex[itemName][slot] = itemCount
+	    if itemCount == 0 then
+	        self:removeSlot(slot)
+	    end
+	end
+	function ContainerIndex:removeSlot(slot)
+	    local itemName = self.slotIndex[slot].name
+	    self.slotIndex[slot] = nil
+	    self.itemIndex[itemName][slot] = nil
+	end
+	function ContainerIndex:getItemList()
+	    local items = {}
+	    for itemName, slots in pairs(self.itemIndex) do
+	        local itemCount = 0
+	        for slot, count in pairs(slots) do
+	            itemCount = itemCount + count
+	        end
+	        table.insert(items, {name = itemName, count = itemCount})
+	    end
+	    return items
+	end
+	return ContainerIndex
+end
+local utils_storage_ContainerIndex = MODULE_utils_storage_ContainerIndex()
+
+
+print(" -> Loading: utils_storage_patterns_ContainerPattern") function MODULE_utils_storage_patterns_ContainerPattern()
+	local Blocks = utils_blocks_Blocks
+	local ContainerPattern = {}
+	ContainerPattern.__index = ContainerPattern
+	ContainerPattern.indexes = {
+	    [1] = {1, 2, 3, 10, 11, 12, 19, 20, 21},
+	    [2] = {4, 5, 6, 13, 14, 15, 22, 23, 24},
+	    [3] = {7, 8, 9, 16, 17, 18, 25, 26, 27},
+	}
+	function ContainerPattern.new(name, pattern)
+	    local self = setmetatable({}, ContainerPattern)
+	    self.name = name
+	    self.pattern = pattern
+	    return self
+	end
+	function ContainerPattern:match(containerIndex)
+	    for offset = 1, 3 do
+	        if self:_matchWithOffset(containerIndex, offset) then
+	            return {name = self.name, matchPosition = offset}
+	        end
+	    end
+	    return nil
+	end
+	function ContainerPattern:_matchWithOffset(containerIndex, offset)
+	    local indexes = ContainerPattern.indexes[offset]
+	    for index = 1, 9 do
+	        local patternSlotNumber = index
+	        local containerSlotNumber = indexes[index]
+	        local block = self.pattern[patternSlotNumber]
+	        if block ~= nil and block ~= Blocks.ANY then
+	            local slot = containerIndex:getSlot(containerSlotNumber)
+	            if slot == nil or slot.name ~= block then
+	                return nil
+	            end
+	        end
+	    end
+	    return true
+	end
+	return ContainerPattern
+end
+local utils_storage_patterns_ContainerPattern = MODULE_utils_storage_patterns_ContainerPattern()
+
+
+print(" -> Loading: utils_storage_patterns_ContainerPatterns") function MODULE_utils_storage_patterns_ContainerPatterns()
+	local BlockIndicators = utils_blocks_BlockIndicators
+	local ContainerPattern = utils_storage_patterns_ContainerPattern
+	local ContainerPatterns = {}
+	ContainerPatterns.DIRECTION_UP = ContainerPattern.new("DIRECTION_UP", {
+	    [2] = BlockIndicators.DIRECTION,
+	    [4] = BlockIndicators.DIRECTION,
+	    [6] = BlockIndicators.DIRECTION,
+	})
+	ContainerPatterns.DIRECTION_DOWN = ContainerPattern.new("DIRECTION_DOWN", {
+	    [8] = BlockIndicators.DIRECTION,
+	    [4] = BlockIndicators.DIRECTION,
+	    [6] = BlockIndicators.DIRECTION,
+	})
+	ContainerPatterns.DIRECTION_FORWARD = ContainerPattern.new("DIRECTION_FORWARD", {[2] = BlockIndicators.DIRECTION})
+	ContainerPatterns.DIRECTION_BACK = ContainerPattern.new("DIRECTION_BACK", {[8] = BlockIndicators.DIRECTION})
+	ContainerPatterns.DIRECTION_LEFT = ContainerPattern.new("DIRECTION_LEFT", {[4] = BlockIndicators.DIRECTION})
+	ContainerPatterns.DIRECTION_RIGHT = ContainerPattern.new("DIRECTION_RIGHT", {[6] = BlockIndicators.DIRECTION})
+	ContainerPatterns.ACTION_STOP = ContainerPattern.new("ACTION_STOP", {[5] = BlockIndicators.ACTION_STOP})
+	ContainerPatterns.ACTION_HOME = ContainerPattern.new("ACTION_HOME", {[5] = BlockIndicators.ACTION_HOME})
+	ContainerPatterns.ACTION_MOVE = ContainerPattern.new("ACTION_MOVE", {[5] = BlockIndicators.ACTION_MOVE})
+	ContainerPatterns.ACTION_BREAK = ContainerPattern.new("ACTION_BREAK", {[5] = BlockIndicators.ACTION_BREAK})
+	ContainerPatterns.ACTION_PLACE = ContainerPattern.new("ACTION_PLACE", {[5] = BlockIndicators.ACTION_PLACE})
+	ContainerPatterns.ACTION_MARKER = ContainerPattern.new("ACTION_MARKER", {[5] = BlockIndicators.ACTION_MARKER})
+	ContainerPatterns.ACTION_DROP = ContainerPattern.new("ACTION_DROP", {[5] = BlockIndicators.ACTION_DROP})
+	ContainerPatterns.ACTION_REFUEL = ContainerPattern.new("ACTION_REFUEL", {[5] = BlockIndicators.ACTION_REFUEL})
+	return ContainerPatterns
+end
+local utils_storage_patterns_ContainerPatterns = MODULE_utils_storage_patterns_ContainerPatterns()
+
+
+print(" -> Loading: utils_storage_Container") function MODULE_utils_storage_Container()
+	local ContainerIndex = utils_storage_ContainerIndex
+	local Parallel = utils_controlflow_Parallel
+	local ContainerPatterns = utils_storage_patterns_ContainerPatterns
+	local Blocks = utils_blocks_Blocks
+	local Container = {}
+	Container.__index = Container
+	function Container.new(name)
+	    local self = setmetatable({}, Container)
+	    self.name = name
+	    self.internal = peripheral.wrap(name)
+	    self.size = self.internal.size()
+	    self.index = ContainerIndex.new(self.internal.size())
+	    self:updateIndex()
+	    return self
+	end
+	function Container:updateIndex()
+	    self.index = ContainerIndex.new(self.internal.size())
+	    for slot, item in pairs(self.internal.list()) do
+	        self.index:addSlot(slot, item.name, item.count)
+	    end
+	end
+	function Container:hasItem(itemName)
+	    return self.index:hasItem(itemName)
+	end
+	function Container:getItemLimit(slotNumber)
+	    return self.internal.getItemLimit(slotNumber)
+	end
+	function Container:putItems(sourceContainer, itemName, count)
+	    local destContainer = self
+	    local remainingCount = count
+	    while remainingCount > 0 do
+	        local sourceSlotTable = sourceContainer:findItemSlot(itemName)
+	        if sourceSlotTable == nil then
+	            return remainingCount  -- Source container is empty
+	        end
+	        local sourceSlot = sourceSlotTable.slot
+	        local destSlot = destContainer:getEmptySlot()
+	        if destSlot == nil then
+	            return remainingCount  -- Destination container is full
+	        end
+	        local moved = sourceContainer.internal.pushItems(destContainer.name, sourceSlot, remainingCount, destSlot)
+	        remainingCount = remainingCount - moved  -- Track the remaining count
+	        local sourceSlotCount = sourceContainer.index:getSlot(sourceSlot).count - moved
+	        local destSlotCount = moved  -- Was initially empty
+	        sourceContainer.index:updateSlot(sourceSlot, itemName, sourceSlotCount)
+	        destContainer.index:updateSlot(destSlot, itemName, destSlotCount)
+	    end
+	    return remainingCount
+	end
+	function Container:sendItems(destinationContainer, itemName, count)
+	    local sourceContainer = self
+	    return destinationContainer:putItems(sourceContainer, itemName, count)
+	end
+	function Container:findItemSlot(itemName)
+	    return self.index:getSlotWithItem(itemName)
+	end
+	function Container:findItemSlots(itemName)
+	    return self.index:getSlotsWithItem(itemName)
+	end
+	function Container:getItemCount(slot)
+	    local item = self.index:getSlot(slot)
+	    if item == nil then
+	        return 0
+	    end
+	    return item.count
+	end
+	function Container:getSlot(slot)
+	    return self.index:getSlot(slot)
+	end
+	function Container:getEmptySlot()
+	    return self.index:getEmptySlot()
+	end
+	function Container:getEmptySlots()
+	    return self.index:getEmptySlots()
+	end
+	function Container:getUsedSlots()
+	    return self.index:getUsedSlots()
+	end
+	function Container:getItemList()
+	    return self.index:getItemList()
+	end
+	function Container:getMaxCount(slot)
+	    local itemDetail = self.internal.getItemDetail(slot)
+	    if itemDetail == nil then
+	        return self:getItemLimit(slot)
+	    end
+	    return itemDetail.maxCount
+	end
+	function Container:defragment()
+	    local items = self:getItemList()
+	    local p = Parallel.new()
+	    for _, item in pairs(items) do
+	        p:addTask(function() self:_defragmentSingleItem(item) end)
+	    end
+	    p:run()
+	end
+	function Container:_defragmentSingleItem(item)
+	    local slots = self:findItemSlots(item.name)
+	    if #slots == 0 then
+	        return
+	    end
+	    local maxItems = self:getMaxCount(slots[1].slot)
+	    for i = #slots, 1, -1 do
+	        if slots[i].count == maxItems then
+	            table.remove(slots, i)
+	        end
+	    end
+	    if #slots >= 2 then
+	        for _ = 1, #slots - 1 do
+	            local currentSlotIndex = 1
+	            while currentSlotIndex < #slots do
+	                local currentSlot = slots[currentSlotIndex]
+	                local nextSlot = slots[currentSlotIndex + 1]
+	                local itemsMoved = self.internal.pushItems(self.name, currentSlot.slot, maxItems, nextSlot.slot)
+	                currentSlot.count = currentSlot.count - itemsMoved
+	                nextSlot.count = nextSlot.count + itemsMoved
+	                self.index:updateSlot(currentSlot.slot, item.name, currentSlot.count)
+	                self.index:updateSlot(nextSlot.slot, item.name, nextSlot.count)
+	                currentSlotIndex = currentSlotIndex + 1
+	            end
+	            for i = #slots, 1, -1 do
+	                if slots[i].count == maxItems or slots[i].count == 0 then
+	                    table.remove(slots, i)
+	                end
+	            end
+	        end
+	    end
+	end
+	function Container:tostring()
+	    return self.name
+	end
+	function Container:getMatchingContainerPatterns()
+	    local matchingPatterns = {}
+	    for _, pattern in pairs(ContainerPatterns) do
+	        local match = pattern:matches(self.index)
+	        if match ~= nil then
+	            matchingPatterns[match.matchPosition] = match
+	        end
+	    end
+	    if #matchingPatterns == 0 then
+	        return nil
+	    end
+	    local newMatchingPatterns = {}
+	    for _, match in pairs(matchingPatterns) do
+	        table.insert(newMatchingPatterns, match)
+	    end
+	    return newMatchingPatterns
+	end
+	return Container
+end
+local utils_storage_Container = MODULE_utils_storage_Container()
+
+
+print(" -> Loading: utils_data_Table") function MODULE_utils_data_Table()
+	local Table = {}
+	function Table.contains(object, value)
+	    for _, v in ipairs(object) do
+	        if v == value then
+	            return true
+	        end
+	    end
+	    return false
+	end
+	return Table
+end
+local utils_data_Table = MODULE_utils_data_Table()
+
+
+print(" -> Loading: utils_storage_Storage") function MODULE_utils_storage_Storage()
+	local Blocks = utils_blocks_Blocks
+	local BlockIndicators = utils_blocks_BlockIndicators
+	local Container = utils_storage_Container
+	local Text      = utils_text_Text
+	local Parallel = utils_controlflow_Parallel
+	local Table = utils_data_Table
+	local Storage = {}
+	Storage.__index = Storage
+	function Storage.new(config)
+	    local self = setmetatable({}, Storage)
+	    self.config = config or {}
+	    self.barrels = Storage.connectToBarrels()
+	    self.inventories = Storage.connectToChests()
+	    self.io = self.barrels[config.io or Blocks.barrel .. "_0"]
+	    self.inputs = {}
+	    if config.inputs ~= nil then
+	        for _, input in pairs(config.inputs) do
+	            self.inputs[input] = self.barrels[input]
+	        end
+	    end
+	    return self
+	end
+	function Storage.connectToChests()
+	    local inventories = {}
+	    local allPeripheralNames =  peripheral.getNames()
+	    for index, name in pairs(allPeripheralNames) do
+	        if Text.contains(name, Blocks.chest) then
+	            inventories[name] = Container.new(name)
+	        end
+	    end
+	    return inventories
+	end
+	function Storage.connectToBarrels()
+	    local barrels = {}
+	    local allPeripheralNames =  peripheral.getNames()
+	    for index, name in pairs(allPeripheralNames) do
+	        if Text.contains(name, Blocks.barrel) then
+	            barrels[name] = Container.new(name)
+	        end
+	    end
+	    return barrels
+	end
+	function Storage:updateIndex()
+	    for _, container in pairs(self.inventories) do
+	        container:updateIndex()
+	    end
+	    for _, container in pairs(self.barrels) do
+	        container:updateIndex()
+	    end
+	end
+	function Storage:defragment()
+	    local p = Parallel.new()
+	    p:addTask(function() self.io:defragment() end)
+	    for _, container in pairs(self.inventories) do
+	        p:addTask(function() container:defragment() end)
+	    end
+	    p:run()
+	end
+	function Storage:hasItem(itemName)
+	    for _, container in pairs(self.inventories) do
+	        if container:hasItem(itemName) then
+	            return true
+	        end
+	    end
+	    return false
+	end
+	function Storage:sendItems(sourceName, destinationName, itemName, count)
+	    local sourceContainer = self.inventories[sourceName]
+	    local destinationContainer = self.inventories[destinationName]
+	    if sourceContainer == nil then
+	        error("Source container not found: " .. sourceName)
+	    end
+	    if destinationContainer == nil then
+	        error("Destination container not found: " .. destinationName)
+	    end
+	    local remainingCount = sourceContainer:sendItems(destinationContainer, itemName, count)
+	    return remainingCount
+	end
+	function Storage:moveToIo(itemName, count, destinationContainer)
+	    destinationContainer = destinationContainer or self.io
+	    local locations = self:findItemLocations(itemName)
+	    local remainingCount = count
+	    while remainingCount ~= 0 and #locations > 0 do
+	        local location = table.remove(locations, 1)
+	        local container = self.inventories[location.containerName]
+	        local slot = location.slot
+	        if container == nil then
+	            error("Container not found: " .. location.containerName)
+	        end
+	        remainingCount = container:sendItems(destinationContainer, itemName, remainingCount)
+	    end
+	    if remainingCount > 0 then
+	        print("Warning: Missing " .. remainingCount .. " " .. itemName)
+	    end
+	    return remainingCount
+	end
+	function Storage:moveFromIo(itemName, count, sourceContainer)
+	    sourceContainer = sourceContainer or self.io
+	    local remainingCount = count
+	    for _, destinationContainer in pairs(self.inventories) do
+	        if remainingCount == 0 then
+	            return 0  -- All items have been moved
+	        end
+	        remainingCount = sourceContainer:sendItems(destinationContainer, itemName, remainingCount)
+	    end
+	    return remainingCount
+	end
+	function Storage:dump(sourceContainer)
+	    sourceContainer = sourceContainer or self.io
+	    if sourceContainer == nil then
+	        return
+	    end
+	    local items = sourceContainer:getItemList()
+	    for _, item in pairs(items) do
+	        self:moveFromIo(item.name, item.count, sourceContainer)
+	    end
+	end
+	function Storage:dumpAllBarrels()
+	    for _, container in pairs(self.barrels) do
+	        self:dump(container)
+	    end
+	end
+	function Storage:dumpAllInputs()
+	    for _, container in pairs(self.inputs) do
+	        container:updateIndex()
+	        self:dump(container)
+	    end
+	end
+	function Storage:placeBlockIndicator(containerName, blockIndicator)
+	    local container = self.barrels[containerName]
+	    if container == nil then
+	        print("WARNING: Failed to find " .. containerName)
+	    end
+	    self:moveToIo(blockIndicator, 1, container)
+	end
+	function Storage:readBlockIndicators()
+	    self.config.inputs = nil
+	    self.config.io = nil
+	    for _, container in pairs(self.barrels) do
+	        local blockIndicator = self:readBlockIndicator(container)
+	        if blockIndicator == BlockIndicators.INPUT then
+	            self.inputs[container.name] = container
+	            if self.config.inputs == nil then
+	                self.config.inputs = {}
+	            end
+	            if not Table.contains(self.config.inputs, container.name) then
+	                table.insert(self.config.inputs, container.name)
+	            end
+	        elseif blockIndicator == BlockIndicators.OUTPUT then
+	            self.io = container
+	            self.config.io = container.name
+	        elseif blockIndicator == nil then
+	            print("WARNING: No block indicator found")
+	        else
+	            print("WARNING: Unknown block indicator - " .. blockIndicator .. " - found in " .. container.name)
+	        end
+	    end
+	end
+	function Storage:readBlockIndicator(container)
+	    container:updateIndex()
+	    local slot = container:getSlot(1)
+	    if slot == nil then
+	        return nil
+	    end
+	    return slot.name
+	end
+	function Storage:getItemList()
+	    local items = {}
+	    for _, container in pairs(self.inventories) do
+	        local containerItems = container:getItemList()
+	        for _, item in pairs(containerItems) do
+	            if items[item.name] == nil then
+	                items[item.name] = item.count
+	            else
+	                items[item.name] = items[item.name] + item.count
+	            end
+	        end
+	    end
+	    return items
+	end
+	function Storage:findItemLocations(itemName)
+	    local locations = {}
+	    for _, container in pairs(self.inventories) do
+	        local slots = container:findItemSlots(itemName)
+	        for _, slot in pairs(slots) do
+	            local count = container:getItemCount(slot)
+	            table.insert(locations, {
+	                containerName = container.name,
+	                itemName = itemName,
+	                slot = slot,
+	                count = count,
+	            })
+	        end
+	    end
+	    return locations
+	end
+	function Storage:getItemCount(itemName)
+	    local count = 0
+	    for _, container in pairs(self.inventories) do
+	        local itemList = container:getItemList()
+	        for _, item in pairs(itemList) do
+	            if item.name == itemName then
+	                count = count + item.count
+	            end
+	        end
+	    end
+	    return count
+	end
+	function Storage:getEmptySlotCount()
+	    local count = 0
+	    for _, container in pairs(self.inventories) do
+	        count = count + #container:getEmptySlots()
+	    end
+	    return count
+	end
+	function Storage:getUsedSlotCount()
+	    local count = 0
+	    for _, container in pairs(self.inventories) do
+	        count = count + #container:getUsedSlots()
+	    end
+	    return count
+	end
+	function Storage:getUsedCapacity()
+	    local usedSlots = self:getUsedSlotCount()
+	    local emptySlots = self:getEmptySlotCount()
+	    local totalSlots = usedSlots + emptySlots
+	    local usedCapacity = usedSlots / totalSlots
+	    return usedCapacity
+	end
+	function Storage:getContainerCount()
+	    local count = 0
+	    for _, _ in pairs(self.inventories) do
+	        count = count + 1
+	    end
+	    return count
+	end
+	function Storage:getPresentItemNames()
+	    local itemNames = {}
+	    for name, count in pairs(self:getItemList()) do
+	        table.insert(itemNames, name)
+	    end
+	    return itemNames
+	end
+	return Storage
+end
+local utils_storage_Storage = MODULE_utils_storage_Storage()
+
+
+print(" -> Loading: utils_terminal_Terminal") function MODULE_utils_terminal_Terminal()
+	local Terminal = {}
+	Terminal.__index = Terminal
+	function Terminal.write(text)
+	    print(text)
+	end
+	function Terminal.read(prompt)
+	    if prompt ~= nil then
+	        write(prompt)
+	    end
+	    return read()
+	end
+	return Terminal
+end
+local utils_terminal_Terminal = MODULE_utils_terminal_Terminal()
+
+
+print(" -> Loading: utils_terminal_commands_Command") function MODULE_utils_terminal_commands_Command()
+	local Command = {}
+	Command.__index = Command
+	function Command.new(name, helpText, func)
+	    local self = setmetatable({}, Command)
+	    self.name = name
+	    self.helpText = helpText
+	    self.func = func
+	    return self
+	end
+	function Command:help()
+	    print("Command: " .. self.name)
+	    print(self.helpText)
+	end
+	function Command:run(...)
+	    self.func(...)
+	end
+	return Command
+end
+local utils_terminal_commands_Command = MODULE_utils_terminal_commands_Command()
+
+
+print(" -> Loading: utils_terminal_commands_Commands") function MODULE_utils_terminal_commands_Commands()
+	local Command = utils_terminal_commands_Command
+	local Text = utils_text_Text
+	local Commands = {}
+	Commands.__index = Commands
+	function Commands.new()
+	    local self = setmetatable({}, Commands)
+	    self.commands = {}
+	    self:add("help", Command.new("help", "Prints a list of commands", function(...) self:help(...) end))
+	    return self
+	end
+	function Commands:add(name, command)
+	    self.commands[name] = command
+	end
+	function Commands:help(commandName)
+	    if commandName ~= nil then
+	        local command = self.commands[commandName]
+	        if command == nil then
+	            print("Command not found: " .. commandName)
+	            return
+	        end
+	        command:help()
+	        return
+	    end
+	    print("Commands:")
+	    for name, command in pairs(self.commands) do
+	        print("  " .. name)
+	    end
+	    print("*Type 'help <command>' for more information")
+	end
+	function Commands:run(message)
+	    local parts = Text.split(message, " ")
+	    local name = parts[1]
+	    local command = self.commands[name]
+	    if command == nil then
+	        print("Command not found: " .. command)
+	        print("\ttype 'help' for a list of commands")
+	        return
+	    end
+	    local arguments = {}
+	    for i = 2, #parts do
+	        table.insert(arguments, parts[i])
+	    end
+	    command:run(table.unpack(arguments))
+	end
+	return Commands
+end
+local utils_terminal_commands_Commands = MODULE_utils_terminal_commands_Commands()
+
+
+print(" -> Loading: utils_math_Math") function MODULE_utils_math_Math()
+	local Math = {}
+	function Math.round(num, numDecimalPlaces)
+	    numDecimalPlaces = numDecimalPlaces or 0
+	    local mult = 10^numDecimalPlaces
+	    return math.floor(num * mult + 0.5) / mult
+	end
+	return Math
+end
+local utils_math_Math = MODULE_utils_math_Math()
+
+
+print(" -> Loading: jobs_definitions_static_StorageJob") function MODULE_jobs_definitions_static_StorageJob()
+	local Storage = utils_storage_Storage
+	local Blocks  = utils_blocks_Blocks
+	local Block   = utils_blocks_Block
+	local BlockIndicators = utils_blocks_BlockIndicators
+	local Terminal = utils_terminal_Terminal
+	local Commands = utils_terminal_commands_Commands
+	local Command = utils_terminal_commands_Command
+	local Text = utils_text_Text
+	local Math = utils_math_Math
+	local StorageJob = {}
+	StorageJob.__index = StorageJob
+	function StorageJob.new(config)
+	    local self = setmetatable({}, StorageJob)
+	    self.backgroundTask = function() self:onBackgroundStep() end
+	    self.backgroundDelay = 5  -- This task should be infrequent
+	    self.storage = nil
+	    self.commands = Commands.new()
+	    self.commands:add("exit", Command.new("exit", "Terminates the storage program", function(...) self:commandExit(...) end))
+	    self.commands:add("get", Command.new("get", "Gets an item from storage\nExample 1: get <quantity> <item>\nExample 2: get <item>\n*Default quantity is 64", function(...) self:commandGet(...) end))
+	    self.commands:add("dump", Command.new("dump", "Dumps the storage", function(...) self:commandDump(...) end))
+	    self.commands:add("dumpInputs", Command.new("dumpinputs", "Dumps the input barrels", function(...) self:commandDumpInputs(...) end))
+	    self.commands:add("list", Command.new("list", "Lists the storage\nExample 1: list\nExample 2: list <itemName>", function(...) self:commandList(...) end))
+	    self.commands:add("stats", Command.new("stats", "Prints the storage stats", function(...) self:commandStats(...) end))
+	    self.commands:add("setup", Command.new("setup", "Puts the storage into setup mode", function(...) self:commandSetup(...) end))
+	    self.commands:add("defragment", Command.new("defragment", "Compacts item stacks in the storage so that stacks of e.g. 1 are combined into fewer bigger stacks", function(...) self:commandDefragment(...) end))
+	    self.config = config
+	    self.states = {
+	        SETUP = "SETUP",
+	        COMMAND_PROMPT = "COMMAND_PROMPT",
+	    }
+	    return self
+	end
+	function StorageJob:onStart()
+	    self.config:set("alive", true)
+	    local storageConfig = self.config:get("storageConfig", nil)
+	    self.storage = Storage.new(storageConfig)
+	    self.storage:updateIndex()
+	    self.storage:dump()
+	    self.storage:defragment()
+	    print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
+	end
+	function StorageJob:onResume()
+	    self:onStart()
+	end
+	function StorageJob:inProgress()
+	    return self.config:get("alive", false)
+	end
+	function StorageJob:onStep()
+	    local state = self.config:get("state", self.states.SETUP)
+	    if state == self.states.SETUP then
+	        self:stateSetup()
+	    elseif state == self.states.COMMAND_PROMPT then
+	        self:stateCommandPrompt()
+	    else
+	        print("Invalid state: " .. state)
+	        self.config:set("state", self.states.COMMAND_PROMPT)
+	    end
+	end
+	function StorageJob:onBackgroundStep()
+	    if self.config:get("state", nil) == self.states.COMMAND_PROMPT then
+	        self.storage:dumpAllInputs()
+	    end
+	end
+	function StorageJob:stateSetup()
+	    print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
+	    self.storage:dumpAllBarrels()
+	    if self.storage.config ~= nil then
+	        print("Found existing storage configuration")
+	        if self.storage.config.io ~= nil then
+	            print("\t\tFound main interface barrel")
+	            print("\t\t\t" .. self.storage.config.io)
+	            self.storage:placeBlockIndicator(self.storage.config.io, BlockIndicators.OUTPUT)
+	        end
+	        if self.storage.config.inputs ~= nil then
+	            print("\t\tFound " .. #self.storage.config.inputs .. " input barrels")
+	            for _, containerName in pairs(self.storage.config.inputs) do
+	                print("\t\t\t" .. containerName)
+	                self.storage:placeBlockIndicator(containerName, BlockIndicators.INPUT)
+	            end
+	        end
+	    else
+	        print("No pre-existing storage configuration found")
+	        self.storage.config = {}
+	    end
+	    print("\n\nSetup Storage")
+	    print("Mark Barrels Using the Following Items")
+	    print("\t\tMain Interface - " .. BlockIndicators.OUTPUT)
+	    print("\t\tInput Only - " .. BlockIndicators.INPUT)
+	    print("*You can only have one Main Interface")
+	    print("*Input Only barrels take inserted items and store them in the storage system")
+	    print("*Chests are used for storage and are not configurable")
+	    Terminal.read("\nPress Enter to Continue")
+	    self.storage:readBlockIndicators()
+	    self.config:set("storageConfig", self.storage.config)
+	    os.sleep(1)
+	    if self.storage.config.io == nil then
+	        print("\n\nNo main interface barrel found")
+	        print("Please add a main interface barrel by following the instructions above")
+	        os.sleep(2)
+	        return
+	    end
+	    self.config:set("state", self.states.COMMAND_PROMPT)
+	    self.storage:dumpAllBarrels()
+	    print("\n\nSetup Complete")
+	    os.sleep(2)
+	end
+	function StorageJob:stateCommandPrompt()
+	    local userInput = Terminal.read("\nEnter Command: ")
+	    print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
+	    self.storage.io:updateIndex()
+	    if userInput == nil or userInput == "" then
+	        print("No command entered")
+	        print("Type 'help' for a list of commands")
+	        return
+	    end
+	    self.commands:run(userInput)
+	end
+	function StorageJob:onComplete()
+	end
+	function StorageJob:commandExit()
+	    self.config:set("alive", false)
+	end
+	function StorageJob:commandGet(...)
+	    local args = {...}
+	    local quantity = 64
+	    local itemName = nil
+	    if #args == 0 then
+	        print("No arguments provided")
+	        print("Expected: get <quantity> <item>")
+	        print("Type 'help get' for more information")
+	        return
+	    elseif #args == 1 then
+	        quantity = 64
+	        itemName = args[1]
+	    else
+	        quantity = tonumber(args[1])
+	        itemName = args[2]
+	        for i = 3, #args do
+	            itemName = itemName .. " " .. args[i]
+	        end
+	    end
+	    local matchDetails = Block.getClosestMatch(itemName, self.storage:getPresentItemNames())
+	    if matchDetails.score > 3 then
+	        print("Could not find item: " .. itemName)
+	        print("Did you mean: " .. matchDetails.closestMatch)
+	        return
+	    end
+	    itemName = matchDetails.closestMatch
+	    if quantity == nil or itemName == nil then
+	        print("Invalid arguments for quantity or itemName")
+	        print("Type 'help get' for more information")
+	        return
+	    end
+	    print("Getting " .. quantity .. " " .. itemName)
+	    self.storage:moveToIo(itemName, quantity)
+	end
+	function StorageJob:commandDump()
+	    print("Dumping Storage")
+	    local items = self.storage.io:getItemList()
+	    for _, item in pairs(items) do
+	        local displayName = Text.getDisplayName(item.name)
+	        print("\t\t" .. displayName .. " x" .. item.count)
+	    end
+	    self.storage:dump()
+	end
+	function StorageJob:commandDumpInputs()
+	    print("Dumping Inputs")
+	    self.storage:dumpAllInputs()
+	end
+	function StorageJob:commandList(...)
+	    local args = {...}
+	    local itemName = nil
+	    if #args == 1 then
+	        itemName = args[1]
+	    elseif #args > 1 then
+	        itemName = args[1]
+	        for i = 2, #args do
+	            itemName = itemName .. " " .. args[i]
+	        end
+	    end
+	    if itemName ~= nil then
+	        local matchDetails = Block.getClosestMatch(itemName, self.storage:getPresentItemNames())
+	        if matchDetails.score > 3 then
+	            print("Could not find item: " .. itemName)
+	            print("Did you mean: " .. matchDetails.closestMatch)
+	            return
+	        end
+	        itemName = matchDetails.closestMatch
+	        local count = self.storage:getItemCount(itemName)
+	        print("Listing Single Item")
+	        print("\t\t" .. Text.getDisplayName(itemName) .. " x" .. count)
+	        return
+	    end
+	    print("Listing Storage")
+	    local items = self.storage:getItemList()
+	    local totalItems = 0
+	    local uniqueItems = 0
+	    for name, count in pairs(items) do
+	        local displayName = Text.getDisplayName(name)
+	        print("\t\t" .. displayName .. " x" .. count)
+	        totalItems = totalItems + count
+	        uniqueItems = uniqueItems + 1
+	    end
+	    print("*Found " .. totalItems .. " total items and " .. uniqueItems .. " unique items")
+	end
+	function StorageJob:commandStats()
+	    print("Storage Stats")
+	    print("\t\tContainer Count: " .. self.storage:getContainerCount())
+	    print("\t\tUsed Capacity: " .. Math.round(self.storage:getUsedCapacity() * 100, 2))
+	    print("\t\tUsed Slots: " .. self.storage:getUsedSlotCount())
+	    print("\t\tEmpty Slots: " .. self.storage:getEmptySlotCount())
+	end
+	function StorageJob:commandSetup()
+	    self.config:set("state", self.states.SETUP)
+	end
+	function StorageJob:commandDefragment()
+	    print("Defragmenting Storage...")
+	    self.storage:defragment()
+	    print("Defragmentation Complete!")
+	end
+	return StorageJob
+end
+local jobs_definitions_static_StorageJob = MODULE_jobs_definitions_static_StorageJob()
+
+
+print(" -> Loading: jobs_JobManager") function MODULE_jobs_JobManager()
+	local JobConfig = utils_config_JobConfig
+	local Job = jobs_Job
+	local Parallel = utils_controlflow_Parallel
+	local ExampleJob = jobs_definitions_misc_ExampleJob
+	local IdleJob = jobs_definitions_misc_IdleJob
+	local QuarryJob = jobs_definitions_misc_QuarryJob
+	local SetupJob = jobs_definitions_misc_SetupJob
+	local StorageJob = jobs_definitions_static_StorageJob
+	local JobManager = {}
+	JobManager.jobs = {
+	    [Job.EXAMPLE] = ExampleJob,
+	    [Job.IDLE] = IdleJob,
+	    [Job.QUARRY] = QuarryJob,
+	    [Job.SETUP] = SetupJob,
+	    [Job.STORAGE] = StorageJob,
+	}
+	function JobManager.run(name)
+	    local config = JobConfig.load()
+	    config.job = name
+	    config:save()
+	    local job = JobManager.jobs[name].new(config)
+	    if job == nil then
+	        print("Job not found: " .. name)
+	        return
+	    end
+	    print("Starting Job: " .. name)
+	    job:onStart()
+	    local p = Parallel.new()
+	    p:addTask(function() JobManager.runForegroundTask(job, config, name) end)
+	    p:addTask(function() JobManager.runBackgroundTask(job, config) end)
+	    p:waitForAny()
+	    job:onComplete()
+	    print("Completed Job: " .. name)
+	    config:save()
+	end
+	function JobManager.runForegroundTask(job, config, name)
+	    print("Running Job: " .. name)
+	    while job:inProgress() do
+	        job:onStep()
+	    end
+	end
+	function JobManager.runBackgroundTask(job, config)
+	    if job.backgroundTask == nil then
+	        return
+	    end
+	    if job.backgroundDelay == nil then
+	        error("Background task defined without a job.backgroundDelay")
+	    end
+	    while job:inProgress() do
+	        job.backgroundTask()
+	        os.sleep(job.backgroundDelay)
+	    end
+	end
+	return JobManager
+end
+local jobs_JobManager = MODULE_jobs_JobManager()
+
+
+print(" -> Loading: entrypoints_setup") function MODULE_entrypoints_setup()
+	local JobManager = jobs_JobManager
+	local Job = jobs_Job
+	JobManager.run(Job.SETUP)
+end
+local entrypoints_setup = MODULE_entrypoints_setup()
+print("Finished Loading Modules")
