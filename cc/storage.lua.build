@@ -851,9 +851,11 @@ print(" -> Loading: utils_config_Config") function MODULE_utils_config_Config()
 	    }
 	end
 	function Config:serializeJson()
+	    print("START TEST")
 	    for k, v in pairs(self:toTable()) do
 	        print(k, v)
 	    end
+	    print("END TEST")
 	    return textutils.serializeJSON(self:toTable())
 	end
 	function Config.deserializeJson(json)
