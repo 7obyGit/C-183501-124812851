@@ -857,7 +857,9 @@ print(" -> Loading: utils_config_Config") function MODULE_utils_config_Config()
 	    end
 	    print("MID TEST")
 	    local content = self:toTable()
-	    content.homePosition = nil
+	    for k, v in pairs(content.homePosition) do
+	        print(k, v, type(v))
+	    end
 	    local text = textutils.serializeJSON(content)
 	    print("TEXT", text)
 	    print("END TEST")
