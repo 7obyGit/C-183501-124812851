@@ -120,20 +120,28 @@ local utils_controlflow_Parallel = MODULE_utils_controlflow_Parallel()
 function MODULE_jobs_definitions_misc_ExampleJob()
 	local ExampleJob = {}
 	ExampleJob.__index = ExampleJob
-	function ExampleJob.new()
+	function ExampleJob.new(config)
 	    local self = setmetatable({}, ExampleJob)
-	    self.alive = true
+	    self.backgroundTask = function() self:onBackgroundStep() end
+	    self.backgroundDelay = 5  -- This task should be infrequent
+	    self.config = config
+	    self.states = {
+	        EXAMPLE_STATE = "EXAMPLE_STATE",
+	    }
 	    return self
 	end
 	function ExampleJob:onStart()
+	    self.config:set("alive", true)
 	end
 	function ExampleJob:onResume()
 	end
 	function ExampleJob:inProgress()
-	    return self.alive
+	    return self.config:get("alive", false)
 	end
 	function ExampleJob:onStep()
-	    self.alive = false
+	    self.config:set("alive", false)
+	end
+	function ExampleJob:onBackgroundStep()
 	end
 	function ExampleJob:onComplete()
 	end
