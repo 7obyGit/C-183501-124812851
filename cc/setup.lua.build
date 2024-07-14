@@ -860,13 +860,13 @@ print(" -> Loading: utils_config_Config") function MODULE_utils_config_Config()
 	    for k, v in pairs(content.homePosition) do
 	        print(k, v, type(v))
 	    end
-	    local text = textutils.serializeJSON(content)
+	    local text = textutils.serialize(content)  -- Switch to serailisze
 	    print("TEXT", text)
 	    print("END TEST")
 	    return text
 	end
 	function Config.deserializeJson(json)
-	    local configAttributes = textutils.unserializeJSON(json)
+	    local configAttributes = textutils.unserialize(json)
 	    local config = Config.fromTable(configAttributes)
 	    return config
 	end
