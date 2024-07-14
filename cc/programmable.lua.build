@@ -1621,21 +1621,12 @@ function MODULE_utils_storage_Container()
 	function Container:tostring()
 	    return self.name
 	end
-print("	function Container:getMatchingContainerPatterns()")
 	function Container:getMatchingContainerPatterns()
-print("	    if self.internal == nil then")
 	    if self.internal == nil then
-print("	        return nil")
 	        return nil
-print("	    end")
 	    end
-print("	")
-print("	    local matchingPatterns = {}")
 	    local matchingPatterns = {}
-print("	")
-print("	    for _, pattern in pairs(ContainerPatterns) do")
 	    for _, pattern in pairs(ContainerPatterns) do
-print("	        local match = pattern:match(self.index)")
 	        local match = pattern:match(self.index)
 print("	        if match ~= nil then")
 	        if match ~= nil then
@@ -1700,9 +1691,7 @@ print("	")
 print("	return Container")
 	return Container
 print("	")
-print("end")
 end
-print("local utils_storage_Container = MODULE_utils_storage_Container()")
 local utils_storage_Container = MODULE_utils_storage_Container()
 
 
