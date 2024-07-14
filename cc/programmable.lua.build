@@ -1584,7 +1584,7 @@ function MODULE_utils_storage_Container()
 	    end
 	    local matchingPatterns = {}
 	    for _, pattern in pairs(ContainerPatterns) do
-	        local match = pattern:matches(self.index)
+	        local match = pattern:match(self.index)
 	        if match ~= nil then
 	            matchingPatterns[match.matchPosition] = match
 	        end
