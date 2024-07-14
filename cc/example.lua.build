@@ -1958,6 +1958,7 @@ function MODULE_jobs_definitions_mobile_ProgrammableJob()
 	        self.config:set("state", self.states.IDLE)
 	    end)
 	    self.codedInventory:addListener(ContainerPatternNames.ACTION_REFUEL, function(name, side, count)
+	        print(name, side, count)
 	        local slot = 1
 	        turtle.select(slot)
 	        if side == ContainerPatternNames.DIRECTION_FORWARD then
