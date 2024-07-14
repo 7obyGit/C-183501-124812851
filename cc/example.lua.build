@@ -1394,11 +1394,6 @@ function MODULE_utils_storage_patterns_ContainerPattern()
 	end
 	function ContainerPattern:match(containerIndex)
 	    if positionToCheck == nil then
-	        if self:_matchWithOffset(containerIndex, positionToCheck) then
-	            return {name = self.name, matchPosition = positionToCheck}
-	        else
-	            return nil
-	        end
 	    end
 	    for offset = 1, 3 do
 	        if self:_matchWithOffset(containerIndex, offset) then
