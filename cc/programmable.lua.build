@@ -1969,7 +1969,7 @@ function MODULE_jobs_definitions_mobile_ProgrammableJob()
 	end
 	function ProgrammableJob:runStateAction()
 	    local state = self.config:get("state", self.states.IDLE)
-	    local actionSide = self.config.get("actionSide", ContainerPatternNames.DIRECTION_FORWARD)
+	    local actionSide = self.config:get("actionSide", ContainerPatternNames.DIRECTION_FORWARD)
 	    if state == self.states.IDLE then
 	        os.sleep(1)
 	    elseif state == self.states.MOVING then
