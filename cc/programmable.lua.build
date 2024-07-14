@@ -1219,6 +1219,29 @@ end
 local turtle_Side = MODULE_turtle_Side()
 
 
+function MODULE_utils_data_Table()
+	local Table = {}
+	function Table.contains(object, value)
+	    for _, v in ipairs(object) do
+	        if v == value then
+	            return true
+	        end
+	    end
+	    return false
+	end
+	function Table.size(object)
+	    local count = 0
+	    for _ in pairs(object) do count = count + 1 end
+	    return count
+	end
+	function Table.isEmpty(object)
+	    return next(object) == nil
+	end
+	return Table
+end
+local utils_data_Table = MODULE_utils_data_Table()
+
+
 function MODULE_utils_storage_ContainerIndex()
 	local ContainerIndex = {}
 	ContainerIndex.__index = ContainerIndex
@@ -1429,6 +1452,7 @@ local utils_storage_patterns_ContainerPatterns = MODULE_utils_storage_patterns_C
 
 
 function MODULE_utils_storage_Container()
+	local Table = utils_data_Table
 	local ContainerIndex = utils_storage_ContainerIndex
 	local Parallel = utils_controlflow_Parallel
 	local ContainerPatterns = utils_storage_patterns_ContainerPatterns
@@ -1586,11 +1610,10 @@ function MODULE_utils_storage_Container()
 	    for _, pattern in pairs(ContainerPatterns) do
 	        local match = pattern:match(self.index)
 	        if match ~= nil then
-	            print("Matched pattern: " .. match.name)
 	            matchingPatterns[match.matchPosition] = match
 	        end
 	    end
-	    if #matchingPatterns == 0 then
+	    if Table.isEmpty(matchingPatterns) then
 	        return nil
 	    end
 	    local newMatchingPatterns = {}
@@ -1696,21 +1719,6 @@ function MODULE_jobs_definitions_mobile_ProgrammableJob()
 	return ProgrammableJob
 end
 local jobs_definitions_mobile_ProgrammableJob = MODULE_jobs_definitions_mobile_ProgrammableJob()
-
-
-function MODULE_utils_data_Table()
-	local Table = {}
-	function Table.contains(object, value)
-	    for _, v in ipairs(object) do
-	        if v == value then
-	            return true
-	        end
-	    end
-	    return false
-	end
-	return Table
-end
-local utils_data_Table = MODULE_utils_data_Table()
 
 
 function MODULE_utils_storage_Storage()
