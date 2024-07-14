@@ -1801,7 +1801,7 @@ function MODULE_jobs_definitions_mobile_ProgrammableJob()
 	        print("Ignoring pattern: " .. name)
 	    end
 	    self.codedInventory:addListener(ContainerPatternNames.ACTION_STOP, function(name, side, count)
-	        print("ACTION_STOP matched on side: " .. side)
+	        print("ACTION_STOP matched on side: " .. side, count)
 	    end)
 	end
 	function ProgrammableJob:updateStateUsingCodedInventory()
