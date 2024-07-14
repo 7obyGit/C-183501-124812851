@@ -1601,8 +1601,8 @@ function MODULE_utils_storage_codedinventory_CodedInventory()
 	end
 	function CodedInventory.getInventories()
 	    local codedInventories = {
-	        [Side.Up] = CodedInventory.new(Side.Up),
-	        [Side.Down] = CodedInventory.new(Side.Down),
+	        [Side.TOP] = CodedInventory.new(Side.TOP),
+	        [Side.BOTTOM] = CodedInventory.new(Side.BOTTOM),
 	    }
 	    local presentInventories = {}
 	    for side, codedInventory in pairs(codedInventories) do
