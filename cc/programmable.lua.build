@@ -1628,9 +1628,10 @@ function MODULE_utils_storage_Container()
 	                    direction = directionMatch
 	                end
 	            end
-	            match.direction = direction
-	            for key, value in pairs(direction) do
-	                print(key, value)
+	            if direction == nil then
+	                match.direction = nil
+	            else
+	                match.direction = direction.name
 	            end
 	            matchingPatterns[match.matchPosition] = match
 	        end
