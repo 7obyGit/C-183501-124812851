@@ -1628,69 +1628,35 @@ function MODULE_utils_storage_Container()
 	    local matchingPatterns = {}
 	    for _, pattern in pairs(ContainerPatterns) do
 	        local match = pattern:match(self.index)
-print("	        if match ~= nil then")
+	        print("CALLED")
 	        if match ~= nil then
-print("	            -- There was a match, find the direction if provided")
-print("	            local direction = nil")
+	            print("MATCHED")
 	            local direction = nil
-print("	            for _, directionPattern in pairs(ContainerDirections) do")
 	            for _, directionPattern in pairs(ContainerDirections) do
-print("	                local directionMatch = directionPattern:match(self.index, match.matchPosition)")
 	                local directionMatch = directionPattern:match(self.index, match.matchPosition)
-print("	                if directionMatch ~= nil then")
 	                if directionMatch ~= nil then
-print("	                    print(directionMatch.name, directionMatch.matchPosition)")
 	                    print(directionMatch.name, directionMatch.matchPosition)
-print("	                    direction = directionMatch")
 	                    direction = directionMatch
-print("	                end")
 	                end
-print("	            end")
 	            end
-print("	")
-print("	            if direction == nil then")
 	            if direction == nil then
-print("	                match.direction = nil")
 	                match.direction = nil
-print("	            else")
 	            else
-print("	                match.direction = direction.name")
 	                match.direction = direction.name
-print("	            end")
 	            end
-print("	            matchingPatterns[match.matchPosition] = match")
 	            matchingPatterns[match.matchPosition] = match
-print("	        end")
 	        end
-print("	    end")
 	    end
-print("	")
-print("	    if Table.isEmpty(matchingPatterns) then")
 	    if Table.isEmpty(matchingPatterns) then
-print("	        return nil")
 	        return nil
-print("	    end")
 	    end
-print("	")
-print("	    -- Create a new table with incrementing index in order of index for the matchinPatterns table")
-print("	    local newMatchingPatterns = {}")
 	    local newMatchingPatterns = {}
-print("	    for _, match in pairs(matchingPatterns) do")
 	    for _, match in pairs(matchingPatterns) do
-print("	        table.insert(newMatchingPatterns, match)")
 	        table.insert(newMatchingPatterns, match)
-print("	    end")
 	    end
-print("	")
-print("	    return newMatchingPatterns")
 	    return newMatchingPatterns
-print("	end")
 	end
-print("	")
-print("	")
-print("	return Container")
 	return Container
-print("	")
 end
 local utils_storage_Container = MODULE_utils_storage_Container()
 
