@@ -1483,7 +1483,6 @@ function MODULE_utils_storage_Container()
 	    self.name = name
 	    self.internal = peripheral.wrap(name)
 	    if self.internal == nil then
-	        print(self.name .. " is not a valid container")
 	        return nil
 	    end
 	    self.size = self.internal.size()
@@ -1697,6 +1696,7 @@ function MODULE_utils_storage_codedinventory_CodedInventory()
 	    local containers = self:getInventories()
 	    local allPatterns = {}
 	    for _, container in pairs(containers) do
+	        print(container.name)
 	        local matchingPatterns = container:getMatchingContainerPatterns()
 	        if matchingPatterns ~= nil then
 	            for _, pattern in pairs(matchingPatterns) do
