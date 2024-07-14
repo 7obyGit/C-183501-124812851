@@ -1206,56 +1206,17 @@ end
 local jobs_definitions_misc_SetupJob = MODULE_jobs_definitions_misc_SetupJob()
 
 
-function MODULE_jobs_definitions_mobile_ProgrammableJob()
-	local ProgrammableJob = {}
-	ProgrammableJob.__index = ProgrammableJob
-	function ProgrammableJob.new(config)
-	    local self = setmetatable({}, ProgrammableJob)
-	    self.backgroundTask = function() self:onBackgroundStep() end
-	    self.backgroundDelay = 5  -- This task should be infrequent
-	    self.config = config
-	    self.states = {
-	        EXAMPLE_STATE = "EXAMPLE_STATE",
-	    }
-	    return self
-	end
-	function ProgrammableJob:onStart()
-	    self.config:set("alive", true)
-	end
-	function ProgrammableJob:onResume()
-	end
-	function ProgrammableJob:inProgress()
-	    return self.config:get("alive", false)
-	end
-	function ProgrammableJob:onStep()
-	    self.config:set("alive", false)
-	end
-	function ProgrammableJob:onBackgroundStep()
-	end
-	function ProgrammableJob:onComplete()
-	end
-	return ProgrammableJob
+function MODULE_turtle_Side()
+	local Side = {}
+	Side.TOP = "top"
+	Side.BOTTOM = "bottom"
+	Side.FRONT = "front"
+	Side.BACK = "back"
+	Side.LEFT = "left"
+	Side.RIGHT = "right"
+	return Side
 end
-local jobs_definitions_mobile_ProgrammableJob = MODULE_jobs_definitions_mobile_ProgrammableJob()
-
-
-function MODULE_utils_blocks_BlockIndicators()
-	local Blocks = utils_blocks_Blocks
-	local BlockIndicators = {}
-	BlockIndicators.INPUT = Blocks.green_wool
-	BlockIndicators.OUTPUT = Blocks.red_wool
-	BlockIndicators.DIRECTION = Blocks.white_wool
-	BlockIndicators.ACTION_STOP = Blocks.red_wool
-	BlockIndicators.ACTION_HOME = Blocks.cyan_wool
-	BlockIndicators.ACTION_MOVE = Blocks.green_wool
-	BlockIndicators.ACTION_BREAK = Blocks.brown_wool
-	BlockIndicators.ACTION_PLACE = Blocks.pink_wool
-	BlockIndicators.ACTION_MARKER = Blocks.magenta_wool
-	BlockIndicators.ACTION_DROP = Blocks.purple_wool
-	BlockIndicators.ACTION_REFUEL = Blocks.black_wool
-	return BlockIndicators
-end
-local utils_blocks_BlockIndicators = MODULE_utils_blocks_BlockIndicators()
+local turtle_Side = MODULE_turtle_Side()
 
 
 function MODULE_utils_storage_ContainerIndex()
@@ -1372,6 +1333,25 @@ function MODULE_utils_storage_ContainerIndex()
 	return ContainerIndex
 end
 local utils_storage_ContainerIndex = MODULE_utils_storage_ContainerIndex()
+
+
+function MODULE_utils_blocks_BlockIndicators()
+	local Blocks = utils_blocks_Blocks
+	local BlockIndicators = {}
+	BlockIndicators.INPUT = Blocks.green_wool
+	BlockIndicators.OUTPUT = Blocks.red_wool
+	BlockIndicators.DIRECTION = Blocks.white_wool
+	BlockIndicators.ACTION_STOP = Blocks.red_wool
+	BlockIndicators.ACTION_HOME = Blocks.cyan_wool
+	BlockIndicators.ACTION_MOVE = Blocks.green_wool
+	BlockIndicators.ACTION_BREAK = Blocks.brown_wool
+	BlockIndicators.ACTION_PLACE = Blocks.pink_wool
+	BlockIndicators.ACTION_MARKER = Blocks.magenta_wool
+	BlockIndicators.ACTION_DROP = Blocks.purple_wool
+	BlockIndicators.ACTION_REFUEL = Blocks.black_wool
+	return BlockIndicators
+end
+local utils_blocks_BlockIndicators = MODULE_utils_blocks_BlockIndicators()
 
 
 function MODULE_utils_storage_patterns_ContainerPattern()
@@ -1600,6 +1580,100 @@ function MODULE_utils_storage_Container()
 	return Container
 end
 local utils_storage_Container = MODULE_utils_storage_Container()
+
+
+function MODULE_utils_storage_codedinventory_CodedInventory()
+	local Turtle = turtle_Turtle
+	local Blocks = utils_blocks_Blocks
+	local Side = turtle_Side
+	local Container = utils_storage_Container
+	local CodedInventory = {}
+	CodedInventory.__index = CodedInventory
+	function CodedInventory.new(side)
+	    local container = Container.new(side)
+	    local self = setmetatable({
+	        side = side,
+	        isPresent = container.internal == nil,
+	        container = container,
+	    }, CodedInventory)
+	    return self
+	end
+	function CodedInventory.getInventories()
+	    local codedInventories = {
+	        [Side.Up] = CodedInventory.new(Side.Up),
+	        [Side.Down] = CodedInventory.new(Side.Down),
+	    }
+	    local presentInventories = {}
+	    for side, codedInventory in pairs(codedInventories) do
+	        if codedInventory.isPresent then
+	            presentInventories[side] = codedInventory
+	        end
+	    end
+	    return presentInventories
+	end
+	function CodedInventory.getMatchingPatterns()
+	    local codedInventories = CodedInventory.getInventories()
+	    local allPatterns = {}
+	    for _, codedInventory in pairs(codedInventories) do
+	        local matchingPatterns = codedInventory.container:getMatchingContainerPatterns()
+	        if matchingPatterns ~= nil then
+	            for _, pattern in pairs(matchingPatterns) do
+	                table.insert(allPatterns, pattern)
+	            end
+	        end
+	    end
+	    if #allPatterns == 0 then
+	        return nil
+	    end
+	    return allPatterns
+	end
+	function CodedInventory.run()
+	    local patterns = CodedInventory.getMatchingPatterns()
+	    if patterns == nil then
+	        return
+	    end
+	    for _, pattern in pairs(patterns) do
+	        print(pattern.name)
+	    end
+	end
+	return CodedInventory
+end
+local utils_storage_codedinventory_CodedInventory = MODULE_utils_storage_codedinventory_CodedInventory()
+
+
+function MODULE_jobs_definitions_mobile_ProgrammableJob()
+	local CodedInventory = utils_storage_codedinventory_CodedInventory
+	local ProgrammableJob = {}
+	ProgrammableJob.__index = ProgrammableJob
+	function ProgrammableJob.new(config)
+	    local self = setmetatable({}, ProgrammableJob)
+	    self.backgroundTask = function() self:onBackgroundStep() end
+	    self.backgroundDelay = 5  -- This task should be infrequent
+	    self.config = config
+	    self.states = {
+	        EXAMPLE_STATE = "EXAMPLE_STATE",
+	    }
+	    return self
+	end
+	function ProgrammableJob:onStart()
+	    self.config:set("alive", true)
+	end
+	function ProgrammableJob:onResume()
+	end
+	function ProgrammableJob:inProgress()
+	    return self.config:get("alive", false)
+	end
+	function ProgrammableJob:onStep()
+	    CodedInventory.run()
+	    self.config:set("alive", false)
+	end
+	function ProgrammableJob:onBackgroundStep()
+	end
+	function ProgrammableJob:onComplete()
+	end
+	return ProgrammableJob
+end
+local jobs_definitions_mobile_ProgrammableJob = MODULE_jobs_definitions_mobile_ProgrammableJob()
 
 
 function MODULE_utils_data_Table()
