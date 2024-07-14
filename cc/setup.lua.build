@@ -1614,7 +1614,7 @@ function MODULE_utils_storage_codedinventory_CodedInventory()
 	    local container = Container.new(side)
 	    local self = setmetatable({
 	        side = side,
-	        isPresent = container.internal == nil,
+	        isPresent = container ~= nil,
 	        container = container,
 	    }, CodedInventory)
 	    return self
