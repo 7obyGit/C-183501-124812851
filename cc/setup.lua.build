@@ -84,8 +84,11 @@ function MODULE_utils_config_JobConfig()
 	function JobConfig:get(key, defaultValue)
 	    return self.state[key] or defaultValue
 	end
+print("	function JobConfig:set(key, value)")
 	function JobConfig:set(key, value)
+print("	    self.state[key] = value")
 	    self.state[key] = value
+print("	    self:save()")
 	    self:save()
 	end
 	return JobConfig
@@ -1884,6 +1887,8 @@ function MODULE_jobs_definitions_mobile_ProgrammableJob()
 	        self.config:set("state", self.status.IDLE)
 	    end)
 	    self.codedInventory:addListener(ContainerPatternNames.ACTION_PLACE, function(name, side, count)
+	        local slot = 1
+	        turtle.select(slot)
 	        if side == ContainerPatternNames.DIRECTION_FORWARD then
 	            Turtle.place()
 	        elseif side == ContainerPatternNames.DIRECTION_UP then
