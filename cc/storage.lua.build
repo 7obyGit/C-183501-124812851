@@ -84,11 +84,9 @@ function MODULE_utils_config_JobConfig()
 	function JobConfig:get(key, defaultValue)
 	    return self.state[key] or defaultValue
 	end
-print("	function JobConfig:set(key, value)")
 	function JobConfig:set(key, value)
-print("	    self.state[key] = value")
+	    print("Setting " .. key .. " to " .. value)
 	    self.state[key] = value
-print("	    self:save()")
 	    self:save()
 	end
 	return JobConfig
