@@ -24,6 +24,7 @@ function MODULE_jobs_Job()
 	Job.EXAMPLE = "ExampleJob"
 	Job.IDLE = "IdleJob"
 	Job.SETUP = "SetupJob"
+	Job.PROGRAMMABLE_JOB = "ProgrammableJob"
 	Job.QUARRY = "QuarryJob"
 	Job.STORAGE = "StorageJob"
 	return Job
@@ -1205,6 +1206,39 @@ end
 local jobs_definitions_misc_SetupJob = MODULE_jobs_definitions_misc_SetupJob()
 
 
+function MODULE_jobs_definitions_mobile_ProgrammableJob()
+	local ProgrammableJob = {}
+	ProgrammableJob.__index = ProgrammableJob
+	function ProgrammableJob.new(config)
+	    local self = setmetatable({}, ProgrammableJob)
+	    self.backgroundTask = function() self:onBackgroundStep() end
+	    self.backgroundDelay = 5  -- This task should be infrequent
+	    self.config = config
+	    self.states = {
+	        EXAMPLE_STATE = "EXAMPLE_STATE",
+	    }
+	    return self
+	end
+	function ProgrammableJob:onStart()
+	    self.config:set("alive", true)
+	end
+	function ProgrammableJob:onResume()
+	end
+	function ProgrammableJob:inProgress()
+	    return self.config:get("alive", false)
+	end
+	function ProgrammableJob:onStep()
+	    self.config:set("alive", false)
+	end
+	function ProgrammableJob:onBackgroundStep()
+	end
+	function ProgrammableJob:onComplete()
+	end
+	return ProgrammableJob
+end
+local jobs_definitions_mobile_ProgrammableJob = MODULE_jobs_definitions_mobile_ProgrammableJob()
+
+
 function MODULE_utils_blocks_BlockIndicators()
 	local Blocks = utils_blocks_Blocks
 	local BlockIndicators = {}
@@ -2167,13 +2201,15 @@ function MODULE_jobs_JobManager()
 	local IdleJob = jobs_definitions_misc_IdleJob
 	local QuarryJob = jobs_definitions_misc_QuarryJob
 	local SetupJob = jobs_definitions_misc_SetupJob
+	local ProgrammableJob = jobs_definitions_mobile_ProgrammableJob
 	local StorageJob = jobs_definitions_static_StorageJob
 	local JobManager = {}
 	JobManager.jobs = {
 	    [Job.EXAMPLE] = ExampleJob,
+	    [Job.SETUP] = SetupJob,
 	    [Job.IDLE] = IdleJob,
 	    [Job.QUARRY] = QuarryJob,
-	    [Job.SETUP] = SetupJob,
+	    [Job.PROGRAMMABLE_JOB] = ProgrammableJob,
 	    [Job.STORAGE] = StorageJob,
 	}
 	function JobManager.run(name)

@@ -2254,9 +2254,9 @@ end
 local jobs_JobManager = MODULE_jobs_JobManager()
 
 
-function MODULE_entrypoints_example()
+function MODULE_entrypoints_programmable()
 	local JobManager = jobs_JobManager
 	local Job = jobs_Job
-	JobManager.run(Job.EXAMPLE)
+	JobManager.run(Job.PROGRAMMABLE_JOB)
 end
-local entrypoints_example = MODULE_entrypoints_example()
+local entrypoints_programmable = MODULE_entrypoints_programmable()
