@@ -1636,6 +1636,7 @@ function MODULE_utils_storage_codedinventory_CodedInventory()
 	CodedInventory.__index = CodedInventory
 	function CodedInventory.new(side)
 	    local container = Container.new(side)
+	    print("CALLKED")
 	    local self = setmetatable({
 	        side = side,
 	        isPresent = container ~= nil,
@@ -1645,12 +1646,12 @@ function MODULE_utils_storage_codedinventory_CodedInventory()
 	end
 	function CodedInventory.getInventories()
 	    local codedInventories = {
-	        [Side.TOP] = CodedInventory.new(Side.TOP),
-	        [Side.BOTTOM] = CodedInventory.new(Side.BOTTOM),
+	        [Side.TOP] = Container.new(Side.TOP),
+	        [Side.BOTTOM] = Container.new(Side.BOTTOM),
 	    }
 	    local presentInventories = {}
 	    for side, codedInventory in pairs(codedInventories) do
-	        if codedInventory.isPresent then
+	        if codedInventory ~= nil then
 	            presentInventories[side] = codedInventory
 	        end
 	    end
