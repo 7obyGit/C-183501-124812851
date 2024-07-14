@@ -854,18 +854,7 @@ print(" -> Loading: utils_config_Config") function MODULE_utils_config_Config()
 	    }
 	end
 	function Config:serializeJson()
-	    print("START TEST")
-	    for k, v in pairs(self:toTable()) do
-	        print(k, v, type(v))
-	    end
-	    print("MID TEST")
-	    local content = self:toTable()
-	    for k, v in pairs(content.homePosition) do
-	        print(k, v, type(v))
-	    end
-	    local text = textutils.serializeJSON(content)
-	    print("TEXT", text)
-	    print("END TEST")
+	    local text = textutils.serializeJSON(self:toTable())
 	    return text
 	end
 	function Config.deserializeJson(json)
@@ -876,27 +865,15 @@ print(" -> Loading: utils_config_Config") function MODULE_utils_config_Config()
 	function Config:save()
 	   file.writeText("config.json", self:serializeJson())
 	end
-print("	function Config.load()")
 	function Config.load()
-print("	    local config = nil")
 	    local config = nil
-print("	    local content = file.readText(\"config.json\")")
 	    local content = file.readText("config.json")
-print("	")
-print("	    if content == nil then")
 	    if content == nil then
-print("	        config = Config.new()")
 	        config = Config.new()
-print("	    else")
 	    else
-print("	        config = Config.deserializeJson(content)")
 	        config = Config.deserializeJson(content)
-print("	    end")
 	    end
-print("	")
-print("	    config:save()  -- Save any default values that were missing")
 	    config:save()  -- Save any default values that were missing
-print("	    return config")
 	    return config
 	end
 	return Config
