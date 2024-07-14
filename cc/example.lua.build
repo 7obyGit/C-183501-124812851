@@ -1438,23 +1438,24 @@ local utils_storage_patterns_ContainerPatterns = MODULE_utils_storage_patterns_C
 
 
 function MODULE_utils_storage_patterns_ContainerDirections()
+	local Side = turtle_Side
 	local BlockIndicators = utils_blocks_BlockIndicators
 	local ContainerPattern = utils_storage_patterns_ContainerPattern
 	local ContainerDirections = {}
-	ContainerDirections.DIRECTION_UP = ContainerPattern.new("DIRECTION_UP", {
+	ContainerDirections.DIRECTION_UP = ContainerPattern.new(Side.TOP, {
 	    [2] = BlockIndicators.DIRECTION,
 	    [4] = BlockIndicators.DIRECTION,
 	    [6] = BlockIndicators.DIRECTION,
 	})
-	ContainerDirections.DIRECTION_DOWN = ContainerPattern.new("DIRECTION_DOWN", {
+	ContainerDirections.DIRECTION_DOWN = ContainerPattern.new(Side.BOTTOM, {
 	    [8] = BlockIndicators.DIRECTION,
 	    [4] = BlockIndicators.DIRECTION,
 	    [6] = BlockIndicators.DIRECTION,
 	})
-	ContainerDirections.DIRECTION_FORWARD = ContainerPattern.new("DIRECTION_FORWARD", {[2] = BlockIndicators.DIRECTION})
-	ContainerDirections.DIRECTION_BACK = ContainerPattern.new("DIRECTION_BACK", {[8] = BlockIndicators.DIRECTION})
-	ContainerDirections.DIRECTION_LEFT = ContainerPattern.new("DIRECTION_LEFT", {[4] = BlockIndicators.DIRECTION})
-	ContainerDirections.DIRECTION_RIGHT = ContainerPattern.new("DIRECTION_RIGHT", {[6] = BlockIndicators.DIRECTION})
+	ContainerDirections.DIRECTION_FORWARD = ContainerPattern.new(Side.FRONT, {[2] = BlockIndicators.DIRECTION})
+	ContainerDirections.DIRECTION_BACK = ContainerPattern.new(Side.BACK, {[8] = BlockIndicators.DIRECTION})
+	ContainerDirections.DIRECTION_LEFT = ContainerPattern.new(Side.LEFT, {[4] = BlockIndicators.DIRECTION})
+	ContainerDirections.DIRECTION_RIGHT = ContainerPattern.new(Side.RIGHT, {[6] = BlockIndicators.DIRECTION})
 	return ContainerDirections
 end
 local utils_storage_patterns_ContainerDirections = MODULE_utils_storage_patterns_ContainerDirections()
