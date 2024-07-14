@@ -1439,12 +1439,18 @@ function MODULE_utils_storage_Container()
 	    local self = setmetatable({}, Container)
 	    self.name = name
 	    self.internal = peripheral.wrap(name)
+	    if self.internal == nil then
+	        return nil
+	    end
 	    self.size = self.internal.size()
 	    self.index = ContainerIndex.new(self.internal.size())
 	    self:updateIndex()
 	    return self
 	end
 	function Container:updateIndex()
+	    if self.internal == nil then
+	        return
+	    end
 	    self.index = ContainerIndex.new(self.internal.size())
 	    for slot, item in pairs(self.internal.list()) do
 	        self.index:addSlot(slot, item.name, item.count)
@@ -1454,9 +1460,15 @@ function MODULE_utils_storage_Container()
 	    return self.index:hasItem(itemName)
 	end
 	function Container:getItemLimit(slotNumber)
+	    if self.internal == nil then
+	        return 0
+	    end
 	    return self.internal.getItemLimit(slotNumber)
 	end
 	function Container:putItems(sourceContainer, itemName, count)
+	    if self.internal == nil or sourceContainer.internal == nil then
+	        return count
+	    end
 	    local destContainer = self
 	    local remainingCount = count
 	    while remainingCount > 0 do
@@ -1511,6 +1523,9 @@ function MODULE_utils_storage_Container()
 	    return self.index:getItemList()
 	end
 	function Container:getMaxCount(slot)
+	    if self.internal == nil then
+	        return 0
+	    end
 	    local itemDetail = self.internal.getItemDetail(slot)
 	    if itemDetail == nil then
 	        return self:getItemLimit(slot)
@@ -1518,6 +1533,9 @@ function MODULE_utils_storage_Container()
 	    return itemDetail.maxCount
 	end
 	function Container:defragment()
+	    if self.internal == nil then
+	        return
+	    end
 	    local items = self:getItemList()
 	    local p = Parallel.new()
 	    for _, item in pairs(items) do
@@ -1561,6 +1579,9 @@ function MODULE_utils_storage_Container()
 	    return self.name
 	end
 	function Container:getMatchingContainerPatterns()
+	    if self.internal == nil then
+	        return nil
+	    end
 	    local matchingPatterns = {}
 	    for _, pattern in pairs(ContainerPatterns) do
 	        local match = pattern:matches(self.index)
@@ -1590,7 +1611,6 @@ function MODULE_utils_storage_codedinventory_CodedInventory()
 	local CodedInventory = {}
 	CodedInventory.__index = CodedInventory
 	function CodedInventory.new(side)
-	    print(side)
 	    local container = Container.new(side)
 	    local self = setmetatable({
 	        side = side,
