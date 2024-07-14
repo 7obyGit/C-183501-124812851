@@ -1590,6 +1590,7 @@ function MODULE_utils_storage_codedinventory_CodedInventory()
 	local CodedInventory = {}
 	CodedInventory.__index = CodedInventory
 	function CodedInventory.new(side)
+	    print(side)
 	    local container = Container.new(side)
 	    local self = setmetatable({
 	        side = side,
