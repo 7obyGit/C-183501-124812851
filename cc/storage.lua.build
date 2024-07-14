@@ -1631,13 +1631,6 @@ function MODULE_utils_storage_Container()
 	        local match = pattern:match(self.index)
 	        if match ~= nil then
 	            local direction = nil
-	            for _, directionPattern in pairs(ContainerDirections) do
-	                local directionMatch = directionPattern:match(self.index, match.matchPosition)
-	                if directionMatch ~= nil then
-	                    print(directionMatch.name, directionMatch.matchPosition)
-	                    direction = directionMatch
-	                end
-	            end
 	            if direction == nil then
 	                match.direction = nil
 	            else
