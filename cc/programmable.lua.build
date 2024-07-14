@@ -1424,20 +1424,6 @@ function MODULE_utils_storage_patterns_ContainerPatterns()
 	local BlockIndicators = utils_blocks_BlockIndicators
 	local ContainerPattern = utils_storage_patterns_ContainerPattern
 	local ContainerPatterns = {}
-	ContainerPatterns.DIRECTION_UP = ContainerPattern.new("DIRECTION_UP", {
-	    [2] = BlockIndicators.DIRECTION,
-	    [4] = BlockIndicators.DIRECTION,
-	    [6] = BlockIndicators.DIRECTION,
-	})
-	ContainerPatterns.DIRECTION_DOWN = ContainerPattern.new("DIRECTION_DOWN", {
-	    [8] = BlockIndicators.DIRECTION,
-	    [4] = BlockIndicators.DIRECTION,
-	    [6] = BlockIndicators.DIRECTION,
-	})
-	ContainerPatterns.DIRECTION_FORWARD = ContainerPattern.new("DIRECTION_FORWARD", {[2] = BlockIndicators.DIRECTION})
-	ContainerPatterns.DIRECTION_BACK = ContainerPattern.new("DIRECTION_BACK", {[8] = BlockIndicators.DIRECTION})
-	ContainerPatterns.DIRECTION_LEFT = ContainerPattern.new("DIRECTION_LEFT", {[4] = BlockIndicators.DIRECTION})
-	ContainerPatterns.DIRECTION_RIGHT = ContainerPattern.new("DIRECTION_RIGHT", {[6] = BlockIndicators.DIRECTION})
 	ContainerPatterns.ACTION_STOP = ContainerPattern.new("ACTION_STOP", {[5] = BlockIndicators.ACTION_STOP})
 	ContainerPatterns.ACTION_HOME = ContainerPattern.new("ACTION_HOME", {[5] = BlockIndicators.ACTION_HOME})
 	ContainerPatterns.ACTION_MOVE = ContainerPattern.new("ACTION_MOVE", {[5] = BlockIndicators.ACTION_MOVE})
@@ -1634,17 +1620,20 @@ function MODULE_utils_storage_codedinventory_CodedInventory()
 	local Container = utils_storage_Container
 	local CodedInventory = {}
 	CodedInventory.__index = CodedInventory
-	function CodedInventory.new(side)
-	    local container = Container.new(side)
-	    print("CALLKED")
-	    local self = setmetatable({
-	        side = side,
-	        isPresent = container ~= nil,
-	        container = container,
-	    }, CodedInventory)
+	function CodedInventory.new()
+	    local self = setmetatable({}, CodedInventory)
+	    self.listeners = {}
 	    return self
 	end
-	function CodedInventory.getInventories()
+	function CodedInventory:addListener(patternName, listenerFunction)
+	    self.listeners[patternName] = listenerFunction
+	end
+	function CodedInventory:notifyListeners(patternName, direction)
+	    if self.listeners[patternName] ~= nil then
+	        self.listeners[patternName](direction)
+	    end
+	end
+	function CodedInventory:getInventories()
 	    local codedInventories = {
 	        [Side.TOP] = Container.new(Side.TOP),
 	        [Side.BOTTOM] = Container.new(Side.BOTTOM),
@@ -1657,8 +1646,8 @@ function MODULE_utils_storage_codedinventory_CodedInventory()
 	    end
 	    return presentInventories
 	end
-	function CodedInventory.getMatchingPatterns()
-	    local containers = CodedInventory.getInventories()
+	function CodedInventory:getMatchingPatterns()
+	    local containers = self:getInventories()
 	    local allPatterns = {}
 	    for _, container in pairs(containers) do
 	        local matchingPatterns = container:getMatchingContainerPatterns()
@@ -1673,13 +1662,14 @@ function MODULE_utils_storage_codedinventory_CodedInventory()
 	    end
 	    return allPatterns
 	end
-	function CodedInventory.run()
-	    local patterns = CodedInventory.getMatchingPatterns()
+	function CodedInventory:run()
+	    local patterns = self:getMatchingPatterns()
 	    if patterns == nil then
 	        return
 	    end
 	    for _, pattern in pairs(patterns) do
 	        print(pattern.name)
+	        self:notifyListeners(pattern.name, pattern.direction)
 	    end
 	end
 	return CodedInventory
@@ -1710,7 +1700,7 @@ function MODULE_jobs_definitions_mobile_ProgrammableJob()
 	    return self.config:get("alive", false)
 	end
 	function ProgrammableJob:onStep()
-	    CodedInventory.run()
+	    CodedInventory.new():run()
 	    self.config:set("alive", false)
 	end
 	function ProgrammableJob:onBackgroundStep()
