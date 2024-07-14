@@ -1650,18 +1650,18 @@ function MODULE_utils_storage_codedinventory_CodedInventory()
 	        [Side.BOTTOM] = Container.new(Side.BOTTOM),
 	    }
 	    local presentInventories = {}
-	    for side, codedInventory in pairs(codedInventories) do
-	        if codedInventory ~= nil then
-	            presentInventories[side] = codedInventory
+	    for side, container in pairs(codedInventories) do
+	        if container ~= nil then
+	            presentInventories[side] = container
 	        end
 	    end
 	    return presentInventories
 	end
 	function CodedInventory.getMatchingPatterns()
-	    local codedInventories = CodedInventory.getInventories()
+	    local containers = CodedInventory.getInventories()
 	    local allPatterns = {}
-	    for _, codedInventory in pairs(codedInventories) do
-	        local matchingPatterns = codedInventory.container:getMatchingContainerPatterns()
+	    for _, container in pairs(containers) do
+	        local matchingPatterns = container:getMatchingContainerPatterns()
 	        if matchingPatterns ~= nil then
 	            for _, pattern in pairs(matchingPatterns) do
 	                table.insert(allPatterns, pattern)
