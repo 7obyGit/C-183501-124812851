@@ -1483,6 +1483,7 @@ function MODULE_utils_storage_Container()
 	    self.name = name
 	    self.internal = peripheral.wrap(name)
 	    if self.internal == nil then
+	        print(self.name .. " is not a valid container")
 	        return nil
 	    end
 	    self.size = self.internal.size()
@@ -1628,9 +1629,7 @@ function MODULE_utils_storage_Container()
 	    local matchingPatterns = {}
 	    for _, pattern in pairs(ContainerPatterns) do
 	        local match = pattern:match(self.index)
-	        print("CALLED")
 	        if match ~= nil then
-	            print("MATCHED")
 	            local direction = nil
 	            for _, directionPattern in pairs(ContainerDirections) do
 	                local directionMatch = directionPattern:match(self.index, match.matchPosition)
