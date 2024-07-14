@@ -627,8 +627,9 @@ print(" -> Loading: utils_math_Vector3") function MODULE_utils_math_Vector3()
 	local Vector3 = {}
 	Vector3.__index = Vector3
 	function Vector3.new(x, y, z)
-	    print("New vector")
-	    print("Vector3.new" .. x .. y .. z)
+	    if type(x) == "table" then
+	        x, y, z = x.x, x.y, x.z
+	    end
 	    return setmetatable({x = x or 0, y = y or 0, z = z or 0}, Vector3)
 	end
 	function Vector3.fromTable(tbl)
