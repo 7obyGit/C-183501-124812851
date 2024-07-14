@@ -1856,7 +1856,7 @@ function MODULE_jobs_definitions_mobile_ProgrammableJob()
 	            Turtle.turnLeft()
 	            Turtle.turnLeft()
 	        end
-	        self.config:set("state", self.status.MOVING)
+	        self.config:set("state", self.states.MOVING)
 	        self.config:set("actionSide", side)
 	    end)
 	    self.codedInventory:addListener(ContainerPatternNames.ACTION_BREAK, function(name, side, count)
@@ -1881,7 +1881,7 @@ function MODULE_jobs_definitions_mobile_ProgrammableJob()
 	            Turtle.turnLeft()
 	            Turtle.turnLeft()
 	        end
-	        self.config:set("state", self.status.IDLE)
+	        self.config:set("state", self.states.IDLE)
 	    end)
 	    self.codedInventory:addListener(ContainerPatternNames.ACTION_PLACE, function(name, side, count)
 	        local slot = 1
@@ -1907,13 +1907,13 @@ function MODULE_jobs_definitions_mobile_ProgrammableJob()
 	            Turtle.turnLeft()
 	            Turtle.turnLeft()
 	        end
-	        self.config:set("state", self.status.IDLE)
+	        self.config:set("state", self.states.IDLE)
 	    end)
 	    self.codedInventory:addListener(ContainerPatternNames.ACTION_MARKER, function(name, side, count)
 	        local existingMarkers = self.config:get("markers", {})
 	        existingMarkers[count] = Turtle.CURRENT_POSITION:copy():toTable()
 	        self.config:set("markers", existingMarkers)
-	        self.config:set("state", self.status.IDLE)
+	        self.config:set("state", self.states.IDLE)
 	    end)
 	    self.codedInventory:addListener(ContainerPatternNames.ACTION_DROP, function(name, side, count)
 	        local slot = 1
@@ -1938,7 +1938,7 @@ function MODULE_jobs_definitions_mobile_ProgrammableJob()
 	            Turtle.turnLeft()
 	            Turtle.turnLeft()
 	        end
-	        self.config:set("state", self.status.IDLE)
+	        self.config:set("state", self.states.IDLE)
 	    end)
 	    self.codedInventory:addListener(ContainerPatternNames.ACTION_SUCK, function(name, side, count)
 	        local slot = 1
@@ -1956,7 +1956,7 @@ function MODULE_jobs_definitions_mobile_ProgrammableJob()
 	        elseif side == ContainerPatternNames.DIRECTION_BACK then
 	            Turtle.suckBack(count)
 	        end
-	        self.config:set("state", self.status.IDLE)
+	        self.config:set("state", self.states.IDLE)
 	    end)
 	    self.codedInventory:addListener(ContainerPatternNames.ACTION_REFUEL, function(name, side, count)
 	        local slot = 1
@@ -1975,7 +1975,7 @@ function MODULE_jobs_definitions_mobile_ProgrammableJob()
 	            Turtle.suckBack(count)
 	        end
 	        Turtle.refuel()
-	        self.config:set("state", self.status.IDLE)
+	        self.config:set("state", self.states.IDLE)
 	    end)
 	end
 	function ProgrammableJob:updateStateUsingCodedInventory()
