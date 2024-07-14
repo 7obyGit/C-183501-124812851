@@ -1974,7 +1974,7 @@ function MODULE_jobs_definitions_mobile_ProgrammableJob()
 	        elseif side == ContainerPatternNames.DIRECTION_BACK then
 	            Turtle.suckBack(count)
 	        end
-	        Turtle.refuel()
+	        turtle.refuel()
 	        self.config:set("state", self.states.IDLE)
 	    end)
 	end
