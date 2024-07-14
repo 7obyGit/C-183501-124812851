@@ -918,10 +918,8 @@ function MODULE_turtle_Turtle()
 	local file = utils_other_file
 	local Inventory = turtle_Inventory
 	local Blocks    = utils_blocks_Blocks
-	print("PRE_CONFIG")
 	local Turtle = {}
 	Turtle.CONFIG = Config.load()
-	print("POST_CONFIG")
 	function Turtle.getGpsPosition()
 	    local x, y, z = gps.locate()
 	    return Vector3.new(x, y, z)
