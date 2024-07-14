@@ -1402,10 +1402,22 @@ function MODULE_utils_storage_patterns_ContainerPattern()
 	    end
 	    for offset = 1, 3 do
 	        if self:_matchWithOffset(containerIndex, offset) then
-	            return {name = self.name, matchPosition = offset}
+	            return {name = self.name, matchPosition = offset, count = self:_getCount(containerIndex, offset)}
 	        end
 	    end
 	    return nil
+	end
+	function ContainerPattern:_getCount(containerIndex, offset)
+	    local index = {
+	        [1] = 11,
+	        [2] = 14,
+	        [3] = 17,
+	    }
+	    local slot = containerIndex:getSlot(index[offset])
+	    if slot == nil then
+	        return 0
+	    end
+	    return slot.count
 	end
 	function ContainerPattern:_matchWithOffset(containerIndex, offset)
 	    local indexes = ContainerPattern.indexes[offset]
@@ -1674,13 +1686,13 @@ function MODULE_utils_storage_codedinventory_CodedInventory()
 	function CodedInventory:addListener(patternName, listenerFunction)
 	    self.listeners[patternName] = listenerFunction
 	end
-	function CodedInventory:notifyListeners(patternName, side)
+	function CodedInventory:notifyListeners(patternName, side, count)
 	    if self.listeners[patternName] ~= nil then
-	        self.listeners[patternName](patternName, side)
+	        self.listeners[patternName](patternName, side, count)
 	        return
 	    end
 	    if self.defaultListener ~= nil then
-	        self.defaultListener(patternName, side)
+	        self.defaultListener(patternName, side, count)
 	        return
 	    end
 	    print("WARNING: No listener found for pattern '" .. patternName .. "'")
@@ -1720,7 +1732,7 @@ function MODULE_utils_storage_codedinventory_CodedInventory()
 	        return
 	    end
 	    for _, pattern in pairs(patterns) do
-	        self:notifyListeners(pattern.name, pattern.direction)
+	        self:notifyListeners(pattern.name, pattern.direction, pattern.count)
 	    end
 	end
 	return CodedInventory
@@ -1757,11 +1769,12 @@ function MODULE_jobs_definitions_mobile_ProgrammableJob()
 	ProgrammableJob.__index = ProgrammableJob
 	function ProgrammableJob.new(config)
 	    local self = setmetatable({}, ProgrammableJob)
+	    self:setupCodedInventory()
 	    self.backgroundTask = function() self:onBackgroundStep() end
 	    self.backgroundDelay = 5  -- This task should be infrequent
 	    self.config = config
 	    self.states = {
-	        EXAMPLE_STATE = "EXAMPLE_STATE",
+	        IDLE = "IDLE",
 	    }
 	    return self
 	end
@@ -1774,19 +1787,31 @@ function MODULE_jobs_definitions_mobile_ProgrammableJob()
 	    return self.config:get("alive", false)
 	end
 	function ProgrammableJob:onStep()
-	    local codedInventory = CodedInventory.new()
-	    codedInventory.defaultListener = function(name, side)
-	        print("Ignoring pattern: " .. name)
-	    end
-	    codedInventory:addListener(ContainerPatternNames.ACTION_STOP, function(name, side)
-	        print("ACTION_STOP matched on side: " .. side)
-	    end)
-	    codedInventory:run()
+	    self:updateStateUsingCodedInventory()
+	    self:runStateAction()
 	    self.config:set("alive", false)
 	end
 	function ProgrammableJob:onBackgroundStep()
 	end
 	function ProgrammableJob:onComplete()
+	end
+	function ProgrammableJob:setupCodedInventory()
+	    self.codedInventory = CodedInventory.new()
+	    self.codedInventory.defaultListener = function(name, side, count)
+	        print("Ignoring pattern: " .. name)
+	    end
+	    self.codedInventory:addListener(ContainerPatternNames.ACTION_STOP, function(name, side, count)
+	        print("ACTION_STOP matched on side: " .. side)
+	    end)
+	end
+	function ProgrammableJob:updateStateUsingCodedInventory()
+	    self.codedInventory:run()
+	end
+	function ProgrammableJob:runStateAction()
+	    local state = self.config:get("state", self.states.IDLE)
+	    if state == self.states.IDLE then
+	        os.sleep(1)
+	    end
 	end
 	return ProgrammableJob
 end
