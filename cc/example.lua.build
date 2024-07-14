@@ -1629,6 +1629,9 @@ function MODULE_utils_storage_Container()
 	                end
 	            end
 	            match.direction = direction
+	            for key, value in pairs(direction) do
+	                print(key, value)
+	            end
 	            matchingPatterns[match.matchPosition] = match
 	        end
 	    end
