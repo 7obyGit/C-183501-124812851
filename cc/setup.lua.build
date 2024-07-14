@@ -1392,14 +1392,7 @@ function MODULE_utils_storage_patterns_ContainerPattern()
 	    self.pattern = pattern
 	    return self
 	end
-	function ContainerPattern:match(containerIndex, positionToCheck)
-	    if positionToCheck == nil then
-	        if self:_matchWithOffset(containerIndex, positionToCheck) then
-	            return {name = self.name, matchPosition = positionToCheck}
-	        else
-	            return nil
-	        end
-	    end
+	function ContainerPattern:match(containerIndex)
 	    for offset = 1, 3 do
 	        if self:_matchWithOffset(containerIndex, offset) then
 	            return {name = self.name, matchPosition = offset}
@@ -1696,7 +1689,6 @@ function MODULE_utils_storage_codedinventory_CodedInventory()
 	    local containers = self:getInventories()
 	    local allPatterns = {}
 	    for _, container in pairs(containers) do
-	        print(container.name)
 	        local matchingPatterns = container:getMatchingContainerPatterns()
 	        if matchingPatterns ~= nil then
 	            for _, pattern in pairs(matchingPatterns) do
