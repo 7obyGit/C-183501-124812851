@@ -1625,7 +1625,7 @@ function MODULE_utils_storage_Container()
 	            local direction = nil
 	            for _, directionPattern in pairs(ContainerDirections) do
 	                local directionMatch = directionPattern:match(self.index)
-	                if directionMatch ~= nil then
+	                if directionMatch ~= nil and directionMatch.matchPosition == match.matchPosition then
 	                    direction = directionMatch
 	                end
 	            end
