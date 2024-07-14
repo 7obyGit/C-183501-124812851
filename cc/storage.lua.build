@@ -1,5 +1,4 @@
-print("Loading Modules...")
-print(" -> Loading: utils_other_file") function MODULE_utils_other_file()
+function MODULE_utils_other_file()
 	return {
 	    readText = function (path)
 	        local file = fs.open(path, "r")
@@ -20,7 +19,7 @@ end
 local utils_other_file = MODULE_utils_other_file()
 
 
-print(" -> Loading: jobs_Job") function MODULE_jobs_Job()
+function MODULE_jobs_Job()
 	local Job = {}
 	Job.EXAMPLE = "ExampleJob"
 	Job.IDLE = "IdleJob"
@@ -32,7 +31,7 @@ end
 local jobs_Job = MODULE_jobs_Job()
 
 
-print(" -> Loading: utils_config_JobConfig") function MODULE_utils_config_JobConfig()
+function MODULE_utils_config_JobConfig()
 	local file = utils_other_file
 	local Job       = jobs_Job
 	local JobConfig = {}
@@ -93,7 +92,7 @@ end
 local utils_config_JobConfig = MODULE_utils_config_JobConfig()
 
 
-print(" -> Loading: utils_controlflow_Parallel") function MODULE_utils_controlflow_Parallel()
+function MODULE_utils_controlflow_Parallel()
 	local Parallel = {}
 	Parallel.__index = Parallel
 	function Parallel.new()
@@ -118,7 +117,7 @@ end
 local utils_controlflow_Parallel = MODULE_utils_controlflow_Parallel()
 
 
-print(" -> Loading: jobs_definitions_misc_ExampleJob") function MODULE_jobs_definitions_misc_ExampleJob()
+function MODULE_jobs_definitions_misc_ExampleJob()
 	local ExampleJob = {}
 	ExampleJob.__index = ExampleJob
 	function ExampleJob.new()
@@ -143,7 +142,7 @@ end
 local jobs_definitions_misc_ExampleJob = MODULE_jobs_definitions_misc_ExampleJob()
 
 
-print(" -> Loading: utils_blocks_Blocks") function MODULE_utils_blocks_Blocks()
+function MODULE_utils_blocks_Blocks()
 	local Blocks = {
 	    ANY = "any",
 	    stone = "minecraft:stone",
@@ -536,7 +535,7 @@ end
 local utils_blocks_Blocks = MODULE_utils_blocks_Blocks()
 
 
-print(" -> Loading: utils_movement_Rotations") function MODULE_utils_movement_Rotations()
+function MODULE_utils_movement_Rotations()
 	Rotations = {}
 	Rotations.NONE = "None"
 	Rotations.UP = "Up"
@@ -559,7 +558,7 @@ end
 local utils_movement_Rotations = MODULE_utils_movement_Rotations()
 
 
-print(" -> Loading: utils_movement_Direction") function MODULE_utils_movement_Direction()
+function MODULE_utils_movement_Direction()
 	local Rotations = utils_movement_Rotations
 	local Direction = {}
 	Direction.__index = Direction
@@ -622,7 +621,7 @@ end
 local utils_movement_Direction = MODULE_utils_movement_Direction()
 
 
-print(" -> Loading: utils_math_Vector3") function MODULE_utils_math_Vector3()
+function MODULE_utils_math_Vector3()
 	local Direction = utils_movement_Direction
 	local Vector3 = {}
 	Vector3.__index = Vector3
@@ -707,7 +706,7 @@ end
 local utils_math_Vector3 = MODULE_utils_math_Vector3()
 
 
-print(" -> Loading: utils_text_Text") function MODULE_utils_text_Text()
+function MODULE_utils_text_Text()
 	local Text = {}
 	function Text.contains(text, pattern)
 	    return text:find(pattern) ~= nil
@@ -771,7 +770,7 @@ end
 local utils_text_Text = MODULE_utils_text_Text()
 
 
-print(" -> Loading: utils_blocks_Block") function MODULE_utils_blocks_Block()
+function MODULE_utils_blocks_Block()
 	local Blocks = utils_blocks_Blocks
 	local Vector3= utils_math_Vector3
 	local Text = utils_text_Text
@@ -811,7 +810,7 @@ end
 local utils_blocks_Block = MODULE_utils_blocks_Block()
 
 
-print(" -> Loading: utils_config_Config") function MODULE_utils_config_Config()
+function MODULE_utils_config_Config()
 	local Vector3 = utils_math_Vector3
 	local file = utils_other_file
 	local Direction = utils_movement_Direction
@@ -881,7 +880,7 @@ end
 local utils_config_Config = MODULE_utils_config_Config()
 
 
-print(" -> Loading: turtle_Inventory") function MODULE_turtle_Inventory()
+function MODULE_turtle_Inventory()
 	local Inventory = {}
 	function Inventory.isFull()
 	    return Inventory.getEmptySlot() == nil
@@ -911,7 +910,7 @@ end
 local turtle_Inventory = MODULE_turtle_Inventory()
 
 
-print(" -> Loading: turtle_Turtle") function MODULE_turtle_Turtle()
+function MODULE_turtle_Turtle()
 	local Block   = utils_blocks_Block
 	local Vector3 = utils_math_Vector3
 	local Direction = utils_movement_Direction
@@ -1108,7 +1107,7 @@ end
 local turtle_Turtle = MODULE_turtle_Turtle()
 
 
-print(" -> Loading: jobs_definitions_misc_IdleJob") function MODULE_jobs_definitions_misc_IdleJob()
+function MODULE_jobs_definitions_misc_IdleJob()
 	local Turtle = turtle_Turtle
 	local IdleJob = {}
 	IdleJob.__index = IdleJob
@@ -1138,7 +1137,7 @@ end
 local jobs_definitions_misc_IdleJob = MODULE_jobs_definitions_misc_IdleJob()
 
 
-print(" -> Loading: jobs_definitions_misc_QuarryJob") function MODULE_jobs_definitions_misc_QuarryJob()
+function MODULE_jobs_definitions_misc_QuarryJob()
 	local Turtle = turtle_Turtle
 	local QuarryJob = {}
 	QuarryJob.__index = QuarryJob
@@ -1168,7 +1167,7 @@ end
 local jobs_definitions_misc_QuarryJob = MODULE_jobs_definitions_misc_QuarryJob()
 
 
-print(" -> Loading: jobs_definitions_misc_SetupJob") function MODULE_jobs_definitions_misc_SetupJob()
+function MODULE_jobs_definitions_misc_SetupJob()
 	local Turtle = turtle_Turtle
 	local SetupJob = {}
 	SetupJob.__index = SetupJob
@@ -1200,7 +1199,7 @@ end
 local jobs_definitions_misc_SetupJob = MODULE_jobs_definitions_misc_SetupJob()
 
 
-print(" -> Loading: utils_blocks_BlockIndicators") function MODULE_utils_blocks_BlockIndicators()
+function MODULE_utils_blocks_BlockIndicators()
 	local Blocks = utils_blocks_Blocks
 	local BlockIndicators = {}
 	BlockIndicators.INPUT = Blocks.green_wool
@@ -1219,7 +1218,7 @@ end
 local utils_blocks_BlockIndicators = MODULE_utils_blocks_BlockIndicators()
 
 
-print(" -> Loading: utils_storage_ContainerIndex") function MODULE_utils_storage_ContainerIndex()
+function MODULE_utils_storage_ContainerIndex()
 	local ContainerIndex = {}
 	ContainerIndex.__index = ContainerIndex
 	function ContainerIndex.new(slotCount)
@@ -1335,7 +1334,7 @@ end
 local utils_storage_ContainerIndex = MODULE_utils_storage_ContainerIndex()
 
 
-print(" -> Loading: utils_storage_patterns_ContainerPattern") function MODULE_utils_storage_patterns_ContainerPattern()
+function MODULE_utils_storage_patterns_ContainerPattern()
 	local Blocks = utils_blocks_Blocks
 	local ContainerPattern = {}
 	ContainerPattern.__index = ContainerPattern
@@ -1378,7 +1377,7 @@ end
 local utils_storage_patterns_ContainerPattern = MODULE_utils_storage_patterns_ContainerPattern()
 
 
-print(" -> Loading: utils_storage_patterns_ContainerPatterns") function MODULE_utils_storage_patterns_ContainerPatterns()
+function MODULE_utils_storage_patterns_ContainerPatterns()
 	local BlockIndicators = utils_blocks_BlockIndicators
 	local ContainerPattern = utils_storage_patterns_ContainerPattern
 	local ContainerPatterns = {}
@@ -1409,7 +1408,7 @@ end
 local utils_storage_patterns_ContainerPatterns = MODULE_utils_storage_patterns_ContainerPatterns()
 
 
-print(" -> Loading: utils_storage_Container") function MODULE_utils_storage_Container()
+function MODULE_utils_storage_Container()
 	local ContainerIndex = utils_storage_ContainerIndex
 	local Parallel = utils_controlflow_Parallel
 	local ContainerPatterns = utils_storage_patterns_ContainerPatterns
@@ -1563,7 +1562,7 @@ end
 local utils_storage_Container = MODULE_utils_storage_Container()
 
 
-print(" -> Loading: utils_data_Table") function MODULE_utils_data_Table()
+function MODULE_utils_data_Table()
 	local Table = {}
 	function Table.contains(object, value)
 	    for _, v in ipairs(object) do
@@ -1578,7 +1577,7 @@ end
 local utils_data_Table = MODULE_utils_data_Table()
 
 
-print(" -> Loading: utils_storage_Storage") function MODULE_utils_storage_Storage()
+function MODULE_utils_storage_Storage()
 	local Blocks = utils_blocks_Blocks
 	local BlockIndicators = utils_blocks_BlockIndicators
 	local Container = utils_storage_Container
@@ -1827,7 +1826,7 @@ end
 local utils_storage_Storage = MODULE_utils_storage_Storage()
 
 
-print(" -> Loading: utils_terminal_Terminal") function MODULE_utils_terminal_Terminal()
+function MODULE_utils_terminal_Terminal()
 	local Terminal = {}
 	Terminal.__index = Terminal
 	function Terminal.write(text)
@@ -1844,7 +1843,7 @@ end
 local utils_terminal_Terminal = MODULE_utils_terminal_Terminal()
 
 
-print(" -> Loading: utils_terminal_commands_Command") function MODULE_utils_terminal_commands_Command()
+function MODULE_utils_terminal_commands_Command()
 	local Command = {}
 	Command.__index = Command
 	function Command.new(name, helpText, func)
@@ -1866,7 +1865,7 @@ end
 local utils_terminal_commands_Command = MODULE_utils_terminal_commands_Command()
 
 
-print(" -> Loading: utils_terminal_commands_Commands") function MODULE_utils_terminal_commands_Commands()
+function MODULE_utils_terminal_commands_Commands()
 	local Command = utils_terminal_commands_Command
 	local Text = utils_text_Text
 	local Commands = {}
@@ -1916,7 +1915,7 @@ end
 local utils_terminal_commands_Commands = MODULE_utils_terminal_commands_Commands()
 
 
-print(" -> Loading: utils_math_Math") function MODULE_utils_math_Math()
+function MODULE_utils_math_Math()
 	local Math = {}
 	function Math.round(num, numDecimalPlaces)
 	    numDecimalPlaces = numDecimalPlaces or 0
@@ -1928,7 +1927,7 @@ end
 local utils_math_Math = MODULE_utils_math_Math()
 
 
-print(" -> Loading: jobs_definitions_static_StorageJob") function MODULE_jobs_definitions_static_StorageJob()
+function MODULE_jobs_definitions_static_StorageJob()
 	local Storage = utils_storage_Storage
 	local Blocks  = utils_blocks_Blocks
 	local Block   = utils_blocks_Block
@@ -2154,7 +2153,7 @@ end
 local jobs_definitions_static_StorageJob = MODULE_jobs_definitions_static_StorageJob()
 
 
-print(" -> Loading: jobs_JobManager") function MODULE_jobs_JobManager()
+function MODULE_jobs_JobManager()
 	local JobConfig = utils_config_JobConfig
 	local Job = jobs_Job
 	local Parallel = utils_controlflow_Parallel
@@ -2213,10 +2212,9 @@ end
 local jobs_JobManager = MODULE_jobs_JobManager()
 
 
-print(" -> Loading: entrypoints_storage") function MODULE_entrypoints_storage()
+function MODULE_entrypoints_storage()
 	local JobManager = jobs_JobManager
 	local Job = jobs_Job
 	JobManager.run(Job.STORAGE)
 end
 local entrypoints_storage = MODULE_entrypoints_storage()
-print("Finished Loading Modules")
