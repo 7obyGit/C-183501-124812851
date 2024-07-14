@@ -822,7 +822,7 @@ print(" -> Loading: utils_config_Config") function MODULE_utils_config_Config()
 	    local self = setmetatable({
 	        turtleName = "MyTurtle",
 	        job = Job.SETUP,
-	        homePosition = Vector3:new({x = 0, y = 0, z = 0}),
+	        homePosition = Vector3.new({x = 0, y = 0, z = 0}),
 	        homeDirection = Direction.NORTH,
 	        fuelMinimum = 64,
 	        fuelTarget = 256,
@@ -862,13 +862,13 @@ print(" -> Loading: utils_config_Config") function MODULE_utils_config_Config()
 	    for k, v in pairs(content.homePosition) do
 	        print(k, v, type(v))
 	    end
-	    local text = textutils.serialize(content)  -- Switch to serailisze
+	    local text = textutils.serializeJSON(content)
 	    print("TEXT", text)
 	    print("END TEST")
 	    return text
 	end
 	function Config.deserializeJson(json)
-	    local configAttributes = textutils.unserialize(json)
+	    local configAttributes = textutils.unserializeJSON(json)
 	    local config = Config.fromTable(configAttributes)
 	    return config
 	end
