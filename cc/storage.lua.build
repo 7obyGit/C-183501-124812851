@@ -1392,7 +1392,12 @@ function MODULE_utils_storage_patterns_ContainerPattern()
 	    self.pattern = pattern
 	    return self
 	end
-	function ContainerPattern:match(containerIndex)
+	function ContainerPattern:match(containerIndex, positionToCheck)
+	    if positionToCheck == nil then
+	        if self:_matchWithOffset(containerIndex, positionToCheck) then
+	            return {name = self.name, matchPosition = positionToCheck}
+	        end
+	    end
 	    for offset = 1, 3 do
 	        if self:_matchWithOffset(containerIndex, offset) then
 	            return {name = self.name, matchPosition = offset}
@@ -1624,8 +1629,8 @@ function MODULE_utils_storage_Container()
 	        if match ~= nil then
 	            local direction = nil
 	            for _, directionPattern in pairs(ContainerDirections) do
-	                local directionMatch = directionPattern:match(self.index)
-	                if directionMatch ~= nil and directionMatch.matchPosition == match.matchPosition then
+	                local directionMatch = directionPattern:match(self.index, match.matchPosition)
+	                if directionMatch ~= nil then
 	                    print(directionMatch.name, directionMatch.matchPosition)
 	                    direction = directionMatch
 	                end
