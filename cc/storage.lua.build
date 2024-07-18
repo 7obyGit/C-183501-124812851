@@ -1368,6 +1368,10 @@ function MODULE_utils_storage_ContainerIndex()
 	        self:addSlot(slot, itemName, itemCount)
 	    end
 	    self.slotIndex[slot] = {name = itemName, count = itemCount}
+	    print()
+	    print(itemName)
+	    print(slot)
+	    print(itemCount)
 	    self.itemIndex[itemName][slot] = itemCount
 	    if itemCount == 0 then
 	        self:removeSlot(slot)
