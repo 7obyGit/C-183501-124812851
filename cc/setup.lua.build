@@ -2408,7 +2408,8 @@ function MODULE_utils_storage_Storage()
 	        local container = self.inventories[location.containerName]
 	        local furnace = table.remove(acceptingFurnaces, 1)
 	        local itemsToAssign = math.min(remainingCount, batchSize)
-	        remainingCount = remainingCount - furnace:smelt(container, itemName, itemsToAssign)
+	        local itemsNotSmelted = furnace:smelt(container, itemName, itemsToAssign)
+	        remainingCount = remainingCount - (itemsToAssign - itemsNotSmelted)
 	    end
 	    return remainingCount
 	end
@@ -2618,10 +2619,8 @@ function MODULE_jobs_definitions_static_StorageJob()
 	        local smeltQueue = self.config:get("smeltQueue", {})
 	        for smeltJobNumber, item in pairs(smeltQueue) do
 	            local remainingCount = self.storage:smelt(item.name, item.count)
-	            print()
 	            print(remainingCount)
 	            item.count = remainingCount
-	            print(item.count)
 	            if remainingCount == 0 then
 	                table.insert(removedJobNumbers, smeltJobNumber)
 	            end
