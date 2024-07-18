@@ -2574,7 +2574,7 @@ function MODULE_jobs_definitions_static_StorageJob()
 	    self.commands:add("setup", Command.new("setup", "Puts the storage into setup mode", function(...) self:commandSetup(...) end))
 	    self.commands:add("defragment", Command.new("defragment", "Compacts item stacks in the storage so that stacks of e.g. 1 are combined into fewer bigger stacks", function(...) self:commandDefragment(...) end))
 	    self.commands:add("updateIndex", Command.new("updateindex", "Updates the index of the storage", function(...) self:commandUpdateIndex(...) end))
-	    self.commands:add("smelt", Command.new("smelt", "Smelts an item in the furnace\nExample 1: smelt <quantity> <item>\nExample 2: smelt <item>\n*Default quantity is 64", function(...) self:commandSmelt(...) end))
+	    self.commands:add("smelt", Command.new("smelt", "Smelts an item in the furnace\nExample 1: smelt <quantity> <item>\nExample 2: smelt <item>\nExample 3: smelt list\n*Default quantity is 64", function(...) self:commandSmelt(...) end))
 	    self.config = config
 	    self.states = {
 	        SETUP = "SETUP",
@@ -2808,6 +2808,14 @@ function MODULE_jobs_definitions_static_StorageJob()
 	        for i = 3, #args do
 	            itemName = itemName .. " " .. args[i]
 	        end
+	    end
+	    if itemName == "list" then
+	        print("Smelt Queue")
+	        local smeltQueue = self.config:get("smeltQueue", {})
+	        for i, item in pairs(smeltQueue) do
+	            print("\t\t" .. i .. ": " .. item.name .. " " .. item.count)
+	        end
+	        return
 	    end
 	    if itemName == nil then
 	        print("No item provided")
