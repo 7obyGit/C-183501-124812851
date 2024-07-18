@@ -2053,7 +2053,7 @@ function MODULE_utils_storage_machines_Furnace()
 	        local sourceSlotTable = sourceContainer.index:getSlot(sourceSlot) or {count = 0}
 	        local sourceSlotCount = sourceSlotTable.count - moved
 	        local destSlotTable = destContainer.index:getSlot(destSlot) or {count = 0}
-	        local destSlotCount = destSlotTable + moved
+	        local destSlotCount = destSlotTable.count + moved
 	        sourceContainer.index:setSlot(sourceSlot, itemName, sourceSlotCount)
 	        destContainer.index:setSlot(destSlot, itemName, destSlotCount)
 	    end
