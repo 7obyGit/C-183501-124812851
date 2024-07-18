@@ -2296,9 +2296,6 @@ function MODULE_utils_storage_Storage()
 	        container:updateIndex()
 	        local itemCount = container:getItemCount(item)
 	        local remainingCount = 64 - itemCount
-	        print(textutils.serialise(container:getItemList()))
-	        print("Item count: " .. itemCount)
-	        print("Item: " .. item)
 	        if remainingCount > 0 then
 	            self:moveToIo(item, remainingCount, container)
 	            container:defragment()
