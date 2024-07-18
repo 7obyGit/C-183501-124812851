@@ -2835,7 +2835,7 @@ function MODULE_jobs_definitions_static_StorageJob()
 	        print("Could not find item")
 	        return
 	    end
-	    print("Adding smelting job for " .. itemCount .. itemName)
+	    print("Adding smelting job for " .. itemCount .. " " .. itemName)
 	    local smeltQueue = self.config:get("smeltQueue", {})
 	    table.insert(smeltQueue, {name = itemName, count = itemCount})
 	    self.config:set("smeltQueue", smeltQueue)
