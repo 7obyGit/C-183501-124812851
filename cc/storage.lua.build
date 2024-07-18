@@ -1578,7 +1578,8 @@ function MODULE_utils_storage_Container()
 	        end
 	        local moved = sourceContainer.internal.pushItems(destContainer.name, sourceSlot, remainingCount, destSlot)
 	        remainingCount = remainingCount - moved  -- Track the remaining count
-	        local sourceSlotCount = sourceContainer.index:getSlot(sourceSlot).count - moved
+	        local sourceSlotTable = sourceContainer.index:getSlot(sourceSlot) or {count = 0}
+	        local sourceSlotCount = sourceSlotTable.count - moved
 	        local destSlotCount = moved  -- Was initially empty
 	        sourceContainer.index:updateSlot(sourceSlot, itemName, sourceSlotCount)
 	        destContainer.index:updateSlot(destSlot, itemName, destSlotCount)
