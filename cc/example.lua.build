@@ -2050,7 +2050,11 @@ function MODULE_utils_storage_machines_Furnace()
 	        local moved = sourceContainer.internal.pushItems(destContainer.name, sourceSlot, remainingCount, destSlot)
 	        remainingCount = remainingCount - moved
 	        local sourceSlotCount = sourceContainer.index:getSlot(sourceSlot).count - moved
-	        local destSlotCount = self.container.index:getSlot(destSlot).count + moved
+	        print(destSlot)
+	        print(moved)
+	        print(destContainer)
+	        print(destContainer.index)
+	        local destSlotCount = destContainer.index:getSlot(destSlot).count + moved
 	        sourceContainer.index:setSlot(sourceSlot, itemName, sourceSlotCount)
 	        destContainer.index:setSlot(destSlot, itemName, destSlotCount)
 	    end
