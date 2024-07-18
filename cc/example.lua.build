@@ -2430,7 +2430,6 @@ function MODULE_utils_storage_Storage()
 	    local remainingCount = 0
 	    for _, furnace in pairs(self.furnaces) do
 	        remainingCount = furnace:getOutputCount()
-	        print(furnace.name, remainingCount)
 	        while #containers > 0 and remainingCount > 0 do
 	            if container == nil or container:getEmptySlot() == nil then
 	                container = table.remove(containers, 1)
