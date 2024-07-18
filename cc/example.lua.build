@@ -1296,9 +1296,7 @@ function MODULE_utils_storage_ContainerIndex()
 	    self.itemIndex[itemName][slot] = itemCount
 	end
 	function ContainerIndex:getSlot(slot)
-	    print("Slot" .. slot)
 	    local slotIndexValue = self.slotIndex[slot]
-	    print(slotIndexValue)
 	    if slotIndexValue == nil then
 	        return nil
 	    end
@@ -2052,12 +2050,10 @@ function MODULE_utils_storage_machines_Furnace()
 	        local sourceSlot = sourceSlotTable.slot
 	        local moved = sourceContainer.internal.pushItems(destContainer.name, sourceSlot, remainingCount, destSlot)
 	        remainingCount = remainingCount - moved
-	        local sourceSlotCount = sourceContainer.index:getSlot(sourceSlot).count - moved
-	        print(destSlot)
-	        print(moved)
-	        print(destContainer)
-	        print(destContainer.index)
-	        local destSlotCount = destContainer.index:getSlot(destSlot).count + moved
+	        local sourceSlotTable = sourceContainer.index:getSlot(sourceSlot) or {count = 0}
+	        local sourceSlotCount = sourceSlotTable.count - moved
+	        local destSlotTable = destContainer.index:getSlot(destSlot) or {count = 0}
+	        local destSlotCount = destSlotTable + moved
 	        sourceContainer.index:setSlot(sourceSlot, itemName, sourceSlotCount)
 	        destContainer.index:setSlot(destSlot, itemName, destSlotCount)
 	    end
