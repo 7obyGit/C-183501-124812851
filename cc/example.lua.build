@@ -2114,7 +2114,7 @@ function MODULE_utils_storage_machines_Furnace()
 	        if destSlot == nil then
 	            return remainingCount
 	        end
-	        local moved = sourceContainer.internal.pushItems(destContainer.name, destSlot, remainingCount, destSlot)
+	        local moved = sourceContainer.internal.pushItems(destContainer.name, Furnace.OUTPUT_SLOT_INDEX, remainingCount, destSlot)
 	        remainingCount = remainingCount - moved
 	        local sourceSlotTable = sourceContainer.index:getSlot(sourceSlot) or {count = 0}
 	        local sourceSlotCount = sourceSlotTable.count - moved
