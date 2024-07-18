@@ -162,6 +162,9 @@ function MODULE_utils_blocks_Blocks()
 	    redstone_block = "minecraft:redstone_block",
 	    lapis_block = "minecraft:lapis_block",
 	    coal_block = "minecraft:coal_block",
+	    coal = "minecraft:coal",
+	    charcoal = "minecraft:charcoal",
+	    charcoal_block = "minecraft:charcoal_block",
 	    chest = "minecraft:chest",
 	    barrel = "minecraft:barrel",
 	    furnace = "minecraft:furnace",
@@ -2000,10 +2003,117 @@ end
 local jobs_definitions_mobile_ProgrammableJob = MODULE_jobs_definitions_mobile_ProgrammableJob()
 
 
+function MODULE_utils_storage_machines_Furnace()
+	local Container = utils_storage_Container
+	local Furnace = {}
+	Furnace.__index = Furnace
+	Furnace.INPUT_SLOT_INDEX = 1
+	Furnace.FUEL_SLOT_INDEX = 2
+	Furnace.OUTPUT_SLOT_INDEX = 3
+	function Furnace.new(name)
+	    local self = setmetatable({}, Furnace)
+	    self.name = name
+	    self.container = Container.new(name)
+	    if self.container == nil then
+	        return nil
+	    end
+	    return self
+	end
+	function Furnace:isInUse()
+	    self.container:updateIndex()
+	    local inputSlot = self.container:getSlot(Furnace.INPUT_SLOT_INDEX)
+	    local inputSlotIsEmpty = inputSlot == nil
+	    return not inputSlotIsEmpty
+	end
+	function Furnace:canAcceptItem(itemName)
+	    if not self:isInUse() then
+	        return true
+	    end
+	    local inputSlot = self.container:getSlot(Furnace.INPUT_SLOT_INDEX)
+	    local isSameItem = inputSlot.name == itemName
+	    if not isSameItem then
+	        return false
+	    end
+	    local stackIsNotFull = inputSlot.count < 64
+	    return stackIsNotFull
+	end
+	function Furnace:_putItemsInSlot(sourceContainer, itemName, count, destSlot)
+	    self.container:updateIndex()
+	    local destContainer = self.container
+	    local remainingCount = count
+	    while remainingCount > 0 do
+	        local sourceSlotTable = sourceContainer:findItemSlot(itemName)
+	        if sourceSlotTable == nil then
+	            return remainingCount
+	        end
+	        local sourceSlot = sourceSlotTable.slot
+	        local moved = sourceContainer.internal.pushItems(destContainer.name, sourceSlot, remainingCount, destSlot)
+	        remainingCount = remainingCount - moved
+	        local sourceSlotCount = sourceContainer.index:getSlot(sourceSlot).count - moved
+	        local destSlotCount = self.container.index:getSlot(destSlot).count + moved
+	        sourceContainer.index:setSlot(sourceSlot, itemName, sourceSlotCount)
+	        destContainer.index:setSlot(destSlot, itemName, destSlotCount)
+	    end
+	    return remainingCount
+	end
+	function Furnace:addFuel(sourceContainer, itemName, count)
+	    return self:_putItemsInSlot(sourceContainer, itemName, count, Furnace.FUEL_SLOT_INDEX)
+	end
+	function Furnace:getFuelLevel()
+	    self.container:updateIndex()
+	    local fuelSlot = self.container:getSlot(Furnace.FUEL_SLOT_INDEX)
+	    if fuelSlot == nil then
+	        return nil
+	    end
+	    local currentFuelLevel = fuelSlot.count
+	    return currentFuelLevel
+	end
+	function Furnace:getRequiredFuelCount()
+	    local maxFuelLevel = 4  -- Fuel is kept low so it can be distributed evenly among furnaces
+	    local requiredFuelCount = maxFuelLevel - self:getFuelLevel()
+	    if requiredFuelCount < 0 then
+	        requiredFuelCount = 0
+	    end
+	    return requiredFuelCount
+	end
+	function Furnace:smelt(sourceContainer, itemName, count)
+	    return self:_putItemsInSlot(sourceContainer, itemName, count, Furnace.INPUT_SLOT_INDEX)
+	end
+	function Furnace:clearOutputs(destContainer)
+	    self.container:updateIndex()
+	    local sourceContainer = self.container
+	    local remainingCount = 0
+	    local sourceSlot = Furnace.OUTPUT_SLOT_INDEX
+	    local sourceSlotTable = sourceContainer:getSlot(sourceSlot)
+	    if sourceSlotTable == nil then
+	        return 0
+	    end
+	    local itemName = sourceSlotTable.name
+	    local remainingCount = sourceSlotTable.count
+	    while remainingCount > 0 do
+	        local destSlot = sourceContainer:getEmptySlot()
+	        if destSlot == nil then
+	            return remainingCount
+	        end
+	        local moved = sourceContainer.internal.pushItems(destContainer.name, destSlot, remainingCount, destSlot)
+	        remainingCount = remainingCount - moved
+	        local sourceSlotCount = sourceContainer.index:getSlot(sourceSlot).count - moved
+	        local destSlotCount = moved  -- Was initially empty
+	        sourceContainer.index:updateSlot(sourceSlot, itemName, sourceSlotCount)
+	        destContainer.index:setSlot(destSlot, itemName, destSlotCount)
+	    end
+	    return remainingCount
+	end
+	return Furnace
+end
+local utils_storage_machines_Furnace = MODULE_utils_storage_machines_Furnace()
+
+
 function MODULE_utils_storage_Storage()
 	local Blocks = utils_blocks_Blocks
 	local BlockIndicators = utils_blocks_BlockIndicators
 	local Container = utils_storage_Container
+	local Furnace = utils_storage_machines_Furnace
 	local Text      = utils_text_Text
 	local Parallel = utils_controlflow_Parallel
 	local Table = utils_data_Table
@@ -2014,6 +2124,7 @@ function MODULE_utils_storage_Storage()
 	    self.config = config or {}
 	    self.barrels = Storage.connectToBarrels()
 	    self.inventories = Storage.connectToChests()
+	    self.furnaces = Storage.connectToFurnaces()
 	    self.io = self.barrels[config.io or Blocks.barrel .. "_0"]
 	    self.inputs = {}
 	    if config.inputs ~= nil then
@@ -2032,6 +2143,16 @@ function MODULE_utils_storage_Storage()
 	        end
 	    end
 	    return inventories
+	end
+	function Storage.connectToFurnaces()
+	    local furnaces = {}
+	    local allPeripheralNames =  peripheral.getNames()
+	    for index, name in pairs(allPeripheralNames) do
+	        if Text.contains(name, Blocks.furnace) then
+	            furnaces[name] = Furnace.new(name)
+	        end
+	    end
+	    return furnaces
 	end
 	function Storage.connectToBarrels()
 	    local barrels = {}
@@ -2244,6 +2365,42 @@ function MODULE_utils_storage_Storage()
 	    end
 	    return itemNames
 	end
+	function Storage:getAcceptingFurnaces(itemName)
+	    local acceptingFurnaces = {}
+	    for name, furnace in pairs(self.furnaces) do
+	        if not furnace:canAcceptItem(itemName) then
+	            table.insert(acceptingFurnaces, furnace)
+	        end
+	    end
+	    return acceptingFurnaces
+	end
+	function Storage:smelt(itemName, itemCount)
+	    local remainingCount = itemCount
+	    local batchSize = 8  -- Spread items across furnaces but do not go below 8 so as to avoid wasting coal
+	    local totalItemCount = self:getItemCount(itemName)
+	    if totalItemCount < itemCount then
+	        return nil  -- Not enough items to smelt
+	    end
+	    local locations = self:findItemLocations(itemName)
+	    local acceptingFurnaces = self:getAcceptingFurnaces(itemName)
+	    while remainingCount > 0 and #locations > 0 and #acceptingFurnaces > 0 do
+	        local location = table.remove(locations, 1)
+	        local container = self.inventories[location.containerName]
+	        local furnace = table.remove(acceptingFurnaces, 1)
+	        remainingCount = furnace:smelt(container, itemName, batchSize)
+	    end
+	    return remainingCount
+	end
+	function Storage:refuelFurnaces()
+	    local fuelItem = Blocks.charcoal
+	    for _, furnace in pairs(self.furnaces) do
+	        local requiredFuelCount = furnace:getRequiredFuelCount()
+	        if requiredFuelCount > 0 then
+	            self:moveToIo(fuelItem, requiredFuelCount)
+	            furnace:addFuel(self.io, fuelItem, requiredFuelCount)
+	        end
+	    end
+	end
 	return Storage
 end
 local utils_storage_Storage = MODULE_utils_storage_Storage()
@@ -2412,6 +2569,7 @@ function MODULE_jobs_definitions_static_StorageJob()
 	function StorageJob:onBackgroundStep()
 	    if self.config:get("state", nil) == self.states.COMMAND_PROMPT then
 	        self.storage:dumpAllInputs()
+	        self.storage:refuelFurnaces()
 	    end
 	end
 	function StorageJob:stateSetup()
