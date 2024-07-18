@@ -2282,6 +2282,7 @@ function MODULE_utils_storage_Storage()
 	        local container = keepFilled.container
 	        local item = keepFilled.item
 	        local itemCount = container:getItemCount(item)
+	        print(itemCount)
 	        local remainingCount = 64 - itemCount
 	        if remainingCount > 0 then
 	            self:moveToIo(item, remainingCount, container)
