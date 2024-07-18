@@ -2388,7 +2388,7 @@ function MODULE_utils_storage_Storage()
 	function Storage:getAcceptingFurnaces(itemName)
 	    local acceptingFurnaces = {}
 	    for name, furnace in pairs(self.furnaces) do
-	        if not furnace:canAcceptItem(itemName) then
+	        if furnace:canAcceptItem(itemName) then
 	            table.insert(acceptingFurnaces, furnace)
 	        end
 	    end
