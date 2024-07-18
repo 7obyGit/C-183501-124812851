@@ -2110,7 +2110,7 @@ function MODULE_utils_storage_machines_Furnace()
 	    local itemName = sourceSlotTable.name
 	    local remainingCount = sourceSlotTable.count
 	    while remainingCount > 0 do
-	        local destSlot = sourceContainer:getEmptySlot()
+	        local destSlot = destContainer:getEmptySlot()
 	        if destSlot == nil then
 	            return remainingCount
 	        end
@@ -2432,7 +2432,7 @@ function MODULE_utils_storage_Storage()
 	        remainingCount = furnace:getOutputCount()
 	        print(furnace.name, remainingCount)
 	        while #containers > 0 and remainingCount > 0 do
-	            print(_, remainingCount)
+	            print(" -> ", _, remainingCount)
 	            if container == nil or container:getEmptySlot() ~= nil then
 	                container = table.remove(containers, 1)
 	            end
