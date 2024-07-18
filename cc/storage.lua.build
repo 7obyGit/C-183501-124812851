@@ -2617,7 +2617,6 @@ function MODULE_jobs_definitions_static_StorageJob()
 	        local removedJobNumbers = {}
 	        local smeltQueue = self.config:get("smeltQueue", {})
 	        for smeltJobNumber, item in pairs(smeltQueue) do
-	            print("Smelting " .. item.count .. " " .. item.name)
 	            local remainingCount = self.storage:smelt(item.name, item.count)
 	            item.count = remainingCount
 	            if remainingCount == 0 then
