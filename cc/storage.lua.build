@@ -2403,7 +2403,6 @@ function MODULE_utils_storage_Storage()
 	    end
 	    local locations = self:findItemLocations(itemName)
 	    local acceptingFurnaces = self:getAcceptingFurnaces(itemName)
-	    print(textutils.serialise(acceptingFurnaces))
 	    while remainingCount > 0 and #locations > 0 and #acceptingFurnaces > 0 do
 	        local location = table.remove(locations, 1)
 	        local container = self.inventories[location.containerName]
