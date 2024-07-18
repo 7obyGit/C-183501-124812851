@@ -2070,7 +2070,11 @@ function MODULE_utils_storage_machines_Furnace()
 	end
 	function Furnace:getRequiredFuelCount()
 	    local maxFuelLevel = 4  -- Fuel is kept low so it can be distributed evenly among furnaces
-	    local requiredFuelCount = maxFuelLevel - self:getFuelLevel()
+	    local currentFuelLevel = self:getFuelLevel()
+	    if currentFuelLevel == nil then
+	        return maxFuelLevel
+	    end
+	    local requiredFuelCount = maxFuelLevel - currentFuelLevel
 	    if requiredFuelCount < 0 then
 	        requiredFuelCount = 0
 	    end
