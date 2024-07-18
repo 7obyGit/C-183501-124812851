@@ -2281,6 +2281,7 @@ function MODULE_utils_storage_Storage()
 	    for _, keepFilled in pairs(self.keepFilled) do
 	        local container = keepFilled.container
 	        local item = keepFilled.item
+	        container:updateIndex()
 	        local itemCount = container:getItemCount(item)
 	        print(itemCount)
 	        local remainingCount = 64 - itemCount
