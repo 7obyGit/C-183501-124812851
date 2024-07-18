@@ -2618,7 +2618,10 @@ function MODULE_jobs_definitions_static_StorageJob()
 	        local smeltQueue = self.config:get("smeltQueue", {})
 	        for smeltJobNumber, item in pairs(smeltQueue) do
 	            local remainingCount = self.storage:smelt(item.name, item.count)
+	            print()
+	            print(remainingCount)
 	            item.count = remainingCount
+	            print(item.count)
 	            if remainingCount == 0 then
 	                table.insert(removedJobNumbers, smeltJobNumber)
 	            end
