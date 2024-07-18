@@ -2402,6 +2402,7 @@ function MODULE_utils_storage_Storage()
 	        return nil  -- Not enough items to smelt
 	    end
 	    local locations = self:findItemLocations(itemName)
+	    print(textutils.serialize(locations))
 	    local acceptingFurnaces = self:getAcceptingFurnaces(itemName)
 	    while remainingCount > 0 and #locations > 0 and #acceptingFurnaces > 0 do
 	        local location = table.remove(locations, 1)
