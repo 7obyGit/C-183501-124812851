@@ -1392,6 +1392,14 @@ function MODULE_utils_storage_ContainerIndex()
 	    end
 	    return items
 	end
+	function ContainerIndex:getItemCount(name)
+	    local slots = self:getSlotsWithItem(name)
+	    local count = 0
+	    for _, slot in pairs(slots) do
+	        count = count + slot.count
+	    end
+	    return count
+	end
 	return ContainerIndex
 end
 local utils_storage_ContainerIndex = MODULE_utils_storage_ContainerIndex()
@@ -1598,12 +1606,16 @@ function MODULE_utils_storage_Container()
 	function Container:findItemSlots(itemName)
 	    return self.index:getSlotsWithItem(itemName)
 	end
-	function Container:getItemCount(slot)
-	    local item = self.index:getSlot(slot)
-	    if item == nil then
-	        return 0
+	function Container:getItemCount(slotOrItemName)
+	    local item = self.index:getSlot(slotOrItemName)
+	    if item ~= nil then
+	        return item.count
 	    end
-	    return item.count
+	    local count = self.index:getItemCount(slotOrItemName)
+	    if count ~= nil then
+	        return count
+	    end
+	    return 0  -- Not found
 	end
 	function Container:getSlot(slot)
 	    return self.index:getSlot(slot)
