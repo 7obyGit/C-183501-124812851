@@ -2054,8 +2054,8 @@ function MODULE_utils_storage_machines_Furnace()
 	        local sourceSlotCount = sourceSlotTable.count - moved
 	        local destSlotTable = destContainer.index:getSlot(destSlot) or {count = 0}
 	        local destSlotCount = destSlotTable.count + moved
-	        sourceContainer.index:setSlot(sourceSlot, itemName, sourceSlotCount)
-	        destContainer.index:setSlot(destSlot, itemName, destSlotCount)
+	        sourceContainer.index:updateSlot(sourceSlot, itemName, sourceSlotCount)
+	        destContainer.index:updateSlot(destSlot, itemName, destSlotCount)
 	    end
 	    return remainingCount
 	end
@@ -2104,10 +2104,11 @@ function MODULE_utils_storage_machines_Furnace()
 	        end
 	        local moved = sourceContainer.internal.pushItems(destContainer.name, destSlot, remainingCount, destSlot)
 	        remainingCount = remainingCount - moved
-	        local sourceSlotCount = sourceContainer.index:getSlot(sourceSlot).count - moved
+	        local sourceSlotTable = sourceContainer.index:getSlot(sourceSlot) or {count = 0}
+	        local sourceSlotCount = sourceSlotTable.count - moved
 	        local destSlotCount = moved  -- Was initially empty
 	        sourceContainer.index:updateSlot(sourceSlot, itemName, sourceSlotCount)
-	        destContainer.index:setSlot(destSlot, itemName, destSlotCount)
+	        destContainer.index:updateSlot(destSlot, itemName, destSlotCount)
 	    end
 	    return remainingCount
 	end
