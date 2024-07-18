@@ -2086,6 +2086,15 @@ function MODULE_utils_storage_machines_Furnace()
 	function Furnace:smelt(sourceContainer, itemName, count)
 	    return self:_putItemsInSlot(sourceContainer, itemName, count, Furnace.INPUT_SLOT_INDEX)
 	end
+	function Furnace:getOutputCount()
+	    self.container:updateIndex()
+	    local outputSlot = self.container:getSlot(Furnace.OUTPUT_SLOT_INDEX)
+	    if outputSlot == nil then
+	        return 0
+	    end
+	    local outputSlotCount = outputSlot.count
+	    return outputSlotCount
+	end
 	function Furnace:clearOutputs(destContainer)
 	    self.container:updateIndex()
 	    local sourceContainer = self.container
@@ -2409,6 +2418,26 @@ function MODULE_utils_storage_Storage()
 	        end
 	    end
 	end
+	function Storage:dumpFurnaces()
+	    local containers = {}
+	    for _, container in pairs(self.inventories) do
+	        table.insert(containers, container)
+	    end
+	    local container = table.remove(containers, 1)
+	    local remainingCount = 0
+	    for _, furnace in pairs(self.furnaces) do
+	        remainingCount = furnace:getOutputCount()
+	        while #containers > 0 and remainingCount > 0 do
+	            if container:getEmptySlotCount() == 0 then
+	                container = table.remove(containers, 1)
+	            end
+	            remainingCount = furnace:clearOutputs(container)
+	        end
+	        if remainingCount > 0 then
+	            print("Warning: Failed to clear all outputs from " .. furnace.name)
+	        end
+	    end
+	end
 	return Storage
 end
 local utils_storage_Storage = MODULE_utils_storage_Storage()
@@ -2541,6 +2570,8 @@ function MODULE_jobs_definitions_static_StorageJob()
 	    self.commands:add("stats", Command.new("stats", "Prints the storage stats", function(...) self:commandStats(...) end))
 	    self.commands:add("setup", Command.new("setup", "Puts the storage into setup mode", function(...) self:commandSetup(...) end))
 	    self.commands:add("defragment", Command.new("defragment", "Compacts item stacks in the storage so that stacks of e.g. 1 are combined into fewer bigger stacks", function(...) self:commandDefragment(...) end))
+	    self.commands:add("updateIndex", Command.new("updateindex", "Updates the index of the storage", function(...) self:commandUpdateIndex(...) end))
+	    self.commands:add("smelt", Command.new("smelt", "Smelts an item in the furnace\nExample 1: smelt <quantity> <item>\nExample 2: smelt <item>\n*Default quantity is 64", function(...) self:commandSmelt(...) end))
 	    self.config = config
 	    self.states = {
 	        SETUP = "SETUP",
@@ -2577,7 +2608,21 @@ function MODULE_jobs_definitions_static_StorageJob()
 	function StorageJob:onBackgroundStep()
 	    if self.config:get("state", nil) == self.states.COMMAND_PROMPT then
 	        self.storage:dumpAllInputs()
+	        self.storage:dumpFurnaces()
 	        self.storage:refuelFurnaces()
+	        local removedJobNumbers = {}
+	        local smeltQueue = self.config:get("smeltQueue", {})
+	        for smeltJobNumber, item in pairs(smeltQueue) do
+	            local remaininCount = self.storage:smelt(item.name, item.count)
+	            item.count = remaininCount
+	            if remaininCount == 0 then
+	                table.insert(removedJobNumbers, smeltJobNumber)
+	            end
+	        end
+	        for _, jobNumber in pairs(removedJobNumbers) do
+	            table.remove(smeltQueue, jobNumber)
+	        end
+	        self.config:set("smeltQueue", smeltQueue)
 	    end
 	end
 	function StorageJob:stateSetup()
@@ -2736,6 +2781,51 @@ function MODULE_jobs_definitions_static_StorageJob()
 	    print("Defragmenting Storage...")
 	    self.storage:defragment()
 	    print("Defragmentation Complete!")
+	end
+	function StorageJob:commandUpdateIndex()
+	    print("Updating Index...")
+	    self.storage:updateIndex()
+	    print("Index Updated!")
+	end
+	function StorageJob:commandSmelt(...)
+	    local args = {...}
+	    local itemCount = 64
+	    local itemName = nil
+	    if #args == 0 then
+	        print("No arguments provided")
+	        print("Expected: get <quantity> <item>")
+	        print("Type 'help get' for more information")
+	        return
+	    elseif #args == 1 then
+	        itemCount = 64
+	        itemName = args[1]
+	    else
+	        itemCount = tonumber(args[1])
+	        itemName = args[2]
+	        for i = 3, #args do
+	            itemName = itemName .. " " .. args[i]
+	        end
+	    end
+	    if itemName == nil then
+	        print("No item provided")
+	        print("Expected: smelt <quantity> <item>")
+	        return
+	    end
+	    local matchDetails = Block.getClosestMatch(itemName, self.storage:getPresentItemNames())
+	    if matchDetails.score > 3 then
+	        print("Could not find item: " .. itemName)
+	        print("Did you mean: " .. matchDetails.closestMatch)
+	        return
+	    end
+	    itemName = matchDetails.closestMatch
+	    if itemName == nil then
+	        print("Could not find item")
+	        return
+	    end
+	    print("Adding smelting job for " .. itemCount .. " item: " .. itemName)
+	    local smeltQueue = self.config:get("smeltQueue", {})
+	    table.insert(smeltQueue, {name = itemName, count = itemCount})
+	    self.config:set("smeltQueue", smeltQueue)
 	end
 	return StorageJob
 end
