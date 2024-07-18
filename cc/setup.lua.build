@@ -2697,7 +2697,7 @@ function MODULE_jobs_definitions_static_StorageJob()
 	                    table.remove(self.storage.config.keepFilled, key)
 	                else
 	                    print("\t\t\t" .. keepFilledDetails.name)
-	                    self.storage:placeBlockIndicator(keepFilledDetails.name, BlockIndicators.KEEP_FILLED)
+	                    self.storage:placeBlockIndicator(keepFilledDetails.name, BlockIndicators.KEEP_FILLED, keepFilledDetails.item)
 	                end
 	            end
 	        end
