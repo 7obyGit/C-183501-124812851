@@ -1402,6 +1402,7 @@ function MODULE_utils_blocks_BlockIndicators()
 	local BlockIndicators = {}
 	BlockIndicators.INPUT = Blocks.green_wool
 	BlockIndicators.OUTPUT = Blocks.red_wool
+	BlockIndicators.KEEP_FILLED = Blocks.pink_wool
 	BlockIndicators.DIRECTION = Blocks.white_wool
 	BlockIndicators.ACTION_STOP = Blocks.red_wool
 	BlockIndicators.ACTION_HOME = Blocks.cyan_wool
@@ -2152,6 +2153,12 @@ function MODULE_utils_storage_Storage()
 	            self.inputs[input] = self.barrels[input]
 	        end
 	    end
+	    self.keepFilled = {}
+	    if config.keepFilled ~= nil then
+	        for _, keepFilled in pairs(config.keepFilled) do
+	            self.keepFilled[keepFilled.name] = {container = self.barrels[keepFilled.name], item = keepFilled.item}
+	        end
+	    end
 	    return self
 	end
 	function Storage.connectToChests()
@@ -2270,14 +2277,32 @@ function MODULE_utils_storage_Storage()
 	        self:dump(container)
 	    end
 	end
-	function Storage:placeBlockIndicator(containerName, blockIndicator)
+	function Storage:populateKeepFilledBarrels()
+	    for _, keepFilled in pairs(self.keepFilled) do
+	        local container = keepFilled.container
+	        local item = keepFilled.item
+	        local itemCount = container:getItemCount(item)
+	        local remainingCount = 64 - itemCount
+	        if remainingCount > 0 then
+	            self:moveToIo(item, remainingCount, container)
+	            container:defragment()
+	        end
+	    end
+	end
+	function Storage:placeBlockIndicator(containerName, blockIndicator, secondaryIndicator)
 	    local container = self.barrels[containerName]
 	    if container == nil then
 	        print("WARNING: Failed to find " .. containerName)
 	    end
 	    self:moveToIo(blockIndicator, 1, container)
+	    if secondaryIndicator ~= nil then
+	        self:moveToIo(secondaryIndicator, 1, container)
+	    end
 	end
 	function Storage:readBlockIndicators()
+	    self.inputs = {}
+	    self.keepFilled = {}
+	    self.config.keepFilled = nil
 	    self.config.inputs = nil
 	    self.config.io = nil
 	    for _, container in pairs(self.barrels) do
@@ -2289,6 +2314,16 @@ function MODULE_utils_storage_Storage()
 	            end
 	            if not Table.contains(self.config.inputs, container.name) then
 	                table.insert(self.config.inputs, container.name)
+	            end
+	        elseif blockIndicator == BlockIndicators.KEEP_FILLED then
+	            local secondaryIndicator = container:getSlot(2)
+	            if secondaryIndicator ~= nil then
+	                local itemName = secondaryIndicator.name
+	                self.keepFilled[container.name] = {container = container, item = itemName}
+	                if self.config.keepFilled == nil then
+	                    self.config.keepFilled = {}
+	                end
+	                self.config.keepFilled[container.name] = {name = container.name, item = itemName}
 	            end
 	        elseif blockIndicator == BlockIndicators.OUTPUT then
 	            self.io = container
@@ -2644,7 +2679,26 @@ function MODULE_jobs_definitions_static_StorageJob()
 	            print("\t\tFound " .. #self.storage.config.inputs .. " input barrels")
 	            for _, containerName in pairs(self.storage.config.inputs) do
 	                print("\t\t\t" .. containerName)
-	                self.storage:placeBlockIndicator(containerName, BlockIndicators.INPUT)
+	                local barrel = self.storage.barrels[containerName]
+	                if barrel == nil then
+	                    print("Could not find input: " .. containerName)
+	                    table.remove(self.storage.config.inputs, containerName)
+	                else
+	                    self.storage:placeBlockIndicator(containerName, BlockIndicators.INPUT)
+	                end
+	            end
+	        end
+	        if self.storage.config.keepFilled ~= nil then
+	            print("\t\tFound " .. #self.storage.config.keepFilled .. " 'keep filled' barrels")
+	            for key, keepFilledDetails in pairs(self.storage.config.keepFilled) do
+	                local barrel = self.storage.barrels[keepFilledDetails.name]
+	                if barrel == nil then
+	                    print("Could not find 'keep filled': " .. keepFilledDetails.name)
+	                    table.remove(self.storage.config.keepFilled, key)
+	                else
+	                    print("\t\t\t" .. keepFilledDetails.name)
+	                    self.storage:placeBlockIndicator(keepFilledDetails.name, BlockIndicators.KEEP_FILLED)
+	                end
 	            end
 	        end
 	    else
@@ -2655,9 +2709,11 @@ function MODULE_jobs_definitions_static_StorageJob()
 	    print("Mark Barrels Using the Following Items")
 	    print("\t\tMain Interface - " .. BlockIndicators.OUTPUT)
 	    print("\t\tInput Only - " .. BlockIndicators.INPUT)
+	    print("\t\tKeep Filled - " .. BlockIndicators.KEEP_FILLED)
 	    print("*You can only have one Main Interface")
 	    print("*Input Only barrels take inserted items and store them in the storage system")
 	    print("*Chests are used for storage and are not configurable")
+	    print("*'Keep Filled' barrels keep a stack of the item in the second slot")
 	    Terminal.read("\nPress Enter to Continue")
 	    self.storage:readBlockIndicators()
 	    self.config:set("storageConfig", self.storage.config)
