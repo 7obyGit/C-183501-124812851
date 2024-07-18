@@ -2407,7 +2407,8 @@ function MODULE_utils_storage_Storage()
 	        local location = table.remove(locations, 1)
 	        local container = self.inventories[location.containerName]
 	        local furnace = table.remove(acceptingFurnaces, 1)
-	        remainingCount = furnace:smelt(container, itemName, batchSize)
+	        local itemsToAssign = math.min(remainingCount, batchSize)
+	        remainingCount = furnace:smelt(container, itemName, itemsToAssign)
 	    end
 	    return remainingCount
 	end
