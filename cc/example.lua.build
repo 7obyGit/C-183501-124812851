@@ -2423,12 +2423,12 @@ function MODULE_utils_storage_Storage()
 	    for _, container in pairs(self.inventories) do
 	        table.insert(containers, container)
 	    end
-	    local container = table.remove(containers, 1)
+	    local container = nil
 	    local remainingCount = 0
 	    for _, furnace in pairs(self.furnaces) do
 	        remainingCount = furnace:getOutputCount()
 	        while #containers > 0 and remainingCount > 0 do
-	            if container:getEmptySlotCount() == 0 then
+	            if container == nil or container:getEmptySlot() ~= nil then
 	                container = table.remove(containers, 1)
 	            end
 	            remainingCount = furnace:clearOutputs(container)
