@@ -723,6 +723,12 @@ function MODULE_utils_text_Text()
 	function Text.contains(text, pattern)
 	    return text:find(pattern) ~= nil
 	end
+	function Text.startsWith(text, pattern)
+	    return text:sub(1, #pattern) == pattern
+	end
+	function Text.endsWith(text, pattern)
+	    return text:sub(-#pattern) == pattern
+	end
 	function Text.split(input, delimiter)
 	    local result = {}
 	    for match in (input .. delimiter):gmatch("(.-)" .. delimiter) do
@@ -1336,6 +1342,42 @@ end
 local jobs_definitions_mobile_quarry_QuarryStates = MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 
 
+function MODULE_turtle_Side()
+	local Side = {}
+	Side.TOP = "top"
+	Side.BOTTOM = "bottom"
+	Side.FRONT = "front"
+	Side.BACK = "back"
+	Side.LEFT = "left"
+	Side.RIGHT = "right"
+	return Side
+end
+local turtle_Side = MODULE_turtle_Side()
+
+
+function MODULE_utils_storage_patterns_ContainerPatternNames()
+	local Side = turtle_Side
+	local ContainerPatternNames = {}
+	ContainerPatternNames.DIRECTION_UP = Side.TOP
+	ContainerPatternNames.DIRECTION_DOWN = Side.BOTTOM
+	ContainerPatternNames.DIRECTION_FORWARD = Side.FRONT
+	ContainerPatternNames.DIRECTION_BACK = Side.BACK
+	ContainerPatternNames.DIRECTION_LEFT = Side.LEFT
+	ContainerPatternNames.DIRECTION_RIGHT = Side.RIGHT
+	ContainerPatternNames.ACTION_STOP = "ACTION_STOP"
+	ContainerPatternNames.ACTION_HOME = "ACTION_HOME"
+	ContainerPatternNames.ACTION_MOVE = "ACTION_MOVE"
+	ContainerPatternNames.ACTION_BREAK = "ACTION_BREAK"
+	ContainerPatternNames.ACTION_PLACE = "ACTION_PLACE"
+	ContainerPatternNames.ACTION_MARKER = "ACTION_MARKER"
+	ContainerPatternNames.ACTION_DROP = "ACTION_DROP"
+	ContainerPatternNames.ACTION_SUCK = "ACTION_SUCK"
+	ContainerPatternNames.ACTION_REFUEL = "ACTION_REFUEL"
+	return ContainerPatternNames
+end
+local utils_storage_patterns_ContainerPatternNames = MODULE_utils_storage_patterns_ContainerPatternNames()
+
+
 function MODULE_utils_terminal_Terminal()
 	local Terminal = {}
 	Terminal.__index = Terminal
@@ -1354,6 +1396,8 @@ local utils_terminal_Terminal = MODULE_utils_terminal_Terminal()
 
 
 function MODULE_utils_jobutils_CommonStates()
+	local ContainerPatternNames = utils_storage_patterns_ContainerPatternNames
+	local Turtle = turtle_Turtle
 	local Terminal = utils_terminal_Terminal
 	local CommonStates = {}
 	function CommonStates.onCommandPrompt(self)
@@ -1361,74 +1405,169 @@ function MODULE_utils_jobutils_CommonStates()
 	    print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
 	    self.commands:run(userInput)
 	end
+	function CommonStates.onMoving(self)
+	    local actionSide = self.config:get("actionSide", ContainerPatternNames.DIRECTION_FORWARD)
+	    if actionSide == ContainerPatternNames.DIRECTION_UP then
+	        Turtle.up()
+	    elseif actionSide == ContainerPatternNames.DIRECTION_DOWN then
+	        Turtle.down()
+	    else
+	        Turtle.forward()
+	    end
+	end
 	return CommonStates
 end
 local utils_jobutils_CommonStates = MODULE_utils_jobutils_CommonStates()
 
 
-function MODULE_jobs_definitions_mobile_quarry_QuarryJob()
+function MODULE_utils_jobutils_CommonCodedInventoryListeners()
 	local Turtle = turtle_Turtle
-	local Commands = utils_terminal_commands_Commands
-	local Command = utils_terminal_commands_Command
-	local QuarryCommands = jobs_definitions_mobile_quarry_QuarryCommands
-	local CommonCommands = utils_jobutils_CommonCommands
-	local QuarryStates = jobs_definitions_mobile_quarry_QuarryStates
-	local CommonStates = utils_jobutils_CommonStates
-	local QuarryJob = {}
-	QuarryJob.__index = QuarryJob
-	function QuarryJob.new(config)
-	    local self = setmetatable({}, QuarryJob)
-	    self.backgroundTask = function() self:onBackgroundStep() end
-	    self.backgroundDelay = 5  -- This task should be infrequent
-	    self.commands = Commands.new()
-	    self.commands:add(Command.new("exit", "Terminates the storage program", function(...) CommonCommands.commandExit(self, ...) end))
-	    self.commands:add(Command.new("setup", "Enters setup mode", function(...) CommonCommands.commandSetup(self, ...) end))
-	    self.config = config
-	    self.states = {
-	        SETUP = "SETUP",
-	        COMMAND_PROMPT = "COMMAND_PROMPT",
-	    }
-	    return self
+	local ContainerPatternNames = utils_storage_patterns_ContainerPatternNames
+	local CommonCodedInventoryListeners = {}
+	function CommonCodedInventoryListeners.defaultListener(self, name, side, count)
+	    print("Ignoring pattern: " .. name)
 	end
-	function QuarryJob:onStart()
-	    self.config:set("alive", true)
+	function CommonCodedInventoryListeners.actionStop(self, name, side, count)
+	    self.config:set("state", self.states.COMMAND_PROMPT)
+	    self.config:set("alive", false)
 	end
-	function QuarryJob:onResume()
+	function CommonCodedInventoryListeners.actionHome(self, name, side, count)
+	    Turtle.goHome()
+	    self.config:set("state", self.states.COMMAND_PROMPT)
 	end
-	function QuarryJob:inProgress()
-	    return self.config:get("alive", false)
-	end
-	function QuarryJob:onStep()
-	    local state = self.config:get("state", self.states.COMMAND_PROMPT)
-	    if state == self.states.COMMAND_PROMPT then
-	        CommonStates.onCommandPrompt(self)
-	    elseif state == self.states.SETUP then
-	        QuarryStates.onSetup(self)
-	    else
-	        print("Invalid state: " .. state)
-	        self.config:set("state", self.states.COMMAND_PROMPT)
+	function CommonCodedInventoryListeners.actionMove(self, name, side, count)
+	    if side == ContainerPatternNames.DIRECTION_LEFT then
+	        Turtle.turnLeft()
+	    elseif side == ContainerPatternNames.DIRECTION_RIGHT then
+	        Turtle.turnRight()
+	    elseif side == ContainerPatternNames.DIRECTION_BACK then
+	        Turtle.turnLeft()
+	        Turtle.turnLeft()
 	    end
+	    self.config:set("state", self.states.MOVING)
+	    self.config:set("actionSide", side)
 	end
-	function QuarryJob:onBackgroundStep()
+	function CommonCodedInventoryListeners.actionBreak(self, name, side, count)
+	    if side == ContainerPatternNames.DIRECTION_FORWARD then
+	        Turtle.dig()
+	    elseif side == ContainerPatternNames.DIRECTION_UP then
+	        Turtle.digUp()
+	    elseif side == ContainerPatternNames.DIRECTION_DOWN then
+	        Turtle.digDown()
+	    elseif side == ContainerPatternNames.DIRECTION_LEFT then
+	        Turtle.turnLeft()
+	        Turtle.dig()
+	        Turtle.turnRight()
+	    elseif side == ContainerPatternNames.DIRECTION_RIGHT then
+	        Turtle.turnRight()
+	        Turtle.dig()
+	        Turtle.turnLeft()
+	    elseif side == ContainerPatternNames.DIRECTION_BACK then
+	        Turtle.turnLeft()
+	        Turtle.turnLeft()
+	        Turtle.dig()
+	        Turtle.turnLeft()
+	        Turtle.turnLeft()
+	    end
+	    self.config:set("state", self.states.COMMAND_PROMPT)
 	end
-	function QuarryJob:onComplete()
+	function CommonCodedInventoryListeners.actionPlace(self, name, side, count)
+	    local slot = 1
+	    turtle.select(slot)
+	    if side == ContainerPatternNames.DIRECTION_FORWARD then
+	        Turtle.place()
+	    elseif side == ContainerPatternNames.DIRECTION_UP then
+	        Turtle.placeUp()
+	    elseif side == ContainerPatternNames.DIRECTION_DOWN then
+	        Turtle.placeDown()
+	    elseif side == ContainerPatternNames.DIRECTION_LEFT then
+	        Turtle.turnLeft()
+	        Turtle.place()
+	        Turtle.turnRight()
+	    elseif side == ContainerPatternNames.DIRECTION_RIGHT then
+	        Turtle.turnRight()
+	        Turtle.place()
+	        Turtle.turnLeft()
+	    elseif side == ContainerPatternNames.DIRECTION_BACK then
+	        Turtle.turnLeft()
+	        Turtle.turnLeft()
+	        Turtle.place()
+	        Turtle.turnLeft()
+	        Turtle.turnLeft()
+	    end
+	    self.config:set("state", self.states.COMMAND_PROMPT)
 	end
-	return QuarryJob
+	function CommonCodedInventoryListeners.actionMarker(self, name, side, count)
+	    local existingMarkers = self.config:get("markers", {})
+	    existingMarkers[count] = Turtle.CURRENT_POSITION:copy():toTable()
+	    self.config:set("markers", existingMarkers)
+	    self.config:set("state", self.states.COMMAND_PROMPT)
+	end
+	function CommonCodedInventoryListeners.actionDrop(self, name, side, count)
+	    local slot = 1
+	    if side == ContainerPatternNames.DIRECTION_FORWARD then
+	        Turtle.tryDrop(slot, count)
+	    elseif side == ContainerPatternNames.DIRECTION_UP then
+	        Turtle.tryDropUp(slot, count)
+	    elseif side == ContainerPatternNames.DIRECTION_DOWN then
+	        Turtle.tryDropDown(slot, count)
+	    elseif side == ContainerPatternNames.DIRECTION_LEFT then
+	        Turtle.turnLeft()
+	        Turtle.tryDrop(slot, count)
+	        Turtle.turnRight()
+	    elseif side == ContainerPatternNames.DIRECTION_RIGHT then
+	        Turtle.turnRight()
+	        Turtle.tryDrop(slot, count)
+	        Turtle.turnLeft()
+	    elseif side == ContainerPatternNames.DIRECTION_BACK then
+	        Turtle.turnLeft()
+	        Turtle.turnLeft()
+	        Turtle.tryDrop(slot, count)
+	        Turtle.turnLeft()
+	        Turtle.turnLeft()
+	    end
+	    self.config:set("state", self.states.COMMAND_PROMPT)
+	end
+	function CommonCodedInventoryListeners.actionSuck(self, name, side, count)
+	    local slot = 1
+	    turtle.select(slot)
+	    if side == ContainerPatternNames.DIRECTION_FORWARD then
+	        Turtle.suck(count)
+	    elseif side == ContainerPatternNames.DIRECTION_UP then
+	        Turtle.suckUp(count)
+	    elseif side == ContainerPatternNames.DIRECTION_DOWN then
+	        Turtle.suckDown(count)
+	    elseif side == ContainerPatternNames.DIRECTION_LEFT then
+	        Turtle.suckLeft(count)
+	    elseif side == ContainerPatternNames.DIRECTION_RIGHT then
+	        Turtle.suckRight(count)
+	    elseif side == ContainerPatternNames.DIRECTION_BACK then
+	        Turtle.suckBack(count)
+	    end
+	    self.config:set("state", self.states.COMMAND_PROMPT)
+	end
+	function CommonCodedInventoryListeners.actionRefuel(self, name, side, count)
+	    local slot = 1
+	    turtle.select(slot)
+	    if side == ContainerPatternNames.DIRECTION_FORWARD then
+	        Turtle.suck(count)
+	    elseif side == ContainerPatternNames.DIRECTION_UP then
+	        Turtle.suckUp(count)
+	    elseif side == ContainerPatternNames.DIRECTION_DOWN then
+	        Turtle.suckDown(count)
+	    elseif side == ContainerPatternNames.DIRECTION_LEFT then
+	        Turtle.suckLeft(count)
+	    elseif side == ContainerPatternNames.DIRECTION_RIGHT then
+	        Turtle.suckRight(count)
+	    elseif side == ContainerPatternNames.DIRECTION_BACK then
+	        Turtle.suckBack(count)
+	    end
+	    turtle.refuel()
+	    self.config:set("state", self.states.COMMAND_PROMPT)
+	end
+	return CommonCodedInventoryListeners
 end
-local jobs_definitions_mobile_quarry_QuarryJob = MODULE_jobs_definitions_mobile_quarry_QuarryJob()
-
-
-function MODULE_turtle_Side()
-	local Side = {}
-	Side.TOP = "top"
-	Side.BOTTOM = "bottom"
-	Side.FRONT = "front"
-	Side.BACK = "back"
-	Side.LEFT = "left"
-	Side.RIGHT = "right"
-	return Side
-end
-local turtle_Side = MODULE_turtle_Side()
+local utils_jobutils_CommonCodedInventoryListeners = MODULE_utils_jobutils_CommonCodedInventoryListeners()
 
 
 function MODULE_utils_data_Table()
@@ -1902,6 +2041,8 @@ local utils_storage_Container = MODULE_utils_storage_Container()
 
 
 function MODULE_utils_storage_codedinventory_CodedInventory()
+	local CommonCodedInventoryListeners = utils_jobutils_CommonCodedInventoryListeners
+	local ContainerPatternNames = utils_storage_patterns_ContainerPatternNames
 	local Turtle = turtle_Turtle
 	local Blocks = utils_blocks_Blocks
 	local Side = turtle_Side
@@ -1917,13 +2058,25 @@ function MODULE_utils_storage_codedinventory_CodedInventory()
 	function CodedInventory:addListener(patternName, listenerFunction)
 	    self.listeners[patternName] = listenerFunction
 	end
-	function CodedInventory:notifyListeners(patternName, side, count)
+	function CodedInventory:addDefaultListeners()
+	    self.defaultListener = CommonCodedInventoryListeners.defaultListener
+	    self:addListener(ContainerPatternNames.ACTION_STOP, CommonCodedInventoryListeners.actionStop)
+	    self:addListener(ContainerPatternNames.ACTION_HOME, CommonCodedInventoryListeners.actionHome)
+	    self:addListener(ContainerPatternNames.ACTION_MOVE, CommonCodedInventoryListeners.actionMove)
+	    self:addListener(ContainerPatternNames.ACTION_BREAK, CommonCodedInventoryListeners.actionBreak)
+	    self:addListener(ContainerPatternNames.ACTION_PLACE, CommonCodedInventoryListeners.actionPlace)
+	    self:addListener(ContainerPatternNames.ACTION_MARKER, CommonCodedInventoryListeners.actionMarker)
+	    self:addListener(ContainerPatternNames.ACTION_DROP, CommonCodedInventoryListeners.actionDrop)
+	    self:addListener(ContainerPatternNames.ACTION_SUCK, CommonCodedInventoryListeners.actionSuck)
+	    self:addListener(ContainerPatternNames.ACTION_REFUEL, CommonCodedInventoryListeners.actionRefuel)
+	end
+	function CodedInventory:notifyListeners(jobSelf, patternName, side, count)
 	    if self.listeners[patternName] ~= nil then
-	        self.listeners[patternName](patternName, side, count)
+	        self.listeners[patternName](jobSelf, patternName, side, count)
 	        return
 	    end
 	    if self.defaultListener ~= nil then
-	        self.defaultListener(patternName, side, count)
+	        self.defaultListener(jobSelf, patternName, side, count)
 	        return
 	    end
 	    print("WARNING: No listener found for pattern '" .. patternName .. "'")
@@ -1957,13 +2110,13 @@ function MODULE_utils_storage_codedinventory_CodedInventory()
 	    end
 	    return allPatterns
 	end
-	function CodedInventory:run()
+	function CodedInventory:run(jobSelf)
 	    local patterns = self:getMatchingPatterns()
 	    if patterns == nil then
 	        return
 	    end
 	    for _, pattern in pairs(patterns) do
-	        self:notifyListeners(pattern.name, pattern.direction, pattern.count)
+	        self:notifyListeners(jobSelf, pattern.name, pattern.direction, pattern.count)
 	    end
 	end
 	return CodedInventory
@@ -1971,32 +2124,83 @@ end
 local utils_storage_codedinventory_CodedInventory = MODULE_utils_storage_codedinventory_CodedInventory()
 
 
-function MODULE_utils_storage_patterns_ContainerPatternNames()
-	local Side = turtle_Side
-	local ContainerPatternNames = {}
-	ContainerPatternNames.DIRECTION_UP = Side.TOP
-	ContainerPatternNames.DIRECTION_DOWN = Side.BOTTOM
-	ContainerPatternNames.DIRECTION_FORWARD = Side.FRONT
-	ContainerPatternNames.DIRECTION_BACK = Side.BACK
-	ContainerPatternNames.DIRECTION_LEFT = Side.LEFT
-	ContainerPatternNames.DIRECTION_RIGHT = Side.RIGHT
-	ContainerPatternNames.ACTION_STOP = "ACTION_STOP"
-	ContainerPatternNames.ACTION_HOME = "ACTION_HOME"
-	ContainerPatternNames.ACTION_MOVE = "ACTION_MOVE"
-	ContainerPatternNames.ACTION_BREAK = "ACTION_BREAK"
-	ContainerPatternNames.ACTION_PLACE = "ACTION_PLACE"
-	ContainerPatternNames.ACTION_MARKER = "ACTION_MARKER"
-	ContainerPatternNames.ACTION_DROP = "ACTION_DROP"
-	ContainerPatternNames.ACTION_SUCK = "ACTION_SUCK"
-	ContainerPatternNames.ACTION_REFUEL = "ACTION_REFUEL"
-	return ContainerPatternNames
+function MODULE_jobs_definitions_mobile_quarry_QuarryJob()
+	local Turtle = turtle_Turtle
+	local Commands = utils_terminal_commands_Commands
+	local Command = utils_terminal_commands_Command
+	local QuarryCommands = jobs_definitions_mobile_quarry_QuarryCommands
+	local CommonCommands = utils_jobutils_CommonCommands
+	local QuarryStates = jobs_definitions_mobile_quarry_QuarryStates
+	local CommonStates = utils_jobutils_CommonStates
+	local CodedInventory = utils_storage_codedinventory_CodedInventory
+	local CommonCodedInventoryListeners = utils_jobutils_CommonCodedInventoryListeners
+	local Text = utils_text_Text
+	local QuarryJob = {}
+	QuarryJob.__index = QuarryJob
+	function QuarryJob.new(config)
+	    local self = setmetatable({}, QuarryJob)
+	    self.backgroundTask = function() self:onBackgroundStep() end
+	    self.backgroundDelay = 5  -- This task should be infrequent
+	    self.commands = Commands.new()
+	    self.commands:add(Command.new("exit", "Terminates the storage program", function(...) CommonCommands.commandExit(self, ...) end))
+	    self.commands:add(Command.new("setup", "Enters setup mode", function(...) CommonCommands.commandSetup(self, ...) end))
+	    self.config = config
+	    self.states = {
+	        SETUP = "SETUP",
+	        COMMAND_PROMPT = "COMMAND_PROMPT",
+	        MOVING = "MOVING",
+	        QUARRY_DIG_DOWN = "QUARRY_DIG_DOWN",  -- Dig down to the position set during the setup process
+	        QUARRY_DIG_UP = "QUARRY_DIG_UP",  -- Dig up to the position the turtle started at
+	        QUARRY_REFUEL = "QUARRY_REFUEL",  -- Refill fuel at refuel station (located during setup with block indicators)
+	        QUARRY_DUMP = "QUARRY_DUMP",  -- Empty inventory
+	        QUARRY_TERMINATING = "QUARRY_TERMINATING",  -- Turtle moves to home position before terminating
+	    }
+	    self.stateActions = {
+	        [self.states.COMMAND_PROMPT] = CommonStates.onCommandPrompt,
+	        [self.states.SETUP] = QuarryStates.onSetup,
+	        [self.states.MOVING] = CommonStates.onMoving,
+	    }
+	    self.codedInventory = CodedInventory.new()
+	    self.codedInventory:addDefaultListeners()
+	    return self
+	end
+	function QuarryJob:onStart()
+	    self.config:set("alive", true)
+	end
+	function QuarryJob:onResume()
+	end
+	function QuarryJob:inProgress()
+	    return self.config:get("alive", false)
+	end
+	function QuarryJob:onStep()
+	    local state = self.config:get("state", self.states.COMMAND_PROMPT)
+	    if Text.startsWith(state, "QUARRY_") then
+	        self.stateActions[state](self)
+	        return
+	    end
+	    self.codedInventory:run(self)
+	    local state = self.config:get("state", self.states.COMMAND_PROMPT)
+	    local stateAction = self.stateActions[state]
+	    if stateAction == nil then
+	        print("Invalid state: " .. state)
+	        self.config:set("state", self.states.COMMAND_PROMPT)
+	        return
+	    end
+	    stateAction(self)
+	end
+	function QuarryJob:onBackgroundStep()
+	end
+	function QuarryJob:onComplete()
+	end
+	return QuarryJob
 end
-local utils_storage_patterns_ContainerPatternNames = MODULE_utils_storage_patterns_ContainerPatternNames()
+local jobs_definitions_mobile_quarry_QuarryJob = MODULE_jobs_definitions_mobile_quarry_QuarryJob()
 
 
 function MODULE_jobs_definitions_mobile_ProgrammableJob()
 	local CodedInventory = utils_storage_codedinventory_CodedInventory
 	local ContainerPatternNames = utils_storage_patterns_ContainerPatternNames
+	local CommonCodedInventoryListeners = utils_jobutils_CommonCodedInventoryListeners
 	local Turtle = turtle_Turtle
 	local ProgrammableJob = {}
 	ProgrammableJob.__index = ProgrammableJob
@@ -2007,7 +2211,7 @@ function MODULE_jobs_definitions_mobile_ProgrammableJob()
 	    self.backgroundDelay = 5  -- This task should be infrequent
 	    self.config = config
 	    self.states = {
-	        IDLE = "IDLE",
+	        COMMAND_PROMPT = "COMMAND_PROMPT",
 	        GOING_HOME = "GOING_HOME",
 	        MOVING = "MOVING",
 	    }
@@ -2031,155 +2235,15 @@ function MODULE_jobs_definitions_mobile_ProgrammableJob()
 	end
 	function ProgrammableJob:setupCodedInventory()
 	    self.codedInventory = CodedInventory.new()
-	    self.codedInventory.defaultListener = function(name, side, count)
-	        print("Ignoring pattern: " .. name)
-	    end
-	    self.codedInventory:addListener(ContainerPatternNames.ACTION_STOP, function(name, side, count)
-	        self.config:set("state", self.states.IDLE)
-	        self.config:set("alive", false)
-	    end)
-	    self.codedInventory:addListener(ContainerPatternNames.ACTION_HOME, function(name, side, count)
-	        Turtle.goHome()
-	        self.config:set("state", self.states.IDLE)
-	    end)
-	    self.codedInventory:addListener(ContainerPatternNames.ACTION_MOVE, function(name, side, count)
-	        if side == ContainerPatternNames.DIRECTION_LEFT then
-	            Turtle.turnLeft()
-	        elseif side == ContainerPatternNames.DIRECTION_RIGHT then
-	            Turtle.turnRight()
-	        elseif side == ContainerPatternNames.DIRECTION_BACK then
-	            Turtle.turnLeft()
-	            Turtle.turnLeft()
-	        end
-	        self.config:set("state", self.states.MOVING)
-	        self.config:set("actionSide", side)
-	    end)
-	    self.codedInventory:addListener(ContainerPatternNames.ACTION_BREAK, function(name, side, count)
-	        if side == ContainerPatternNames.DIRECTION_FORWARD then
-	            Turtle.dig()
-	        elseif side == ContainerPatternNames.DIRECTION_UP then
-	            Turtle.digUp()
-	        elseif side == ContainerPatternNames.DIRECTION_DOWN then
-	            Turtle.digDown()
-	        elseif side == ContainerPatternNames.DIRECTION_LEFT then
-	            Turtle.turnLeft()
-	            Turtle.dig()
-	            Turtle.turnRight()
-	        elseif side == ContainerPatternNames.DIRECTION_RIGHT then
-	            Turtle.turnRight()
-	            Turtle.dig()
-	            Turtle.turnLeft()
-	        elseif side == ContainerPatternNames.DIRECTION_BACK then
-	            Turtle.turnLeft()
-	            Turtle.turnLeft()
-	            Turtle.dig()
-	            Turtle.turnLeft()
-	            Turtle.turnLeft()
-	        end
-	        self.config:set("state", self.states.IDLE)
-	    end)
-	    self.codedInventory:addListener(ContainerPatternNames.ACTION_PLACE, function(name, side, count)
-	        local slot = 1
-	        turtle.select(slot)
-	        if side == ContainerPatternNames.DIRECTION_FORWARD then
-	            Turtle.place()
-	        elseif side == ContainerPatternNames.DIRECTION_UP then
-	            Turtle.placeUp()
-	        elseif side == ContainerPatternNames.DIRECTION_DOWN then
-	            Turtle.placeDown()
-	        elseif side == ContainerPatternNames.DIRECTION_LEFT then
-	            Turtle.turnLeft()
-	            Turtle.place()
-	            Turtle.turnRight()
-	        elseif side == ContainerPatternNames.DIRECTION_RIGHT then
-	            Turtle.turnRight()
-	            Turtle.place()
-	            Turtle.turnLeft()
-	        elseif side == ContainerPatternNames.DIRECTION_BACK then
-	            Turtle.turnLeft()
-	            Turtle.turnLeft()
-	            Turtle.place()
-	            Turtle.turnLeft()
-	            Turtle.turnLeft()
-	        end
-	        self.config:set("state", self.states.IDLE)
-	    end)
-	    self.codedInventory:addListener(ContainerPatternNames.ACTION_MARKER, function(name, side, count)
-	        local existingMarkers = self.config:get("markers", {})
-	        existingMarkers[count] = Turtle.CURRENT_POSITION:copy():toTable()
-	        self.config:set("markers", existingMarkers)
-	        self.config:set("state", self.states.IDLE)
-	    end)
-	    self.codedInventory:addListener(ContainerPatternNames.ACTION_DROP, function(name, side, count)
-	        local slot = 1
-	        if side == ContainerPatternNames.DIRECTION_FORWARD then
-	            Turtle.tryDrop(slot, count)
-	        elseif side == ContainerPatternNames.DIRECTION_UP then
-	            Turtle.tryDropUp(slot, count)
-	        elseif side == ContainerPatternNames.DIRECTION_DOWN then
-	            Turtle.tryDropDown(slot, count)
-	        elseif side == ContainerPatternNames.DIRECTION_LEFT then
-	            Turtle.turnLeft()
-	            Turtle.tryDrop(slot, count)
-	            Turtle.turnRight()
-	        elseif side == ContainerPatternNames.DIRECTION_RIGHT then
-	            Turtle.turnRight()
-	            Turtle.tryDrop(slot, count)
-	            Turtle.turnLeft()
-	        elseif side == ContainerPatternNames.DIRECTION_BACK then
-	            Turtle.turnLeft()
-	            Turtle.turnLeft()
-	            Turtle.tryDrop(slot, count)
-	            Turtle.turnLeft()
-	            Turtle.turnLeft()
-	        end
-	        self.config:set("state", self.states.IDLE)
-	    end)
-	    self.codedInventory:addListener(ContainerPatternNames.ACTION_SUCK, function(name, side, count)
-	        local slot = 1
-	        turtle.select(slot)
-	        if side == ContainerPatternNames.DIRECTION_FORWARD then
-	            Turtle.suck(count)
-	        elseif side == ContainerPatternNames.DIRECTION_UP then
-	            Turtle.suckUp(count)
-	        elseif side == ContainerPatternNames.DIRECTION_DOWN then
-	            Turtle.suckDown(count)
-	        elseif side == ContainerPatternNames.DIRECTION_LEFT then
-	            Turtle.suckLeft(count)
-	        elseif side == ContainerPatternNames.DIRECTION_RIGHT then
-	            Turtle.suckRight(count)
-	        elseif side == ContainerPatternNames.DIRECTION_BACK then
-	            Turtle.suckBack(count)
-	        end
-	        self.config:set("state", self.states.IDLE)
-	    end)
-	    self.codedInventory:addListener(ContainerPatternNames.ACTION_REFUEL, function(name, side, count)
-	        local slot = 1
-	        turtle.select(slot)
-	        if side == ContainerPatternNames.DIRECTION_FORWARD then
-	            Turtle.suck(count)
-	        elseif side == ContainerPatternNames.DIRECTION_UP then
-	            Turtle.suckUp(count)
-	        elseif side == ContainerPatternNames.DIRECTION_DOWN then
-	            Turtle.suckDown(count)
-	        elseif side == ContainerPatternNames.DIRECTION_LEFT then
-	            Turtle.suckLeft(count)
-	        elseif side == ContainerPatternNames.DIRECTION_RIGHT then
-	            Turtle.suckRight(count)
-	        elseif side == ContainerPatternNames.DIRECTION_BACK then
-	            Turtle.suckBack(count)
-	        end
-	        turtle.refuel()
-	        self.config:set("state", self.states.IDLE)
-	    end)
+	    self.codedInventory:addDefaultListeners()
 	end
 	function ProgrammableJob:updateStateUsingCodedInventory()
-	    self.codedInventory:run()
+	    self.codedInventory:run(self)
 	end
 	function ProgrammableJob:runStateAction()
-	    local state = self.config:get("state", self.states.IDLE)
+	    local state = self.config:get("state", self.states.COMMAND_PROMPT)
 	    local actionSide = self.config:get("actionSide", ContainerPatternNames.DIRECTION_FORWARD)
-	    if state == self.states.IDLE then
+	    if state == self.states.COMMAND_PROMPT then
 	        os.sleep(1)
 	    elseif state == self.states.MOVING then
 	        if actionSide == ContainerPatternNames.DIRECTION_UP then
