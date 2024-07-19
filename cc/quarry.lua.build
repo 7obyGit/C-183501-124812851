@@ -3031,9 +3031,9 @@ end
 local jobs_JobManager = MODULE_jobs_JobManager()
 
 
-function MODULE_entrypoints_programmable()
+function MODULE_entrypoints_quarry()
 	local JobManager = jobs_JobManager
 	local Job = jobs_Job
-	JobManager.run(Job.PROGRAMMABLE_JOB)
+	JobManager.run(Job.QUARRY)
 end
-local entrypoints_programmable = MODULE_entrypoints_programmable()
+local entrypoints_quarry = MODULE_entrypoints_quarry()

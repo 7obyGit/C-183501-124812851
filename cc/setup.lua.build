@@ -1180,36 +1180,6 @@ end
 local jobs_definitions_misc_IdleJob = MODULE_jobs_definitions_misc_IdleJob()
 
 
-function MODULE_jobs_definitions_misc_QuarryJob()
-	local Turtle = turtle_Turtle
-	local QuarryJob = {}
-	QuarryJob.__index = QuarryJob
-	function QuarryJob.new()
-	    local self = setmetatable({}, QuarryJob)
-	    self.alive = true
-	    return self
-	end
-	function QuarryJob:onStart()
-	    print("Starting the QuarryJob")
-	end
-	function QuarryJob:onResume()
-	    print("Resuming the QuarryJob")
-	end
-	function QuarryJob:inProgress()
-	    return self.alive
-	end
-	function QuarryJob:onStep()
-	    print("Hello world in the QuarryJob")
-	    self.alive = false
-	end
-	function QuarryJob:onComplete()
-	    print("Finished the QuarryJob")
-	end
-	return QuarryJob
-end
-local jobs_definitions_misc_QuarryJob = MODULE_jobs_definitions_misc_QuarryJob()
-
-
 function MODULE_jobs_definitions_misc_SetupJob()
 	local Turtle = turtle_Turtle
 	local SetupJob = {}
@@ -1240,6 +1210,178 @@ function MODULE_jobs_definitions_misc_SetupJob()
 	return SetupJob
 end
 local jobs_definitions_misc_SetupJob = MODULE_jobs_definitions_misc_SetupJob()
+
+
+function MODULE_utils_terminal_commands_Command()
+	local Command = {}
+	Command.__index = Command
+	function Command.new(name, helpText, func)
+	    local self = setmetatable({}, Command)
+	    self.name = name
+	    self.helpText = helpText
+	    self.func = func
+	    return self
+	end
+	function Command:help()
+	    print("Command: " .. self.name)
+	    print(self.helpText)
+	end
+	function Command:run(...)
+	    self.func(...)
+	end
+	return Command
+end
+local utils_terminal_commands_Command = MODULE_utils_terminal_commands_Command()
+
+
+function MODULE_utils_terminal_commands_Commands()
+	local Command = utils_terminal_commands_Command
+	local Text = utils_text_Text
+	local Commands = {}
+	Commands.__index = Commands
+	function Commands.new()
+	    local self = setmetatable({}, Commands)
+	    self.commands = {}
+	    self:add("help", Command.new("help", "Prints a list of commands", function(...) self:help(...) end))
+	    return self
+	end
+	function Commands:add(name, command)
+	    self.commands[name] = command
+	end
+	function Commands:help(commandName)
+	    if commandName ~= nil then
+	        local command = self.commands[commandName]
+	        if command == nil then
+	            print("Command not found: " .. commandName)
+	            return
+	        end
+	        command:help()
+	        return
+	    end
+	    print("Commands:")
+	    for name, command in pairs(self.commands) do
+	        print("  " .. name)
+	    end
+	    print("*Type 'help <command>' for more information")
+	end
+	function Commands:run(message)
+	    if message == nil or message == "" then
+	        print("No command entered")
+	        print("Type 'help' for a list of commands")
+	        return
+	    end
+	    local parts = Text.split(message, " ")
+	    local name = parts[1]
+	    local command = self.commands[name]
+	    if command == nil then
+	        print("Command not found: " .. command)
+	        print("\ttype 'help' for a list of commands")
+	        return
+	    end
+	    local arguments = {}
+	    for i = 2, #parts do
+	        table.insert(arguments, parts[i])
+	    end
+	    command:run(table.unpack(arguments))
+	end
+	return Commands
+end
+local utils_terminal_commands_Commands = MODULE_utils_terminal_commands_Commands()
+
+
+function MODULE_jobs_definitions_mobile_quarry_QuarryCommands()
+	local QuarryCommands = {}
+	function QuarryCommands.Test(self)
+	    print("QuarryCommands.Test was called")
+	    print(self.backgroundTask)
+	end
+	return QuarryCommands
+end
+local jobs_definitions_mobile_quarry_QuarryCommands = MODULE_jobs_definitions_mobile_quarry_QuarryCommands()
+
+
+function MODULE_utils_terminal_Terminal()
+	local Terminal = {}
+	Terminal.__index = Terminal
+	function Terminal.write(text)
+	    print(text)
+	end
+	function Terminal.read(prompt)
+	    if prompt ~= nil then
+	        write(prompt)
+	    end
+	    return read()
+	end
+	return Terminal
+end
+local utils_terminal_Terminal = MODULE_utils_terminal_Terminal()
+
+
+function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
+	local Terminal = utils_terminal_Terminal
+	local QuarryStates = {}
+	function QuarryStates.onCommandPrompt(self)
+	    print("QuarryStates.onCommandPrompt was called")
+	    local userInput = Terminal.read("\nEnter Command: ")
+	    print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
+	    self.commands:run(userInput)
+	end
+	function QuarryStates.onSetup(self)
+	    print("QuarryStates.onSetup was called")
+	    self.config:set("state", self.states.COMMAND_PROMPT)
+	end
+	return QuarryStates
+end
+local jobs_definitions_mobile_quarry_QuarryStates = MODULE_jobs_definitions_mobile_quarry_QuarryStates()
+
+
+function MODULE_jobs_definitions_mobile_quarry_QuarryJob()
+	local Turtle = turtle_Turtle
+	local Commands = utils_terminal_commands_Commands
+	local Command = utils_terminal_commands_Command
+	local QuarryCommands = jobs_definitions_mobile_quarry_QuarryCommands
+	local QuarryStates = jobs_definitions_mobile_quarry_QuarryStates
+	local QuarryJob = {}
+	QuarryJob.__index = QuarryJob
+	function QuarryJob.new(config)
+	    local self = setmetatable({}, QuarryJob)
+	    self.backgroundTask = function() self:onBackgroundStep() end
+	    self.backgroundDelay = 5  -- This task should be infrequent
+	    self.commands = Commands.new()
+	    self.commands:add(Command.new("test", function() QuarryCommands.Test(self) end))
+	    self.config = config
+	    self.states = {
+	        SETUP = "SETUP",
+	        COMMAND_PROMPT = "COMMAND_PROMPT",
+	    }
+	    return self
+	end
+	function QuarryJob:onStart()
+	    self.config:set("alive", true)
+	end
+	function QuarryJob:onResume()
+	end
+	function QuarryJob:inProgress()
+	    return self.config:get("alive", false)
+	end
+	function QuarryJob:onStep()
+	    local state = self.config:get("state", self.states.COMMAND_PROMPT)
+	    if state == self.states.COMMAND_PROMPT then
+	        QuarryStates.onCommandPrompt(self)
+	    elseif state == self.states.SETUP then
+	        QuarryStates.onSetup(self)
+	    else
+	        print("Invalid state: " .. state)
+	        self.config:set("state", self.states.COMMAND_PROMPT)
+	    end
+	end
+	function QuarryJob:onBackgroundStep()
+	end
+	function QuarryJob:onComplete()
+	end
+	return QuarryJob
+end
+local jobs_definitions_mobile_quarry_QuarryJob = MODULE_jobs_definitions_mobile_quarry_QuarryJob()
 
 
 function MODULE_turtle_Side()
@@ -2496,95 +2638,6 @@ end
 local utils_storage_Storage = MODULE_utils_storage_Storage()
 
 
-function MODULE_utils_terminal_Terminal()
-	local Terminal = {}
-	Terminal.__index = Terminal
-	function Terminal.write(text)
-	    print(text)
-	end
-	function Terminal.read(prompt)
-	    if prompt ~= nil then
-	        write(prompt)
-	    end
-	    return read()
-	end
-	return Terminal
-end
-local utils_terminal_Terminal = MODULE_utils_terminal_Terminal()
-
-
-function MODULE_utils_terminal_commands_Command()
-	local Command = {}
-	Command.__index = Command
-	function Command.new(name, helpText, func)
-	    local self = setmetatable({}, Command)
-	    self.name = name
-	    self.helpText = helpText
-	    self.func = func
-	    return self
-	end
-	function Command:help()
-	    print("Command: " .. self.name)
-	    print(self.helpText)
-	end
-	function Command:run(...)
-	    self.func(...)
-	end
-	return Command
-end
-local utils_terminal_commands_Command = MODULE_utils_terminal_commands_Command()
-
-
-function MODULE_utils_terminal_commands_Commands()
-	local Command = utils_terminal_commands_Command
-	local Text = utils_text_Text
-	local Commands = {}
-	Commands.__index = Commands
-	function Commands.new()
-	    local self = setmetatable({}, Commands)
-	    self.commands = {}
-	    self:add("help", Command.new("help", "Prints a list of commands", function(...) self:help(...) end))
-	    return self
-	end
-	function Commands:add(name, command)
-	    self.commands[name] = command
-	end
-	function Commands:help(commandName)
-	    if commandName ~= nil then
-	        local command = self.commands[commandName]
-	        if command == nil then
-	            print("Command not found: " .. commandName)
-	            return
-	        end
-	        command:help()
-	        return
-	    end
-	    print("Commands:")
-	    for name, command in pairs(self.commands) do
-	        print("  " .. name)
-	    end
-	    print("*Type 'help <command>' for more information")
-	end
-	function Commands:run(message)
-	    local parts = Text.split(message, " ")
-	    local name = parts[1]
-	    local command = self.commands[name]
-	    if command == nil then
-	        print("Command not found: " .. command)
-	        print("\ttype 'help' for a list of commands")
-	        return
-	    end
-	    local arguments = {}
-	    for i = 2, #parts do
-	        table.insert(arguments, parts[i])
-	    end
-	    command:run(table.unpack(arguments))
-	end
-	return Commands
-end
-local utils_terminal_commands_Commands = MODULE_utils_terminal_commands_Commands()
-
-
 function MODULE_utils_math_Math()
 	local Math = {}
 	function Math.round(num, numDecimalPlaces)
@@ -2921,8 +2974,8 @@ function MODULE_jobs_JobManager()
 	local Parallel = utils_controlflow_Parallel
 	local ExampleJob = jobs_definitions_misc_ExampleJob
 	local IdleJob = jobs_definitions_misc_IdleJob
-	local QuarryJob = jobs_definitions_misc_QuarryJob
 	local SetupJob = jobs_definitions_misc_SetupJob
+	local QuarryJob = jobs_definitions_mobile_quarry_QuarryJob
 	local ProgrammableJob = jobs_definitions_mobile_ProgrammableJob
 	local StorageJob = jobs_definitions_static_StorageJob
 	local JobManager = {}
