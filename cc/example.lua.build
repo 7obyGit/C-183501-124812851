@@ -1274,7 +1274,7 @@ function MODULE_utils_terminal_commands_Commands()
 	    local name = parts[1]
 	    local command = self.commands[name]
 	    if command == nil then
-	        print("Command not found: " .. command)
+	        print("Command not found '" .. message .. "'")
 	        print("\ttype 'help' for a list of commands")
 	        return
 	    end
