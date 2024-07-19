@@ -2284,6 +2284,13 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryJob()
 	        [self.states.COMMAND_PROMPT] = CommonStates.onCommandPrompt,
 	        [self.states.SETUP] = QuarryStates.onSetup,
 	        [self.states.MOVING] = CommonStates.onMoving,
+	        [self.states.QUARRY_STARTING] = QuarryStates.onQuarryStarting,
+	        [self.states.QUARRY_MOVING_COLUMN] = QuarryStates.onQuarryMovingColumn,
+	        [self.states.QUARRY_DIG_DOWN] = QuarryStates.onQuarryDigDown,
+	        [self.states.QUARRY_DIG_UP] = QuarryStates.onQuarryDigUp,
+	        [self.states.QUARRY_REFUEL] = QuarryStates.onQuarryRefuel,
+	        [self.states.QUARRY_DUMP] = QuarryStates.onQuarryDump,
+	        [self.states.QUARRY_TERMINATING] = QuarryStates.onQuarryTerminating,
 	    }
 	    self.codedInventory = CodedInventory.new()
 	    self.codedInventory:addDefaultListeners()
