@@ -2626,9 +2626,6 @@ function MODULE_utils_storage_Storage()
 	        end
 	        remainingCount = container:sendItems(destinationContainer, itemName, remainingCount)
 	    end
-	    if remainingCount > 0 then
-	        print("Warning: Missing " .. remainingCount .. " " .. itemName)
-	    end
 	    return remainingCount
 	end
 	function Storage:moveFromIo(itemName, count, sourceContainer)
