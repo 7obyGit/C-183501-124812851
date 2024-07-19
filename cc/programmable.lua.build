@@ -1321,13 +1321,11 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	local Terminal = utils_terminal_Terminal
 	local QuarryStates = {}
 	function QuarryStates.onCommandPrompt(self)
-	    print("QuarryStates.onCommandPrompt was called")
 	    local userInput = Terminal.read("\nEnter Command: ")
 	    print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
 	    self.commands:run(userInput)
 	end
 	function QuarryStates.onSetup(self)
-	    print("QuarryStates.onSetup was called")
 	    self.config:set("state", self.states.COMMAND_PROMPT)
 	end
 	return QuarryStates
