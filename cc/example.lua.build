@@ -2532,16 +2532,16 @@ function MODULE_utils_storage_Storage()
 	    self.barrels = Storage.connectToBarrels()
 	    self.inventories = Storage.connectToChests()
 	    self.furnaces = Storage.connectToFurnaces()
-	    self.io = self.barrels[config.io or Blocks.barrel .. "_0"]
+	    self.io = self.barrels[self.config.io or Blocks.barrel .. "_0"]
 	    self.inputs = {}
-	    if config.inputs ~= nil then
-	        for _, input in pairs(config.inputs) do
+	    if self.config.inputs ~= nil then
+	        for _, input in pairs(self.config.inputs) do
 	            self.inputs[input] = self.barrels[input]
 	        end
 	    end
 	    self.keepFilled = {}
-	    if config.keepFilled ~= nil then
-	        for _, keepFilled in pairs(config.keepFilled) do
+	    if self.config.keepFilled ~= nil then
+	        for _, keepFilled in pairs(self.config.keepFilled) do
 	            self.keepFilled[keepFilled.name] = {container = self.barrels[keepFilled.name], item = keepFilled.item}
 	        end
 	    end
