@@ -705,6 +705,9 @@ function MODULE_utils_terminal_Terminal()
 	                    Terminal.write("\t\tMissing field: '" .. key .. "'")
 	                end
 	            end
+	            if not validationPassed then
+	                Terminal.write("\t\tExpected format: " .. textutils.serialize(requiredFields))
+	            end
 	        end
 	    end
 	    return value or {}
@@ -727,7 +730,7 @@ function MODULE_utils_math_Vector3()
 	end
 	function Vector3.fromTerminal(prompt)
 	    prompt = prompt or "Enter a Vector3: "
-	    local table = Terminal.readTable(prompt, Vector3.new(0, 0, 0))
+	    local table = Terminal.readTable(prompt, Vector3.new(0, 0, 0):toTable())
 	    return Vector3.new(table.x, table.y, table.z)
 	end
 	function Vector3.fromTable(tbl)
@@ -1401,14 +1404,18 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryCommands()
 	function QuarryCommands.commandExit(self)
 	    self.config:set("alive", false)
 	end
-	function QuarryCommands.commandTest(self)
-	    print("Test command")
-	    local vector = Vector3.fromTerminal("Enter a vector: ")
-	    print("Vector: " .. vector:__tostring())
-	end
 	function QuarryCommands.commandSetup(self)
 	    print("Entering setup mode")
-	    self.config:set("state", self.states.SETUP)
+	    self.config:set("fuelPosition", Vector3.fromTerminal("Enter the fuel position: "))
+	    local position1 = Vector3.fromTerminal("Enter the first corner position: ")
+	    local position2 = Vector3.fromTerminal("Enter the second corner position: ")
+	    self.config:set("minX", math.min(position1.x, position2.x))
+	    self.config:set("maxX", math.max(position1.x, position2.x))
+	    self.config:set("minY", math.min(position1.y, position2.y))
+	    self.config:set("maxY", math.max(position1.y, position2.y))
+	    self.config:set("minZ", math.min(position1.z, position2.z))
+	    self.config:set("maxZ", math.max(position1.z, position2.z))
+	    self.config:set("state", self.states.COMMAND_PROMPT)
 	end
 	function QuarryCommands.commandQuarryStart(self)
 	    print("Starting the quarry")
@@ -1448,6 +1455,7 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	    self.config:init("maxZ", Turtle.CURRENT_POSITION.z)
 	    self.config:set("homePosition", Turtle.CURRENT_POSITION:toTable())
 	    self.config:init("fuelPosition", Turtle.CURRENT_POSITION:toTable())  -- Could be located during setup
+	    self.config:init("minFuelLevel", 256)
 	    self.config:init("targetFuelLevel", 1024)
 	    self.config:set("minEmptyInventorySlots", 4)  -- The number of slots that should be empty before dumping
 	    self.config:set("columnsToMine", {})
@@ -1458,6 +1466,7 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	    end
 	    if #self.config:get("columnsToMine") == 0 then
 	        print("WARNING: No columns to mine")
+	        print("Have you called the 'setup' command?")
 	        self.config:set("state", self.states.QUARRY_TERMINATING)
 	    else
 	        print("Detected columns to mine, moving to the first one")
@@ -2257,7 +2266,7 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryJob()
 	    self.commands = Commands.new()
 	    self.commands:add(Command.new("exit", "Terminates the storage program", function(...) CommonCommands.commandExit(self, ...) end))
 	    self.commands:add(Command.new("setup", "Enters setup mode", function(...) CommonCommands.commandSetup(self, ...) end))
-	    self.commands:add(Command.new("test", "Runs the test command", function(...) QuarryCommands.commandTest(self, ...) end))
+	    self.commands:add(Command.new("start", "Starts the quarry", function(...) QuarryCommands.commandQuarryStart(self, ...) end))
 	    self.config = config
 	    self.states = {
 	        SETUP = "SETUP",
