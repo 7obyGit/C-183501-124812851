@@ -1304,6 +1304,9 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryCommands()
 	    print("QuarryCommands.Test was called")
 	    print(self.backgroundTask)
 	end
+	function QuarryCommands.commandExit(self)
+	    self.config:set("alive", false)
+	end
 	return QuarryCommands
 end
 local jobs_definitions_mobile_quarry_QuarryCommands = MODULE_jobs_definitions_mobile_quarry_QuarryCommands()
