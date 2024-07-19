@@ -1398,6 +1398,7 @@ local utils_terminal_commands_Commands = MODULE_utils_terminal_commands_Commands
 
 
 function MODULE_jobs_definitions_mobile_quarry_QuarryCommands()
+	local Turtle = turtle_Turtle
 	local Vector3 = utils_math_Vector3
 	local Terminal = utils_terminal_Terminal
 	local QuarryCommands = {}
@@ -1407,8 +1408,9 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryCommands()
 	function QuarryCommands.commandSetup(self)
 	    print("Entering setup mode")
 	    self.config:set("fuelPosition", Vector3.fromTerminal("Enter the fuel position: "))
-	    local position1 = Vector3.fromTerminal("Enter the first corner position: ")
-	    local position2 = Vector3.fromTerminal("Enter the second corner position: ")
+	    print("The first corner position has been set to the current position of the turtle")
+	    local position1 = Turtle.CURRENT_POSITION
+	    local position2 = Vector3.fromTerminal("Enter the other corner position: ")
 	    self.config:set("minX", math.min(position1.x, position2.x))
 	    self.config:set("maxX", math.max(position1.x, position2.x))
 	    self.config:set("minY", math.min(position1.y, position2.y))
