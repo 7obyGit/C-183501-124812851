@@ -1341,7 +1341,7 @@ function MODULE_utils_terminal_Terminal()
 	end
 	function Terminal.read(prompt)
 	    if prompt ~= nil then
-	        Terminal.write(prompt)
+	        write(prompt)
 	    end
 	    return read()
 	end
