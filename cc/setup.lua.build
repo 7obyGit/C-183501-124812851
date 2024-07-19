@@ -1355,8 +1355,8 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryJob()
 	    self.backgroundTask = function() self:onBackgroundStep() end
 	    self.backgroundDelay = 5  -- This task should be infrequent
 	    self.commands = Commands.new()
-	    self.commands:add("exit", Command.new("exit", "Terminates the storage program", function(...) self:commandExit(...) end))
-	    self.commands:add(Command.new("test", function() QuarryCommands.Test(self) end))
+	    self.commands:add(Command.new("exit", "Terminates the storage program", function(...) QuarryCommands.commandExit(self, ...) end))
+	    self.commands:add(Command.new("test", "A test function", function(...) QuarryCommands.Test(self, ...) end))
 	    self.config = config
 	    self.states = {
 	        SETUP = "SETUP",
