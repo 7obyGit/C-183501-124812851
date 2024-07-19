@@ -1246,7 +1246,16 @@ function MODULE_utils_terminal_commands_Commands()
 	    return self
 	end
 	function Commands:add(name, command)
-	    self.commands[name] = command
+	    if name ~= nil and command ~= nil then
+	        self.commands[name] = command
+	    elseif name ~= nil and command == nil then
+	        command = name
+	        self.commands[command.name] = command
+	    elseif name == nil and command == nil then
+	        print("'Commands:add' provided both name and command = nil")
+	    else
+	        print("How did this happen?")
+	    end
 	end
 	function Commands:help(commandName)
 	    if commandName ~= nil then
@@ -1346,6 +1355,7 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryJob()
 	    self.backgroundTask = function() self:onBackgroundStep() end
 	    self.backgroundDelay = 5  -- This task should be infrequent
 	    self.commands = Commands.new()
+	    self.commands:add("exit", Command.new("exit", "Terminates the storage program", function(...) self:commandExit(...) end))
 	    self.commands:add(Command.new("test", function() QuarryCommands.Test(self) end))
 	    self.config = config
 	    self.states = {
