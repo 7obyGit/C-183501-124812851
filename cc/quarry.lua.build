@@ -1463,11 +1463,9 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	    self.config:set("columnsToMine", {})
 	    for x = self.config:get("minX"), self.config:get("maxX") do
 	        for z = self.config:get("minZ"), self.config:get("maxZ") do
-	            print(x, z)
 	            self.config:enqueue("columnsToMine", {x = x, z = z})
 	        end
 	    end
-	    print(#self.config:get("columnsToMine") .. " columns to mine")
 	    if #self.config:get("columnsToMine") == 0 then
 	        print("WARNING: No columns to mine")
 	        print("Have you called the 'setup' command?")
