@@ -1353,6 +1353,26 @@ function MODULE_utils_terminal_Terminal()
 	    end
 	    return value
 	end
+	function Terminal.readBoolean(prompt)
+	    local value = nil
+	    while value == nil do
+	        local input = Terminal.read(prompt):lower()
+	        if input == "true" or input == "y" or input == "yes" then
+	            value = true
+	        elseif input == "false" or input == "n" or input == "no" then
+	            value = false
+	        end
+	    end
+	    return value
+	end
+	function Terminal.readTable(prompt)
+	    local value = nil
+	    while value == nil do
+	        local input = Terminal.read(prompt)
+	        value = textutils.unserialize(input)
+	    end
+	    return value
+	end
 	return Terminal
 end
 local utils_terminal_Terminal = MODULE_utils_terminal_Terminal()
@@ -1366,8 +1386,8 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryCommands()
 	end
 	function QuarryCommands.commandTest(self)
 	    print("Test command")
-	    local n = Terminal.readNumber("Enter a number")
-	    print(type(n), n)
+	    local vector = Terminal.readTable("Enter a vector: ")
+	    print("Vector: " .. textutils.serialize(vector))
 	end
 	function QuarryCommands.commandSetup(self)
 	    print("Entering setup mode")
