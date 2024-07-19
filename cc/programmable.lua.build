@@ -88,6 +88,32 @@ function MODULE_utils_config_JobConfig()
 	    self.state[key] = value
 	    self:save()
 	end
+	function JobConfig:init(key, defaultValue)
+	    if self:get(key, nil) == nil then
+	        self:set(key, defaultValue)
+	    end
+	end
+	function JobConfig:getNext(key, defaultValue)
+	    local list = self:get(key, {})
+	    if #list == 0 then
+	        return defaultValue
+	    end
+	    local value = table.remove(list, 1)
+	    if #list > 0 then
+	        self:set(key, list)
+	    else
+	        self:set(key, nil)
+	    end
+	    return value
+	end
+	function JobConfig:dequeue(key, defaultValue)
+	    return self:getNext(key, defaultValue)
+	end
+	function JobConfig:enqueue(key, value)
+	    local list = self:get(key, {})
+	    table.insert(list, value)
+	    self:set(key, list)
+	end
 	return JobConfig
 end
 local utils_config_JobConfig = MODULE_utils_config_JobConfig()
@@ -962,13 +988,16 @@ function MODULE_turtle_Turtle()
 	    Turtle.CURRENT_POSITION = Turtle.CURRENT_POSITION:addInDirection(Direction.DOWN, 1)
 	    return true
 	end
+	function Turtle.getFuelLevel()
+	    return turtle.getFuelLevel()
+	end
 	function Turtle.refuel()
 	    if turtle.getFuelLevel() >= Turtle.CONFIG.fuelTarget then
 	        return
 	    end
 	    local slot = nil
 	    slot = 0
-	    while turtle.getFuelLevel() < Turtle.CONFIG.fuelTarget and slot ~= nil do
+	    while Turtle.getFuelLevel() < Turtle.CONFIG.fuelTarget and slot ~= nil do
 	        slot = Inventory.getSlotWithItem(Turtle.CONFIG.fuelItem)
 	        turtle.select(slot)
 	        turtle.refuel()
@@ -1304,14 +1333,49 @@ end
 local utils_terminal_commands_Commands = MODULE_utils_terminal_commands_Commands()
 
 
+function MODULE_utils_terminal_Terminal()
+	local Terminal = {}
+	Terminal.__index = Terminal
+	function Terminal.write(text)
+	    print(text)
+	end
+	function Terminal.read(prompt)
+	    if prompt ~= nil then
+	        Terminal.write(prompt)
+	    end
+	    return read()
+	end
+	function Terminal.readNumber(prompt)
+	    local value = nil
+	    while value == nil do
+	        local input = Terminal.read(prompt)
+	        value = tonumber(input)
+	    end
+	    return value
+	end
+	return Terminal
+end
+local utils_terminal_Terminal = MODULE_utils_terminal_Terminal()
+
+
 function MODULE_jobs_definitions_mobile_quarry_QuarryCommands()
+	local Terminal = utils_terminal_Terminal
 	local QuarryCommands = {}
 	function QuarryCommands.commandExit(self)
 	    self.config:set("alive", false)
 	end
+	function QuarryCommands.commandTest(self)
+	    print("Test command")
+	    local n = Terminal.readNumber("Enter a number")
+	    print(type(n), n)
+	end
 	function QuarryCommands.commandSetup(self)
 	    print("Entering setup mode")
 	    self.config:set("state", self.states.SETUP)
+	end
+	function QuarryCommands.commandQuarryStart(self)
+	    print("Starting the quarry")
+	    self.config:set("state", self.states.QUARRY_STARTING)
 	end
 	return QuarryCommands
 end
@@ -1333,9 +1397,38 @@ local utils_jobutils_CommonCommands = MODULE_utils_jobutils_CommonCommands()
 
 
 function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
+	local Turtle = turtle_Turtle
 	local QuarryStates = {}
 	function QuarryStates.onSetup(self)
 	    self.config:set("state", self.states.COMMAND_PROMPT)
+	end
+	function QuarryStates.onQuarryStarting(self)
+	    self.config:init("minX", Turtle.CURRENT_POSITION.x)
+	    self.config:init("maxX", Turtle.CURRENT_POSITION.x)
+	    self.config:init("minY", Turtle.CURRENT_POSITION.y)
+	    self.config:init("maxY", Turtle.CURRENT_POSITION.y)
+	    self.config:init("minZ", Turtle.CURRENT_POSITION.z)
+	    self.config:init("maxZ", Turtle.CURRENT_POSITION.z)
+	    self.config:set("homePosition", Turtle.CURRENT_POSITION:toTable())
+	    self.config:init("fuelPosition", Turtle.CURRENT_POSITION:toTable())  -- Could be located during setup
+	    self.config:init("targetFuelLevel", 1024)
+	    self.config:set("minEmptyInventorySlots", 4)  -- The number of slots that should be empty before dumping
+	    self.config:set("columnsToMine", {})
+	    for x = self.config:get("minX"), self.config:get("maxX") do
+	        for z = self.config:get("minZ"), self.config:get("maxZ") do
+	            self.config:enqueue("columnsToMine", {x = x, z = z})
+	        end
+	    end
+	    if #self.config:get("columnsToMine") == 0 then
+	        print("WARNING: No columns to mine")
+	        self.config:set("state", self.states.QUARRY_TERMINATING)
+	    else
+	        print("Detected columns to mine, moving to the first one")
+	        self.config:set("currentColumn", self.config:getNext("columnsToMine"))
+	        self.config:set("state", self.states.QUARRY_MOVING_COLUMN)
+	    end
+	end
+	function QuarryStates.onQuarryMovingColumn(self)
 	end
 	return QuarryStates
 end
@@ -1376,23 +1469,6 @@ function MODULE_utils_storage_patterns_ContainerPatternNames()
 	return ContainerPatternNames
 end
 local utils_storage_patterns_ContainerPatternNames = MODULE_utils_storage_patterns_ContainerPatternNames()
-
-
-function MODULE_utils_terminal_Terminal()
-	local Terminal = {}
-	Terminal.__index = Terminal
-	function Terminal.write(text)
-	    print(text)
-	end
-	function Terminal.read(prompt)
-	    if prompt ~= nil then
-	        write(prompt)
-	    end
-	    return read()
-	end
-	return Terminal
-end
-local utils_terminal_Terminal = MODULE_utils_terminal_Terminal()
 
 
 function MODULE_utils_jobutils_CommonStates()
@@ -2144,11 +2220,14 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryJob()
 	    self.commands = Commands.new()
 	    self.commands:add(Command.new("exit", "Terminates the storage program", function(...) CommonCommands.commandExit(self, ...) end))
 	    self.commands:add(Command.new("setup", "Enters setup mode", function(...) CommonCommands.commandSetup(self, ...) end))
+	    self.commands:add(Command.new("test", "Runs the test command", function(...) QuarryCommands.commandTest(self, ...) end))
 	    self.config = config
 	    self.states = {
 	        SETUP = "SETUP",
 	        COMMAND_PROMPT = "COMMAND_PROMPT",
 	        MOVING = "MOVING",
+	        QUARRY_STARTING = "QUARRY_STARTING",  -- Turtle initiates quarry plan in the config file
+	        QUARRY_MOVING_COLUMN = "QUARRY_MOVING_COLUMN",  -- Turtle moves to the next column of blocks to be mined
 	        QUARRY_DIG_DOWN = "QUARRY_DIG_DOWN",  -- Dig down to the position set during the setup process
 	        QUARRY_DIG_UP = "QUARRY_DIG_UP",  -- Dig up to the position the turtle started at
 	        QUARRY_REFUEL = "QUARRY_REFUEL",  -- Refill fuel at refuel station (located during setup with block indicators)
