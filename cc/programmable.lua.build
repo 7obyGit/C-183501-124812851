@@ -1886,7 +1886,9 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	    local currentPosition = Turtle.CURRENT_POSITION
 	    local fuelPosition = Vector3.new(self.config:get("fuelPosition", currentPosition))
 	    if currentPosition:equals(fuelPosition) then
-	        print("Refueling")
+	        print("Refueling " ..textutils.serialiseJSON(currentPosition:toTable()))
+	        print("\t\tFuel Pos: " ..textutils.serialiseJSON(fuelPosition:toTable()))
+	        os.sleep(1)
 	        local fuelTarget = self.config:get("targetFuelLevel", 1024)
 	        if Turtle.getFuelLevel() >= fuelTarget then
 	            return
