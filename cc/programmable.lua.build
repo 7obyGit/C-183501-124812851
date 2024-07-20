@@ -814,10 +814,7 @@ function MODULE_utils_text_Text()
 	    return text:find(pattern) ~= nil
 	end
 	function Text.startsWith(text, pattern)
-	    print("CALLED startsWith with text: " .. text .. " and pattern: " .. pattern)
-	    local temp = text:sub(1, #pattern) == pattern
-	    print("RESULT: " .. tostring(temp))
-	    return temp
+	    return text:sub(1, #pattern) == pattern
 	end
 	function Text.endsWith(text, pattern)
 	    return text:sub(-#pattern) == pattern
@@ -1480,6 +1477,7 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	    end
 	end
 	function QuarryStates.onQuarryMovingColumn(self)
+	    print("MOVING")
 	end
 	return QuarryStates
 end
@@ -2311,6 +2309,7 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryJob()
 	end
 	function QuarryJob:onStep()
 	    local state = self.config:get("state", self.states.COMMAND_PROMPT)
+	    print(state)
 	    if Text.startsWith(state, "QUARRY_") then
 	        self.stateActions[state](self)
 	        return
