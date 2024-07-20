@@ -1626,6 +1626,7 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	    local currentPosition = Turtle.CURRENT_POSITION
 	    local fuelPosition = Vector3.new(self.config:get("fuelPosition", currentPosition))
 	    if currentPosition:equals(fuelPosition) then
+	        print("Refueling")
 	        local fuelTarget = self.config:get("targetFuelLevel", 1024)
 	        if Turtle.getFuelLevel() >= fuelTarget then
 	            return
@@ -1665,6 +1666,7 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	    local currentPosition = Turtle.CURRENT_POSITION
 	    local homePosition = Vector3.new(self.config:get("homePosition", currentPosition))
 	    if currentPosition:equals(homePosition) then
+	        print("Dumping items")
 	        local side = Inventory.findContainerSide()
 	        if side == nil then
 	            print("No dump container found - please place one")
@@ -1688,6 +1690,7 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	    local currentPosition = Turtle.CURRENT_POSITION
 	    local homePosition = Vector3.new(self.config:get("homePosition", currentPosition))
 	    if currentPosition:equals(homePosition) then
+	        print("Quarry terminating")
 	        self.config:set("state", self.states.COMMAND_PROMPT)
 	        return
 	    end
