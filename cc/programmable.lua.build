@@ -1150,8 +1150,36 @@ function MODULE_turtle_Turtle()
 	        return Turtle.forward(true)
 	    end
 	end
+	function Turtle.checkDirection()
+	    for _, direction in ipairs(Turtle.DIRECTIONS) do
+	        print("TRYING " .. direction)
+	        if Turtle.moveInDirection(direction) then
+	            Turtle.CURRENT_DIRECTION = direction
+	            Turtle.CURRENT_POSITION = Turtle.getGpsPosition()
+	            return true
+	        end
+	    end
+	    if Turtle.up() then
+	        Turtle.CURRENT_POSITION = Turtle.CURRENT_POSITION:addInDirection("up", 1)
+	        for _, direction in ipairs(Turtle.DIRECTIONS) do
+	            if Turtle.moveInDirection(direction) then
+	                Turtle.CURRENT_DIRECTION = direction
+	                Turtle.CURRENT_POSITION = Turtle.getGpsPosition()
+	                return true
+	            end
+	        end
+	    end
+	    return false
+	end
 	function Turtle.forward(skipDirectionCheck)
-	    if Turtle.getBlockInFront() ~= nil then return false end
+	    if Turtle.getBlockInFront() ~= nil then
+	        print("Block in front")
+	        if skipDirectionCheck then
+	            print("SKIPPING DIRECTION CHECK")
+	            return false
+	        end
+	        return Turtle.checkDirection()
+	    end
 	    local oldPosition = Turtle.CURRENT_POSITION:copy()
 	    local moved = turtle.forward()
 	    local expectedNewPosition = Turtle.CURRENT_POSITION:addInDirection(Turtle.CURRENT_DIRECTION, 1)
@@ -1162,25 +1190,7 @@ function MODULE_turtle_Turtle()
 	            print("SKIPPING DIRECTION CHECK")
 	            return false
 	        end
-	        for _, direction in ipairs(Turtle.DIRECTIONS) do
-	            print("TRYING " .. direction)
-	            if Turtle.moveInDirection(direction) then
-	                Turtle.CURRENT_DIRECTION = direction
-	                Turtle.CURRENT_POSITION = Turtle.getGpsPosition()
-	                return true
-	            end
-	        end
-	        if Turtle.up() then
-	            Turtle.CURRENT_POSITION = Turtle.CURRENT_POSITION:addInDirection("up", 1)
-	            for _, direction in ipairs(Turtle.DIRECTIONS) do
-	                if Turtle.moveInDirection(direction) then
-	                    Turtle.CURRENT_DIRECTION = direction
-	                    Turtle.CURRENT_POSITION = Turtle.getGpsPosition()
-	                    return true
-	                end
-	            end
-	        end
-	        return false
+	        return Turtle.checkDirection()
 	    end
 	    if Turtle._UNCHECKED_DIRECTION then
 	        local newPosition = Turtle.getGpsPosition()
