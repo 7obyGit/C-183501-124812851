@@ -1237,13 +1237,12 @@ function MODULE_turtle_Turtle()
 	            end
 	        end
 	    end
+	    print("RETURING FROM CHECK DIRECTION")
 	    return false
 	end
 	function Turtle.forward(skipDirectionCheck)
 	    if Turtle.getBlockInFront() ~= nil then
-	        print("Block in front")
 	        if skipDirectionCheck then
-	            print("SKIPPING DIRECTION CHECK")
 	            return false
 	        end
 	        return Turtle.checkDirection()
@@ -1251,11 +1250,8 @@ function MODULE_turtle_Turtle()
 	    local oldPosition = Turtle.CURRENT_POSITION:copy()
 	    local moved = turtle.forward()
 	    local expectedNewPosition = Turtle.CURRENT_POSITION:addInDirection(Turtle.CURRENT_DIRECTION, 1)
-	    print("CALLED")
 	    if not moved then
-	        print("NOT MOVED")
 	        if skipDirectionCheck then
-	            print("SKIPPING DIRECTION CHECK")
 	            return false
 	        end
 	        return Turtle.checkDirection()
