@@ -1516,7 +1516,9 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryCommands()
 	end
 	function QuarryCommands.commandSetup(self)
 	    print("Entering setup mode")
+	    print("CALL1")
 	    self.config:set("fuelPosition", Vector3.fromTerminal("Enter the fuel position: "))
+	    print("CALL2")
 	    print("The first corner position has been set to the current position of the turtle")
 	    local position1 = Turtle.CURRENT_POSITION
 	    local position2 = Vector3.fromTerminal("Enter the other corner position: ")
@@ -1558,6 +1560,7 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	local QuarryStates = {}
 	function QuarryStates.onSetup(self)
 	    print("CALLED ON SETUP")
+	    self.config:set("state", self.states.COMMAND_PROMPT)
 	end
 	function QuarryStates.onQuarryStarting(self)
 	    self.config:init("minX", Turtle.CURRENT_POSITION.x)
