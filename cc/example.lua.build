@@ -814,7 +814,10 @@ function MODULE_utils_text_Text()
 	    return text:find(pattern) ~= nil
 	end
 	function Text.startsWith(text, pattern)
-	    return text:sub(1, #pattern) == pattern
+	    print("CALLED startsWith with text: " .. text .. " and pattern: " .. pattern)
+	    local temp = text:sub(1, #pattern) == pattern
+	    print("RESULT: " .. tostring(temp))
+	    return temp
 	end
 	function Text.endsWith(text, pattern)
 	    return text:sub(-#pattern) == pattern
