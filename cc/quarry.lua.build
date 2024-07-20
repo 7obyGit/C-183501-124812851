@@ -1269,6 +1269,7 @@ function MODULE_turtle_Turtle()
 	    else
 	        Turtle.CURRENT_POSITION = expectedNewPosition
 	    end
+	    print("FORWARD RETURING TRUE")
 	    return true
 	end
 	function Turtle.up()
