@@ -1477,6 +1477,21 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	    end
 	end
 	function QuarryStates.onQuarryMovingColumn(self)
+	    local currentColumn = self.config:get("currentColumn")
+	    if Turtle.CURRENT_POSITION.x == currentColumn.x and
+	            Turtle.CURRENT_POSITION.z == currentColumn.z then
+	        if Turtle.CURRENT_POSITION.y == self.config:get("maxY") then
+	            print("Column reached - digging down")
+	            self.config:set("state", self.states.QUARRY_DIG_DOWN)
+	        else
+	            print("Column reached - digging up")
+	            self.config:set("state", self.states.QUARRY_DIG_UP)
+	        end
+	        return
+	    end
+	    local direction = Turtle.CURRENT_POSITION:directionTo(currentColumn)
+	    print(direction)
+	    print(textutils.serialise(currentColumn))
 	end
 	return QuarryStates
 end
