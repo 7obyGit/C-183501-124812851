@@ -60,10 +60,13 @@ function MODULE_utils_config_JobConfig()
 	    }
 	end
 	function JobConfig:serializeJson()
-	    return textutils.serializeJSON(self:toTable())
+	    return textutils.serialize(self:toTable())
 	end
 	function JobConfig.deserializeJson(json)
-	    local configAttributes = textutils.unserializeJSON(json)
+	    local success, configAttributes = pcall(textutils.unserialize, json)
+	    if not success then
+	        configAttributes = textutils.unserializeJSON(json)
+	    end
 	    local config = JobConfig.fromTable(configAttributes)
 	    return config
 	end
