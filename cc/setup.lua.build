@@ -1647,8 +1647,8 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	        end
 	        return
 	    end
-	    print("CALLED")
 	    local direction = currentPosition:directionTo(currentColumn)
+	    print("CALLED: '" .. direction .. "'")
 	    local moved = Turtle.move(direction)
 	    print(moved)
 	    print(Turtle.getFuelLevel())
