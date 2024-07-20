@@ -1274,9 +1274,11 @@ function MODULE_turtle_Turtle()
 	    return true
 	end
 	function Turtle.up()
+	    print("START UP")
 	    if Turtle.getBlockAbove() ~= nil then return false end
 	    turtle.up()
 	    Turtle.CURRENT_POSITION = Turtle.CURRENT_POSITION:addInDirection(Direction.UP, 1)
+	    print("UP RETURING TRUE")
 	    return true
 	end
 	function Turtle.down()
