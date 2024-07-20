@@ -1856,7 +1856,12 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	    if not moved then
 	        print("Cannot move to the next column - turtle is stuck")
 	        print("Digging " .. direction)
-	        Turtle.safeDig(direction)
+	        local success = Turtle.safeDig(direction)
+	        if not success then
+	            print("Cannot move to the home position - turtle is stuck")
+	            print("Please move the turtle manually")
+	            self.config:set("state", self.states.COMMAND_PROMPT)
+	        end
 	    end
 	end
 	function QuarryStates.onQuarryDigDown(self)
@@ -1925,7 +1930,12 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	    if not moved then
 	        print("Cannot move to the next column - turtle is stuck")
 	        print("Digging " .. direction)
-	        Turtle.safeDig(direction)
+	        local success = Turtle.safeDig(direction)
+	        if not success then
+	            print("Cannot move to the home position - turtle is stuck")
+	            print("Please move the turtle manually")
+	            self.config:set("state", self.states.COMMAND_PROMPT)
+	        end
 	    end
 	end
 	function QuarryStates.onQuarryDump(self)
@@ -1953,7 +1963,12 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	    if not moved then
 	        print("Cannot move to the next column - turtle is stuck")
 	        print("Digging " .. direction)
-	        Turtle.safeDig(direction)
+	        local success = Turtle.safeDig(direction)
+	        if not success then
+	            print("Cannot move to the home position - turtle is stuck")
+	            print("Please move the turtle manually")
+	            self.config:set("state", self.states.COMMAND_PROMPT)
+	        end
 	    end
 	end
 	function QuarryStates.onQuarryTerminating(self)
@@ -1974,7 +1989,12 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	    if not moved then
 	        print("Cannot move to the next column - turtle is stuck")
 	        print("Digging " .. direction)
-	        Turtle.safeDig(direction)
+	        local success = Turtle.safeDig(direction)
+	        if not success then
+	            print("Cannot move to the home position - turtle is stuck")
+	            print("Please move the turtle manually")
+	            self.config:set("state", self.states.COMMAND_PROMPT)
+	        end
 	    end
 	end
 	return QuarryStates
