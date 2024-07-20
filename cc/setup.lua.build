@@ -1590,12 +1590,12 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	function QuarryStates.onQuarryMovingColumn(self)
 	    local currentPosition = Turtle.CURRENT_POSITION
 	    local currentColumn = self.config:get("currentColumn", nil)
-	    currentColumn = Vector3.new(currentColumn.x, currentPosition.y, currentColumn.z)
 	    if currentColumn == nil then
 	        print("All columns mined!")
 	        self.config:set("state", self.states.QUARRY_TERMINATING)
 	        return
 	    end
+	    currentColumn = Vector3.new(currentColumn.x, currentPosition.y, currentColumn.z)
 	    if currentPosition:equals(currentColumn) then
 	        if Turtle.CURRENT_POSITION.y == self.config:get("maxY", currentPosition.y) then
 	            print("Column reached - digging down")
