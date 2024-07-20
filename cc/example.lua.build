@@ -1155,11 +1155,15 @@ function MODULE_turtle_Turtle()
 	    local oldPosition = Turtle.CURRENT_POSITION:copy()
 	    local moved = turtle.forward()
 	    local expectedNewPosition = Turtle.CURRENT_POSITION:addInDirection(Turtle.CURRENT_DIRECTION, 1)
+	    print("CALLED")
 	    if not moved then
+	        print("NOT MOVED")
 	        if skipDirectionCheck then
+	            print("SKIPPING DIRECTION CHECK")
 	            return false
 	        end
 	        for _, direction in ipairs(Turtle.DIRECTIONS) do
+	            print("TRYING " .. direction)
 	            if Turtle.moveInDirection(direction) then
 	                Turtle.CURRENT_DIRECTION = direction
 	                Turtle.CURRENT_POSITION = Turtle.getGpsPosition()
