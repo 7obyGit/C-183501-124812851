@@ -1511,14 +1511,9 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryCommands()
 	local Vector3 = utils_math_Vector3
 	local Terminal = utils_terminal_Terminal
 	local QuarryCommands = {}
-	function QuarryCommands.commandExit(self)
-	    self.config:set("alive", false)
-	end
 	function QuarryCommands.commandSetup(self)
 	    print("Entering setup mode")
-	    print("CALL1")
 	    self.config:set("fuelPosition", Vector3.fromTerminal("Enter the fuel position: "))
-	    print("CALL2")
 	    print("The first corner position has been set to the current position of the turtle")
 	    local position1 = Turtle.CURRENT_POSITION
 	    local position2 = Vector3.fromTerminal("Enter the other corner position: ")
@@ -2499,7 +2494,7 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryJob()
 	    self.backgroundDelay = 5  -- This task should be infrequent
 	    self.commands = Commands.new()
 	    self.commands:add(Command.new("exit", "Terminates the storage program", function(...) CommonCommands.commandExit(self, ...) end))
-	    self.commands:add(Command.new("setup", "Enters setup mode", function(...) CommonCommands.commandSetup(self, ...) end))
+	    self.commands:add(Command.new("setup", "Enters setup mode", function(...) QuarryCommands.commandSetup(self, ...) end))
 	    self.commands:add(Command.new("start", "Starts the quarry", function(...) QuarryCommands.commandQuarryStart(self, ...) end))
 	    self.config = config
 	    self.states = {
