@@ -1207,6 +1207,7 @@ function MODULE_turtle_Turtle()
 	end
 	function Turtle.move(direction)
 	    if direction == Direction.NORTH or direction == Direction.SOUTH or direction == Direction.WEST or direction == Direction.EAST then
+	        print("ATTEMPTING TO MOVE")
 	        Turtle.turnTo(direction)
 	        return Turtle.forward()
 	    elseif direction == Direction.UP then
