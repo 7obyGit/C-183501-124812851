@@ -64,7 +64,7 @@ function MODULE_utils_config_JobConfig()
 	end
 	function JobConfig.deserializeJson(json)
 	    local success, configAttributes = pcall(textutils.unserialize, json)
-	    if not success then
+	    if not success or configAttributes == nil then
 	        configAttributes = textutils.unserializeJSON(json)
 	    end
 	    local config = JobConfig.fromTable(configAttributes)
