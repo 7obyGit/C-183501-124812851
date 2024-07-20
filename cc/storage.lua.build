@@ -1331,7 +1331,6 @@ function MODULE_turtle_Turtle()
 	end
 	function Turtle.move(direction)
 	    if direction == Direction.NORTH or direction == Direction.SOUTH or direction == Direction.WEST or direction == Direction.EAST then
-	        print("ATTEMPTING TO MOVE")
 	        Turtle.turnTo(direction)
 	        return Turtle.forward()
 	    elseif direction == Direction.UP then
@@ -1922,7 +1921,12 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	        return
 	    end
 	    local direction = currentPosition:directionTo(fuelPosition)
-	    Turtle.move(direction)
+	    local moved = Turtle.move(direction)
+	    if not moved then
+	        print("Cannot move to the next column - turtle is stuck")
+	        print("Digging " .. direction)
+	        Turtle.safeDig(direction)
+	    end
 	end
 	function QuarryStates.onQuarryDump(self)
 	    local currentPosition = Turtle.CURRENT_POSITION
@@ -1945,7 +1949,12 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	        return
 	    end
 	    local direction = currentPosition:directionTo(dumpPosition)
-	    Turtle.move(direction)
+	    local moved = Turtle.move(direction)
+	    if not moved then
+	        print("Cannot move to the next column - turtle is stuck")
+	        print("Digging " .. direction)
+	        Turtle.safeDig(direction)
+	    end
 	end
 	function QuarryStates.onQuarryTerminating(self)
 	    local currentPosition = Turtle.CURRENT_POSITION
@@ -1961,7 +1970,12 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	        return
 	    end
 	    local direction = currentPosition:directionTo(homePosition)
-	    Turtle.move(direction)
+	    local moved = Turtle.move(direction)
+	    if not moved then
+	        print("Cannot move to the next column - turtle is stuck")
+	        print("Digging " .. direction)
+	        Turtle.safeDig(direction)
+	    end
 	end
 	return QuarryStates
 end
