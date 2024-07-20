@@ -1577,6 +1577,16 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	            self.config:enqueue("columnsToMine", {x = x, z = z})
 	        end
 	    end
+	    if self.config:get("minX", nil) == self.config:get("maxX", nil)
+	            and self.config:get("minY", nil) == self.config:get("maxY", nil)
+	            and self.config:get("minZ", nil) == self.config:get("maxZ", nil) then
+	        print("WARNING: No secondary position set")
+	        print("Have you called the 'setup' command?")
+	        self.config:set("state", self.states.QUARRY_TERMINATING)
+	    else
+	        print("Quarry initialized")
+	        self.config:set("state", self.states.QUARRY_MOVING_COLUMN)
+	    end
 	    if #self.config:get("columnsToMine") == 0 then
 	        print("WARNING: No columns to mine")
 	        print("Have you called the 'setup' command?")
