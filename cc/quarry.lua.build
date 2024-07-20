@@ -1855,8 +1855,6 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	    local direction = currentPosition:directionTo(currentColumn)
 	    local moved = Turtle.move(direction)
 	    if not moved then
-	        print("Cannot move to the next column - turtle is stuck")
-	        print("Digging " .. direction)
 	        local success = Turtle.safeDig(direction)
 	        if not success then
 	            print("Cannot move to the home position - turtle is stuck")
@@ -1930,8 +1928,6 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	    local direction = currentPosition:directionTo(fuelPosition)
 	    local moved = Turtle.move(direction)
 	    if not moved then
-	        print("Cannot move to the next column - turtle is stuck")
-	        print("Digging " .. direction)
 	        local success = Turtle.safeDig(direction)
 	        if not success then
 	            print("Cannot move to the home position - turtle is stuck")
@@ -1963,8 +1959,6 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	    local direction = currentPosition:directionTo(dumpPosition)
 	    local moved = Turtle.move(direction)
 	    if not moved then
-	        print("Cannot move to the next column - turtle is stuck")
-	        print("Digging " .. direction)
 	        local success = Turtle.safeDig(direction)
 	        if not success then
 	            print("Cannot move to the home position - turtle is stuck")
@@ -1989,8 +1983,6 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	    local direction = currentPosition:directionTo(homePosition)
 	    local moved = Turtle.move(direction)
 	    if not moved then
-	        print("Cannot move to the next column - turtle is stuck")
-	        print("Digging " .. direction)
 	        local success = Turtle.safeDig(direction)
 	        if not success then
 	            print("Cannot move to the home position - turtle is stuck")
