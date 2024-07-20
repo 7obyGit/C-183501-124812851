@@ -1803,7 +1803,7 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	    self.config:init("maxY", Turtle.CURRENT_POSITION.y)
 	    self.config:init("minZ", Turtle.CURRENT_POSITION.z)
 	    self.config:init("maxZ", Turtle.CURRENT_POSITION.z)
-	    self.config:set("homePosition", Turtle.CURRENT_POSITION:toTable())
+	    self.config:init("homePosition", Turtle.CURRENT_POSITION:toTable())
 	    self.config:init("fuelPosition", Turtle.CURRENT_POSITION:toTable())  -- Could be located during setup
 	    self.config:init("dumpPosition", Turtle.CURRENT_POSITION:toTable())  -- Could be located during setup
 	    self.config:init("minFuelLevel", 256)
@@ -1838,7 +1838,11 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	    local currentColumn = self.config:get("currentColumn", nil)
 	    if currentColumn == nil then
 	        print("All columns mined!")
-	        self.config:set("state", self.states.QUARRY_TERMINATING)
+	        if Inventory.isEmpty() then
+	            self.config:set("state", self.states.QUARRY_TERMINATING)
+	        else
+	            self.config:set("state", self.states.QUARRY_DUMP)
+	        end
 	        return
 	    end
 	    currentColumn = Vector3.new(currentColumn.x, currentPosition.y, currentColumn.z)
