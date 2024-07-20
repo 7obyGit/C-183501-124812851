@@ -1477,7 +1477,6 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	    end
 	end
 	function QuarryStates.onQuarryMovingColumn(self)
-	    print("MOVING")
 	end
 	return QuarryStates
 end
@@ -2309,9 +2308,14 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryJob()
 	end
 	function QuarryJob:onStep()
 	    local state = self.config:get("state", self.states.COMMAND_PROMPT)
-	    print(state)
 	    if Text.startsWith(state, "QUARRY_") then
-	        self.stateActions[state](self)
+	        local stateAction = self.stateActions[state]
+	        if stateAction == nil then
+	            print("Invalid state: " .. state)
+	            self.config:set("state", self.states.COMMAND_PROMPT)
+	            return
+	        end
+	        stateAction(self)
 	        return
 	    end
 	    self.codedInventory:run(self)
