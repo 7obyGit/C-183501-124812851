@@ -1230,6 +1230,7 @@ function MODULE_turtle_Turtle()
 	    if Turtle.up() then
 	        Turtle.CURRENT_POSITION = Turtle.CURRENT_POSITION:addInDirection("up", 1)
 	        for _, direction in ipairs(Direction.DIRECTIONS) do
+	            print("TRYING ABOVE " .. direction)
 	            if Turtle.moveInDirection(direction) then
 	                Turtle.CURRENT_DIRECTION = direction
 	                Turtle.CURRENT_POSITION = Turtle.getGpsPosition()
