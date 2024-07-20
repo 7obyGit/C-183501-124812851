@@ -1666,7 +1666,7 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	    if currentPosition.y == self.config:get("maxY", currentPosition.y) then
 	        print("Digging up complete")
 	        self.config:set("currentColumn", self.config:getNext("columnsToMine"))
-	        self.config:set("state", self.states.QUARRY_MOVING_COLUMN)
+	        self.config:set("state", self.states.QUARRY_DUMP)
 	        return
 	    end
 	    Turtle.digUp()
