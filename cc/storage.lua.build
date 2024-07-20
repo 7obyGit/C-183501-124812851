@@ -819,6 +819,17 @@ function MODULE_utils_math_Vector3()
 	        return Direction.DOWN
 	    end
 	end
+	function Vector3:verticalDirectionTo(other)
+	    local diff = other:sub(self)
+	    if diff:equals(Vector3.new(0, 0, 0)) then
+	        return nil
+	    end
+	    if diff.y > 0 then
+	        return Direction.UP
+	    elseif diff.y < 0 then
+	        return Direction.DOWN
+	    end
+	end
 	function Vector3:__tostring()
 	    return string.format("Vector3(%.2f, %.2f, %.2f)", self.x, self.y, self.z)
 	end
@@ -937,6 +948,19 @@ end
 local utils_blocks_Block = MODULE_utils_blocks_Block()
 
 
+function MODULE_turtle_Side()
+	local Side = {}
+	Side.TOP = "top"
+	Side.BOTTOM = "bottom"
+	Side.FRONT = "front"
+	Side.BACK = "back"
+	Side.LEFT = "left"
+	Side.RIGHT = "right"
+	return Side
+end
+local turtle_Side = MODULE_turtle_Side()
+
+
 function MODULE_utils_config_Config()
 	local Vector3 = utils_math_Vector3
 	local file = utils_other_file
@@ -1008,6 +1032,8 @@ local utils_config_Config = MODULE_utils_config_Config()
 
 
 function MODULE_turtle_Inventory()
+	local Blocks = utils_blocks_Blocks
+	local Side = turtle_Side
 	local Inventory = {}
 	function Inventory.isFull()
 	    return Inventory.getEmptySlot() == nil
@@ -1032,6 +1058,37 @@ function MODULE_turtle_Inventory()
 	    end
 	    return nil
 	end
+	function Inventory.findContainerSide()
+	    for _, side in pairs(Side) do
+	        local peripheralType = peripheral.getType(side)
+	        if peripheralType == Blocks.barrel or peripheralType == Blocks.chest then
+	            return side
+	        end
+	    end
+	end
+	function Inventory.pullFromContainer(limit)
+	    local side = Inventory.findContainerSide()
+	    if side == nil then
+	        return false
+	    end
+	    local suckFunction = turtle.suck
+	    if side == Side.up then
+	        suckFunction = turtle.suckUp
+	    elseif side == Side.down then
+	        suckFunction = turtle.suckDown
+	    end
+	    local itemsPickedUp = true
+	    local totalItemsSucked = 0
+	    while itemsPickedUp and totalItemsSucked < limit do
+	        itemsPickedUp = false
+	        local itemsSucked = suckFunction()
+	        if itemsSucked then
+	            itemsPickedUp = true
+	            totalItemsSucked = totalItemsSucked + itemsSucked
+	        end
+	    end
+	    return totalItemsSucked
+	end
 	return Inventory
 end
 local turtle_Inventory = MODULE_turtle_Inventory()
@@ -1041,6 +1098,7 @@ function MODULE_turtle_Turtle()
 	local Block   = utils_blocks_Block
 	local Vector3 = utils_math_Vector3
 	local Direction = utils_movement_Direction
+	local Side = turtle_Side
 	local Config = utils_config_Config
 	local file = utils_other_file
 	local Inventory = turtle_Inventory
@@ -1071,11 +1129,24 @@ function MODULE_turtle_Turtle()
 	    Turtle.CURRENT_POSITION = Turtle.CURRENT_POSITION:addInDirection(Direction.DOWN, 1)
 	    return true
 	end
+	function Turtle.move(direction)
+	    if direction == Direction.NORTH or direction == Direction.SOUTH or direction == Direction.WEST or direction == Direction.EAST then
+	        Turtle.turnTo(direction)
+	        return Turtle.forward()
+	    elseif direction == Direction.UP then
+	        return Turtle.up()
+	    elseif direction == Direction.DOWN then
+	        return Turtle.down()
+	    else
+	        print("Invalid direction")
+	    end
+	    return false
+	end
 	function Turtle.getFuelLevel()
 	    return turtle.getFuelLevel()
 	end
 	function Turtle.refuel()
-	    if turtle.getFuelLevel() >= Turtle.CONFIG.fuelTarget then
+	    if Turtle.getFuelLevel() >= Turtle.CONFIG.fuelTarget then
 	        return
 	    end
 	    local slot = nil
@@ -1090,14 +1161,24 @@ function MODULE_turtle_Turtle()
 	    local bestDirectionToTurn = Direction.getBestDirectionToTurn(Turtle.CURRENT_DIRECTION, direction)
 	    if bestDirectionToTurn == Rotations.LEFT then
 	        while Turtle.CURRENT_DIRECTION ~= direction do
-	            turtle.turnLeft()
-	            Turtle.CURRENT_DIRECTION = Direction.nextLeft(Turtle.CURRENT_DIRECTION)
+	            Turtle.turnLeft()
 	        end
 	    elseif bestDirectionToTurn == Rotations.RIGHT then
 	        while Turtle.CURRENT_DIRECTION ~= direction do
-	            turtle.turnRight()
-	            Turtle.CURRENT_DIRECTION = Direction.nextRight(Turtle.CURRENT_DIRECTION)
+	            Turtle.turnRight()
 	        end
+	    end
+	end
+	function Turtle.turnToSide(side)
+	    if side == Side.FRONT then
+	        return
+	    elseif side == Side.LEFT then
+	        Turtle.turnLeft()
+	    elseif side == Side.RIGHT then
+	        Turtle.turnRight()
+	    elseif side == Side.BACK then
+	        Turtle.turnLeft()
+	        Turtle.turnLeft()
 	    end
 	end
 	function Turtle.turnLeft()
@@ -1464,6 +1545,7 @@ local utils_jobutils_CommonCommands = MODULE_utils_jobutils_CommonCommands()
 function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	local Vector3 = utils_math_Vector3
 	local Turtle = turtle_Turtle
+	local Inventory = turtle_Inventory
 	local QuarryStates = {}
 	function QuarryStates.onSetup(self)
 	    self.config:set("state", self.states.COMMAND_PROMPT)
@@ -1498,10 +1580,15 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	end
 	function QuarryStates.onQuarryMovingColumn(self)
 	    local currentPosition = Turtle.CURRENT_POSITION
-	    local currentColumn = self.config:get("currentColumn")
+	    local currentColumn = self.config:get("currentColumn", nil)
 	    currentColumn = Vector3.new(currentColumn.x, currentPosition.y, currentColumn.z)
+	    if currentColumn == nil then
+	        print("All columns mined!")
+	        self.config:set("state", self.states.QUARRY_TERMINATING)
+	        return
+	    end
 	    if currentPosition:equals(currentColumn) then
-	        if Turtle.CURRENT_POSITION.y == self.config:get("maxY") then
+	        if Turtle.CURRENT_POSITION.y == self.config:get("maxY", currentPosition.y) then
 	            print("Column reached - digging down")
 	            self.config:set("state", self.states.QUARRY_DIG_DOWN)
 	        else
@@ -1511,25 +1598,110 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	        return
 	    end
 	    local direction = currentPosition:directionTo(currentColumn)
-	    print(direction)
-	    error("Not implemented")
+	    Turtle.move(direction)
+	end
+	function QuarryStates.onQuarryDigDown(self)
+	    local currentPosition = Turtle.CURRENT_POSITION
+	    if currentPosition.y == self.config:get("minY", currentPosition.y) then
+	        print("Digging down complete")
+	        self.config:set("currentColumn", self.config:getNext("columnsToMine"))
+	        self.config:set("state", self.states.QUARRY_MOVING_COLUMN)
+	        return
+	    end
+	    Turtle.digDown()
+	    Turtle.down()
+	end
+	function QuarryStates.onQuarryDigUp(self)
+	    local currentPosition = Turtle.CURRENT_POSITION
+	    if currentPosition.y == self.config:get("maxY", currentPosition.y) then
+	        print("Digging up complete")
+	        self.config:set("currentColumn", self.config:getNext("columnsToMine"))
+	        self.config:set("state", self.states.QUARRY_MOVING_COLUMN)
+	        return
+	    end
+	    Turtle.digUp()
+	    Turtle.up()
+	end
+	function QuarryStates.onQuarryRefuel(self)
+	    local currentPosition = Turtle.CURRENT_POSITION
+	    local fuelPosition = Vector3.new(self.config:get("fuelPosition", currentPosition))
+	    if currentPosition:equals(fuelPosition) then
+	        local fuelTarget = self.config:get("targetFuelLevel", 1024)
+	        if Turtle.getFuelLevel() >= fuelTarget then
+	            return
+	        end
+	        local slot = nil
+	        slot = 0
+	        while Turtle.getFuelLevel() < Turtle.CONFIG.fuelTarget and slot ~= nil do
+	            local side = Inventory.findContainerSide()
+	            if side == nil then
+	                print("No fuel container found - please place one")
+	                os.sleep(1)
+	            end
+	            local maxItemsToSuck = 64
+	            Turtle.turnToSide(side)
+	            Inventory.pullFromContainer(maxItemsToSuck)
+	            slot = Inventory.getSlotWithItem(Turtle.CONFIG.fuelItem)
+	            if slot ~= nil then
+	                turtle.select(slot)
+	                turtle.refuel()
+	            else
+	                print("No fuel found")
+	                os.sleep(1)
+	            end
+	        end
+	        self.config:set("state", self.states.QUARRY_MOVING_COLUMN)
+	        return
+	    end
+	    if currentPosition.y ~= fuelPosition.y then
+	        local direction = currentPosition:verticalDirectionTo(fuelPosition)
+	        Turtle.move(direction)
+	        return
+	    end
+	    local direction = currentPosition:directionTo(fuelPosition)
+	    Turtle.move(direction)
+	end
+	function QuarryStates.onQuarryDump(self)
+	    local currentPosition = Turtle.CURRENT_POSITION
+	    local homePosition = Vector3.new(self.config:get("homePosition", currentPosition))
+	    if currentPosition:equals(homePosition) then
+	        local side = Inventory.findContainerSide()
+	        if side == nil then
+	            print("No dump container found - please place one")
+	            os.sleep(1)
+	        end
+	        local maxItemsToDump = 64
+	        Turtle.turnToSide(side)
+	        Inventory.dumpIntoContainer(maxItemsToDump)
+	        self.config:set("state", self.states.QUARRY_REFUEL)
+	        return
+	    end
+	    if currentPosition.y ~= homePosition.y then
+	        local direction = currentPosition:verticalDirectionTo(homePosition)
+	        Turtle.move(direction)
+	        return
+	    end
+	    local direction = currentPosition:directionTo(homePosition)
+	    Turtle.move(direction)
+	end
+	function QuarryStates.onQuarryTerminating(self)
+	    local currentPosition = Turtle.CURRENT_POSITION
+	    local homePosition = Vector3.new(self.config:get("homePosition", currentPosition))
+	    if currentPosition:equals(homePosition) then
+	        self.config:set("state", self.states.COMMAND_PROMPT)
+	        return
+	    end
+	    if currentPosition.y ~= homePosition.y then
+	        local direction = currentPosition:verticalDirectionTo(homePosition)
+	        Turtle.move(direction)
+	        return
+	    end
+	    local direction = currentPosition:directionTo(homePosition)
+	    Turtle.move(direction)
 	end
 	return QuarryStates
 end
 local jobs_definitions_mobile_quarry_QuarryStates = MODULE_jobs_definitions_mobile_quarry_QuarryStates()
-
-
-function MODULE_turtle_Side()
-	local Side = {}
-	Side.TOP = "top"
-	Side.BOTTOM = "bottom"
-	Side.FRONT = "front"
-	Side.BACK = "back"
-	Side.LEFT = "left"
-	Side.RIGHT = "right"
-	return Side
-end
-local turtle_Side = MODULE_turtle_Side()
 
 
 function MODULE_utils_storage_patterns_ContainerPatternNames()
@@ -2286,6 +2458,7 @@ local utils_storage_codedinventory_CodedInventory = MODULE_utils_storage_codedin
 
 function MODULE_jobs_definitions_mobile_quarry_QuarryJob()
 	local Turtle = turtle_Turtle
+	local Inventory = turtle_Inventory
 	local Commands = utils_terminal_commands_Commands
 	local Command = utils_terminal_commands_Command
 	local QuarryCommands = jobs_definitions_mobile_quarry_QuarryCommands
@@ -2345,6 +2518,10 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryJob()
 	function QuarryJob:onStep()
 	    local state = self.config:get("state", self.states.COMMAND_PROMPT)
 	    if Text.startsWith(state, "QUARRY_") then
+	        if Inventory.getEmptySlots() < self.config:get("minEmptyInventorySlots", 4)
+	                or Turtle.getFuelLevel() < self.config:get("minFuelLevel", 256) then
+	            self.config:set("state", self.states.QUARRY_DUMP)
+	        end
 	        local stateAction = self.stateActions[state]
 	        if stateAction == nil then
 	            print("Invalid state: " .. state)
