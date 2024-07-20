@@ -1649,7 +1649,8 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	    end
 	    print("CALLED")
 	    local direction = currentPosition:directionTo(currentColumn)
-	    Turtle.move(direction)
+	    local moved = Turtle.move(direction)
+	    print(moved)
 	end
 	function QuarryStates.onQuarryDigDown(self)
 	    local currentPosition = Turtle.CURRENT_POSITION
