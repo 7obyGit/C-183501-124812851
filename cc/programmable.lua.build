@@ -1092,6 +1092,22 @@ function MODULE_turtle_Inventory()
 	    end
 	    return totalItemsSucked
 	end
+	function Inventory.dumpIntoContainer()
+	    local side = Inventory.findContainerSide()
+	    if side == nil then
+	        return false
+	    end
+	    local dropFunction = turtle.drop
+	    if side == Side.up then
+	        dropFunction = turtle.dropUp
+	    elseif side == Side.down then
+	        dropFunction = turtle.dropDown
+	    end
+	    for i = 1, 16 do
+	        turtle.select(i)
+	        dropFunction()
+	    end
+	end
 	function Inventory.getEmptySlots()
 	    local emptySlots = 0
 	    for i = 1, 16 do
@@ -1516,7 +1532,9 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryCommands()
 	local QuarryCommands = {}
 	function QuarryCommands.commandSetup(self)
 	    print("Entering setup mode")
+	    print("Note that the fuel position is the position the turtle should be in when refueling, not the position of the fuel chest")
 	    self.config:set("fuelPosition", Vector3.fromTerminal("Enter the fuel position: "))
+	    self.config:set("dumpPosition", Vector3.fromTerminal("Enter the dump position: "))
 	    self.config:set("homePosition", Turtle.CURRENT_POSITION:toTable())
 	    print("The first corner position has been set to the current position of the turtle")
 	    local position1 = Turtle.CURRENT_POSITION
@@ -1537,6 +1555,7 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryCommands()
 	            * (config:get("maxY", 0) - config:get("minY", 0) + 1)
 	    print("Config")
 	    print("\t\tFuel position: " .. textutils.serializeJSON(config:get("fuelPosition", "Not set")))
+	    print("\t\tDump position: " .. textutils.serializeJSON(config:get("dumpPosition", "Not set")))
 	    print("\t\tFar corner: " .. textutils.serializeJSON(config:get("farPosition", "Not set")))
 	    print("\t\tBlocks down: " .. config:get("maxY", 0) - config:get("minY", 0))
 	    print("\t\tTotal Blocks: " .. totalBlocks)
@@ -1694,26 +1713,25 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	end
 	function QuarryStates.onQuarryDump(self)
 	    local currentPosition = Turtle.CURRENT_POSITION
-	    local homePosition = Vector3.new(self.config:get("homePosition", currentPosition))
-	    if currentPosition:equals(homePosition) then
+	    local dumpPosition = Vector3.new(self.config:get("dumpPosition", currentPosition))
+	    if currentPosition:equals(dumpPosition) then
 	        print("Dumping items")
 	        local side = Inventory.findContainerSide()
 	        if side == nil then
 	            print("No dump container found - please place one")
 	            os.sleep(1)
 	        end
-	        local maxItemsToDump = 64
 	        Turtle.turnToSide(side)
-	        Inventory.dumpIntoContainer(maxItemsToDump)
+	        Inventory.dumpIntoContainer()
 	        self.config:set("state", self.states.QUARRY_REFUEL)
 	        return
 	    end
-	    if currentPosition.y ~= homePosition.y then
-	        local direction = currentPosition:verticalDirectionTo(homePosition)
+	    if currentPosition.y ~= dumpPosition.y then
+	        local direction = currentPosition:verticalDirectionTo(dumpPosition)
 	        Turtle.move(direction)
 	        return
 	    end
-	    local direction = currentPosition:directionTo(homePosition)
+	    local direction = currentPosition:directionTo(dumpPosition)
 	    Turtle.move(direction)
 	end
 	function QuarryStates.onQuarryTerminating(self)
