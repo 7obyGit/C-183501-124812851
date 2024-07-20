@@ -1227,16 +1227,20 @@ function MODULE_turtle_Turtle()
 	            return true
 	        end
 	    end
+	    print("TRYING UP")
 	    if Turtle.up() then
 	        Turtle.CURRENT_POSITION = Turtle.CURRENT_POSITION:addInDirection("up", 1)
+	        print("STARTING UP")
 	        for _, direction in ipairs(Direction.DIRECTIONS) do
 	            print("TRYING ABOVE " .. direction)
 	            if Turtle.moveInDirection(direction) then
+	                print("IN IF")
 	                Turtle.CURRENT_DIRECTION = direction
 	                Turtle.CURRENT_POSITION = Turtle.getGpsPosition()
 	                return true
 	            end
 	        end
+	        print("ENDINT UP")
 	    end
 	    print("RETURING FROM CHECK DIRECTION")
 	    return false
