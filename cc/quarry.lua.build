@@ -602,7 +602,6 @@ local utils_movement_Rotations = MODULE_utils_movement_Rotations()
 function MODULE_utils_movement_Direction()
 	local Rotations = utils_movement_Rotations
 	local Direction = {}
-	Direction.__index = Direction
 	Direction.NORTH = "North"  -- -z
 	Direction.EAST = "East"  -- +x
 	Direction.SOUTH = "South"  -- +z
