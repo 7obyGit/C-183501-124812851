@@ -1221,70 +1221,38 @@ function MODULE_turtle_Turtle()
 	    elseif direction == Direction.DOWN then
 	        return Turtle.down()
 	    else
-	        return Turtle.forward(true)
+	        return Turtle.forward()
 	    end
 	end
-	function Turtle.checkDirection()
-	    for _, direction in ipairs(Direction.HORIZONTAL_DIRECTIONS) do
-	        print("TRYING " .. direction)
-	        if Turtle.moveInDirection(direction) then
-	            Turtle.CURRENT_DIRECTION = direction
-	            Turtle.CURRENT_POSITION = Turtle.getGpsPosition()
-	            return true
-	        end
-	    end
-	    print("TRYING UP")
-	    if Turtle.up() then
-	        Turtle.CURRENT_POSITION = Turtle.CURRENT_POSITION:addInDirection("up", 1)
-	        print("STARTING UP")
-	        for _, direction in ipairs(Direction.HORIZONTAL_DIRECTIONS) do
-	            print("TRYING ABOVE " .. direction)
-	            if Turtle.moveInDirection(direction) then
-	                print("IN IF")
-	                Turtle.CURRENT_DIRECTION = direction
-	                Turtle.CURRENT_POSITION = Turtle.getGpsPosition()
-	                return true
-	            end
-	        end
-	        print("ENDINT UP")
-	    end
-	    print("RETURING FROM CHECK DIRECTION")
-	    return false
-	end
-	function Turtle.forward(skipDirectionCheck)
+	function Turtle.forward()
 	    if Turtle.getBlockInFront() ~= nil then
-	        if skipDirectionCheck then
-	            return false
-	        end
-	        return Turtle.checkDirection()
+	        return false
 	    end
 	    local oldPosition = Turtle.CURRENT_POSITION:copy()
 	    local moved = turtle.forward()
 	    local expectedNewPosition = Turtle.CURRENT_POSITION:addInDirection(Turtle.CURRENT_DIRECTION, 1)
 	    if not moved then
-	        if skipDirectionCheck then
-	            return false
-	        end
-	        return Turtle.checkDirection()
+	        return false
 	    end
 	    if Turtle._UNCHECKED_DIRECTION then
+	        print("UPDATING DIRECTION")
 	        local newPosition = Turtle.getGpsPosition()
 	        if not newPosition:equals(expectedNewPosition) then
 	            Turtle.CURRENT_DIRECTION = oldPosition:directionTo(newPosition)
+	            print("DIRECTION CORRECTED")
 	        end
 	        Turtle._UNCHECKED_DIRECTION = false  -- The direction is now known
+	        print("DIRECTION IS NOW KNOWN")
+	        print("FACING: " .. Turtle.CURRENT_DIRECTION)
 	    else
 	        Turtle.CURRENT_POSITION = expectedNewPosition
 	    end
-	    print("FORWARD RETURING TRUE")
 	    return true
 	end
 	function Turtle.up()
-	    print("START UP")
 	    if Turtle.getBlockAbove() ~= nil then return false end
 	    turtle.up()
 	    Turtle.CURRENT_POSITION = Turtle.CURRENT_POSITION:addInDirection(Direction.UP, 1)
-	    print("UP RETURING TRUE")
 	    return true
 	end
 	function Turtle.down()
