@@ -1311,6 +1311,7 @@ function MODULE_turtle_Turtle()
 	        if not newPosition:equals(expectedNewPosition) then
 	            Turtle.CURRENT_DIRECTION = oldPosition:directionTo(newPosition)
 	        end
+	        Turtle.CURRENT_POSITION = newPosition
 	        Turtle._UNCHECKED_DIRECTION = false  -- The direction is now known
 	    else
 	        Turtle.CURRENT_POSITION = expectedNewPosition
