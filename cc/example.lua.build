@@ -630,6 +630,14 @@ function MODULE_utils_blocks_Blocks()
 	    blackstone_brick_slab = "minecraft:blackstone_brick_slab",
 	    blackstone_brick_stairs = "minecraft:blackstone_brick_stairs",
 	    blackstone_brick_wall = "minecraft:blackstone_brick_wall",
+	    computercraft_cable = "computercraft:cable",
+	    computercraft_computer = "computercraft:computer",
+	    computercraft_computer_advanced = "computercraft:computer_advanced",
+	    computercraft_computer_command = "computercraft:computer_command",
+	    computercraft_wireless_modem_advanced = "computercraft:wireless_modem_advanced",
+	    computercraft_wired_modem_full = "computercraft:wired_modem_full",
+	    computercraft_wired_modem = "computercraft:wired_modem",
+	    computercraft_turtle = "computercraft:turtle",
 	}
 	return Blocks
 end
@@ -993,6 +1001,38 @@ function MODULE_utils_blocks_Block()
 	for blocksKey, blockName in pairs(Blocks) do
 	    blockLookupTable[blockName] = blocksKey
 	end
+	local protectedBlocks = {
+	    Blocks.barrel,
+	    Blocks.chest,
+	    Blocks.enderChest,
+	    Blocks.shulkerBox,
+	    Blocks.trappedChest,
+	    Blocks.hopper,
+	    Blocks.dispenser,
+	    Blocks.dropper,
+	    Blocks.furnace,
+	    Blocks.blastFurnace,
+	    Blocks.smoker,
+	    Blocks.brewingStand,
+	    Blocks.enchantingTable,
+	    Blocks.craftingTable,
+	    Blocks.anvil,
+	    Blocks.grindstone,
+	    Blocks.smithingTable,
+	    Blocks.loom,
+	    Blocks.cartographyTable,
+	    Blocks.stonecutter,
+	    Blocks.beehive,
+	    Blocks.beeNest,
+	    Blocks.computercraft_cable,
+	    Blocks.computercraft_computer,
+	    Blocks.computercraft_computer_advanced,
+	    Blocks.computercraft_computer_command,
+	    Blocks.computercraft_wireless_modem_advanced,
+	    Blocks.computercraft_wired_modem_full,
+	    Blocks.computercraft_wired_modem,
+	    Blocks.computercraft_turtle,
+	}
 	local Block = {}
 	Block.__index = Block
 	function Block.new(name, position, state, tags)
@@ -1005,6 +1045,14 @@ function MODULE_utils_blocks_Block()
 	        state = state or {},
 	        tags = tags or {},
 	    }, Block)
+	end
+	function Block.isAllowedToBreak(name)
+	    for _, protectedBlockName in ipairs(protectedBlocks) do
+	        if name == protectedBlockName then
+	            return false
+	        end
+	    end
+	    return true
 	end
 	function Block.exists(name)
 	    return blockLookupTable[name] ~= nil
@@ -1196,6 +1244,29 @@ end
 local turtle_Inventory = MODULE_turtle_Inventory()
 
 
+function MODULE_utils_data_Table()
+	local Table = {}
+	function Table.contains(object, value)
+	    for _, v in ipairs(object) do
+	        if v == value then
+	            return true
+	        end
+	    end
+	    return false
+	end
+	function Table.size(object)
+	    local count = 0
+	    for _ in pairs(object) do count = count + 1 end
+	    return count
+	end
+	function Table.isEmpty(object)
+	    return next(object) == nil
+	end
+	return Table
+end
+local utils_data_Table = MODULE_utils_data_Table()
+
+
 function MODULE_turtle_Turtle()
 	local Block   = utils_blocks_Block
 	local Vector3 = utils_math_Vector3
@@ -1205,6 +1276,7 @@ function MODULE_turtle_Turtle()
 	local file = utils_other_file
 	local Inventory = turtle_Inventory
 	local Blocks    = utils_blocks_Blocks
+	local Table = utils_data_Table
 	local Turtle = {}
 	Turtle.CONFIG = Config.load()
 	function Turtle.getGpsPosition()
@@ -1235,15 +1307,11 @@ function MODULE_turtle_Turtle()
 	        return false
 	    end
 	    if Turtle._UNCHECKED_DIRECTION then
-	        print("UPDATING DIRECTION")
 	        local newPosition = Turtle.getGpsPosition()
 	        if not newPosition:equals(expectedNewPosition) then
 	            Turtle.CURRENT_DIRECTION = oldPosition:directionTo(newPosition)
-	            print("DIRECTION CORRECTED")
 	        end
 	        Turtle._UNCHECKED_DIRECTION = false  -- The direction is now known
-	        print("DIRECTION IS NOW KNOWN")
-	        print("FACING: " .. Turtle.CURRENT_DIRECTION)
 	    else
 	        Turtle.CURRENT_POSITION = expectedNewPosition
 	    end
@@ -1458,6 +1526,29 @@ function MODULE_turtle_Turtle()
 	        end
 	    end
 	    return false
+	end
+	function Turtle.safeDig(direction)
+	    local hasBlock = nil
+	    local data = nil
+	    if direction == nil then
+	        hasBlock, data = turtle.inspect()
+	    elseif direction == Direction.UP then
+	        hasBlock, data = turtle.inspectUp()
+	    elseif direction == Direction.DOWN then
+	        hasBlock, data = turtle.inspectDown()
+	    else
+	        Turtle.turnTo(direction)
+	        hasBlock, data = turtle.inspect()
+	    end
+	    if not hasBlock or data == nil then
+	        return true
+	    end
+	    if Block.isAllowedToBreak(data.name) then
+	        Turtle.dig(direction)
+	        return true
+	    else
+	        return false
+	    end
 	end
 	function Turtle.dig(direction)
 	    if direction == nil then
@@ -1765,7 +1856,8 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	    local moved = Turtle.move(direction)
 	    if not moved then
 	        print("Cannot move to the next column - turtle is stuck")
-	        self.config:set("state", self.states.QUARRY_TERMINATING)
+	        print("Digging " .. direction)
+	        Turtle.safeDig(direction)
 	    end
 	end
 	function QuarryStates.onQuarryDigDown(self)
@@ -2070,29 +2162,6 @@ function MODULE_utils_jobutils_CommonCodedInventoryListeners()
 	return CommonCodedInventoryListeners
 end
 local utils_jobutils_CommonCodedInventoryListeners = MODULE_utils_jobutils_CommonCodedInventoryListeners()
-
-
-function MODULE_utils_data_Table()
-	local Table = {}
-	function Table.contains(object, value)
-	    for _, v in ipairs(object) do
-	        if v == value then
-	            return true
-	        end
-	    end
-	    return false
-	end
-	function Table.size(object)
-	    local count = 0
-	    for _ in pairs(object) do count = count + 1 end
-	    return count
-	end
-	function Table.isEmpty(object)
-	    return next(object) == nil
-	end
-	return Table
-end
-local utils_data_Table = MODULE_utils_data_Table()
 
 
 function MODULE_utils_storage_ContainerIndex()
