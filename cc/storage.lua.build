@@ -1600,6 +1600,7 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	    self.config:init("maxZ", Turtle.CURRENT_POSITION.z)
 	    self.config:set("homePosition", Turtle.CURRENT_POSITION:toTable())
 	    self.config:init("fuelPosition", Turtle.CURRENT_POSITION:toTable())  -- Could be located during setup
+	    self.config:init("dumpPosition", Turtle.CURRENT_POSITION:toTable())  -- Could be located during setup
 	    self.config:init("minFuelLevel", 256)
 	    self.config:init("targetFuelLevel", 1024)
 	    self.config:set("minEmptyInventorySlots", 4)  -- The number of slots that should be empty before dumping
