@@ -1140,19 +1140,19 @@ function MODULE_turtle_Turtle()
 	Turtle.CURRENT_POSITION = Turtle.getGpsPosition()
 	Turtle.CURRENT_DIRECTION = Turtle.CONFIG.homeDirection  -- TODO: work out what the current direction is on startup
 	function Turtle.forward()
-	    if Turtle.getBlockInFront() == nil then return false end
+	    if Turtle.getBlockInFront() ~= nil then return false end
 	    turtle.forward()
 	    Turtle.CURRENT_POSITION = Turtle.CURRENT_POSITION:addInDirection(Turtle.CURRENT_DIRECTION, 1)
 	    return true
 	end
 	function Turtle.up()
-	    if Turtle.getBlockAbove() == nil then return false end
+	    if Turtle.getBlockAbove() ~= nil then return false end
 	    turtle.up()
 	    Turtle.CURRENT_POSITION = Turtle.CURRENT_POSITION:addInDirection(Direction.UP, 1)
 	    return true
 	end
 	function Turtle.down()
-	    if Turtle.getBlockBelow() == nil then return false end
+	    if Turtle.getBlockBelow() ~= nil then return false end
 	    turtle.down()
 	    Turtle.CURRENT_POSITION = Turtle.CURRENT_POSITION:addInDirection(Direction.DOWN, 1)
 	    return true
@@ -1648,10 +1648,11 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	        return
 	    end
 	    local direction = currentPosition:directionTo(currentColumn)
-	    print("CALLED: '" .. direction .. "'")
 	    local moved = Turtle.move(direction)
-	    print(moved)
-	    print(Turtle.getFuelLevel())
+	    if not moved then
+	        print("Cannot move to the next column - turtle is stuck")
+	        self.config:set("state", self.states.QUARRY_TERMINATING)
+	    end
 	end
 	function QuarryStates.onQuarryDigDown(self)
 	    local currentPosition = Turtle.CURRENT_POSITION
