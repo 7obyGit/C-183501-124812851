@@ -1558,7 +1558,6 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	local QuarryStates = {}
 	function QuarryStates.onSetup(self)
 	    print("CALLED ON SETUP")
-	    self.config:set("state", self.states.COMMAND_PROMPT)
 	end
 	function QuarryStates.onQuarryStarting(self)
 	    self.config:init("minX", Turtle.CURRENT_POSITION.x)
