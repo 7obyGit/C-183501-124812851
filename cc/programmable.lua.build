@@ -1583,9 +1583,7 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	        print("WARNING: No secondary position set")
 	        print("Have you called the 'setup' command?")
 	        self.config:set("state", self.states.QUARRY_TERMINATING)
-	    else
-	        print("Quarry initialized")
-	        self.config:set("state", self.states.QUARRY_MOVING_COLUMN)
+	        return
 	    end
 	    if #self.config:get("columnsToMine") == 0 then
 	        print("WARNING: No columns to mine")
