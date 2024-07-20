@@ -677,6 +677,12 @@ function MODULE_utils_movement_Direction()
 	    Direction.UP,
 	    Direction.DOWN,
 	}
+	Direction.HORIZONTAL_DIRECTIONS = {
+	    Direction.NORTH,
+	    Direction.EAST,
+	    Direction.SOUTH,
+	    Direction.WEST,
+	}
 	function Direction.opposite(direction)
 	    if direction == Direction.NORTH then
 	        return Direction.SOUTH
@@ -1219,7 +1225,7 @@ function MODULE_turtle_Turtle()
 	    end
 	end
 	function Turtle.checkDirection()
-	    for _, direction in ipairs(Direction.DIRECTIONS) do
+	    for _, direction in ipairs(Direction.HORIZONTAL_DIRECTIONS) do
 	        print("TRYING " .. direction)
 	        if Turtle.moveInDirection(direction) then
 	            Turtle.CURRENT_DIRECTION = direction
@@ -1231,7 +1237,7 @@ function MODULE_turtle_Turtle()
 	    if Turtle.up() then
 	        Turtle.CURRENT_POSITION = Turtle.CURRENT_POSITION:addInDirection("up", 1)
 	        print("STARTING UP")
-	        for _, direction in ipairs(Direction.DIRECTIONS) do
+	        for _, direction in ipairs(Direction.HORIZONTAL_DIRECTIONS) do
 	            print("TRYING ABOVE " .. direction)
 	            if Turtle.moveInDirection(direction) then
 	                print("IN IF")
