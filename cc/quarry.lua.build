@@ -1647,6 +1647,7 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	        end
 	        return
 	    end
+	    print("CALLED")
 	    local direction = currentPosition:directionTo(currentColumn)
 	    Turtle.move(direction)
 	end
