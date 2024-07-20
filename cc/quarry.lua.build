@@ -602,12 +602,21 @@ local utils_movement_Rotations = MODULE_utils_movement_Rotations()
 function MODULE_utils_movement_Direction()
 	local Rotations = utils_movement_Rotations
 	local Direction = {}
+	Direction.__index = Direction
 	Direction.NORTH = "North"  -- -z
 	Direction.EAST = "East"  -- +x
 	Direction.SOUTH = "South"  -- +z
 	Direction.WEST = "West"  -- -x
 	Direction.UP = "Up"  -- +y
 	Direction.DOWN = "Down"  -- -y
+	Direction.DIRECTIONS = {
+	    Direction.NORTH,
+	    Direction.EAST,
+	    Direction.SOUTH,
+	    Direction.WEST,
+	    Direction.UP,
+	    Direction.DOWN,
+	}
 	function Direction.opposite(direction)
 	    if direction == Direction.NORTH then
 	        return Direction.SOUTH
@@ -1150,7 +1159,7 @@ function MODULE_turtle_Turtle()
 	    end
 	end
 	function Turtle.checkDirection()
-	    for _, direction in pairs(Direction) do
+	    for _, direction in ipairs(Direction.DIRECTIONS) do
 	        print("TRYING " .. direction)
 	        if Turtle.moveInDirection(direction) then
 	            Turtle.CURRENT_DIRECTION = direction
@@ -1160,7 +1169,7 @@ function MODULE_turtle_Turtle()
 	    end
 	    if Turtle.up() then
 	        Turtle.CURRENT_POSITION = Turtle.CURRENT_POSITION:addInDirection("up", 1)
-	        for _, direction in pairs(Direction) do
+	        for _, direction in ipairs(Direction.DIRECTIONS) do
 	            if Turtle.moveInDirection(direction) then
 	                Turtle.CURRENT_DIRECTION = direction
 	                Turtle.CURRENT_POSITION = Turtle.getGpsPosition()
