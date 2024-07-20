@@ -1354,8 +1354,17 @@ function MODULE_turtle_Turtle()
 	    end
 	    return false
 	end
-	function Turtle.dig()
-	    turtle.dig()
+	function Turtle.dig(direction)
+	    if direction == nil then
+	        turtle.dig()
+	    elseif direction == Direction.UP then
+	        turtle.digUp()
+	    elseif direction == Direction.DOWN then
+	        turtle.digDown()
+	    else
+	        Turtle.turnTo(direction)
+	        turtle.dig()
+	    end
 	end
 	function Turtle.digUp()
 	    turtle.digUp()
