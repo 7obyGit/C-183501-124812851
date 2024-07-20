@@ -1138,11 +1138,55 @@ function MODULE_turtle_Turtle()
 	    return Vector3.new(x, y, z)
 	end
 	Turtle.CURRENT_POSITION = Turtle.getGpsPosition()
-	Turtle.CURRENT_DIRECTION = Turtle.CONFIG.homeDirection  -- TODO: work out what the current direction is on startup
-	function Turtle.forward()
+	Turtle.CURRENT_DIRECTION = Turtle.CONFIG.homeDirection
+	Turtle._UNCHECKED_DIRECTION = true  -- Used to determine if the direction has been checked
+	function Turtle.moveInDirection(direction)
+	    Turtle.turnTo(direction)
+	    if direction == Direction.UP then
+	        return Turtle.up()
+	    elseif direction == Direction.DOWN then
+	        return Turtle.down()
+	    else
+	        return Turtle.forward(true)
+	    end
+	end
+	function Turtle.forward(skipDirectionCheck)
 	    if Turtle.getBlockInFront() ~= nil then return false end
-	    turtle.forward()
-	    Turtle.CURRENT_POSITION = Turtle.CURRENT_POSITION:addInDirection(Turtle.CURRENT_DIRECTION, 1)
+	    local oldPosition = Turtle.CURRENT_POSITION:copy()
+	    local moved = turtle.forward()
+	    local expectedNewPosition = Turtle.CURRENT_POSITION:addInDirection(Turtle.CURRENT_DIRECTION, 1)
+	    if not moved then
+	        if skipDirectionCheck then
+	            return false
+	        end
+	        for _, direction in ipairs(Turtle.DIRECTIONS) do
+	            if Turtle.moveInDirection(direction) then
+	                Turtle.CURRENT_DIRECTION = direction
+	                Turtle.CURRENT_POSITION = Turtle.getGpsPosition()
+	                return true
+	            end
+	        end
+	        if Turtle.up() then
+	            Turtle.CURRENT_POSITION = Turtle.CURRENT_POSITION:addInDirection("up", 1)
+	            for _, direction in ipairs(Turtle.DIRECTIONS) do
+	                if Turtle.moveInDirection(direction) then
+	                    Turtle.CURRENT_DIRECTION = direction
+	                    Turtle.CURRENT_POSITION = Turtle.getGpsPosition()
+	                    return true
+	                end
+	            end
+	        end
+	        return false
+	    end
+	    if Turtle._UNCHECKED_DIRECTION then
+	        local newPosition = Turtle.getGpsPosition()
+	        if not newPosition:equals(expectedNewPosition) then
+	            Turtle.CURRENT_DIRECTION = oldPosition:directionTo(newPosition)
+	        end
+	        Turtle._UNCHECKED_DIRECTION = false  -- The direction is now known
+	    else
+	        Turtle.CURRENT_POSITION = expectedNewPosition
+	    end
 	    return true
 	end
 	function Turtle.up()
