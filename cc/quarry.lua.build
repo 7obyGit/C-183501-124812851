@@ -1533,7 +1533,7 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryCommands()
 	    print("Config")
 	    print("\t\tFar corner: " .. config:get("maxX", 0) .. ", " .. config:get("maxZ", 0))
 	    print("\t\tBlocks down: " .. config:get("maxY", 0) - config:get("minY", 0))
-	    print("\t\tFuel position: " .. config:get("fuelPosition", "Not set"))
+	    print("\t\tFuel position: " .. textutils.serialise(config:get("fuelPosition", "Not set")))
 	    print("\t\tTotal Blocks: " .. totalBlocks)
 	end
 	function QuarryCommands.commandQuarryStart(self)
