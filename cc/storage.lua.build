@@ -2880,7 +2880,9 @@ function MODULE_utils_storage_codedinventory_CodedInventory()
 	    if patterns == nil then
 	        return
 	    end
+	    print("EXECUTING BARREL")
 	    for _, pattern in pairs(patterns) do
+	        print(pattern.name .. " " .. pattern.direction .. " " .. pattern.count)
 	        self:notifyListeners(jobSelf, pattern.name, pattern.direction, pattern.count)
 	    end
 	end
