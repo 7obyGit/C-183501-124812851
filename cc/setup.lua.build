@@ -3339,6 +3339,9 @@ function MODULE_utils_storage_Storage()
 	    for index, container in ipairs(destinations) do
 	        print("Destination " .. index .. ": " .. container.name)
 	    end
+	    for index, container in pairs(destinations) do
+	        print("PAIRS Destination " .. index .. ": " .. container.name)
+	    end
 	    local p = Parallel.new()
 	    for _, container in ipairs(destinations) do
 	        print("Defragmenting container:", container.name)
