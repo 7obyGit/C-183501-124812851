@@ -3319,7 +3319,7 @@ function MODULE_utils_storage_Storage()
 	function Storage:defragment()
 	    local inventories = Table.copy(self.inventories)
 	    inventories["IO"] = self.io
-	    Parallel.map(inventories, function(container) container:defragment() end)
+	    Parallel.map(inventories, function(name, container) container:defragment() end)
 	end
 	function Storage:hasItem(itemName)
 	    for _, container in pairs(self.inventories) do
