@@ -2825,6 +2825,135 @@ end
 local jobs_definitions_mobile_quarry_QuarryJob = MODULE_jobs_definitions_mobile_quarry_QuarryJob()
 
 
+function MODULE_jobs_definitions_mobile_treeFarm_TreeFarmCommands()
+	local TreeFarmCommands = {}
+	function TreeFarmCommands.commandQuarryStart(self)
+	    print("Starting the tree farm")
+	    self.config:set("state", self.states.TREE_FARM_STARTING)
+	end
+	return TreeFarmCommands
+end
+local jobs_definitions_mobile_treeFarm_TreeFarmCommands = MODULE_jobs_definitions_mobile_treeFarm_TreeFarmCommands()
+
+
+function MODULE_jobs_definitions_mobile_treeFarm_TreeFarmStates()
+	local TreeFarmStates = {}
+	return TreeFarmStates
+end
+local jobs_definitions_mobile_treeFarm_TreeFarmStates = MODULE_jobs_definitions_mobile_treeFarm_TreeFarmStates()
+
+
+function MODULE_utils_jobutils_CommonEventImplementations()
+	local CommonEventImplementations = {}
+	function CommonEventImplementations.onStart(self)
+	    return self.config:set("alive", true)
+	end
+	function CommonEventImplementations.onResume(self)
+	    return
+	end
+	function CommonEventImplementations.inProgress(self)
+	    return self.config:get("alive", false)
+	end
+	function CommonEventImplementations.onStepMobile(self)
+	    self.codedInventory:run(self)
+	    local state = self.config:get("state", self.states.COMMAND_PROMPT)
+	    local stateAction = self.stateActions[state]
+	    if stateAction == nil then
+	        print("Invalid state: " .. state)
+	        self.config:set("state", self.states.COMMAND_PROMPT)
+	        return
+	    end
+	    stateAction(self)
+	end
+	function CommonEventImplementations.onBackgroundStep(self)
+	    return
+	end
+	function CommonEventImplementations.onComplete(self)
+	    return
+	end
+	return CommonEventImplementations
+end
+local utils_jobutils_CommonEventImplementations = MODULE_utils_jobutils_CommonEventImplementations()
+
+
+function MODULE_jobs_definitions_mobile_treeFarm_TreeFarmJob()
+	local Turtle = turtle_Turtle
+	local Inventory = turtle_Inventory
+	local Commands = utils_terminal_commands_Commands
+	local Command = utils_terminal_commands_Command
+	local TreeFarmCommands = jobs_definitions_mobile_treeFarm_TreeFarmCommands
+	local CommonCommands = utils_jobutils_CommonCommands
+	local TreeFarmStates = jobs_definitions_mobile_treeFarm_TreeFarmStates
+	local CommonStates = utils_jobutils_CommonStates
+	local CodedInventory = utils_storage_codedinventory_CodedInventory
+	local CommonCodedInventoryListeners = utils_jobutils_CommonCodedInventoryListeners
+	local CommonEventImplementations = utils_jobutils_CommonEventImplementations
+	local Text = utils_text_Text
+	local TreeFarmJob = {}
+	TreeFarmJob.__index = TreeFarmJob
+	function TreeFarmJob.new(config)
+	    local self = setmetatable({}, TreeFarmJob)
+	    self.backgroundTask = function() self:onBackgroundStep() end
+	    self.backgroundDelay = 5  -- This task should be infrequent
+	    self.commands = Commands.new()
+	    self.commands:add(Command.new("exit", "Terminates the program", function(...) CommonCommands.commandExit(self, ...) end))
+	    self.commands:add(Command.new("start", "Starts the program", function(...) TreeFarmCommands.commandTreeFarmStart(self, ...) end))
+	    self.config = config
+	    self.states = {
+	        COMMAND_PROMPT = "COMMAND_PROMPT",
+	        MOVING = "MOVING",
+	        TREE_FARM_STARTING = "TREE_FARM_STARTING",  -- Turtle initiates tree farm details in the config file and reads coded inventories
+	        TREE_FARM_MOVING_FORWARD = "TREE_FARM_MOVING_FORWARD",
+	        TREE_FARM_MOVING_UP = "TREE_FARM_MOVING_UP",
+	        TREE_FARM_MOVING_DOWN = "TREE_FARM_MOVING_DOWN",
+	        TREE_FARM_MOVING_TO_NEXT_TREE = "TREE_FARM_MOVING_TO_NEXT_TREE",  -- Moves forwards if possible - breaks logs / leaves if needed
+	        TREE_FARM_MINING_TREE_UP = "TREE_FARM_MINING_TREE_UP",  -- Turtle goes up first
+	        TREE_FARM_MINING_TREE_DOWN = "TREE_FARM_MINING_TREE_DOWN",  -- Turtle goes down next
+	        TREE_FARM_REPLANTING = "TREE_FARM_REPLANTING",  -- Finally - Starts from the lowest block before dirt and places sapling after moving one block up
+	        TREE_FARM_WAITING = "TREE_FARM_WAITING",  -- Turtle waits for saplings to grow
+	        TREE_FARM_TERMINATING = "TREE_FARM_TERMINATING",  -- Turtle stops
+	    }
+	    self.stateActions = {
+	        [self.states.COMMAND_PROMPT] = CommonStates.onCommandPrompt,
+	        [self.states.MOVING] = CommonStates.onMoving,
+	        [self.states.TREE_FARM_STARTING] = TreeFarmStates.onTreeFarmStarting,
+	        [self.states.TREE_FARM_MOVING_FORWARD] = TreeFarmStates.onTreeFarmMovingForward,
+	        [self.states.TREE_FARM_MOVING_UP] = TreeFarmStates.onTreeFarmMovingUp,
+	        [self.states.TREE_FARM_MOVING_DOWN] = TreeFarmStates.onTreeFarmMovingDown,
+	        [self.states.TREE_FARM_MOVING_TO_NEXT_TREE] = TreeFarmStates.onTreeFarmMovingToNextTree,
+	        [self.states.TREE_FARM_MINING_TREE_UP] = TreeFarmStates.onTreeFarmMiningTreeUp,
+	        [self.states.TREE_FARM_MINING_TREE_DOWN] = TreeFarmStates.onTreeFarmMiningTreeDown,
+	        [self.states.TREE_FARM_REPLANTING] = TreeFarmStates.onTreeFarmReplanting,
+	        [self.states.TREE_FARM_WAITING] = TreeFarmStates.onTreeFarmWaiting,
+	        [self.states.TREE_FARM_TERMINATING] = TreeFarmStates.onTreeFarmTerminating,
+	    }
+	    self.codedInventory = CodedInventory.new()
+	    self.codedInventory:addDefaultListeners()
+	    return self
+	end
+	function TreeFarmJob:onStart()
+	    return CommonEventImplementations.onStart(self)
+	end
+	function TreeFarmJob:onResume()
+	    return CommonEventImplementations.onResume(self)
+	end
+	function TreeFarmJob:inProgress()
+	    return CommonEventImplementations.inProgress(self)
+	end
+	function TreeFarmJob:onStep()
+	    return CommonEventImplementations.onStepMobile(self)
+	end
+	function TreeFarmJob:onBackgroundStep()
+	    return CommonEventImplementations.onBackgroundStep(self)
+	end
+	function TreeFarmJob:onComplete()
+	    return CommonEventImplementations.onComplete(self)
+	end
+	return TreeFarmJob
+end
+local jobs_definitions_mobile_treeFarm_TreeFarmJob = MODULE_jobs_definitions_mobile_treeFarm_TreeFarmJob()
+
+
 function MODULE_jobs_definitions_mobile_ProgrammableJob()
 	local CodedInventory = utils_storage_codedinventory_CodedInventory
 	local ContainerPatternNames = utils_storage_patterns_ContainerPatternNames
@@ -3699,6 +3828,7 @@ function MODULE_jobs_JobManager()
 	local IdleJob = jobs_definitions_misc_IdleJob
 	local SetupJob = jobs_definitions_misc_SetupJob
 	local QuarryJob = jobs_definitions_mobile_quarry_QuarryJob
+	local TreeFarmJob = jobs_definitions_mobile_treeFarm_TreeFarmJob
 	local ProgrammableJob = jobs_definitions_mobile_ProgrammableJob
 	local StorageJob = jobs_definitions_static_StorageJob
 	local JobManager = {}
@@ -3707,6 +3837,7 @@ function MODULE_jobs_JobManager()
 	    [Job.SETUP] = SetupJob,
 	    [Job.IDLE] = IdleJob,
 	    [Job.QUARRY] = QuarryJob,
+	    [Job.TREE_FARM] = TreeFarmJob,
 	    [Job.PROGRAMMABLE_JOB] = ProgrammableJob,
 	    [Job.STORAGE] = StorageJob,
 	}
