@@ -3179,7 +3179,7 @@ function MODULE_jobs_definitions_mobile_treeFarm_TreeFarmCodedInventoryListeners
 	    local currentSaplingCount = Inventory.countSaplings()
 	    while currentSaplingCount < saplingTarget do
 	        print("Sapling Count: " .. currentSaplingCount)
-	        Turtle.suck(side)
+	        Turtle.suck()
 	        currentSaplingCount = Inventory.countSaplings()
 	    end
 	    print("Sapling Count: " .. currentSaplingCount)
