@@ -1133,6 +1133,15 @@ function MODULE_utils_blocks_Block()
 	        or name == Blocks.oak_log
 	        or name == Blocks.mangrove_log
 	end
+	function Block.isSapling(name)
+	    return name == Blocks.acacia_sapling
+	        or name == Blocks.spruce_sapling
+	        or name == Blocks.birch_sapling
+	        or name == Blocks.dark_oak_sapling
+	        or name == Blocks.jungle_sapling
+	        or name == Blocks.oak_sapling
+	        or name == Blocks.mangrove_sapling
+	end
 	function Block.isLeaf(name)
 	    return name == Blocks.acacia_leaves
 	        or name == Blocks.spruce_leaves
@@ -1273,6 +1282,15 @@ function MODULE_turtle_Inventory()
 	    for i = 1, 16 do
 	        local item = turtle.getItemDetail(i)
 	        if item ~= nil and item.name == name then
+	            return i
+	        end
+	    end
+	    return nil
+	end
+	function Inventory.getSlotWithSapling()
+	    for i = 1, 16 do
+	        local item = turtle.getItemDetail(i)
+	        if item ~= nil and Block.isSapling(item) then
 	            return i
 	        end
 	    end
@@ -1699,6 +1717,12 @@ function MODULE_turtle_Turtle()
 	        Turtle.turnTo(direction)
 	        turtle.dig()
 	    end
+	end
+	function Turtle.select(slot)
+	    if slot == nil then
+	        return
+	    end
+	    turtle.select(slot)
 	end
 	function Turtle.digUp()
 	    turtle.digUp()
@@ -2951,6 +2975,7 @@ local jobs_definitions_mobile_treeFarm_TreeFarmCommands = MODULE_jobs_definition
 
 function MODULE_jobs_definitions_mobile_treeFarm_TreeFarmStates()
 	local Turtle = turtle_Turtle
+	local Inventory = turtle_Inventory
 	local Block = utils_blocks_Block
 	local Blocks = utils_blocks_Blocks
 	local TreeFarmStates = {}
@@ -3038,7 +3063,14 @@ function MODULE_jobs_definitions_mobile_treeFarm_TreeFarmStates()
 	function TreeFarmStates.onTreeFarmReplanting(self)
 	    local block = Turtle.getBlockBelow()
 	    if block == nil then
-	        Turtle.placeDown()
+	        local saplingSlot = Inventory.getSlotWithSapling()
+	        if saplingSlot ~= nil then
+	            Turtle.select(saplingSlot)
+	            Turtle.placeDown()
+	        else
+	            print("No saplings available - continuing")
+	        end
+	        self.config:set("state", self.states.TREE_FARM_MOVING_FORWARD)
 	        return
 	    end
 	    local isPlantable = block.name == Blocks.dirt or block.name == Blocks.grass_block
