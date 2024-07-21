@@ -1426,6 +1426,7 @@ function MODULE_utils_peripherals_Compass()
 	function Compass:getConfiguration()
 	    return self.internal.getConfiguration()
 	end
+	return Compass
 end
 local utils_peripherals_Compass = MODULE_utils_peripherals_Compass()
 
