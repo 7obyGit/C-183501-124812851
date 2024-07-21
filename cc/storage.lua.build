@@ -3337,7 +3337,9 @@ function MODULE_utils_storage_Storage()
 	    end
 	    local p = Parallel.new()
 	    for _, container in pairs(destinations) do
-	        p:addTask(function() container:defragment() end)
+	        p:addTask(function() 
+	            print("Defragmenting " .. container.name)
+	            container:defragment() end)
 	    end
 	    p:run()
 	    return remainingCount
