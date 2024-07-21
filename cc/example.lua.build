@@ -3177,6 +3177,7 @@ function MODULE_jobs_definitions_mobile_treeFarm_TreeFarmCodedInventoryListeners
 	    local originalDirection = Turtle.CURRENT_DIRECTION
 	    local saplingTarget = self.config:get("saplingTarget", 128)
 	    local currentSaplingCount = Inventory.countSaplings()
+	    Turtle.turnToSide(side)
 	    while currentSaplingCount < saplingTarget do
 	        print("Sapling Count: " .. currentSaplingCount)
 	        Turtle.suck()
