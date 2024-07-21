@@ -3003,7 +3003,7 @@ function MODULE_jobs_definitions_mobile_treeFarm_TreeFarmStates()
 	local TreeFarmStates = {}
 	function TreeFarmStates.onTreeFarmStarting(self)
 	    print("Tree farm is starting...")
-	    self.config:init("waitSeconds", 15)
+	    self.config:init("waitSeconds", 64)
 	    self.config:init("homePosition", Turtle.CURRENT_POSITION:toTable())
 	end
 	function TreeFarmStates.onTreeFarmMovingForward(self)
@@ -3152,7 +3152,7 @@ function MODULE_jobs_definitions_mobile_treeFarm_TreeFarmCodedInventoryListeners
 	local TreeFarmCodedInventoryListeners = {}
 	function TreeFarmCodedInventoryListeners.actionHome(self, name, side, count)
 	    print("Home Detected - Watiting")
-	    local waitSeconds = self.config:get("waitSeconds", 0)
+	    local waitSeconds = self.config:get("waitSeconds", 15)
 	    os.sleep(waitSeconds)
 	end
 	function TreeFarmCodedInventoryListeners.actionMove(self, name, side, count)
@@ -3897,8 +3897,20 @@ function MODULE_jobs_definitions_static_StorageJob()
 	        self.storage:populateKeepFilledBarrels()
 	        self.storage:dumpFurnaces()
 	        self.storage:refuelFurnaces()
-	        local removedJobNumbers = {}
+	        local charcoalCount = self.storage:getItemCount(Blocks.charcoal)
+	        local spruceLogCount = self.storage:getItemCount(Blocks.spruce_log)
 	        local smeltQueue = self.config:get("smeltQueue", {})
+	        local noCharcoalSmeltTask = true
+	        for _, item in pairs(smeltQueue) do
+	            if item.name == Blocks.spruce_log then
+	                noCharcoalSmeltTask = false
+	                break
+	            end
+	        end
+	        if spruceLogCount > 1024 and charcoalCount < 1024 and noCharcoalSmeltTask then
+	            table.insert(smeltQueue, {name = Blocks.spruce_log, count = 512})
+	        end
+	        local removedJobNumbers = {}
 	        for smeltJobNumber, item in pairs(smeltQueue) do
 	            local remainingCount = self.storage:smelt(item.name, item.count)
 	            item.count = remainingCount
