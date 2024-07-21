@@ -1308,6 +1308,13 @@ function MODULE_utils_data_Table()
 	function Table.isEmpty(object)
 	    return next(object) == nil
 	end
+	function Table.copy(object)
+	    local newObject = {}
+	    for key, value in pairs(object) do
+	        newObject[key] = value
+	    end
+	    return newObject
+	end
 	return Table
 end
 local utils_data_Table = MODULE_utils_data_Table()
