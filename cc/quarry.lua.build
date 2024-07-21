@@ -3333,10 +3333,12 @@ function MODULE_utils_storage_Storage()
 	            return 0  -- All items have been moved
 	        end
 	        remainingCount = sourceContainer:sendItems(destinationContainer, itemName, remainingCount)
+	        print("ADDING DESTINATION", destinationContainer.name)
 	        table.insert(destinations, destinationContainer)
 	    end
 	    local p = Parallel.new()
 	    for _, container in ipairs(destinations) do
+	        print(_, container.name)
 	        p:addTask(function() container:defragment() end)
 	    end
 	    p:run()
