@@ -3748,6 +3748,20 @@ function MODULE_utils_storage_Storage()
 	    end
 	    return count
 	end
+	function Storage:getBarrelCount()
+	    local count = 0
+	    for _, _ in pairs(self.barrels) do
+	        count = count + 1
+	    end
+	    return count
+	end
+	function Storage:getFurnaceCount()
+	    local count = 0
+	    for _, _ in pairs(self.furnaces) do
+	        count = count + 1
+	    end
+	    return count
+	end
 	function Storage:getPresentItemNames()
 	    local itemNames = {}
 	    for name, count in pairs(self:getItemList()) do
@@ -4090,6 +4104,7 @@ function MODULE_jobs_definitions_static_StorageJob()
 	function StorageJob:commandStats()
 	    print("Storage Stats")
 	    print("\t\tContainer Count: " .. self.storage:getContainerCount())
+	    print("\t\tFurnace Count: " .. self.storage:getFurnaceCount())
 	    print("\t\tUsed Capacity: " .. Math.round(self.storage:getUsedCapacity() * 100, 2) .. "%")
 	    print("\t\tUsed Slots: " .. self.storage:getUsedSlotCount())
 	    print("\t\tEmpty Slots: " .. self.storage:getEmptySlotCount())
