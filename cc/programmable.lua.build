@@ -3335,6 +3335,7 @@ function MODULE_utils_storage_Storage()
 	        remainingCount = sourceContainer:sendItems(destinationContainer, itemName, remainingCount)
 	        print("ADDING DESTINATION", destinationContainer.name)
 	        table.insert(destinations, destinationContainer)
+	        print("#DESTINATIONS", #destinations)
 	    end
 	    for index, container in ipairs(destinations) do
 	        print("Destination " .. index .. ": " .. container.name)
