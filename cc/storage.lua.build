@@ -3313,8 +3313,8 @@ function MODULE_utils_storage_Storage()
 	    return barrels
 	end
 	function Storage:updateIndex()
-	    Parallel.map(self.inventories, function(container) container:updateIndex() end)
-	    Parallel.map(self.barrels, function(container) container:updateIndex() end)
+	    Parallel.map(self.inventories, function(name, container) container:updateIndex() end)
+	    Parallel.map(self.barrels, function(name, container) container:updateIndex() end)
 	end
 	function Storage:defragment()
 	    local inventories = Table.copy(self.inventories)
