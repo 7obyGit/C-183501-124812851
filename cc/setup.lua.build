@@ -3279,11 +3279,11 @@ function MODULE_utils_storage_Storage()
 	function Storage.connectToFurnaces()
 	    local furnaces = {}
 	    local allPeripheralNames =  peripheral.getNames()
-	    for index, name in pairs(allPeripheralNames) do
+	    Parallel.map(allPeripheralNames, function(name)
 	        if Text.contains(name, Blocks.furnace) then
 	            furnaces[name] = Furnace.new(name)
 	        end
-	    end
+	    end)
 	    return furnaces
 	end
 	function Storage.connectToBarrels()
