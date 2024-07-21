@@ -163,7 +163,7 @@ function MODULE_utils_controlflow_Parallel()
 	        end
 	        parallel:addTask(function() func(item) end)
 	    end
-	    return parallel
+	    parallel:run()
 	end
 	function Parallel.mapTable(table_, func)
 	    print("Parallel.mapTable")
@@ -174,7 +174,7 @@ function MODULE_utils_controlflow_Parallel()
 	        end
 	        parallel:addTask(function() func(key, item) end)
 	    end
-	    return parallel
+	    parallel:run()
 	end
 	return Parallel
 end
@@ -3285,10 +3285,8 @@ function MODULE_utils_storage_Storage()
 	function Storage.connectToChests()
 	    local inventories = {}
 	    local allPeripheralNames =  peripheral.getNames()
-	    Parallel.mapTable(allPeripheralNames, function(name)
-	        print("CALLED With: " .. name)
+	    Parallel.map(allPeripheralNames, function(name)
 	        if Text.contains(name, Blocks.chest) then
-	            print("ADDING INVENTORY: " .. name)
 	            inventories[name] = Container.new(name)
 	        end
 	    end)
