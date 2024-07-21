@@ -1407,6 +1407,29 @@ end
 local utils_data_Table = MODULE_utils_data_Table()
 
 
+function MODULE_utils_peripherals_Compass()
+	local Compass = {}
+	function Compass.new()
+	    local self = setmetatable({}, Compass)
+	    self.internal = peripheral.find("compass")
+	    if self.internal == nil then
+	        return nil
+	    end
+	    return self
+	end
+	function Compass:getFacing()
+	    return self.internal.getFacing()
+	end
+	function Compass:getName()
+	    return self.internal.getName()
+	end
+	function Compass:getConfiguration()
+	    return self.internal.getConfiguration()
+	end
+end
+local utils_peripherals_Compass = MODULE_utils_peripherals_Compass()
+
+
 function MODULE_turtle_Turtle()
 	local Block   = utils_blocks_Block
 	local Vector3 = utils_math_Vector3
@@ -1417,6 +1440,7 @@ function MODULE_turtle_Turtle()
 	local Inventory = turtle_Inventory
 	local Blocks    = utils_blocks_Blocks
 	local Table = utils_data_Table
+	local Compass = utils_peripherals_Compass
 	local Turtle = {}
 	Turtle.CONFIG = Config.load()
 	function Turtle.getGpsPosition()
@@ -1426,6 +1450,17 @@ function MODULE_turtle_Turtle()
 	Turtle.CURRENT_POSITION = Turtle.getGpsPosition()
 	Turtle.CURRENT_DIRECTION = Turtle.CONFIG.homeDirection
 	Turtle._UNCHECKED_DIRECTION = true  -- Used to determine if the direction has been checked
+	local compass = Compass.new()
+	if compass ~= nil then
+	    print("Using compass to determine direction")
+	    Turtle.CURRENT_DIRECTION = compass.getFacing()
+	    Turtle._UNCHECKED_DIRECTION = false
+	    print("Facing " .. Turtle.CURRENT_DIRECTION)
+	    os.sleep(5)
+	else
+	    print("Compass not found - using GPS to determine direction")
+	    os.sleep(5)
+	end
 	function Turtle.moveInDirection(direction)
 	    Turtle.turnTo(direction)
 	    if direction == Direction.UP then
