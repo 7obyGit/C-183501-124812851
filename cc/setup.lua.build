@@ -2880,9 +2880,7 @@ function MODULE_utils_storage_codedinventory_CodedInventory()
 	    if patterns == nil then
 	        return
 	    end
-	    print("EXECUTING BARREL")
 	    for _, pattern in pairs(patterns) do
-	        print(pattern.name .. " " .. pattern.direction .. " " .. pattern.count)
 	        self:notifyListeners(jobSelf, pattern.name, pattern.direction, pattern.count)
 	    end
 	end
@@ -3158,7 +3156,9 @@ function MODULE_jobs_definitions_mobile_treeFarm_TreeFarmCodedInventoryListeners
 	    os.sleep(waitSeconds)
 	end
 	function TreeFarmCodedInventoryListeners.actionMove(self, name, side, count)
-	    if side == ContainerPatternNames.DIRECTION_LEFT then
+	    if side == ContainerPatternNames.DIRECTION_FORWARD then
+	        self.config:set("state", self.states.TREE_FARM_MOVING_FORWARD)
+	    elseif side == ContainerPatternNames.DIRECTION_LEFT then
 	        Turtle.turnLeft()
 	        self.config:set("state", self.states.TREE_FARM_MOVING_FORWARD)
 	    elseif side == ContainerPatternNames.DIRECTION_RIGHT then
@@ -3168,6 +3168,8 @@ function MODULE_jobs_definitions_mobile_treeFarm_TreeFarmCodedInventoryListeners
 	        Turtle.turnLeft()
 	        Turtle.turnLeft()
 	        self.config:set("state", self.states.TREE_FARM_MOVING_FORWARD)
+	    else
+	        print("Unexpected direction: " .. side)
 	    end
 	end
 	function TreeFarmCodedInventoryListeners.actionDrop(self, name, side, count)
