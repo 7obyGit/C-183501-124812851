@@ -3330,24 +3330,13 @@ function MODULE_utils_storage_Storage()
 	    local remainingCount = count
 	    for _, destinationContainer in pairs(self.inventories) do
 	        if remainingCount == 0 then
-	            return 0  -- All items have been moved
+	            break  -- All items have been moved
 	        end
 	        remainingCount = sourceContainer:sendItems(destinationContainer, itemName, remainingCount)
-	        print("ADDING DESTINATION", destinationContainer.name)
 	        table.insert(destinations, destinationContainer)
-	        print("#DESTINATIONS", #destinations)
-	    end
-	    print("DESTINATIONS", #destinations)
-	    print("DESTINATIONS", destinations)
-	    for index, container in ipairs(destinations) do
-	        print("Destination " .. index .. ": " .. container.name)
-	    end
-	    for index, container in pairs(destinations) do
-	        print("PAIRS Destination " .. index .. ": " .. container.name)
 	    end
 	    local p = Parallel.new()
 	    for _, container in ipairs(destinations) do
-	        print("Defragmenting container:", container.name)
 	        p:addTask(function() container:defragment() end)
 	    end
 	    p:run()
