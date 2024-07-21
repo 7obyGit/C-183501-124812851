@@ -3285,7 +3285,7 @@ function MODULE_utils_storage_Storage()
 	function Storage.connectToChests()
 	    local inventories = {}
 	    local allPeripheralNames =  peripheral.getNames()
-	    Parallel.map(allPeripheralNames, function(name)
+	    Parallel.mapTable(allPeripheralNames, function(name)
 	        if Text.contains(name, Blocks.chest) then
 	            print("ADDING INVENTORY: " .. name)
 	            inventories[name] = Container.new(name)
