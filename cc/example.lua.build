@@ -3265,7 +3265,6 @@ function MODULE_utils_storage_Storage()
 	    self.inventories = Storage.connectToChests()
 	    self.furnaces = Storage.connectToFurnaces()
 	    self.io = self.barrels[self.config.io or Blocks.barrel .. "_0"]
-	    os.sleep(4)
 	    self.inputs = {}
 	    if self.config.inputs ~= nil then
 	        for _, input in pairs(self.config.inputs) do
@@ -3285,6 +3284,7 @@ function MODULE_utils_storage_Storage()
 	    local allPeripheralNames =  peripheral.getNames()
 	    Parallel.map(allPeripheralNames, function(name)
 	        if Text.contains(name, Blocks.chest) then
+	            print("ADDING INVENTORY: " .. name)
 	            inventories[name] = Container.new(name)
 	        end
 	    end)
