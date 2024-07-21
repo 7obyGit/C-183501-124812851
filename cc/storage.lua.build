@@ -1261,7 +1261,7 @@ function MODULE_turtle_Inventory()
 	        end
 	    end
 	end
-	function Inventory.pullFromContainer(limit)
+	function Inventory.pullFromContainer()
 	    local side = Inventory.findContainerSide()
 	    if side == nil then
 	        return false
@@ -1272,17 +1272,8 @@ function MODULE_turtle_Inventory()
 	    elseif side == Side.down then
 	        suckFunction = turtle.suckDown
 	    end
-	    local itemsPickedUp = true
-	    local totalItemsSucked = 0
-	    while itemsPickedUp and totalItemsSucked < limit do
-	        itemsPickedUp = false
-	        local itemsSucked = suckFunction()
-	        if itemsSucked then
-	            itemsPickedUp = true
-	            totalItemsSucked = totalItemsSucked + itemsSucked
-	        end
-	    end
-	    return totalItemsSucked
+	    while suckFunction() do end
+	    return
 	end
 	function Inventory.dumpIntoContainer()
 	    local side = Inventory.findContainerSide()
@@ -1448,9 +1439,8 @@ function MODULE_turtle_Turtle()
 	                os.sleep(1)
 	            end
 	        end
-	        local maxItemsToSuck = 64
 	        Turtle.turnToSide(side)
-	        Inventory.pullFromContainer(maxItemsToSuck)
+	        Inventory.pullFromContainer()
 	        slot = Inventory.getSlotWithItem(Turtle.CONFIG.fuelItem)
 	        if slot ~= nil then
 	            turtle.select(slot)
