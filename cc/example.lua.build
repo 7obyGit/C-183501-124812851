@@ -262,6 +262,7 @@ function MODULE_utils_blocks_Blocks()
 	    jungle_log = "minecraft:jungle_log",
 	    acacia_log = "minecraft:acacia_log",
 	    dark_oak_log = "minecraft:dark_oak_log",
+	    mangrove_log = "minecraft:mangrove_log",
 	    crimson_stem = "minecraft:crimson_stem",
 	    warped_stem = "minecraft:warped_stem",
 	    oak_wood = "minecraft:oak_wood",
@@ -278,6 +279,7 @@ function MODULE_utils_blocks_Blocks()
 	    jungle_leaves = "minecraft:jungle_leaves",
 	    acacia_leaves = "minecraft:acacia_leaves",
 	    dark_oak_leaves = "minecraft:dark_oak_leaves",
+	    mangrove_leaves = "minecraft:mangrove_leaves",
 	    crimson_leaves = "minecraft:crimson_leaves",
 	    warped_leaves = "minecraft:warped_leaves",
 	    oak_sapling = "minecraft:oak_sapling",
@@ -1069,6 +1071,22 @@ function MODULE_utils_blocks_Block()
 	    Blocks.water,
 	    Blocks.lava,
 	}
+	local treeBlocks = {
+	    Blocks.acacia_leaves,
+	    Blocks.acacia_log,
+	    Blocks.spruce_leaves,
+	    Blocks.spruce_log,
+	    Blocks.birch_leaves,
+	    Blocks.birch_log,
+	    Blocks.dark_oak_leaves,
+	    Blocks.dark_oak_log,
+	    Blocks.jungle_leaves,
+	    Blocks.jungle_log,
+	    Blocks.oak_leaves,
+	    Blocks.oak_log,
+	    Blocks.mangrove_leaves,
+	    Blocks.mangrove_log,
+	}
 	local Block = {}
 	Block.__index = Block
 	function Block.new(name, position, state, tags)
@@ -1093,6 +1111,14 @@ function MODULE_utils_blocks_Block()
 	function Block.isLiquid(name)
 	    for _, liquidBlockName in ipairs(liquidBlocks) do
 	        if name == liquidBlockName then
+	            return true
+	        end
+	    end
+	    return false
+	end
+	function Block.isTree(name)
+	    for _, treeBlockName in ipairs(treeBlocks) do
+	        if name == treeBlockName then
 	            return true
 	        end
 	    end
@@ -2900,7 +2926,83 @@ local jobs_definitions_mobile_treeFarm_TreeFarmCommands = MODULE_jobs_definition
 
 
 function MODULE_jobs_definitions_mobile_treeFarm_TreeFarmStates()
+	local Turtle = turtle_Turtle
+	local Block = utils_blocks_Block
+	local Blocks = utils_blocks_Blocks
 	local TreeFarmStates = {}
+	function TreeFarmStates.onTreeFarmStarting(self)
+	    print("Tree farm is starting...")
+	    self.config:init("waitSeconds", 15)
+	end
+	function TreeFarmStates.onTreeFarmMovingForward(self)
+	    local block = Turtle.getBlockInFront()
+	    if block == nil then
+	        Turtle.forward()
+	        return
+	    end
+	    local isTree = Block.isTree(block.name)
+	    if isTree then
+	        Turtle.dig()
+	        Turtle.forward()
+	        self.config:set("state", self.states.TREE_FARM_MINING_UP)
+	        return
+	    end
+	    print("Unable to continue moving forward - terminating")
+	    self.config:set("state", self.states.TREE_FARM_TERMINATING)
+	end
+	function TreeFarmStates.onTreeFarmMiningUp(self)
+	    local block = Turtle.getBlockAbove()
+	    if block == nil then
+	        self.config:set("state", self.states.TREE_FARM_MINING_DOWN)
+	        return
+	    end
+	    local isTree = Block.isTree(block.name)
+	    if isTree then
+	        Turtle.digUp()
+	        Turtle.up()
+	        return
+	    end
+	    print("Unable to continue moving up - terminating")
+	    self.config:set("state", self.states.TREE_FARM_TERMINATING)
+	end
+	function TreeFarmStates.onTreeFarmMiningDown(self)
+	    local block = Turtle.getBlockBelow()
+	    if block == nil then
+	        Turtle.down()
+	        return
+	    end
+	    local isDirt = block.name == Blocks.dirt
+	    if isDirt then
+	        self.config:set("state", self.states.TREE_FARM_REPLANTING)
+	        return
+	    end
+	    local isTree = Block.isTree(block.name)
+	    if isTree then
+	        Turtle.digDown()
+	        Turtle.down()
+	        return
+	    end
+	    print("Unable to continue moving down - terminating")
+	    self.config:set("state", self.states.TREE_FARM_TERMINATING)
+	end
+	function TreeFarmStates.onTreeFarmReplanting(self)
+	    local block = Turtle.getBlockBelow()
+	    if block == nil then
+	        Turtle.placeDown()
+	        return
+	    end
+	    local isPlantable = block.name == Blocks.dirt or block.name == Blocks.grass_block
+	    if isPlantable then
+	        Turtle.up()
+	        return
+	    end
+	    print("Unable to replant - terminating")
+	    self.config:set("state", self.states.TREE_FARM_TERMINATING)
+	end
+	function TreeFarmStates.onTreeFarmTerminating(self)
+	    print("Tree farm is terminating...")
+	    self.config:set("state", self.states.COMMAND_PROMPT)
+	end
 	return TreeFarmStates
 end
 local jobs_definitions_mobile_treeFarm_TreeFarmStates = MODULE_jobs_definitions_mobile_treeFarm_TreeFarmStates()
@@ -2945,8 +3047,8 @@ function MODULE_jobs_definitions_mobile_treeFarm_TreeFarmCodedInventoryListeners
 	local TreeFarmCodedInventoryListeners = {}
 	function TreeFarmCodedInventoryListeners.actionHome(self, name, side, count)
 	    print("Home Detected - Watiting")
-	    os.sleep(5)
-	    self.config:set("state", self.states.TREE_FARM_WAITING)
+	    local waitSeconds = self.config:get("waitSeconds", 0)
+	    os.sleep(waitSeconds)
 	end
 	function TreeFarmCodedInventoryListeners.actionMove(self, name, side, count)
 	    if side == ContainerPatternNames.DIRECTION_LEFT then
@@ -3007,11 +3109,8 @@ function MODULE_jobs_definitions_mobile_treeFarm_TreeFarmJob()
 	        MOVING = "MOVING",
 	        TREE_FARM_STARTING = "TREE_FARM_STARTING",  -- Turtle initiates tree farm details in the config file and reads coded inventories
 	        TREE_FARM_MOVING_FORWARD = "TREE_FARM_MOVING_FORWARD",
-	        TREE_FARM_MOVING_UP = "TREE_FARM_MOVING_UP",
-	        TREE_FARM_MOVING_DOWN = "TREE_FARM_MOVING_DOWN",
-	        TREE_FARM_MOVING_TO_NEXT_TREE = "TREE_FARM_MOVING_TO_NEXT_TREE",  -- Moves forwards if possible - breaks logs / leaves if needed
-	        TREE_FARM_MINING_TREE_UP = "TREE_FARM_MINING_TREE_UP",  -- Turtle goes up first
-	        TREE_FARM_MINING_TREE_DOWN = "TREE_FARM_MINING_TREE_DOWN",  -- Turtle goes down next
+	        TREE_FARM_MINING_UP = "TREE_FARM_MINING_UP",
+	        TREE_FARM_MINING_DOWN = "TREE_FARM_MINING_DOWN",
 	        TREE_FARM_REPLANTING = "TREE_FARM_REPLANTING",  -- Finally - Starts from the lowest block before dirt and places sapling after moving one block up
 	        TREE_FARM_WAITING = "TREE_FARM_WAITING",  -- Turtle waits for saplings to grow
 	        TREE_FARM_TERMINATING = "TREE_FARM_TERMINATING",  -- Turtle stops
@@ -3021,13 +3120,9 @@ function MODULE_jobs_definitions_mobile_treeFarm_TreeFarmJob()
 	        [self.states.MOVING] = CommonStates.onMoving,
 	        [self.states.TREE_FARM_STARTING] = TreeFarmStates.onTreeFarmStarting,
 	        [self.states.TREE_FARM_MOVING_FORWARD] = TreeFarmStates.onTreeFarmMovingForward,
-	        [self.states.TREE_FARM_MOVING_UP] = TreeFarmStates.onTreeFarmMovingUp,
-	        [self.states.TREE_FARM_MOVING_DOWN] = TreeFarmStates.onTreeFarmMovingDown,
-	        [self.states.TREE_FARM_MOVING_TO_NEXT_TREE] = TreeFarmStates.onTreeFarmMovingToNextTree,
-	        [self.states.TREE_FARM_MINING_TREE_UP] = TreeFarmStates.onTreeFarmMiningTreeUp,
-	        [self.states.TREE_FARM_MINING_TREE_DOWN] = TreeFarmStates.onTreeFarmMiningTreeDown,
+	        [self.states.TREE_FARM_MINING_TREE_UP] = TreeFarmStates.onTreeFarmMiningUp,
+	        [self.states.TREE_FARM_MINING_TREE_DOWN] = TreeFarmStates.onTreeFarmMiningDown,
 	        [self.states.TREE_FARM_REPLANTING] = TreeFarmStates.onTreeFarmReplanting,
-	        [self.states.TREE_FARM_WAITING] = TreeFarmStates.onTreeFarmWaiting,
 	        [self.states.TREE_FARM_TERMINATING] = TreeFarmStates.onTreeFarmTerminating,
 	    }
 	    self.codedInventory = CodedInventory.new()
