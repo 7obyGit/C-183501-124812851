@@ -3287,6 +3287,7 @@ function MODULE_utils_storage_Storage()
 	            inventories[name] = Container.new(name)
 	        end
 	    end)
+	    print("Chests: " .. Table.size(inventories))
 	    return inventories
 	end
 	function Storage.connectToFurnaces()
@@ -3297,6 +3298,7 @@ function MODULE_utils_storage_Storage()
 	            furnaces[name] = Furnace.new(name)
 	        end
 	    end)
+	    print("Furnaces: " .. Table.size(furnaces))
 	    return furnaces
 	end
 	function Storage.connectToBarrels()
@@ -3307,6 +3309,7 @@ function MODULE_utils_storage_Storage()
 	            barrels[name] = Container.new(name)
 	        end
 	    end)
+	    print("Barrels: " .. Table.size(barrels))
 	    return barrels
 	end
 	function Storage:updateIndex()
