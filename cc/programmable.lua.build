@@ -143,6 +143,31 @@ function MODULE_utils_controlflow_Parallel()
 	function Parallel:waitForAll()
 	    parallel.waitForAll(table.unpack(self.tasks))
 	end
+	function Parallel.map(obj, func)
+	    if type(obj) == "table" then
+	        if #obj > 0 then
+	            return Parallel.mapList(obj, func)
+	        else
+	            return Parallel.mapTable(obj, func)
+	        end
+	    else
+	        return Parallel.mapList(obj, func)
+	    end
+	end
+	function Parallel.mapList(list, func)
+	    local parallel = Parallel.new()
+	    for _, item in ipairs(list) do
+	        parallel:addTask(function() func(item) end)
+	    end
+	    return parallel
+	end
+	function Parallel.mapTable(table_, func)
+	    local parallel = Parallel.new()
+	    for key, item in pairs(table_) do
+	        parallel:addTask(function() func(key, item) end)
+	    end
+	    return parallel
+	end
 	return Parallel
 end
 local utils_controlflow_Parallel = MODULE_utils_controlflow_Parallel()
@@ -3335,11 +3360,10 @@ function MODULE_utils_storage_Storage()
 	        remainingCount = sourceContainer:sendItems(destinationContainer, itemName, remainingCount)
 	        table.insert(destinations, destinationContainer)
 	    end
-	    local p = Parallel.new()
-	    for _, container in ipairs(destinations) do
-	        p:addTask(function() container:defragment() end)
-	    end
-	    p:run()
+	    Parallel.map(
+	        destinations,
+	        function(destionation) destionation:defragment() end
+	    )
 	    return remainingCount
 	end
 	function Storage:dump(sourceContainer)
