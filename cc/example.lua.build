@@ -1290,7 +1290,7 @@ function MODULE_turtle_Inventory()
 	function Inventory.getSlotWithSapling()
 	    for i = 1, 16 do
 	        local item = turtle.getItemDetail(i)
-	        if item ~= nil and Block.isSapling(item) then
+	        if item ~= nil and Block.isSapling(item.name) then
 	            return i
 	        end
 	    end
@@ -1299,7 +1299,7 @@ function MODULE_turtle_Inventory()
 	function Inventory.getSlotWithFuel()
 	    for i = 1, 16 do
 	        local item = turtle.getItemDetail(i)
-	        if item ~= nil and Block.isFuel(item) then
+	        if item ~= nil and Block.isFuel(item.name) then
 	            return i
 	        end
 	    end
