@@ -3120,8 +3120,8 @@ function MODULE_jobs_definitions_mobile_treeFarm_TreeFarmJob()
 	        [self.states.MOVING] = CommonStates.onMoving,
 	        [self.states.TREE_FARM_STARTING] = TreeFarmStates.onTreeFarmStarting,
 	        [self.states.TREE_FARM_MOVING_FORWARD] = TreeFarmStates.onTreeFarmMovingForward,
-	        [self.states.TREE_FARM_MINING_TREE_UP] = TreeFarmStates.onTreeFarmMiningUp,
-	        [self.states.TREE_FARM_MINING_TREE_DOWN] = TreeFarmStates.onTreeFarmMiningDown,
+	        [self.states.TREE_FARM_MINING_UP] = TreeFarmStates.onTreeFarmMiningUp,
+	        [self.states.TREE_FARM_MINING_DOWN] = TreeFarmStates.onTreeFarmMiningDown,
 	        [self.states.TREE_FARM_REPLANTING] = TreeFarmStates.onTreeFarmReplanting,
 	        [self.states.TREE_FARM_TERMINATING] = TreeFarmStates.onTreeFarmTerminating,
 	    }
