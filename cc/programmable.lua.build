@@ -155,7 +155,6 @@ function MODULE_utils_controlflow_Parallel()
 	    end
 	end
 	function Parallel.mapList(list, func)
-	    print("Parallel.mapList")
 	    local parallel = Parallel.new()
 	    for _, item in ipairs(list) do
 	        if item ~= nil then
@@ -165,7 +164,6 @@ function MODULE_utils_controlflow_Parallel()
 	    parallel:run()
 	end
 	function Parallel.mapTable(table_, func)
-	    print("Parallel.mapTable")
 	    local parallel = Parallel.new()
 	    for key, item in pairs(table_) do
 	        if item ~= nil then
@@ -3287,7 +3285,6 @@ function MODULE_utils_storage_Storage()
 	            inventories[name] = Container.new(name)
 	        end
 	    end)
-	    print("Chests: " .. Table.size(inventories))
 	    return inventories
 	end
 	function Storage.connectToFurnaces()
@@ -3298,7 +3295,6 @@ function MODULE_utils_storage_Storage()
 	            furnaces[name] = Furnace.new(name)
 	        end
 	    end)
-	    print("Furnaces: " .. Table.size(furnaces))
 	    return furnaces
 	end
 	function Storage.connectToBarrels()
@@ -3309,7 +3305,6 @@ function MODULE_utils_storage_Storage()
 	            barrels[name] = Container.new(name)
 	        end
 	    end)
-	    print("Barrels: " .. Table.size(barrels))
 	    return barrels
 	end
 	function Storage:updateIndex()
