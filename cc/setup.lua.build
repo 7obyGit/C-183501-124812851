@@ -631,6 +631,8 @@ function MODULE_utils_blocks_Blocks()
 	    blackstone_brick_slab = "minecraft:blackstone_brick_slab",
 	    blackstone_brick_stairs = "minecraft:blackstone_brick_stairs",
 	    blackstone_brick_wall = "minecraft:blackstone_brick_wall",
+	    water = "minecraft:water",
+	    lava = "minecraft:lava",
 	    computercraft_cable = "computercraft:cable",
 	    computercraft_computer = "computercraft:computer",
 	    computercraft_computer_advanced = "computercraft:computer_advanced",
@@ -1034,6 +1036,10 @@ function MODULE_utils_blocks_Block()
 	    Blocks.computercraft_wired_modem,
 	    Blocks.computercraft_turtle,
 	}
+	local liquidBlocks = {
+	    Blocks.water,
+	    Blocks.lava,
+	}
 	local Block = {}
 	Block.__index = Block
 	function Block.new(name, position, state, tags)
@@ -1054,6 +1060,14 @@ function MODULE_utils_blocks_Block()
 	        end
 	    end
 	    return true
+	end
+	function Block.isLiquid(name)
+	    for _, liquidBlockName in ipairs(liquidBlocks) do
+	        if name == liquidBlockName then
+	            return true
+	        end
+	    end
+	    return false
 	end
 	function Block.exists(name)
 	    return blockLookupTable[name] ~= nil
@@ -1298,7 +1312,8 @@ function MODULE_turtle_Turtle()
 	    end
 	end
 	function Turtle.forward()
-	    if Turtle.getBlockInFront() ~= nil then
+	    local block = Turtle.getBlockInFront()
+	    if block ~= nil and not Block.isLiquid(block.name) then
 	        return false
 	    end
 	    local oldPosition = Turtle.CURRENT_POSITION:copy()
@@ -1320,13 +1335,15 @@ function MODULE_turtle_Turtle()
 	    return true
 	end
 	function Turtle.up()
-	    if Turtle.getBlockAbove() ~= nil then return false end
+	    local block = Turtle.getBlockAbove()
+	    if block ~= nil and not Block.isLiquid(block.name) then return false end
 	    turtle.up()
 	    Turtle.CURRENT_POSITION = Turtle.CURRENT_POSITION:addInDirection(Direction.UP, 1)
 	    return true
 	end
 	function Turtle.down()
-	    if Turtle.getBlockBelow() ~= nil then return false end
+	    local block = Turtle.getBlockBelow()
+	    if block ~= nil and not Block.isLiquid(block.name) then return false end
 	    turtle.down()
 	    Turtle.CURRENT_POSITION = Turtle.CURRENT_POSITION:addInDirection(Direction.DOWN, 1)
 	    return true
@@ -1357,6 +1374,29 @@ function MODULE_turtle_Turtle()
 	        slot = Inventory.getSlotWithItem(Turtle.CONFIG.fuelItem)
 	        turtle.select(slot)
 	        turtle.refuel()
+	    end
+	end
+	function Turtle.refuelUsingAdjacentContainer(targetFuelLevel, side)
+	    local slot = nil
+	    slot = 0
+	    while Turtle.getFuelLevel() < targetFuelLevel and slot ~= nil do
+	        if side == nil then
+	            side = Inventory.findContainerSide()
+	            if side == nil then
+	                os.sleep(1)
+	            end
+	        end
+	        local maxItemsToSuck = 64
+	        Turtle.turnToSide(side)
+	        Inventory.pullFromContainer(maxItemsToSuck)
+	        slot = Inventory.getSlotWithItem(Turtle.CONFIG.fuelItem)
+	        if slot ~= nil then
+	            turtle.select(slot)
+	            turtle.refuel()
+	        else
+	            print("No fuel found")
+	            os.sleep(1)
+	        end
 	    end
 	end
 	function Turtle.turnTo(direction)
@@ -1527,6 +1567,17 @@ function MODULE_turtle_Turtle()
 	        end
 	    end
 	    return false
+	end
+	function Turtle.dump(side)
+	    if side == nil then
+	        side = Inventory.findContainerSide()
+	        if side == nil then
+	            print("No dump container found - please place one")
+	            os.sleep(1)
+	        end
+	    end
+	    Turtle.turnToSide(side)
+	    Inventory.dumpIntoContainer()
 	end
 	function Turtle.safeDig(direction)
 	    local hasBlock = nil
@@ -1903,25 +1954,7 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	            self.config:set("state", self.states.QUARRY_MOVING_COLUMN)
 	            return
 	        end
-	        local slot = nil
-	        slot = 0
-	        while Turtle.getFuelLevel() < Turtle.CONFIG.fuelTarget and slot ~= nil do
-	            local side = Inventory.findContainerSide()
-	            if side == nil then
-	                os.sleep(1)
-	            end
-	            local maxItemsToSuck = 64
-	            Turtle.turnToSide(side)
-	            Inventory.pullFromContainer(maxItemsToSuck)
-	            slot = Inventory.getSlotWithItem(Turtle.CONFIG.fuelItem)
-	            if slot ~= nil then
-	                turtle.select(slot)
-	                turtle.refuel()
-	            else
-	                print("No fuel found")
-	                os.sleep(1)
-	            end
-	        end
+	        Turtle.refuelUsingAdjacentContainer(fuelTarget)
 	        self.config:set("state", self.states.QUARRY_MOVING_COLUMN)
 	        return
 	    end
@@ -1946,13 +1979,7 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	    local dumpPosition = Vector3.new(self.config:get("dumpPosition", currentPosition))
 	    if currentPosition:equals(dumpPosition) then
 	        print("Dumping items")
-	        local side = Inventory.findContainerSide()
-	        if side == nil then
-	            print("No dump container found - please place one")
-	            os.sleep(1)
-	        end
-	        Turtle.turnToSide(side)
-	        Inventory.dumpIntoContainer()
+	        Turtle.dump()
 	        self.config:set("state", self.states.QUARRY_REFUEL)
 	        return
 	    end
@@ -2876,6 +2903,44 @@ end
 local utils_jobutils_CommonEventImplementations = MODULE_utils_jobutils_CommonEventImplementations()
 
 
+function MODULE_jobs_definitions_mobile_treeFarm_TreeFarmCodedInventoryListeners()
+	local Turtle = turtle_Turtle
+	local ContainerPatternNames = utils_storage_patterns_ContainerPatternNames
+	local TreeFarmCodedInventoryListeners = {}
+	function TreeFarmCodedInventoryListeners.actionHome(self, name, side, count)
+	    print("Home Detected - Watiting")
+	    os.sleep(5)
+	    self.config:set("state", self.states.TREE_FARM_WAITING)
+	end
+	function TreeFarmCodedInventoryListeners.actionMove(self, name, side, count)
+	    if side == ContainerPatternNames.DIRECTION_LEFT then
+	        Turtle.turnLeft()
+	        self.config:set("state", self.states.TREE_FARM_MOVING_FORWARD)
+	    elseif side == ContainerPatternNames.DIRECTION_RIGHT then
+	        Turtle.turnRight()
+	        self.config:set("state", self.states.TREE_FARM_MOVING_UP)
+	    elseif side == ContainerPatternNames.DIRECTION_BACK then
+	        Turtle.turnLeft()
+	        Turtle.turnLeft()
+	        self.config:set("state", self.states.TREE_FARM_MOVING_DOWN)
+	    end
+	end
+	function TreeFarmCodedInventoryListeners.actionDrop(self, name, side, count)
+	    local originalDirection = Turtle.CURRENT_DIRECTION
+	    Turtle.dump(side)
+	    Turtle.turnTo(originalDirection)
+	end
+	function TreeFarmCodedInventoryListeners.actionRefuel(self, name, side, count)
+	    local fuelTarget = self.config:get("targetFuelLevel", 1024)
+	    local originalDirection = Turtle.CURRENT_DIRECTION
+	    Turtle.refuelUsingAdjacentContainer(fuelTarget, side)
+	    Turtle.turnTo(originalDirection)
+	end
+	return TreeFarmCodedInventoryListeners
+end
+local jobs_definitions_mobile_treeFarm_TreeFarmCodedInventoryListeners = MODULE_jobs_definitions_mobile_treeFarm_TreeFarmCodedInventoryListeners()
+
+
 function MODULE_jobs_definitions_mobile_treeFarm_TreeFarmJob()
 	local Turtle = turtle_Turtle
 	local Inventory = turtle_Inventory
@@ -2888,6 +2953,8 @@ function MODULE_jobs_definitions_mobile_treeFarm_TreeFarmJob()
 	local CodedInventory = utils_storage_codedinventory_CodedInventory
 	local CommonCodedInventoryListeners = utils_jobutils_CommonCodedInventoryListeners
 	local CommonEventImplementations = utils_jobutils_CommonEventImplementations
+	local ContainerPatternNames = utils_storage_patterns_ContainerPatternNames
+	local TreeFarmCodedInventoryListeners = jobs_definitions_mobile_treeFarm_TreeFarmCodedInventoryListeners
 	local Text = utils_text_Text
 	local TreeFarmJob = {}
 	TreeFarmJob.__index = TreeFarmJob
@@ -2929,6 +2996,10 @@ function MODULE_jobs_definitions_mobile_treeFarm_TreeFarmJob()
 	    }
 	    self.codedInventory = CodedInventory.new()
 	    self.codedInventory:addDefaultListeners()
+	    self.codedInventory:addListener(ContainerPatternNames.ACTION_HOME, TreeFarmCodedInventoryListeners.actionHome)
+	    self.codedInventory:addListener(ContainerPatternNames.ACTION_MOVE, TreeFarmCodedInventoryListeners.actionMove)
+	    self.codedInventory:addListener(ContainerPatternNames.ACTION_DROP, TreeFarmCodedInventoryListeners.actionDrop)
+	    self.codedInventory:addListener(ContainerPatternNames.ACTION_REFUEL, TreeFarmCodedInventoryListeners.actionRefuel)
 	    return self
 	end
 	function TreeFarmJob:onStart()
