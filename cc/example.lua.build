@@ -2923,6 +2923,7 @@ function MODULE_jobs_definitions_mobile_treeFarm_TreeFarmStates()
 	function TreeFarmStates.onTreeFarmStarting(self)
 	    print("Tree farm is starting...")
 	    self.config:init("waitSeconds", 15)
+	    self.config:init("homePosition", Turtle.CURRENT_POSITION:toTable())
 	end
 	function TreeFarmStates.onTreeFarmMovingForward(self)
 	    local block = Turtle.getBlockInFront()
@@ -2939,6 +2940,23 @@ function MODULE_jobs_definitions_mobile_treeFarm_TreeFarmStates()
 	    end
 	    print("Unable to continue moving forward - terminating")
 	    self.config:set("state", self.states.TREE_FARM_TERMINATING)
+	end
+	function TreeFarmStates.onTreeFarmReturningToHomeHeight(self)
+	    local homePosition = self.config:get("homePosition", nil)
+	    if homePosition == nil then
+	        print("Home position not set - terminating")
+	        self.config:set("state", self.states.TREE_FARM_TERMINATING)
+	        return
+	    end
+	    if Turtle.CURRENT_POSITION.y < homePosition.y then
+	        Turtle.up()
+	        return
+	    end
+	    if Turtle.CURRENT_POSITION.y > homePosition.y then
+	        Turtle.down()
+	        return
+	    end
+	    self.config:set("state", self.states.TREE_FARM_MOVING_FORWARD)
 	end
 	function TreeFarmStates.onTreeFarmMiningUp(self)
 	    local block = Turtle.getBlockAbove()
@@ -3099,6 +3117,7 @@ function MODULE_jobs_definitions_mobile_treeFarm_TreeFarmJob()
 	        MOVING = "MOVING",
 	        TREE_FARM_STARTING = "TREE_FARM_STARTING",  -- Turtle initiates tree farm details in the config file and reads coded inventories
 	        TREE_FARM_MOVING_FORWARD = "TREE_FARM_MOVING_FORWARD",
+	        TREE_FARM_RETURNING_TO_HOME_HEIGHT = "TREE_FARM_RETURNING_TO_HOME_HEIGHT",
 	        TREE_FARM_MINING_UP = "TREE_FARM_MINING_UP",
 	        TREE_FARM_MINING_DOWN = "TREE_FARM_MINING_DOWN",
 	        TREE_FARM_REPLANTING = "TREE_FARM_REPLANTING",  -- Finally - Starts from the lowest block before dirt and places sapling after moving one block up
