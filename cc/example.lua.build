@@ -158,10 +158,9 @@ function MODULE_utils_controlflow_Parallel()
 	    print("Parallel.mapList")
 	    local parallel = Parallel.new()
 	    for _, item in ipairs(list) do
-	        if item == nil then
-	            print("Warning: nil item in list")
+	        if item ~= nil then
+	            parallel:addTask(function() func(item) end)
 	        end
-	        parallel:addTask(function() func(item) end)
 	    end
 	    parallel:run()
 	end
@@ -169,10 +168,9 @@ function MODULE_utils_controlflow_Parallel()
 	    print("Parallel.mapTable")
 	    local parallel = Parallel.new()
 	    for key, item in pairs(table_) do
-	        if item == nil then
-	            print("Warning: nil item in table with key " .. key)
+	        if item ~= nil then
+	            parallel:addTask(function() func(key, item) end)
 	        end
-	        parallel:addTask(function() func(key, item) end)
 	    end
 	    parallel:run()
 	end
