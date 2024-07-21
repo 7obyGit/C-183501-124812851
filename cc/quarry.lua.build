@@ -288,6 +288,7 @@ function MODULE_utils_blocks_Blocks()
 	    jungle_sapling = "minecraft:jungle_sapling",
 	    acacia_sapling = "minecraft:acacia_sapling",
 	    dark_oak_sapling = "minecraft:dark_oak_sapling",
+	    mangrove_sapling = "minecraft:mangrove_sapling",
 	    crimson_fungus = "minecraft:crimson_fungus",
 	    warped_fungus = "minecraft:warped_fungus",
 	    oak_fence = "minecraft:oak_fence",
@@ -1305,6 +1306,25 @@ function MODULE_turtle_Inventory()
 	    end
 	    return nil
 	end
+	function Inventory.getItemCount(name)
+	    local count = 0
+	    for i = 1, 16 do
+	        local item = turtle.getItemDetail(i)
+	        if item ~= nil and item.name == name then
+	            count = count + item.count
+	        end
+	    end
+	    return count
+	end
+	function Inventory.countSaplings()
+	    return Inventory.getItemCount(Blocks.acacia_sapling)
+	        + Inventory.getItemCount(Blocks.birch_sapling)
+	        + Inventory.getItemCount(Blocks.dark_oak_sapling)
+	        + Inventory.getItemCount(Blocks.jungle_sapling)
+	        + Inventory.getItemCount(Blocks.oak_sapling)
+	        + Inventory.getItemCount(Blocks.spruce_sapling)
+	        + Inventory.getItemCount(Blocks.mangrove_sapling)
+	end
 	function Inventory.findContainerSide()
 	    for _, side in pairs(Side) do
 	        local peripheralType = peripheral.getType(side)
@@ -1485,6 +1505,7 @@ function MODULE_turtle_Turtle()
 	    local slot = nil
 	    slot = 0
 	    while Turtle.getFuelLevel() < targetFuelLevel and slot ~= nil do
+	        print("Current Fuel Level: " .. Turtle.getFuelLevel())
 	        if side == nil then
 	            side = Inventory.findContainerSide()
 	            if side == nil then
@@ -1502,6 +1523,7 @@ function MODULE_turtle_Turtle()
 	            os.sleep(1)
 	        end
 	    end
+	    print("Current Fuel Level: " .. Turtle.getFuelLevel())
 	end
 	function Turtle.turnTo(direction)
 	    local bestDirectionToTurn = Direction.getBestDirectionToTurn(Turtle.CURRENT_DIRECTION, direction)
@@ -3125,6 +3147,7 @@ local utils_jobutils_CommonEventImplementations = MODULE_utils_jobutils_CommonEv
 
 function MODULE_jobs_definitions_mobile_treeFarm_TreeFarmCodedInventoryListeners()
 	local Turtle = turtle_Turtle
+	local Inventory = turtle_Inventory
 	local ContainerPatternNames = utils_storage_patterns_ContainerPatternNames
 	local TreeFarmCodedInventoryListeners = {}
 	function TreeFarmCodedInventoryListeners.actionHome(self, name, side, count)
@@ -3150,8 +3173,19 @@ function MODULE_jobs_definitions_mobile_treeFarm_TreeFarmCodedInventoryListeners
 	    Turtle.dump(side)
 	    Turtle.turnTo(originalDirection)
 	end
+	function TreeFarmCodedInventoryListeners.actionSuck(self, name, side, count)
+	    local originalDirection = Turtle.CURRENT_DIRECTION
+	    local saplingTarget = self.config:get("saplingTarget", 128)
+	    local currentSaplingCount = Inventory.countSaplings()
+	    while currentSaplingCount < saplingTarget do
+	        print("Sapling Count: " .. currentSaplingCount)
+	        Turtle.suck(side)
+	        currentSaplingCount = Inventory.countSaplings()
+	    end
+	    print("Sapling Count: " .. currentSaplingCount)
+	    Turtle.turnTo(originalDirection)
+	end
 	function TreeFarmCodedInventoryListeners.actionRefuel(self, name, side, count)
-	    print("Current Fuel Level: " .. Turtle.getFuelLevel())
 	    local fuelTarget = self.config:get("targetFuelLevel", 1024)
 	    local originalDirection = Turtle.CURRENT_DIRECTION
 	    Turtle.refuelUsingAdjacentContainer(fuelTarget, side)
@@ -3215,6 +3249,7 @@ function MODULE_jobs_definitions_mobile_treeFarm_TreeFarmJob()
 	    self.codedInventory:addListener(ContainerPatternNames.ACTION_HOME, TreeFarmCodedInventoryListeners.actionHome)
 	    self.codedInventory:addListener(ContainerPatternNames.ACTION_MOVE, TreeFarmCodedInventoryListeners.actionMove)
 	    self.codedInventory:addListener(ContainerPatternNames.ACTION_DROP, TreeFarmCodedInventoryListeners.actionDrop)
+	    self.codedInventory:addListener(ContainerPatternNames.ACTION_SUCK, TreeFarmCodedInventoryListeners.actionSuck)
 	    self.codedInventory:addListener(ContainerPatternNames.ACTION_REFUEL, TreeFarmCodedInventoryListeners.actionRefuel)
 	    return self
 	end
