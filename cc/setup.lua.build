@@ -157,6 +157,9 @@ function MODULE_utils_controlflow_Parallel()
 	function Parallel.mapList(list, func)
 	    local parallel = Parallel.new()
 	    for _, item in ipairs(list) do
+	        if item == nil then
+	            print("Warning: nil item in list")
+	        end
 	        parallel:addTask(function() func(item) end)
 	    end
 	    return parallel
@@ -164,6 +167,9 @@ function MODULE_utils_controlflow_Parallel()
 	function Parallel.mapTable(table_, func)
 	    local parallel = Parallel.new()
 	    for key, item in pairs(table_) do
+	        if item == nil then
+	            print("Warning: nil item in table with key " .. key)
+	        end
 	        parallel:addTask(function() func(key, item) end)
 	    end
 	    return parallel
@@ -3301,12 +3307,9 @@ function MODULE_utils_storage_Storage()
 	    Parallel.map(self.barrels, function(container) container:updateIndex() end)
 	end
 	function Storage:defragment()
-	    local p = Parallel.new()
-	    p:addTask(function() self.io:defragment() end)
-	    for _, container in pairs(self.inventories) do
-	        p:addTask(function() container:defragment() end)
-	    end
-	    p:run()
+	    local inventories = Table.copy(self.inventories)
+	    inventories["IO"] = self.io
+	    Parallel.map(inventories, function(container) container:defragment() end)
 	end
 	function Storage:hasItem(itemName)
 	    for _, container in pairs(self.inventories) do
