@@ -3305,6 +3305,7 @@ function MODULE_utils_storage_Storage()
 	        error("Destination container not found: " .. destinationName)
 	    end
 	    local remainingCount = sourceContainer:sendItems(destinationContainer, itemName, count)
+	    destinationContainer:defragment()
 	    return remainingCount
 	end
 	function Storage:moveToIo(itemName, count, destinationContainer)
@@ -3320,17 +3321,25 @@ function MODULE_utils_storage_Storage()
 	        end
 	        remainingCount = container:sendItems(destinationContainer, itemName, remainingCount)
 	    end
+	    destinationContainer:defragment()
 	    return remainingCount
 	end
 	function Storage:moveFromIo(itemName, count, sourceContainer)
 	    sourceContainer = sourceContainer or self.io
+	    local destinations = {}
 	    local remainingCount = count
 	    for _, destinationContainer in pairs(self.inventories) do
 	        if remainingCount == 0 then
 	            return 0  -- All items have been moved
 	        end
 	        remainingCount = sourceContainer:sendItems(destinationContainer, itemName, remainingCount)
+	        table.insert(destinations, destinationContainer)
 	    end
+	    local p = Parallel.new()
+	    for _, container in pairs(destinations) do
+	        p:addTask(function() container:defragment() end)
+	    end
+	    p:run()
 	    return remainingCount
 	end
 	function Storage:dump(sourceContainer)
