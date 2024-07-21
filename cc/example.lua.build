@@ -3289,11 +3289,11 @@ function MODULE_utils_storage_Storage()
 	function Storage.connectToBarrels()
 	    local barrels = {}
 	    local allPeripheralNames =  peripheral.getNames()
-	    for index, name in pairs(allPeripheralNames) do
+	    Parallel.map(allPeripheralNames, function(name)
 	        if Text.contains(name, Blocks.barrel) then
 	            barrels[name] = Container.new(name)
 	        end
-	    end
+	    end)
 	    return barrels
 	end
 	function Storage:updateIndex()
