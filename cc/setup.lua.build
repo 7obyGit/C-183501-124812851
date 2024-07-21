@@ -3267,6 +3267,7 @@ function MODULE_utils_storage_Storage()
 	    self.inventories = Storage.connectToChests()
 	    self.furnaces = Storage.connectToFurnaces()
 	    self.io = self.barrels[self.config.io or Blocks.barrel .. "_0"]
+	    os.sleep(5)
 	    self.inputs = {}
 	    if self.config.inputs ~= nil then
 	        for _, input in pairs(self.config.inputs) do
