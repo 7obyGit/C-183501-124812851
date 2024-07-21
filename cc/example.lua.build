@@ -4090,7 +4090,7 @@ function MODULE_jobs_definitions_static_StorageJob()
 	function StorageJob:commandStats()
 	    print("Storage Stats")
 	    print("\t\tContainer Count: " .. self.storage:getContainerCount())
-	    print("\t\tUsed Capacity: " .. Math.round(self.storage:getUsedCapacity() * 100, 2))
+	    print("\t\tUsed Capacity: " .. Math.round(self.storage:getUsedCapacity() * 100, 2) .. "%")
 	    print("\t\tUsed Slots: " .. self.storage:getUsedSlotCount())
 	    print("\t\tEmpty Slots: " .. self.storage:getEmptySlotCount())
 	end
