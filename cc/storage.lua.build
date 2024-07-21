@@ -3269,11 +3269,11 @@ function MODULE_utils_storage_Storage()
 	function Storage.connectToChests()
 	    local inventories = {}
 	    local allPeripheralNames =  peripheral.getNames()
-	    for index, name in pairs(allPeripheralNames) do
+	    Parallel.map(allPeripheralNames, function(name)
 	        if Text.contains(name, Blocks.chest) then
 	            inventories[name] = Container.new(name)
 	        end
-	    end
+	    end)
 	    return inventories
 	end
 	function Storage.connectToFurnaces()
