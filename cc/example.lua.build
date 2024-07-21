@@ -3337,6 +3337,8 @@ function MODULE_utils_storage_Storage()
 	        table.insert(destinations, destinationContainer)
 	        print("#DESTINATIONS", #destinations)
 	    end
+	    print("DESTINATIONS", #destinations)
+	    print("DESTINATIONS", destinations)
 	    for index, container in ipairs(destinations) do
 	        print("Destination " .. index .. ": " .. container.name)
 	    end
