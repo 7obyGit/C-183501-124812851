@@ -3269,31 +3269,31 @@ function MODULE_utils_storage_Storage()
 	function Storage.connectToChests()
 	    local inventories = {}
 	    local allPeripheralNames =  peripheral.getNames()
-	    Parallel.map(allPeripheralNames, function(name)
+	    for index, name in pairs(allPeripheralNames) do
 	        if Text.contains(name, Blocks.chest) then
 	            inventories[name] = Container.new(name)
 	        end
-	    end)
+	    end
 	    return inventories
 	end
 	function Storage.connectToFurnaces()
 	    local furnaces = {}
 	    local allPeripheralNames =  peripheral.getNames()
-	    Parallel.map(allPeripheralNames, function(name)
+	    for index, name in pairs(allPeripheralNames) do
 	        if Text.contains(name, Blocks.furnace) then
 	            furnaces[name] = Furnace.new(name)
 	        end
-	    end)
+	    end
 	    return furnaces
 	end
 	function Storage.connectToBarrels()
 	    local barrels = {}
 	    local allPeripheralNames =  peripheral.getNames()
-	    Parallel.map(allPeripheralNames, function(name)
+	    for index, name in pairs(allPeripheralNames) do
 	        if Text.contains(name, Blocks.barrel) then
 	            barrels[name] = Container.new(name)
 	        end
-	    end)
+	    end
 	    return barrels
 	end
 	function Storage:updateIndex()
