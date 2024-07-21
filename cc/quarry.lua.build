@@ -3089,6 +3089,7 @@ function MODULE_jobs_definitions_mobile_treeFarm_TreeFarmCodedInventoryListeners
 	    Turtle.turnTo(originalDirection)
 	end
 	function TreeFarmCodedInventoryListeners.actionRefuel(self, name, side, count)
+	    print("Current Fuel Level: " .. Turtle.getFuelLevel())
 	    local fuelTarget = self.config:get("targetFuelLevel", 1024)
 	    local originalDirection = Turtle.CURRENT_DIRECTION
 	    Turtle.refuelUsingAdjacentContainer(fuelTarget, side)
