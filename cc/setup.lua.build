@@ -226,9 +226,1631 @@ end
 local jobs_JobManager = MODULE_jobs_JobManager()
 
 
+function MODULE_utils_blocks_Blocks()
+	local Blocks = {
+	    ANY = "any",
+	    stone = "minecraft:stone",
+	    iron_block = "minecraft:iron_block",
+	    gold_block = "minecraft:gold_block",
+	    diamond_block = "minecraft:diamond_block",
+	    emerald_block = "minecraft:emerald_block",
+	    redstone_block = "minecraft:redstone_block",
+	    lapis_block = "minecraft:lapis_block",
+	    coal_block = "minecraft:coal_block",
+	    coal = "minecraft:coal",
+	    charcoal = "minecraft:charcoal",
+	    charcoal_block = "minecraft:charcoal_block",
+	    chest = "minecraft:chest",
+	    barrel = "minecraft:barrel",
+	    furnace = "minecraft:furnace",
+	    crafting_table = "minecraft:crafting_table",
+	    anvil = "minecraft:anvil",
+	    enchanting_table = "minecraft:enchanting_table",
+	    brewing_stand = "minecraft:brewing_stand",
+	    blast_furnace = "minecraft:blast_furnace",
+	    smoker = "minecraft:smoker",
+	    loom = "minecraft:loom",
+	    cartography_table = "minecraft:cartography_table",
+	    stonecutter = "minecraft:stonecutter",
+	    grindstone = "minecraft:grindstone",
+	    smithing_table = "minecraft:smithing_table",
+	    lectern = "minecraft:lectern",
+	    beehive = "minecraft:beehive",
+	    bee_nest = "minecraft:bee_nest",
+	    composter = "minecraft:composter",
+	    bell = "minecraft:bell",
+	    jukebox = "minecraft:jukebox",
+	    note_block = "minecraft:note_block",
+	    end_portal_frame = "minecraft:end_portal_frame",
+	    end_portal = "minecraft:end_portal",
+	    end_gateway = "minecraft:end_gateway",
+	    oak_planks = "minecraft:oak_planks",
+	    spruce_planks = "minecraft:spruce_planks",
+	    birch_planks = "minecraft:birch_planks",
+	    jungle_planks = "minecraft:jungle_planks",
+	    acacia_planks = "minecraft:acacia_planks",
+	    dark_oak_planks = "minecraft:dark_oak_planks",
+	    crimson_planks = "minecraft:crimson_planks",
+	    warped_planks = "minecraft:warped_planks",
+	    oak_log = "minecraft:oak_log",
+	    spruce_log = "minecraft:spruce_log",
+	    birch_log = "minecraft:birch_log",
+	    jungle_log = "minecraft:jungle_log",
+	    acacia_log = "minecraft:acacia_log",
+	    dark_oak_log = "minecraft:dark_oak_log",
+	    mangrove_log = "minecraft:mangrove_log",
+	    crimson_stem = "minecraft:crimson_stem",
+	    warped_stem = "minecraft:warped_stem",
+	    oak_wood = "minecraft:oak_wood",
+	    spruce_wood = "minecraft:spruce_wood",
+	    birch_wood = "minecraft:birch_wood",
+	    jungle_wood = "minecraft:jungle_wood",
+	    acacia_wood = "minecraft:acacia_wood",
+	    dark_oak_wood = "minecraft:dark_oak_wood",
+	    crimson_hyphae = "minecraft:crimson_hyphae",
+	    warped_hyphae = "minecraft:warped_hyphae",
+	    oak_leaves = "minecraft:oak_leaves",
+	    spruce_leaves = "minecraft:spruce_leaves",
+	    birch_leaves = "minecraft:birch_leaves",
+	    jungle_leaves = "minecraft:jungle_leaves",
+	    acacia_leaves = "minecraft:acacia_leaves",
+	    dark_oak_leaves = "minecraft:dark_oak_leaves",
+	    mangrove_leaves = "minecraft:mangrove_leaves",
+	    crimson_leaves = "minecraft:crimson_leaves",
+	    warped_leaves = "minecraft:warped_leaves",
+	    oak_sapling = "minecraft:oak_sapling",
+	    spruce_sapling = "minecraft:spruce_sapling",
+	    birch_sapling = "minecraft:birch_sapling",
+	    jungle_sapling = "minecraft:jungle_sapling",
+	    acacia_sapling = "minecraft:acacia_sapling",
+	    dark_oak_sapling = "minecraft:dark_oak_sapling",
+	    mangrove_sapling = "minecraft:mangrove_sapling",
+	    crimson_fungus = "minecraft:crimson_fungus",
+	    warped_fungus = "minecraft:warped_fungus",
+	    oak_fence = "minecraft:oak_fence",
+	    spruce_fence = "minecraft:spruce_fence",
+	    birch_fence = "minecraft:birch_fence",
+	    jungle_fence = "minecraft:jungle_fence",
+	    acacia_fence = "minecraft:acacia_fence",
+	    dark_oak_fence = "minecraft:dark_oak_fence",
+	    crimson_fence = "minecraft:crimson_fence",
+	    warped_fence = "minecraft:warped_fence",
+	    oak_fence_gate = "minecraft:oak_fence_gate",
+	    spruce_fence_gate = "minecraft:spruce_fence_gate",
+	    birch_fence_gate = "minecraft:birch_fence_gate",
+	    jungle_fence_gate = "minecraft:jungle_fence_gate",
+	    acacia_fence_gate = "minecraft:acacia_fence_gate",
+	    dark_oak_fence_gate = "minecraft:dark_oak_fence_gate",
+	    crimson_fence_gate = "minecraft:crimson_fence_gate",
+	    warped_fence_gate = "minecraft:warped_fence_gate",
+	    oak_stairs = "minecraft:oak_stairs",
+	    spruce_stairs = "minecraft:spruce_stairs",
+	    birch_stairs = "minecraft:birch_stairs",
+	    jungle_stairs = "minecraft:jungle_stairs",
+	    acacia_stairs = "minecraft:acacia_stairs",
+	    dark_oak_stairs = "minecraft:dark_oak_stairs",
+	    crimson_stairs = "minecraft:crimson_stairs",
+	    warped_stairs = "minecraft:warped_stairs",
+	    oak_slab = "minecraft:oak_slab",
+	    spruce_slab = "minecraft:spruce_slab",
+	    birch_slab = "minecraft:birch_slab",
+	    jungle_slab = "minecraft:jungle_slab",
+	    acacia_slab = "minecraft:acacia_slab",
+	    dark_oak_slab = "minecraft:dark_oak_slab",
+	    crimson_slab = "minecraft:crimson_slab",
+	    warped_slab = "minecraft:warped_slab",
+	    oak_button = "minecraft:oak_button",
+	    spruce_button = "minecraft:spruce_button",
+	    birch_button = "minecraft:birch_button",
+	    jungle_button = "minecraft:jungle_button",
+	    acacia_button = "minecraft:acacia_button",
+	    dark_oak_button = "minecraft:dark_oak_button",
+	    crimson_button = "minecraft:crimson_button",
+	    warped_button = "minecraft:warped_button",
+	    oak_pressure_plate = "minecraft:oak_pressure_plate",
+	    spruce_pressure_plate = "minecraft:spruce_pressure_plate",
+	    birch_pressure_plate = "minecraft:birch_pressure_plate",
+	    jungle_pressure_plate = "minecraft:jungle_pressure_plate",
+	    acacia_pressure_plate = "minecraft:acacia_pressure_plate",
+	    dark_oak_pressure_plate = "minecraft:dark_oak_pressure_plate",
+	    crimson_pressure_plate = "minecraft:crimson_pressure_plate",
+	    warped_pressure_plate = "minecraft:warped_pressure_plate",
+	    oak_door = "minecraft:oak_door",
+	    spruce_door = "minecraft:spruce_door",
+	    birch_door = "minecraft:birch_door",
+	    jungle_door = "minecraft:jungle_door",
+	    acacia_door = "minecraft:acacia_door",
+	    dark_oak_door = "minecraft:dark_oak_door",
+	    crimson_door = "minecraft:crimson_door",
+	    warped_door = "minecraft:warped_door",
+	    oak_trapdoor = "minecraft:oak_trapdoor",
+	    spruce_trapdoor = "minecraft:spruce_trapdoor",
+	    birch_trapdoor = "minecraft:birch_trapdoor",
+	    jungle_trapdoor = "minecraft:jungle_trapdoor",
+	    acacia_trapdoor = "minecraft:acacia_trapdoor",
+	    dark_oak_trapdoor = "minecraft:dark_oak_trapdoor",
+	    crimson_trapdoor = "minecraft:crimson_trapdoor",
+	    warped_trapdoor = "minecraft:warped_trapdoor",
+	    oak_sign = "minecraft:oak_sign",
+	    spruce_sign = "minecraft:spruce_sign",
+	    birch_sign = "minecraft:birch_sign",
+	    jungle_sign = "minecraft:jungle_sign",
+	    acacia_sign = "minecraft:acacia_sign",
+	    bone_meal = "minecraft:bone_meal",
+	    white_wool = "minecraft:white_wool",
+	    orange_wool = "minecraft:orange_wool",
+	    magenta_wool = "minecraft:magenta_wool",
+	    light_blue_wool = "minecraft:light_blue_wool",
+	    yellow_wool = "minecraft:yellow_wool",
+	    lime_wool = "minecraft:lime_wool",
+	    pink_wool = "minecraft:pink_wool",
+	    gray_wool = "minecraft:gray_wool",
+	    light_gray_wool = "minecraft:light_gray_wool",
+	    cyan_wool = "minecraft:cyan_wool",
+	    purple_wool = "minecraft:purple_wool",
+	    blue_wool = "minecraft:blue_wool",
+	    brown_wool = "minecraft:brown_wool",
+	    green_wool = "minecraft:green_wool",
+	    red_wool = "minecraft:red_wool",
+	    black_wool = "minecraft:black_wool",
+	    white_carpet = "minecraft:white_carpet",
+	    orange_carpet = "minecraft:orange_carpet",
+	    magenta_carpet = "minecraft:magenta_carpet",
+	    light_blue_carpet = "minecraft:light_blue_carpet",
+	    yellow_carpet = "minecraft:yellow_carpet",
+	    lime_carpet = "minecraft:lime_carpet",
+	    pink_carpet = "minecraft:pink_carpet",
+	    gray_carpet = "minecraft:gray_carpet",
+	    light_gray_carpet = "minecraft:light_gray_carpet",
+	    cyan_carpet = "minecraft:cyan_carpet",
+	    purple_carpet = "minecraft:purple_carpet",
+	    blue_carpet = "minecraft:blue_carpet",
+	    brown_carpet = "minecraft:brown_carpet",
+	    green_carpet = "minecraft:green_carpet",
+	    red_carpet = "minecraft:red_carpet",
+	    black_carpet = "minecraft:black_carpet",
+	    white_bed = "minecraft:white_bed",
+	    orange_bed = "minecraft:orange_bed",
+	    magenta_bed = "minecraft:magenta_bed",
+	    light_blue_bed = "minecraft:light_blue_bed",
+	    yellow_bed = "minecraft:yellow_bed",
+	    lime_bed = "minecraft:lime_bed",
+	    pink_bed = "minecraft:pink_bed",
+	    gray_bed = "minecraft:gray_bed",
+	    light_gray_bed = "minecraft:light_gray_bed",
+	    cyan_bed = "minecraft:cyan_bed",
+	    purple_bed = "minecraft:purple_bed",
+	    blue_bed = "minecraft:blue_bed",
+	    brown_bed = "minecraft:brown_bed",
+	    green_bed = "minecraft:green_bed",
+	    red_bed = "minecraft:red_bed",
+	    black_bed = "minecraft:black_bed",
+	    white_banner = "minecraft:white_banner",
+	    orange_banner = "minecraft:orange_banner",
+	    magenta_banner = "minecraft:magenta_banner",
+	    light_blue_banner = "minecraft:light_blue_banner",
+	    yellow_banner = "minecraft:yellow_banner",
+	    lime_banner = "minecraft:lime_banner",
+	    pink_banner = "minecraft:pink_banner",
+	    gray_banner = "minecraft:gray_banner",
+	    light_gray_banner = "minecraft:light_gray_banner",
+	    cyan_banner = "minecraft:cyan_banner",
+	    purple_banner = "minecraft:purple_banner",
+	    blue_banner = "minecraft:blue_banner",
+	    brown_banner = "minecraft:brown_banner",
+	    green_banner = "minecraft:green_banner",
+	    red_banner = "minecraft:red_banner",
+	    black_banner = "minecraft:black_banner",
+	    white_shulker_box = "minecraft:white_shulker_box",
+	    orange_shulker_box = "minecraft:orange_shulker_box",
+	    magenta_shulker_box = "minecraft:magenta_shulker_box",
+	    light_blue_shulker_box = "minecraft:light_blue_shulker_box",
+	    yellow_shulker_box = "minecraft:yellow_shulker_box",
+	    lime_shulker_box = "minecraft:lime_shulker_box",
+	    pink_shulker_box = "minecraft:pink_shulker_box",
+	    gray_shulker_box = "minecraft:gray_shulker_box",
+	    light_gray_shulker_box = "minecraft:light_gray_shulker_box",
+	    cyan_shulker_box = "minecraft:cyan_shulker_box",
+	    purple_shulker_box = "minecraft:purple_shulker_box",
+	    blue_shulker_box = "minecraft:blue_shulker_box",
+	    brown_shulker_box = "minecraft:brown_shulker_box",
+	    green_shulker_box = "minecraft:green_shulker_box",
+	    red_shulker_box = "minecraft:red_shulker_box",
+	    black_shulker_box = "minecraft:black_shulker_box",
+	    white_concrete = "minecraft:white_concrete",
+	    orange_concrete = "minecraft:orange_concrete",
+	    magenta_concrete = "minecraft:magenta_concrete",
+	    light_blue_concrete = "minecraft:light_blue_concrete",
+	    yellow_concrete = "minecraft:yellow_concrete",
+	    lime_concrete = "minecraft:lime_concrete",
+	    pink_concrete = "minecraft:pink_concrete",
+	    gray_concrete = "minecraft:gray_concrete",
+	    light_gray_concrete = "minecraft:light_gray_concrete",
+	    cyan_concrete = "minecraft:cyan_concrete",
+	    purple_concrete = "minecraft:purple_concrete",
+	    blue_concrete = "minecraft:blue_concrete",
+	    brown_concrete = "minecraft:brown_concrete",
+	    green_concrete = "minecraft:green_concrete",
+	    red_concrete = "minecraft:red_concrete",
+	    black_concrete = "minecraft:black_concrete",
+	    white_concrete_powder = "minecraft:white_concrete_powder",
+	    orange_concrete_powder = "minecraft:orange_concrete_powder",
+	    magenta_concrete_powder = "minecraft:magenta_concrete_powder",
+	    light_blue_concrete_powder = "minecraft:light_blue_concrete_powder",
+	    yellow_concrete_powder = "minecraft:yellow_concrete_powder",
+	    lime_concrete_powder = "minecraft:lime_concrete_powder",
+	    pink_concrete_powder = "minecraft:pink_concrete_powder",
+	    gray_concrete_powder = "minecraft:gray_concrete_powder",
+	    light_gray_concrete_powder = "minecraft:light_gray_concrete_powder",
+	    cyan_concrete_powder = "minecraft:cyan_concrete_powder",
+	    purple_concrete_powder = "minecraft:purple_concrete_powder",
+	    blue_concrete_powder = "minecraft:blue_concrete_powder",
+	    brown_concrete_powder = "minecraft:brown_concrete_powder",
+	    green_concrete_powder = "minecraft:green_concrete_powder",
+	    red_concrete_powder = "minecraft:red_concrete_powder",
+	    black_concrete_powder = "minecraft:black_concrete_powder",
+	    white_glazed_terracotta = "minecraft:white_glazed_terracotta",
+	    orange_glazed_terracotta = "minecraft:orange_glazed_terracotta",
+	    magenta_glazed_terracotta = "minecraft:magenta_glazed_terracotta",
+	    light_blue_glazed_terracotta = "minecraft:light_blue_glazed_terracotta",
+	    yellow_glazed_terracotta = "minecraft:yellow_glazed_terracotta",
+	    lime_glazed_terracotta = "minecraft:lime_glazed_terracotta",
+	    pink_glazed_terracotta = "minecraft:pink_glazed_terracotta",
+	    gray_glazed_terracotta = "minecraft:gray_glazed_terracotta",
+	    light_gray_glazed_terracotta = "minecraft:light_gray_glazed_terracotta",
+	    cyan_glazed_terracotta = "minecraft:cyan_glazed_terracotta",
+	    purple_glazed_terracotta = "minecraft:purple_glazed_terracotta",
+	    blue_glazed_terracotta = "minecraft:blue_glazed_terracotta",
+	    brown_glazed_terracotta = "minecraft:brown_glazed_terracotta",
+	    green_glazed_terracotta = "minecraft:green_glazed_terracotta",
+	    red_glazed_terracotta = "minecraft:red_glazed_terracotta",
+	    black_glazed_terracotta = "minecraft:black_glazed_terracotta",
+	    white_stained_glass = "minecraft:white_stained_glass",
+	    orange_stained_glass = "minecraft:orange_stained_glass",
+	    magenta_stained_glass = "minecraft:magenta_stained_glass",
+	    light_blue_stained_glass = "minecraft:light_blue_stained_glass",
+	    yellow_stained_glass = "minecraft:yellow_stained_glass",
+	    lime_stained_glass = "minecraft:lime_stained_glass",
+	    pink_stained_glass = "minecraft:pink_stained_glass",
+	    gray_stained_glass = "minecraft:gray_stained_glass",
+	    light_gray_stained_glass = "minecraft:light_gray_stained_glass",
+	    cyan_stained_glass = "minecraft:cyan_stained_glass",
+	    purple_stained_glass = "minecraft:purple_stained_glass",
+	    blue_stained_glass = "minecraft:blue_stained_glass",
+	    brown_stained_glass = "minecraft:brown_stained_glass",
+	    green_stained_glass = "minecraft:green_stained_glass",
+	    red_stained_glass = "minecraft:red_stained_glass",
+	    black_stained_glass = "minecraft:black_stained_glass",
+	    white_stained_glass_pane = "minecraft:white_stained_glass_pane",
+	    orange_stained_glass_pane = "minecraft:orange_stained_glass_pane",
+	    magenta_stained_glass_pane = "minecraft:magenta_stained_glass_pane",
+	    light_blue_stained_glass_pane = "minecraft:light_blue_stained_glass_pane",
+	    yellow_stained_glass_pane = "minecraft:yellow_stained_glass_pane",
+	    lime_stained_glass_pane = "minecraft:lime_stained_glass_pane",
+	    pink_stained_glass_pane = "minecraft:pink_stained_glass_pane",
+	    gray_stained_glass_pane = "minecraft:gray_stained_glass_pane",
+	    light_gray_stained_glass_pane = "minecraft:light_gray_stained_glass_pane",
+	    cyan_stained_glass_pane = "minecraft:cyan_stained_glass_pane",
+	    purple_stained_glass_pane = "minecraft:purple_stained_glass_pane",
+	    blue_stained_glass_pane = "minecraft:blue_stained_glass_pane",
+	    brown_stained_glass_pane = "minecraft:brown_stained_glass_pane",
+	    green_stained_glass_pane = "minecraft:green_stained_glass_pane",
+	    red_stained_glass_pane = "minecraft:red_stained_glass_pane",
+	    black_stained_glass_pane = "minecraft:black_stained_glass_pane",
+	    white_terracotta = "minecraft:white_terracotta",
+	    orange_terracotta = "minecraft:orange_terracotta",
+	    magenta_terracotta = "minecraft:magenta_terracotta",
+	    light_blue_terracotta = "minecraft:light_blue_terracotta",
+	    yellow_terracotta = "minecraft:yellow_terracotta",
+	    lime_terracotta = "minecraft:lime_terracotta",
+	    pink_terracotta = "minecraft:pink_terracotta",
+	    gray_terracotta = "minecraft:gray_terracotta",
+	    light_gray_terracotta = "minecraft:light_gray_terracotta",
+	    cyan_terracotta = "minecraft:cyan_terracotta",
+	    purple_terracotta = "minecraft:purple_terracotta",
+	    blue_terracotta = "minecraft:blue_terracotta",
+	    brown_terracotta = "minecraft:brown_terracotta",
+	    green_terracotta = "minecraft:green_terracotta",
+	    red_terracotta = "minecraft:red_terracotta",
+	    black_terracotta = "minecraft:black_terracotta",
+	    quartz_block = "minecraft:quartz_block",
+	    obsidian = "minecraft:obsidian",
+	    glowstone = "minecraft:glowstone",
+	    netherrack = "minecraft:netherrack",
+	    soul_sand = "minecraft:soul_sand",
+	    sand = "minecraft:sand",
+	    gravel = "minecraft:gravel",
+	    dirt = "minecraft:dirt",
+	    grass_block = "minecraft:grass_block",
+	    stone_bricks = "minecraft:stone_bricks",
+	    stone_brick_stairs = "minecraft:stone_brick_stairs",
+	    stone_brick_slab = "minecraft:stone_brick_slab",
+	    stone_brick_wall = "minecraft:stone_brick_wall",
+	    mossy_stone_bricks = "minecraft:mossy_stone_bricks",
+	    cracked_stone_bricks = "minecraft:cracked_stone_bricks",
+	    chiseled_stone_bricks = "minecraft:chiseled_stone_bricks",
+	    cobblestone = "minecraft:cobblestone",
+	    mossy_cobblestone = "minecraft:mossy_cobblestone",
+	    chiseled_sandstone = "minecraft:chiseled_sandstone",
+	    cut_sandstone = "minecraft:cut_sandstone",
+	    smooth_sandstone = "minecraft:smooth_sandstone",
+	    sandstone = "minecraft:sandstone",
+	    red_sand = "minecraft:red_sand",
+	    red_sandstone = "minecraft:red_sandstone",
+	    smooth_red_sandstone = "minecraft:smooth_red_sandstone",
+	    cut_red_sandstone = "minecraft:cut_red_sandstone",
+	    chiseled_red_sandstone = "minecraft:chiseled_red_sandstone",
+	    red_sandstone_stairs = "minecraft:red_sandstone_stairs",
+	    red_sandstone_slab = "minecraft:red_sandstone_slab",
+	    red_sandstone_wall = "minecraft:red_sandstone_wall",
+	    smooth_red_sandstone_slab = "minecraft:smooth_red_sandstone_slab",
+	    smooth_red_sandstone_stairs = "minecraft:smooth_red_sandstone_stairs",
+	    smooth_red_sandstone_wall = "minecraft:smooth_red_sandstone_wall",
+	    cut_red_sandstone_slab = "minecraft:cut_red_sandstone_slab",
+	    cut_red_sandstone_stairs = "minecraft:cut_red_sandstone_stairs",
+	    cut_red_sandstone_wall = "minecraft:cut_red_sandstone_wall",
+	    chiseled_red_sandstone_slab = "minecraft:chiseled_red_sandstone_slab",
+	    chiseled_red_sandstone_stairs = "minecraft:chiseled_red_sandstone_stairs",
+	    chiseled_red_sandstone_wall = "minecraft:chiseled_red_sandstone_wall",
+	    rotten_flesh = "minecraft:rotten_flesh",
+	    string = "minecraft:string",
+	    spider_eye = "minecraft:spider_eye",
+	    fermented_spider_eye = "minecraft:fermented_spider_eye",
+	    blaze_powder = "minecraft:blaze_powder",
+	    magma_cream = "minecraft:magma_cream",
+	    ghast_tear = "minecraft:ghast_tear",
+	    ender_pearl = "minecraft:ender_pearl",
+	    ender_eye = "minecraft:ender_eye",
+	    nether_star = "minecraft:nether_star",
+	    nether_wart = "minecraft:nether_wart",
+	    nether_brick = "minecraft:nether_brick",
+	    nether_brick_fence = "minecraft:nether_brick_fence",
+	    nether_brick_stairs = "minecraft:nether_brick_stairs",
+	    nether_brick_slab = "minecraft:nether_brick_slab",
+	    nether_brick_wall = "minecraft:nether_brick_wall",
+	    nether_brick_block = "minecraft:nether_brick_block",
+	    nether_bricks = "minecraft:nether_bricks",
+	    nether_quartz = "minecraft:nether_quartz",
+	    nether_quartz_ore = "minecraft:nether_quartz_ore",
+	    quartz_pillar = "minecraft:quartz_pillar",
+	    quartz_bricks = "minecraft:quartz_bricks",
+	    quartz_wall = "minecraft:quartz_wall",
+	    quartz_ore = "minecraft:quartz_ore",
+	    quartz = "minecraft:quartz",
+	    quartz_slab = "minecraft:quartz_slab",
+	    quartz_stairs = "minecraft:quartz_stairs",
+	    granite = "minecraft:granite",
+	    polished_granite = "minecraft:polished_granite",
+	    granite_slab = "minecraft:granite_slab",
+	    granite_stairs = "minecraft:granite_stairs",
+	    granite_wall = "minecraft:granite_wall",
+	    diorite = "minecraft:diorite",
+	    polished_diorite = "minecraft:polished_diorite",
+	    diorite_slab = "minecraft:diorite_slab",
+	    diorite_stairs = "minecraft:diorite_stairs",
+	    diorite_wall = "minecraft:diorite_wall",
+	    andesite = "minecraft:andesite",
+	    polished_andesite = "minecraft:polished_andesite",
+	    andesite_slab = "minecraft:andesite_slab",
+	    andesite_stairs = "minecraft:andesite_stairs",
+	    andesite_wall = "minecraft:andesite_wall",
+	    prismarine = "minecraft:prismarine",
+	    prismarine_bricks = "minecraft:prismarine_bricks",
+	    dark_prismarine = "minecraft:dark_prismarine",
+	    prismarine_slab = "minecraft:prismarine_slab",
+	    prismarine_stairs = "minecraft:prismarine_stairs",
+	    prismarine_wall = "minecraft:prismarine_wall",
+	    prismarine_brick_slab = "minecraft:prismarine_brick_slab",
+	    prismarine_brick_stairs = "minecraft:prismarine_brick_stairs",
+	    prismarine_brick_wall = "minecraft:prismarine_brick_wall",
+	    dark_prismarine_slab = "minecraft:dark_prismarine_slab",
+	    dark_prismarine_stairs = "minecraft:dark_prismarine_stairs",
+	    dark_prismarine_wall = "minecraft:dark_prismarine_wall",
+	    sea_lantern = "minecraft:sea_lantern",
+	    end_stone = "minecraft:end_stone",
+	    end_stone_bricks = "minecraft:end_stone_bricks",
+	    end_stone_brick_slab = "minecraft:end_stone_brick_slab",
+	    end_stone_brick_stairs = "minecraft:end_stone_brick_stairs",
+	    end_stone_brick_wall = "minecraft:end_stone_brick_wall",
+	    purpur_block = "minecraft:purpur_block",
+	    purpur_pillar = "minecraft:purpur_pillar",
+	    purpur_slab = "minecraft:purpur_slab",
+	    purpur_stairs = "minecraft:purpur_stairs",
+	    purpur_purpur_block = "minecraft:purpur_purpur_block",
+	    purpur_purpur_pillar = "minecraft:purpur_purpur_pillar",
+	    purpur_purpur_slab = "minecraft:purpur_purpur_slab",
+	    purpur_purpur_stairs = "minecraft:purpur_purpur_stairs",
+	    end_bricks = "minecraft:end_bricks",
+	    end_rod = "minecraft:end_rod",
+	    blackstone = "minecraft:blackstone",
+	    polished_blackstone = "minecraft:polished_blackstone",
+	    polished_blackstone_slab = "minecraft:polished_blackstone_slab",
+	    polished_blackstone_stairs = "minecraft:polished_blackstone_stairs",
+	    polished_blackstone_wall = "minecraft:polished_blackstone_wall",
+	    polished_blackstone_brick_slab = "minecraft:polished_blackstone_brick_slab",
+	    polished_blackstone_brick_stairs = "minecraft:polished_blackstone_brick_stairs",
+	    polished_blackstone_brick_wall = "minecraft:polished_blackstone_brick_wall",
+	    blackstone_slab = "minecraft:blackstone_slab",
+	    blackstone_stairs = "minecraft:blackstone_stairs",
+	    blackstone_wall = "minecraft:blackstone_wall",
+	    blackstone_bricks = "minecraft:blackstone_bricks",
+	    polished_blackstone_bricks = "minecraft:polished_blackstone_bricks",
+	    polished_blackstone_brick = "minecraft:polished_blackstone_brick",
+	    blackstone_brick_slab = "minecraft:blackstone_brick_slab",
+	    blackstone_brick_stairs = "minecraft:blackstone_brick_stairs",
+	    blackstone_brick_wall = "minecraft:blackstone_brick_wall",
+	    water = "minecraft:water",
+	    lava = "minecraft:lava",
+	    computercraft_cable = "computercraft:cable",
+	    computercraft_computer = "computercraft:computer",
+	    computercraft_computer_advanced = "computercraft:computer_advanced",
+	    computercraft_computer_command = "computercraft:computer_command",
+	    computercraft_wireless_modem_advanced = "computercraft:wireless_modem_advanced",
+	    computercraft_wired_modem_full = "computercraft:wired_modem_full",
+	    computercraft_wired_modem = "computercraft:wired_modem",
+	    computercraft_turtle = "computercraft:turtle",
+	}
+	return Blocks
+end
+local utils_blocks_Blocks = MODULE_utils_blocks_Blocks()
+
+
+function MODULE_utils_movement_Rotations()
+	Rotations = {}
+	Rotations.NONE = "None"
+	Rotations.UP = "Up"
+	Rotations.DOWN = "Down"
+	Rotations.LEFT = "Left"
+	Rotations.RIGHT = "Right"
+	function Rotations.opposite(direction)
+	    if direction == Rotations.UP then
+	        return Rotations.DOWN
+	    elseif direction == Rotations.DOWN then
+	        return Rotations.UP
+	    elseif direction == Rotations.LEFT then
+	        return Rotations.RIGHT
+	    elseif direction == Rotations.RIGHT then
+	        return Rotations.LEFT
+	    end
+	end
+	return Rotations
+end
+local utils_movement_Rotations = MODULE_utils_movement_Rotations()
+
+
+function MODULE_utils_movement_Direction()
+	local Rotations = utils_movement_Rotations
+	local Direction = {}
+	Direction.__index = Direction
+	Direction.NORTH = "North"  -- -z
+	Direction.EAST = "East"  -- +x
+	Direction.SOUTH = "South"  -- +z
+	Direction.WEST = "West"  -- -x
+	Direction.UP = "Up"  -- +y
+	Direction.DOWN = "Down"  -- -y
+	Direction.DIRECTIONS = {
+	    Direction.NORTH,
+	    Direction.EAST,
+	    Direction.SOUTH,
+	    Direction.WEST,
+	    Direction.UP,
+	    Direction.DOWN,
+	}
+	Direction.HORIZONTAL_DIRECTIONS = {
+	    Direction.NORTH,
+	    Direction.EAST,
+	    Direction.SOUTH,
+	    Direction.WEST,
+	}
+	function Direction.opposite(direction)
+	    if direction == Direction.NORTH then
+	        return Direction.SOUTH
+	    elseif direction == Direction.SOUTH then
+	        return Direction.NORTH
+	    elseif direction == Direction.EAST then
+	        return Direction.WEST
+	    elseif direction == Direction.WEST then
+	        return Direction.EAST
+	    elseif direction == Direction.UP then
+	        return Direction.DOWN
+	    elseif direction == Direction.DOWN then
+	        return Direction.UP
+	    end
+	end
+	function Direction.nextLeft(direction)
+	    if direction == Direction.NORTH then
+	        return Direction.WEST
+	    elseif direction == Direction.WEST then
+	        return Direction.SOUTH
+	    elseif direction == Direction.SOUTH then
+	        return Direction.EAST
+	    elseif direction == Direction.EAST then
+	        return Direction.NORTH
+	    end
+	end
+	function Direction.nextRight(direction)
+	    if direction == Direction.NORTH then
+	        return Direction.EAST
+	    elseif direction == Direction.EAST then
+	        return Direction.SOUTH
+	    elseif direction == Direction.SOUTH then
+	        return Direction.WEST
+	    elseif direction == Direction.WEST then
+	        return Direction.NORTH
+	    end
+	end
+	function Direction.getBestDirectionToTurn(currentDirection, targetDirection)
+	    if currentDirection == targetDirection then
+	        return Rotations.NONE
+	    elseif Direction.nextLeft(currentDirection) == targetDirection then
+	        return Rotations.LEFT
+	    elseif Direction.nextRight(currentDirection) == targetDirection then
+	        return Rotations.RIGHT
+	    else
+	        return Rotations.LEFT  -- Both are acceptable, pick a default
+	    end
+	end
+	return Direction
+end
+local utils_movement_Direction = MODULE_utils_movement_Direction()
+
+
+function MODULE_utils_terminal_Terminal()
+	local Terminal = {}
+	Terminal.__index = Terminal
+	function Terminal.write(text)
+	    print(text)
+	end
+	function Terminal.read(prompt)
+	    if prompt ~= nil then
+	        write(prompt)
+	    end
+	    return read()
+	end
+	function Terminal.readNumber(prompt)
+	    local value = nil
+	    while value == nil do
+	        local input = Terminal.read(prompt)
+	        value = tonumber(input)
+	    end
+	    return value
+	end
+	function Terminal.readBoolean(prompt)
+	    local value = nil
+	    while value == nil do
+	        local input = Terminal.read(prompt):lower()
+	        if input == "true" or input == "y" or input == "yes" then
+	            value = true
+	        elseif input == "false" or input == "n" or input == "no" then
+	            value = false
+	        end
+	    end
+	    return value
+	end
+	function Terminal.readTable(prompt, requiredFields)
+	    local value = nil
+	    local validationPassed = false
+	    while validationPassed == false do
+	        local input = Terminal.read(prompt)
+	        value = textutils.unserialize(input)
+	        if value ~= nil then
+	            validationPassed = true
+	            for key, _ in pairs(requiredFields) do
+	                if value[key] == nil then
+	                    validationPassed = false
+	                    Terminal.write("\t\tMissing field: '" .. key .. "'")
+	                end
+	            end
+	            if not validationPassed then
+	                Terminal.write("\t\tExpected format: " .. textutils.serialize(requiredFields))
+	            end
+	        end
+	    end
+	    return value or {}
+	end
+	return Terminal
+end
+local utils_terminal_Terminal = MODULE_utils_terminal_Terminal()
+
+
+function MODULE_utils_math_Vector3()
+	local Direction = utils_movement_Direction
+	local Terminal = utils_terminal_Terminal
+	local Vector3 = {}
+	Vector3.__index = Vector3
+	function Vector3.new(x, y, z)
+	    if type(x) == "table" then
+	        x, y, z = x.x, x.y, x.z
+	    end
+	    return setmetatable({x = x or 0, y = y or 0, z = z or 0}, Vector3)
+	end
+	function Vector3.fromTerminal(prompt)
+	    prompt = prompt or "Enter a Vector3: "
+	    local table = Terminal.readTable(prompt, Vector3.new(0, 0, 0):toTable())
+	    return Vector3.new(table.x, table.y, table.z)
+	end
+	function Vector3.fromTable(tbl)
+	    return Vector3.new(tbl.x, tbl.y, tbl.z)
+	end
+	function Vector3:toTable()
+	    return {x = self.x, y = self.y, z = self.z}
+	end
+	function Vector3:equals(other)
+	    return self.x == other.x and self.y == other.y and self.z == other.z
+	end
+	function Vector3:copy()
+	    return Vector3.new(self.x, self.y, self.z)
+	end
+	function Vector3:add(other)
+	    return Vector3.new(self.x + other.x, self.y + other.y, self.z + other.z)
+	end
+	function Vector3:addInDirection(direction, distance)
+	    distance = distance or 1
+	    local result = self:copy()
+	    if direction == Direction.NORTH then
+	        result.z = result.z - distance
+	    elseif direction == Direction.SOUTH then
+	        result.z = result.z + distance
+	    elseif direction == Direction.EAST then
+	        result.x = result.x + distance
+	    elseif direction == Direction.WEST then
+	        result.x = result.x - distance
+	    elseif direction == Direction.UP then
+	        result.y = result.y + distance
+	    elseif direction == Direction.DOWN then
+	        result.y = result.y - distance
+	    end
+	    return result
+	end
+	function Vector3:sub(other)
+	    return Vector3.new(self.x - other.x, self.y - other.y, self.z - other.z)
+	end
+	function Vector3:mul(scalar)
+	    return Vector3.new(self.x * scalar, self.y * scalar, self.z * scalar)
+	end
+	function Vector3:dot(other)
+	    return self.x * other.x + self.y * other.y + self.z * other.z
+	end
+	function Vector3:cross(other)
+	    return Vector3.new(
+	        self.y * other.z - self.z * other.y,
+	        self.z * other.x - self.x * other.z,
+	        self.x * other.y - self.y * other.x
+	    )
+	end
+	function Vector3:magnitude()
+	    return math.sqrt(self.x^2 + self.y^2 + self.z^2)
+	end
+	function Vector3:normalize()
+	    local mag = self:magnitude()
+	    if mag > 0 then
+	        return Vector3.new(self.x / mag, self.y / mag, self.z / mag)
+	    else
+	        return Vector3.new(0, 0, 0)
+	    end
+	end
+	function Vector3:serialize()
+	    return string.format("%.6f,%.6f,%.6f", self.x, self.y, self.z)
+	end
+	function Vector3.deserialize(str)
+	    local x, y, z = str:match("([^,]+),([^,]+),([^,]+)")
+	    return Vector3.new(tonumber(x), tonumber(y), tonumber(z))
+	end
+	function Vector3:directionTo(other)
+	    local diff = other:sub(self)
+	    if diff:equals(Vector3.new(0, 0, 0)) then
+	        return nil
+	    end
+	    if diff.x > 0 then
+	        return Direction.EAST
+	    elseif diff.x < 0 then
+	        return Direction.WEST
+	    elseif diff.z > 0 then
+	        return Direction.SOUTH
+	    elseif diff.z < 0 then
+	        return Direction.NORTH
+	    elseif diff.y > 0 then
+	        return Direction.UP
+	    elseif diff.y < 0 then
+	        return Direction.DOWN
+	    end
+	end
+	function Vector3:verticalDirectionTo(other)
+	    local diff = other:sub(self)
+	    if diff:equals(Vector3.new(0, 0, 0)) then
+	        return nil
+	    end
+	    if diff.y > 0 then
+	        return Direction.UP
+	    elseif diff.y < 0 then
+	        return Direction.DOWN
+	    end
+	end
+	function Vector3:__tostring()
+	    return string.format("Vector3(%.2f, %.2f, %.2f)", self.x, self.y, self.z)
+	end
+	return Vector3
+end
+local utils_math_Vector3 = MODULE_utils_math_Vector3()
+
+
+function MODULE_utils_text_Text()
+	local Text = {}
+	function Text.contains(text, pattern)
+	    return text:find(pattern) ~= nil
+	end
+	function Text.startsWith(text, pattern)
+	    return text:sub(1, #pattern) == pattern
+	end
+	function Text.endsWith(text, pattern)
+	    return text:sub(-#pattern) == pattern
+	end
+	function Text.split(input, delimiter)
+	    local result = {}
+	    for match in (input .. delimiter):gmatch("(.-)" .. delimiter) do
+	        table.insert(result, match)
+	    end
+	    return result
+	end
+	function Text.getDisplayName(minecraftName)
+	    local displayName = minecraftName
+	    local parts = Text.split(displayName, ":")
+	    if #parts == 2 then
+	        displayName = parts[2]
+	    end
+	    displayName = displayName:gsub("_", " ")
+	    displayName = displayName:gsub("(%l)(%w*)", function(a,b) return string.upper(a)..b end)
+	    return displayName
+	end
+	function Text.levenshtein(str1, str2)
+	    local len1, len2 = #str1, #str2
+	    local matrix = {}
+	    for i = 0, len1 do
+	        matrix[i] = { [0] = i }
+	    end
+	    for j = 0, len2 do
+	        matrix[0][j] = j
+	    end
+	    for i = 1, len1 do
+	        for j = 1, len2 do
+	            local cost = (str1:sub(i, i) == str2:sub(j, j)) and 0 or 1
+	            matrix[i][j] = math.min(
+	                matrix[i - 1][j] + 1,    -- deletion
+	                matrix[i][j - 1] + 1,    -- insertion
+	                matrix[i - 1][j - 1] + cost -- substitution
+	            )
+	        end
+	    end
+	    return matrix[len1][len2]
+	end
+	function Text.simplifyIdentifier(id)
+	    return id:match(":(.*)"):gsub("_", " ")
+	end
+	function Text.getClosestMatch(input, identifiers)
+	    local bestMatch = nil
+	    local bestScore = math.huge
+	    for _, id in pairs(identifiers) do
+	        local simplifiedId = Text.simplifyIdentifier(id)
+	        local score = Text.levenshtein(input, simplifiedId)
+	        if score < bestScore then
+	            bestScore = score
+	            bestMatch = id
+	        end
+	    end
+	    return bestMatch, bestScore
+	end
+	return Text
+end
+local utils_text_Text = MODULE_utils_text_Text()
+
+
+function MODULE_utils_blocks_Block()
+	local Blocks = utils_blocks_Blocks
+	local Vector3= utils_math_Vector3
+	local Text = utils_text_Text
+	local blockLookupTable = {}
+	for blocksKey, blockName in pairs(Blocks) do
+	    blockLookupTable[blockName] = blocksKey
+	end
+	local protectedBlocks = {
+	    Blocks.barrel,
+	    Blocks.chest,
+	    Blocks.enderChest,
+	    Blocks.shulkerBox,
+	    Blocks.trappedChest,
+	    Blocks.hopper,
+	    Blocks.dispenser,
+	    Blocks.dropper,
+	    Blocks.furnace,
+	    Blocks.blastFurnace,
+	    Blocks.smoker,
+	    Blocks.brewingStand,
+	    Blocks.enchantingTable,
+	    Blocks.craftingTable,
+	    Blocks.anvil,
+	    Blocks.grindstone,
+	    Blocks.smithingTable,
+	    Blocks.loom,
+	    Blocks.cartographyTable,
+	    Blocks.stonecutter,
+	    Blocks.beehive,
+	    Blocks.beeNest,
+	    Blocks.computercraft_cable,
+	    Blocks.computercraft_computer,
+	    Blocks.computercraft_computer_advanced,
+	    Blocks.computercraft_computer_command,
+	    Blocks.computercraft_wireless_modem_advanced,
+	    Blocks.computercraft_wired_modem_full,
+	    Blocks.computercraft_wired_modem,
+	    Blocks.computercraft_turtle,
+	}
+	local liquidBlocks = {
+	    Blocks.water,
+	    Blocks.lava,
+	}
+	local treeBlocks = {
+	    Blocks.acacia_leaves,
+	    Blocks.acacia_log,
+	    Blocks.spruce_leaves,
+	    Blocks.spruce_log,
+	    Blocks.birch_leaves,
+	    Blocks.birch_log,
+	    Blocks.dark_oak_leaves,
+	    Blocks.dark_oak_log,
+	    Blocks.jungle_leaves,
+	    Blocks.jungle_log,
+	    Blocks.oak_leaves,
+	    Blocks.oak_log,
+	    Blocks.mangrove_leaves,
+	    Blocks.mangrove_log,
+	}
+	local Block = {}
+	Block.__index = Block
+	function Block.new(name, position, state, tags)
+	    if Block.exists(name) == false then
+	        print("Block with name " .. name .. " does not exist")
+	    end
+	    return setmetatable({
+	        name = name,
+	        position = position or Vector3.new(0, 0, 0),
+	        state = state or {},
+	        tags = tags or {},
+	    }, Block)
+	end
+	function Block.isAllowedToBreak(name)
+	    for _, protectedBlockName in ipairs(protectedBlocks) do
+	        if name == protectedBlockName then
+	            return false
+	        end
+	    end
+	    return true
+	end
+	function Block.isLiquid(name)
+	    for _, liquidBlockName in ipairs(liquidBlocks) do
+	        if name == liquidBlockName then
+	            return true
+	        end
+	    end
+	    return false
+	end
+	function Block.isTree(name)
+	    for _, treeBlockName in ipairs(treeBlocks) do
+	        if name == treeBlockName then
+	            return true
+	        end
+	    end
+	    return false
+	end
+	function Block.isLog(name)
+	    return name == Blocks.acacia_log
+	        or name == Blocks.spruce_log
+	        or name == Blocks.birch_log
+	        or name == Blocks.dark_oak_log
+	        or name == Blocks.jungle_log
+	        or name == Blocks.oak_log
+	        or name == Blocks.mangrove_log
+	end
+	function Block.isSapling(name)
+	    return name == Blocks.acacia_sapling
+	        or name == Blocks.spruce_sapling
+	        or name == Blocks.birch_sapling
+	        or name == Blocks.dark_oak_sapling
+	        or name == Blocks.jungle_sapling
+	        or name == Blocks.oak_sapling
+	        or name == Blocks.mangrove_sapling
+	end
+	function Block.isLeaf(name)
+	    return name == Blocks.acacia_leaves
+	        or name == Blocks.spruce_leaves
+	        or name == Blocks.birch_leaves
+	        or name == Blocks.dark_oak_leaves
+	        or name == Blocks.jungle_leaves
+	        or name == Blocks.oak_leaves
+	        or name == Blocks.mangrove_leaves
+	end
+	function Block.isFuel(name)
+	    return name == Blocks.charcoal
+	    or name == Blocks.charcoal_block
+	    or name == Blocks.coal
+	    or name == Blocks.coal_block
+	end
+	function Block.exists(name)
+	    return blockLookupTable[name] ~= nil
+	end
+	function Block:__tostring()
+	    return string.format(
+	        "Block(%s, %s)",
+	        self.name,
+	        self.position
+	    )
+	end
+	function Block.getClosestMatch(name, customBlocksList)
+	    local closestMatch, score = Text.getClosestMatch(name, customBlocksList or Blocks)
+	    return {name = name, closestMatch = closestMatch, score = score}
+	end
+	return Block
+end
+local utils_blocks_Block = MODULE_utils_blocks_Block()
+
+
+function MODULE_turtle_Side()
+	local Side = {}
+	Side.TOP = "top"
+	Side.BOTTOM = "bottom"
+	Side.FRONT = "front"
+	Side.BACK = "back"
+	Side.LEFT = "left"
+	Side.RIGHT = "right"
+	return Side
+end
+local turtle_Side = MODULE_turtle_Side()
+
+
+function MODULE_utils_config_Config()
+	local Vector3 = utils_math_Vector3
+	local file = utils_other_file
+	local Direction = utils_movement_Direction
+	local Job       = jobs_Job
+	local Blocks = utils_blocks_Blocks
+	local Config = {}
+	Config.__index = Config
+	function Config.new()
+	    local self = setmetatable({
+	        turtleName = "MyTurtle",
+	        job = Job.SETUP,
+	        homePosition = Vector3.new({x = 0, y = 0, z = 0}),
+	        homeDirection = Direction.NORTH,
+	        fuelMinimum = 64,
+	        fuelTarget = 256,
+	        fuelItem = Blocks.charcoal,
+	    }, Config)
+	    return self
+	end
+	function Config.fromTable(table)
+	    local self = Config.new()
+	    self.turtleName = table.turtleName or self.turtleName
+	    self.task = table.task or self.tasks
+	    self.homePosition = Vector3.fromTable(table.homePosition) or self.homePosition
+	    self.homeDirection = table.homeDirection or self.homeDirection
+	    self.fuelMinimum = table.fuelMinimum or self.fuelMinimum
+	    self.fuelTarget = table.fuelTarget or self.fuelTarget
+	    self.fuelItem = table.fuelItem or self.fuelItem
+	    return self
+	end
+	function Config:toTable()
+	    return {
+	        turtleName = self.turtleName,
+	        task = self.task,
+	        homePosition = self.homePosition:toTable(),
+	        homeDirection = self.homeDirection,
+	        fuelMinimum = self.fuelMinimum,
+	        fuelTarget = self.fuelTarget,
+	        fuelItem = self.fuelItem,
+	    }
+	end
+	function Config:serializeJson()
+	    local text = textutils.serializeJSON(self:toTable())
+	    return text
+	end
+	function Config.deserializeJson(json)
+	    local configAttributes = textutils.unserializeJSON(json)
+	    local config = Config.fromTable(configAttributes)
+	    return config
+	end
+	function Config:save()
+	   file.writeText("config.json", self:serializeJson())
+	end
+	function Config.load()
+	    local config = nil
+	    local content = file.readText("config.json")
+	    if content == nil then
+	        config = Config.new()
+	    else
+	        config = Config.deserializeJson(content)
+	    end
+	    config:save()  -- Save any default values that were missing
+	    return config
+	end
+	return Config
+end
+local utils_config_Config = MODULE_utils_config_Config()
+
+
+function MODULE_turtle_Inventory()
+	local Blocks = utils_blocks_Blocks
+	local Block = utils_blocks_Block
+	local Side = turtle_Side
+	local Inventory = {}
+	function Inventory.isFull()
+	    return Inventory.getEmptySlot() == nil
+	end
+	function Inventory.isEmpty()
+	    return Inventory.isFull() == false
+	end
+	function Inventory.getEmptySlot()
+	    for i = 1, 16 do
+	        if turtle.getItemCount(i) == 0 then
+	            return i
+	        end
+	    end
+	    return nil
+	end
+	function Inventory.getSlotWithItem(name)
+	    for i = 1, 16 do
+	        local item = turtle.getItemDetail(i)
+	        if item ~= nil and item.name == name then
+	            return i
+	        end
+	    end
+	    return nil
+	end
+	function Inventory.getSlotWithSapling()
+	    for i = 1, 16 do
+	        local item = turtle.getItemDetail(i)
+	        if item ~= nil and Block.isSapling(item.name) then
+	            return i
+	        end
+	    end
+	    return nil
+	end
+	function Inventory.getSlotWithFuel()
+	    for i = 1, 16 do
+	        local item = turtle.getItemDetail(i)
+	        if item ~= nil and Block.isFuel(item.name) then
+	            return i
+	        end
+	    end
+	    return nil
+	end
+	function Inventory.getItemCount(name)
+	    local count = 0
+	    for i = 1, 16 do
+	        local item = turtle.getItemDetail(i)
+	        if item ~= nil and item.name == name then
+	            count = count + item.count
+	        end
+	    end
+	    return count
+	end
+	function Inventory.countSaplings()
+	    return Inventory.getItemCount(Blocks.acacia_sapling)
+	        + Inventory.getItemCount(Blocks.birch_sapling)
+	        + Inventory.getItemCount(Blocks.dark_oak_sapling)
+	        + Inventory.getItemCount(Blocks.jungle_sapling)
+	        + Inventory.getItemCount(Blocks.oak_sapling)
+	        + Inventory.getItemCount(Blocks.spruce_sapling)
+	        + Inventory.getItemCount(Blocks.mangrove_sapling)
+	end
+	function Inventory.findContainerSide()
+	    for _, side in pairs(Side) do
+	        local peripheralType = peripheral.getType(side)
+	        if peripheralType == Blocks.barrel or peripheralType == Blocks.chest then
+	            return side
+	        end
+	    end
+	end
+	function Inventory.pullFromContainer()
+	    local side = Inventory.findContainerSide()
+	    if side == nil then
+	        return false
+	    end
+	    local suckFunction = turtle.suck
+	    if side == Side.up then
+	        suckFunction = turtle.suckUp
+	    elseif side == Side.down then
+	        suckFunction = turtle.suckDown
+	    end
+	    while suckFunction() do end
+	    return
+	end
+	function Inventory.dumpIntoContainer()
+	    local side = Inventory.findContainerSide()
+	    if side == nil then
+	        return false
+	    end
+	    local dropFunction = turtle.drop
+	    if side == Side.up then
+	        dropFunction = turtle.dropUp
+	    elseif side == Side.down then
+	        dropFunction = turtle.dropDown
+	    end
+	    for i = 1, 16 do
+	        turtle.select(i)
+	        dropFunction()
+	    end
+	end
+	function Inventory.getEmptySlots()
+	    local emptySlots = 0
+	    for i = 1, 16 do
+	        if turtle.getItemCount(i) == 0 then
+	            emptySlots = emptySlots + 1
+	        end
+	    end
+	    return emptySlots
+	end
+	return Inventory
+end
+local turtle_Inventory = MODULE_turtle_Inventory()
+
+
+function MODULE_utils_data_Table()
+	local Table = {}
+	function Table.contains(object, value)
+	    for _, v in ipairs(object) do
+	        if v == value then
+	            return true
+	        end
+	    end
+	    return false
+	end
+	function Table.size(object)
+	    local count = 0
+	    for _ in pairs(object) do count = count + 1 end
+	    return count
+	end
+	function Table.isEmpty(object)
+	    return next(object) == nil
+	end
+	function Table.copy(object)
+	    local newObject = {}
+	    for key, value in pairs(object) do
+	        newObject[key] = value
+	    end
+	    return newObject
+	end
+	return Table
+end
+local utils_data_Table = MODULE_utils_data_Table()
+
+
+function MODULE_utils_peripherals_Compass()
+	local Compass = {}
+	function Compass.new()
+	    local self = setmetatable({}, Compass)
+	    self.internal = peripheral.find("compass")
+	    if self.internal == nil then
+	        return nil
+	    end
+	    return self
+	end
+	function Compass:getFacing()
+	    return self.internal.getFacing()
+	end
+	function Compass:getName()
+	    return self.internal.getName()
+	end
+	function Compass:getConfiguration()
+	    return self.internal.getConfiguration()
+	end
+	return Compass
+end
+local utils_peripherals_Compass = MODULE_utils_peripherals_Compass()
+
+
+function MODULE_turtle_Turtle()
+	local Block   = utils_blocks_Block
+	local Vector3 = utils_math_Vector3
+	local Direction = utils_movement_Direction
+	local Side = turtle_Side
+	local Config = utils_config_Config
+	local file = utils_other_file
+	local Inventory = turtle_Inventory
+	local Blocks    = utils_blocks_Blocks
+	local Table = utils_data_Table
+	local Compass = utils_peripherals_Compass
+	local Turtle = {}
+	Turtle.CONFIG = Config.load()
+	function Turtle.getGpsPosition()
+	    local x, y, z = gps.locate()
+	    return Vector3.new(x, y, z)
+	end
+	Turtle.CURRENT_POSITION = Turtle.getGpsPosition()
+	Turtle.CURRENT_DIRECTION = Turtle.CONFIG.homeDirection
+	Turtle._UNCHECKED_DIRECTION = true  -- Used to determine if the direction has been checked
+	local compass = Compass.new()
+	if compass ~= nil then
+	    print("Using compass to determine direction")
+	    Turtle.CURRENT_DIRECTION = compass.getFacing()
+	    Turtle._UNCHECKED_DIRECTION = false
+	    print("Facing " .. Turtle.CURRENT_DIRECTION)
+	end
+	function Turtle.moveInDirection(direction)
+	    Turtle.turnTo(direction)
+	    if direction == Direction.UP then
+	        return Turtle.up()
+	    elseif direction == Direction.DOWN then
+	        return Turtle.down()
+	    else
+	        return Turtle.forward()
+	    end
+	end
+	function Turtle.forward()
+	    local block = Turtle.getBlockInFront()
+	    if block ~= nil and not Block.isLiquid(block.name) then
+	        return false
+	    end
+	    local oldPosition = Turtle.CURRENT_POSITION:copy()
+	    local moved = turtle.forward()
+	    local expectedNewPosition = Turtle.CURRENT_POSITION:addInDirection(Turtle.CURRENT_DIRECTION, 1)
+	    if not moved then
+	        return false
+	    end
+	    if Turtle._UNCHECKED_DIRECTION then
+	        local newPosition = Turtle.getGpsPosition()
+	        if not newPosition:equals(expectedNewPosition) then
+	            Turtle.CURRENT_DIRECTION = oldPosition:directionTo(newPosition)
+	        end
+	        Turtle.CURRENT_POSITION = newPosition
+	        Turtle._UNCHECKED_DIRECTION = false  -- The direction is now known
+	    else
+	        Turtle.CURRENT_POSITION = expectedNewPosition
+	    end
+	    return true
+	end
+	function Turtle.up()
+	    local block = Turtle.getBlockAbove()
+	    if block ~= nil and not Block.isLiquid(block.name) then return false end
+	    turtle.up()
+	    Turtle.CURRENT_POSITION = Turtle.CURRENT_POSITION:addInDirection(Direction.UP, 1)
+	    return true
+	end
+	function Turtle.down()
+	    local block = Turtle.getBlockBelow()
+	    if block ~= nil and not Block.isLiquid(block.name) then return false end
+	    turtle.down()
+	    Turtle.CURRENT_POSITION = Turtle.CURRENT_POSITION:addInDirection(Direction.DOWN, 1)
+	    return true
+	end
+	function Turtle.move(direction)
+	    if direction == Direction.NORTH or direction == Direction.SOUTH or direction == Direction.WEST or direction == Direction.EAST then
+	        Turtle.turnTo(direction)
+	        return Turtle.forward()
+	    elseif direction == Direction.UP then
+	        return Turtle.up()
+	    elseif direction == Direction.DOWN then
+	        return Turtle.down()
+	    else
+	        print("Invalid direction")
+	    end
+	    return false
+	end
+	function Turtle.getFuelLevel()
+	    return turtle.getFuelLevel()
+	end
+	function Turtle.refuel()
+	    if Turtle.getFuelLevel() >= Turtle.CONFIG.fuelTarget then
+	        return
+	    end
+	    local slot = nil
+	    slot = 0
+	    while Turtle.getFuelLevel() < Turtle.CONFIG.fuelTarget and slot ~= nil do
+	        slot = Inventory.getSlotWithFuel()
+	        turtle.select(slot)
+	        turtle.refuel()
+	    end
+	end
+	function Turtle.refuelUsingAdjacentContainer(targetFuelLevel, side)
+	    local slot = nil
+	    slot = 0
+	    while Turtle.getFuelLevel() < targetFuelLevel and slot ~= nil do
+	        print("Current Fuel Level: " .. Turtle.getFuelLevel())
+	        if side == nil then
+	            side = Inventory.findContainerSide()
+	            if side == nil then
+	                os.sleep(1)
+	            end
+	        end
+	        Turtle.turnToSide(side)
+	        Inventory.pullFromContainer()
+	        slot = Inventory.getSlotWithFuel()
+	        if slot ~= nil then
+	            turtle.select(slot)
+	            turtle.refuel()
+	        else
+	            print("No fuel found")
+	            os.sleep(1)
+	        end
+	    end
+	    print("Current Fuel Level: " .. Turtle.getFuelLevel())
+	end
+	function Turtle.turnTo(direction)
+	    local bestDirectionToTurn = Direction.getBestDirectionToTurn(Turtle.CURRENT_DIRECTION, direction)
+	    if bestDirectionToTurn == Rotations.LEFT then
+	        while Turtle.CURRENT_DIRECTION ~= direction do
+	            Turtle.turnLeft()
+	        end
+	    elseif bestDirectionToTurn == Rotations.RIGHT then
+	        while Turtle.CURRENT_DIRECTION ~= direction do
+	            Turtle.turnRight()
+	        end
+	    end
+	end
+	function Turtle.turnToSide(side)
+	    if side == Side.FRONT then
+	        return
+	    elseif side == Side.LEFT then
+	        Turtle.turnLeft()
+	    elseif side == Side.RIGHT then
+	        Turtle.turnRight()
+	    elseif side == Side.BACK then
+	        Turtle.turnLeft()
+	        Turtle.turnLeft()
+	    end
+	end
+	function Turtle.turnLeft()
+	    turtle.turnLeft()
+	    Turtle.CURRENT_DIRECTION = Direction.nextLeft(Turtle.CURRENT_DIRECTION)
+	end
+	function Turtle.turnRight()
+	    turtle.turnRight()
+	    Turtle.CURRENT_DIRECTION = Direction.nextRight(Turtle.CURRENT_DIRECTION)
+	end
+	function Turtle.goTo(destination)
+	    local distance = destination:sub(Turtle.CURRENT_POSITION)
+	    if distance.y > 0 then
+	        for i = 1, distance.y do
+	            turtle.up()
+	        end
+	    elseif distance.y < 0 then
+	        for i = 1, math.abs(distance.y) do
+	            turtle.down()
+	        end
+	    end
+	    if distance.x > 0 then
+	        Turtle.turnTo(Direction.EAST)
+	        for i = 1, distance.x do
+	            turtle.forward()
+	        end
+	    elseif distance.x < 0 then
+	        Turtle.turnTo(Direction.WEST)
+	        for i = 1, math.abs(distance.x) do
+	            turtle.back()
+	        end
+	    end
+	    if distance.z > 0 then
+	        Turtle.turnTo(Direction.SOUTH)
+	        for i = 1, distance.z do
+	            turtle.forward()
+	        end
+	    elseif distance.z < 0 then
+	        Turtle.turnTo(Direction.NORTH)
+	        for i = 1, math.abs(distance.z) do
+	            turtle.back()
+	        end
+	    end
+	end
+	function Turtle.goHome()
+	    Turtle.goTo(Turtle.CONFIG.homePosition)
+	    Turtle.turnTo(Turtle.CONFIG.homeDirection)
+	end
+	function Turtle.getBlockInFront()
+	    local present, data = turtle.inspect()
+	    if present == false then
+	        return nil
+	    end
+	    local blockPosition = Turtle.CURRENT_POSITION:addInDirection(Turtle.CURRENT_DIRECTION, 1)
+	    return Block.new(data.name, blockPosition, data.state, data.tags)
+	end
+	function Turtle.getBlockAbove()
+	    local present, data = turtle.inspectUp()
+	    if present == false then
+	        return nil
+	    end
+	    local blockPosition = Turtle.CURRENT_POSITION:addInDirection(Direction.UP, 1)
+	    return Block.new(data.name, blockPosition, data.state, data.tags)
+	end
+	function Turtle.getBlockBelow()
+	    local present, data = turtle.inspectDown()
+	    if present == false then
+	        return nil
+	    end
+	    local blockPosition = Turtle.CURRENT_POSITION:addInDirection(Direction.DOWN, 1)
+	    return Block.new(data.name, blockPosition, data.state, data.tags)
+	end
+	function Turtle.suck(count)
+	    turtle.suck(count)
+	end
+	function Turtle.suckUp(count)
+	    turtle.suckUp(count)
+	end
+	function Turtle.suckDown(count)
+	    turtle.suckDown(count)
+	end
+	function Turtle.suckLeft(count)
+	    Turtle.turnLeft()
+	    Turtle.suck(count)
+	    Turtle.turnRight()
+	end
+	function Turtle.suckRight(count)
+	    Turtle.turnRight()
+	    Turtle.suck(count)
+	    Turtle.turnLeft()
+	end
+	function Turtle.suckBack(count)
+	    Turtle.turnLeft()
+	    Turtle.turnLeft()
+	    Turtle.suck(count)
+	    Turtle.turnLeft()
+	    Turtle.turnLeft()
+	end
+	function Turtle.suckAll(count)
+	    Turtle.suckUp(count)
+	    Turtle.suckDown(count)
+	    for i = 1, 4 do
+	        Turtle.turnRight()
+	        Turtle.suck(count)
+	    end
+	end
+	function Turtle.tryDrop(slot, count)
+	    local block = Turtle.getBlockInFront()
+	    if block == nil then
+	        return false
+	    end
+	    turtle.select(slot)
+	    turtle.drop(count)
+	    return true
+	end
+	function Turtle.tryDropUp(slot, count)
+	    local block = Turtle.getBlockAbove()
+	    if block == nil then
+	        return false
+	    end
+	    turtle.select(slot)
+	    turtle.dropUp(count)
+	    return true
+	end
+	function Turtle.tryDropDown(slot, count)
+	    local block = Turtle.getBlockBelow()
+	    if block == nil then
+	        return false
+	    end
+	    turtle.select(slot)
+	    turtle.dropDown(count)
+	    return true
+	end
+	function Turtle.tryDropAll(slot, count)
+	    if Turtle.tryDropDown(slot, count) then
+	        return true
+	    elseif Turtle.tryDropUp(slot, count) then
+	        return true
+	    end
+	    for i = 1, 4 do
+	        Turtle.turnRight()
+	        if Turtle.tryDrop(slot, count) then
+	            return true
+	        end
+	    end
+	    return false
+	end
+	function Turtle.dump(side)
+	    if side == nil then
+	        side = Inventory.findContainerSide()
+	        if side == nil then
+	            print("No dump container found - please place one")
+	            os.sleep(1)
+	        end
+	    end
+	    Turtle.turnToSide(side)
+	    Inventory.dumpIntoContainer()
+	end
+	function Turtle.safeDig(direction)
+	    local hasBlock = nil
+	    local data = nil
+	    if direction == nil then
+	        hasBlock, data = turtle.inspect()
+	    elseif direction == Direction.UP then
+	        hasBlock, data = turtle.inspectUp()
+	    elseif direction == Direction.DOWN then
+	        hasBlock, data = turtle.inspectDown()
+	    else
+	        Turtle.turnTo(direction)
+	        hasBlock, data = turtle.inspect()
+	    end
+	    if not hasBlock or data == nil then
+	        return true
+	    end
+	    if Block.isAllowedToBreak(data.name) then
+	        Turtle.dig(direction)
+	        return true
+	    else
+	        return false
+	    end
+	end
+	function Turtle.dig(direction)
+	    if direction == nil then
+	        turtle.dig()
+	    elseif direction == Direction.UP then
+	        turtle.digUp()
+	    elseif direction == Direction.DOWN then
+	        turtle.digDown()
+	    else
+	        Turtle.turnTo(direction)
+	        turtle.dig()
+	    end
+	end
+	function Turtle.select(slot)
+	    if slot == nil then
+	        return
+	    end
+	    turtle.select(slot)
+	end
+	function Turtle.digUp()
+	    turtle.digUp()
+	end
+	function Turtle.digDown()
+	    turtle.digDown()
+	end
+	function Turtle.place()
+	    turtle.place()
+	end
+	function Turtle.placeUp()
+	    turtle.placeUp()
+	end
+	function Turtle.placeDown()
+	    turtle.placeDown()
+	end
+	return Turtle
+end
+local turtle_Turtle = MODULE_turtle_Turtle()
+
+
+function MODULE_jobs_definitions_misc_SetupJob()
+	local Turtle = turtle_Turtle
+	local Job = jobs_Job
+	local SetupJob = {}
+	SetupJob.__index = SetupJob
+	SetupJob.name = Job.SETUP
+	function SetupJob.new()
+	    local self = setmetatable({}, SetupJob)
+	    self.alive = true
+	    return self
+	end
+	function SetupJob:onStart()
+	    Turtle.CONFIG.homePosition = Turtle.CURRENT_POSITION
+	    print(" -> Home position set to " .. Turtle.CURRENT_POSITION:__tostring())
+	    Turtle.CONFIG.homeDirection = Turtle.CURRENT_DIRECTION
+	    print(" -> Home direction set to " .. Turtle.CURRENT_DIRECTION)
+	    Turtle.CONFIG:save()
+	end
+	function SetupJob:onResume()
+	end
+	function SetupJob:inProgress()
+	    return self.alive
+	end
+	function SetupJob:onStep()
+	    self.alive = false
+	end
+	function SetupJob:onComplete()
+	    Turtle:goHome()
+	end
+	return SetupJob
+end
+local jobs_definitions_misc_SetupJob = MODULE_jobs_definitions_misc_SetupJob()
+
+
 function MODULE_entrypoints_setup()
 	local JobManager = jobs_JobManager
-	local Job = jobs_Job
-	JobManager.run(Job.SETUP)
+	local SetupJob = jobs_definitions_misc_SetupJob
+	JobManager.run(SetupJob)
 end
 local entrypoints_setup = MODULE_entrypoints_setup()
