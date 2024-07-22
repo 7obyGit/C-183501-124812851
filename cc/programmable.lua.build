@@ -28,6 +28,7 @@ function MODULE_jobs_Job()
 	Job.QUARRY = "QuarryJob"
 	Job.TREE_FARM = "TreeFarmJob"
 	Job.STORAGE = "StorageJob"
+	Job.TABLET_CONTROLLER = "TabletControllerJob"
 	return Job
 end
 local jobs_Job = MODULE_jobs_Job()
@@ -1457,10 +1458,6 @@ function MODULE_turtle_Turtle()
 	    Turtle.CURRENT_DIRECTION = compass.getFacing()
 	    Turtle._UNCHECKED_DIRECTION = false
 	    print("Facing " .. Turtle.CURRENT_DIRECTION)
-	    os.sleep(5)
-	else
-	    print("Compass not found - using GPS to determine direction")
-	    os.sleep(5)
 	end
 	function Turtle.moveInDirection(direction)
 	    Turtle.turnTo(direction)
@@ -3148,9 +3145,60 @@ end
 local jobs_definitions_mobile_treeFarm_TreeFarmStates = MODULE_jobs_definitions_mobile_treeFarm_TreeFarmStates()
 
 
+function MODULE_utils_network_Network()
+	local Parallel = utils_controlflow_Parallel
+	local Network = {}
+	peripheral.find("modem", rednet.open)
+	function Network.isOpen()
+	    return rednet.isOpen()
+	end
+	function Network.host(protocol, hostname)
+	    if not Network.isOpen() then return print("Network is not open") end
+	    rednet.host(protocol, hostname)
+	end
+	function Network.lookup(protocol, hostname)
+	    if not Network.isOpen() then return print("Network is not open") end
+	    return rednet.lookup(protocol, hostname)
+	end
+	function Network.unhost(protocol)
+	    if not Network.isOpen() then return print("Network is not open") end
+	    rednet.unhost(protocol)
+	end
+	function Network.listenWithProtocols(protocols)
+	    if not Network.isOpen() then return print("Network is not open") end
+	    Parallel.map(protocols, function(key, protocol) protocol:listen() end)
+	end
+	function Network.listen(protocol, timeout, func)
+	    if not Network.isOpen() then return print("Network is not open") end
+	    while true do
+	        local senderId, message = rednet.receive(protocol, timeout)
+	        func(senderId, message)
+	    end
+	end
+	function Network.send(recipient, message, protocol)
+	    if not Network.isOpen() then return print("Network is not open") end
+	    rednet.send(recipient, message, protocol)
+	end
+	function Network.broadcast(message, protocol)
+	    if not Network.isOpen() then return print("Network is not open") end
+	    rednet.broadcast(message, protocol)
+	end
+	return Network
+end
+local utils_network_Network = MODULE_utils_network_Network()
+
+
 function MODULE_utils_jobutils_CommonEventImplementations()
+	local Network = utils_network_Network
 	local CommonEventImplementations = {}
 	function CommonEventImplementations.onStart(self)
+	    if self.protocols ~= nil then
+	        if Network.isOpen() then
+	            Network.listenWithProtocols(self.protocols)
+	        else
+	            print("Network is not open - cannot use protocols defined for job")
+	        end
+	    end
 	    return self.config:set("alive", true)
 	end
 	function CommonEventImplementations.onResume(self)
@@ -3238,8 +3286,6 @@ local jobs_definitions_mobile_treeFarm_TreeFarmCodedInventoryListeners = MODULE_
 
 
 function MODULE_jobs_definitions_mobile_treeFarm_TreeFarmJob()
-	local Turtle = turtle_Turtle
-	local Inventory = turtle_Inventory
 	local Commands = utils_terminal_commands_Commands
 	local Command = utils_terminal_commands_Command
 	local TreeFarmCommands = jobs_definitions_mobile_treeFarm_TreeFarmCommands
@@ -3247,11 +3293,9 @@ function MODULE_jobs_definitions_mobile_treeFarm_TreeFarmJob()
 	local TreeFarmStates = jobs_definitions_mobile_treeFarm_TreeFarmStates
 	local CommonStates = utils_jobutils_CommonStates
 	local CodedInventory = utils_storage_codedinventory_CodedInventory
-	local CommonCodedInventoryListeners = utils_jobutils_CommonCodedInventoryListeners
 	local CommonEventImplementations = utils_jobutils_CommonEventImplementations
 	local ContainerPatternNames = utils_storage_patterns_ContainerPatternNames
 	local TreeFarmCodedInventoryListeners = jobs_definitions_mobile_treeFarm_TreeFarmCodedInventoryListeners
-	local Text = utils_text_Text
 	local TreeFarmJob = {}
 	TreeFarmJob.__index = TreeFarmJob
 	function TreeFarmJob.new(config)
@@ -4211,6 +4255,132 @@ end
 local jobs_definitions_static_StorageJob = MODULE_jobs_definitions_static_StorageJob()
 
 
+function MODULE_jobs_definitions_tablet_tabletController_TabletControllerCommands()
+	local TabletControllerCommands = {}
+	function TabletControllerCommands.commandTest(self)
+	    print("Running the test command")
+	    self.protocols.example:sendExample1()
+	end
+	return TabletControllerCommands
+end
+local jobs_definitions_tablet_tabletController_TabletControllerCommands = MODULE_jobs_definitions_tablet_tabletController_TabletControllerCommands()
+
+
+function MODULE_utils_network_protocols_example_ExampleProtocol()
+	local Network = utils_network_Network
+	local ExampleProtocol = {}
+	ExampleProtocol.__index = ExampleProtocol
+	function ExampleProtocol.new(job)
+	    local self = setmetatable({}, ExampleProtocol)
+	    self.job = job  -- The job instance that is using this protocol
+	    self.protocolName = "protocol:example"
+	    self.commands = {
+	        EXAMPLE1 = "EXAMPLE2",
+	        EXAMPLE2 = "EXAMPLE2",
+	        EXAMPLE3 = "EXAMPLE3",
+	    }
+	    self.listeners = {
+	        EXAMPLE1 = self.onExample1,
+	        EXAMPLE2 = self.onExample2,
+	        EXAMPLE3 = self.onExample3,
+	    }
+	    return self
+	end
+	function ExampleProtocol:listen()
+	    Network.host(self.protocolName)
+	    Network.listen(self.protocolName, nil, function(senderId, message)
+	        if type(message) ~= "table" then return end
+	        local command = message.command
+	        local args = message.message
+	        local listener = self.listeners[command]
+	        if listener == nil then return end
+	        listener(self, args)
+	    end)
+	end
+	function ExampleProtocol:_send(command, message)
+	    Network.broadcast({
+	        command = command,
+	        message = message,
+	    }, self.protocolName)
+	end
+	function ExampleProtocol:sendExample1()
+	    self:_send(self.commands.EXAMPLE1, "Example with no arguments")
+	end
+	function ExampleProtocol:onExample1()
+	    print("Example1 received")
+	end
+	function ExampleProtocol:sendExample2(arg)
+	    self:_send(self.commands.EXAMPLE1, arg)
+	end
+	function ExampleProtocol:onExample2(arg)
+	    print("Example2 received with argument: " .. arg)
+	end
+	function ExampleProtocol:sendExample3(arg1, arg2)
+	    self:_send(self.commands.EXAMPLE3, {arg1 = arg1, arg2 = arg2})
+	end
+	function ExampleProtocol:onExample3(args)
+	    local arg1 = args.arg1
+	    local arg2 = args.arg2
+	    print("Example3 received with arguments: " .. arg1 .. ", " .. arg2)
+	end
+	return ExampleProtocol
+end
+local utils_network_protocols_example_ExampleProtocol = MODULE_utils_network_protocols_example_ExampleProtocol()
+
+
+function MODULE_jobs_definitions_tablet_tabletController_TabletControllerJob()
+	local Commands = utils_terminal_commands_Commands
+	local Command = utils_terminal_commands_Command
+	local CommonCommands = utils_jobutils_CommonCommands
+	local CommonStates = utils_jobutils_CommonStates
+	local CommonEventImplementations = utils_jobutils_CommonEventImplementations
+	local TabletControllerCommands = jobs_definitions_tablet_tabletController_TabletControllerCommands
+	local ExampleProtocol = utils_network_protocols_example_ExampleProtocol
+	local Network = utils_network_Network
+	local TabletControllerJob = {}
+	TabletControllerJob.__index = TabletControllerJob
+	function TabletControllerJob.new(config)
+	    local self = setmetatable({}, TabletControllerJob)
+	    self.backgroundTask = function() self:onBackgroundStep() end
+	    self.backgroundDelay = 5  -- This task should be infrequent
+	    self.commands = Commands.new()
+	    self.commands:add(Command.new("exit", "Terminates the program", function(...) CommonCommands.commandExit(self, ...) end))
+	    self.commands:add(Command.new("test", "Test command", function(...) TabletControllerCommands.commandTest(self, ...) end))
+	    self.config = config
+	    self.states = {
+	        COMMAND_PROMPT = "COMMAND_PROMPT",
+	    }
+	    self.stateActions = {
+	        [self.states.COMMAND_PROMPT] = CommonStates.onCommandPrompt,
+	    }
+	    self.protocols = {
+	        example = ExampleProtocol.new(self),
+	    }
+	    return self
+	end
+	function TabletControllerJob:onStart()
+	    return CommonEventImplementations.onStart(self)
+	end
+	function TabletControllerJob:onResume()
+	    return CommonEventImplementations.onResume(self)
+	end
+	function TabletControllerJob:inProgress()
+	    return CommonEventImplementations.inProgress(self)
+	end
+	function TabletControllerJob:onStep()
+	    return CommonEventImplementations.onStepMobile(self)
+	end
+	function TabletControllerJob:onBackgroundStep()
+	    return CommonEventImplementations.onBackgroundStep(self)
+	end
+	function TabletControllerJob:onComplete()
+	    return CommonEventImplementations.onComplete(self)
+	end
+	return TabletControllerJob
+end
+local jobs_definitions_tablet_tabletController_TabletControllerJob = MODULE_jobs_definitions_tablet_tabletController_TabletControllerJob()
+
+
 function MODULE_jobs_JobManager()
 	local JobConfig = utils_config_JobConfig
 	local Job = jobs_Job
@@ -4222,6 +4392,7 @@ function MODULE_jobs_JobManager()
 	local TreeFarmJob = jobs_definitions_mobile_treeFarm_TreeFarmJob
 	local ProgrammableJob = jobs_definitions_mobile_ProgrammableJob
 	local StorageJob = jobs_definitions_static_StorageJob
+	local TabletControllerJob = jobs_definitions_tablet_tabletController_TabletControllerJob
 	local JobManager = {}
 	JobManager.jobs = {
 	    [Job.EXAMPLE] = ExampleJob,
@@ -4231,6 +4402,7 @@ function MODULE_jobs_JobManager()
 	    [Job.TREE_FARM] = TreeFarmJob,
 	    [Job.PROGRAMMABLE_JOB] = ProgrammableJob,
 	    [Job.STORAGE] = StorageJob,
+	    [Job.TABLET_CONTROLLER] = TabletControllerJob,
 	}
 	function JobManager.run(name)
 	    local config = JobConfig.load()
