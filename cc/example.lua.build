@@ -178,8 +178,106 @@ end
 local utils_controlflow_Parallel = MODULE_utils_controlflow_Parallel()
 
 
+function MODULE_utils_libs_LibOs()
+	local LibOs = {}
+	function LibOs.getComputerID()
+	    return os.getComputerID()
+	end
+	function LibOs.getComputerLabel()
+	    return os.getComputerLabel()
+	end
+	function LibOs.setComputerLabel(label)
+	    return os.setComputerLabel(label)
+	end
+	function LibOs.sleep(time)
+	    os.sleep(time)
+	end
+	function LibOs.pullEvent(filter)
+	    return os.pullEvent(filter)
+	end
+	function LibOs.queueEvent(name, ...)
+	    return os.queueEvent(name, ...)
+	end
+	function LibOs.run(env, path, ...)
+	    return os.run(env, path, ...)
+	end
+	function LibOs.version()
+	    return os.version()
+	end
+	function LibOs.shutdown()
+	    return os.shutdown()
+	end
+	function LibOs.reboot()
+	    return os.reboot()
+	end
+	function LibOs.getSecondsSinceComputerStart()
+	    return os.clock()
+	end
+	function LibOs.time(locale)
+	    return os.time(locale)
+	end
+	function LibOs.date(format, time)
+	    return os.date(format, time)
+	end
+	function LibOs.day(...)
+	    return os.day(...)
+	end
+	function LibOs.epoch(...)
+	    return os.epoch(...)
+	end
+	return LibOs
+end
+local utils_libs_LibOs = MODULE_utils_libs_LibOs()
+
+
+function MODULE_utils_network_Network()
+	local Parallel = utils_controlflow_Parallel
+	local LibOs = utils_libs_LibOs
+	local Network = {}
+	peripheral.find("modem", rednet.open)
+	function Network.isOpen()
+	    return rednet.isOpen()
+	end
+	function Network.host(protocol, hostname)
+	    if not Network.isOpen() then return print("Network is not open") end
+	    hostname = hostname or ("computer:" .. LibOs.getComputerID())
+	    rednet.host(protocol, hostname)
+	end
+	function Network.lookup(protocol, hostname)
+	    if not Network.isOpen() then return print("Network is not open") end
+	    return rednet.lookup(protocol, hostname)
+	end
+	function Network.unhost(protocol)
+	    if not Network.isOpen() then return print("Network is not open") end
+	    rednet.unhost(protocol)
+	end
+	function Network.listenWithProtocols(protocols)
+	    if not Network.isOpen() then return print("Network is not open") end
+	    Parallel.map(protocols, function(key, protocol) protocol:listen() end)
+	end
+	function Network.listen(protocol, timeout, func)
+	    if not Network.isOpen() then return print("Network is not open") end
+	    while true do
+	        local senderId, message = rednet.receive(protocol, timeout)
+	        func(senderId, message)
+	    end
+	end
+	function Network.send(recipient, message, protocol)
+	    if not Network.isOpen() then return print("Network is not open") end
+	    rednet.send(recipient, message, protocol)
+	end
+	function Network.broadcast(message, protocol)
+	    if not Network.isOpen() then return print("Network is not open") end
+	    rednet.broadcast(message, protocol)
+	end
+	return Network
+end
+local utils_network_Network = MODULE_utils_network_Network()
+
+
 function MODULE_jobs_JobManager()
 	local JobConfig = utils_config_JobConfig
+	local Network = utils_network_Network
 	local Parallel = utils_controlflow_Parallel
 	local JobManager = {}
 	function JobManager.run(jobClass)
@@ -195,6 +293,13 @@ function MODULE_jobs_JobManager()
 	    job:onStart()
 	    local p = Parallel.new()
 	    p:addTask(function() JobManager.runForegroundTask(job, config, jobClass.name) end)
+	    if job.protocols ~= nil then
+	        if Network.isOpen() then
+	            p:addTask(function() Network.listenWithProtocols(job.protocols) end)
+	        else
+	            print("Network is not open - cannot use protocols defined for job")
+	        end
+	    end
 	    p:addTask(function() JobManager.runBackgroundTask(job, config) end)
 	    p:waitForAny()
 	    job:onComplete()
