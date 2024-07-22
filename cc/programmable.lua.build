@@ -4337,8 +4337,10 @@ function MODULE_jobs_definitions_tablet_tabletController_TabletControllerJob()
 	local TabletControllerCommands = jobs_definitions_tablet_tabletController_TabletControllerCommands
 	local ExampleProtocol = utils_network_protocols_example_ExampleProtocol
 	local Network = utils_network_Network
+	local Job = jobs_Job
 	local TabletControllerJob = {}
 	TabletControllerJob.__index = TabletControllerJob
+	TabletControllerJob.name = Job.TABLET_CONTROLLER
 	function TabletControllerJob.new(config)
 	    local self = setmetatable({}, TabletControllerJob)
 	    self.backgroundTask = function() self:onBackgroundStep() end
@@ -4385,42 +4387,24 @@ function MODULE_jobs_JobManager()
 	local JobConfig = utils_config_JobConfig
 	local Job = jobs_Job
 	local Parallel = utils_controlflow_Parallel
-	local ExampleJob = jobs_definitions_misc_ExampleJob
-	local IdleJob = jobs_definitions_misc_IdleJob
-	local SetupJob = jobs_definitions_misc_SetupJob
-	local QuarryJob = jobs_definitions_mobile_quarry_QuarryJob
-	local TreeFarmJob = jobs_definitions_mobile_treeFarm_TreeFarmJob
-	local ProgrammableJob = jobs_definitions_mobile_ProgrammableJob
-	local StorageJob = jobs_definitions_static_StorageJob
-	local TabletControllerJob = jobs_definitions_tablet_tabletController_TabletControllerJob
 	local JobManager = {}
-	JobManager.jobs = {
-	    [Job.EXAMPLE] = ExampleJob,
-	    [Job.SETUP] = SetupJob,
-	    [Job.IDLE] = IdleJob,
-	    [Job.QUARRY] = QuarryJob,
-	    [Job.TREE_FARM] = TreeFarmJob,
-	    [Job.PROGRAMMABLE_JOB] = ProgrammableJob,
-	    [Job.STORAGE] = StorageJob,
-	    [Job.TABLET_CONTROLLER] = TabletControllerJob,
-	}
-	function JobManager.run(name)
+	function JobManager.run(jobClass)
 	    local config = JobConfig.load()
-	    config.job = name
+	    config.job = jobClass.name
 	    config:save()
-	    local job = JobManager.jobs[name].new(config)
+	    local job = jobClass.new(config)
 	    if job == nil then
-	        print("Job not found: " .. name)
+	        print("Job not found: " .. jobClass.name)
 	        return
 	    end
-	    print("Starting Job: " .. name)
+	    print("Starting Job: " .. jobClass.name)
 	    job:onStart()
 	    local p = Parallel.new()
-	    p:addTask(function() JobManager.runForegroundTask(job, config, name) end)
+	    p:addTask(function() JobManager.runForegroundTask(job, config, jobClass.name) end)
 	    p:addTask(function() JobManager.runBackgroundTask(job, config) end)
 	    p:waitForAny()
 	    job:onComplete()
-	    print("Completed Job: " .. name)
+	    print("Completed Job: " .. jobClass.name)
 	    config:save()
 	end
 	function JobManager.runForegroundTask(job, config, name)
