@@ -905,6 +905,9 @@ local utils_movement_Direction = MODULE_utils_movement_Direction()
 function MODULE_utils_terminal_Terminal()
 	local Terminal = {}
 	Terminal.__index = Terminal
+	function Terminal.writeLineBreak()
+	    print("-------------------------")
+	end
 	function Terminal.write(text)
 	    print(text)
 	end

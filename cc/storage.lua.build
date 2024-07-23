@@ -1953,6 +1953,9 @@ local utils_movement_Direction = MODULE_utils_movement_Direction()
 function MODULE_utils_terminal_Terminal()
 	local Terminal = {}
 	Terminal.__index = Terminal
+	function Terminal.writeLineBreak()
+	    print("-------------------------")
+	end
 	function Terminal.write(text)
 	    print(text)
 	end
@@ -2439,6 +2442,7 @@ local utils_network_protocols_example_ExampleProtocol = MODULE_utils_network_pro
 
 
 function MODULE_utils_network_protocols_logging_LogProtocol()
+	local Terminal = utils_terminal_Terminal
 	local Network = utils_network_Network
 	local LibOs = utils_libs_LibOs
 	local LogProtocol = {}
@@ -2497,7 +2501,7 @@ function MODULE_utils_network_protocols_logging_LogProtocol()
 	        end
 	        print(printArgs)
 	    end
-	    print("-------------------------")
+	    Terminal.writeLineBreak()
 	    print(sourceName)
 	    print("            *Any Key Exit")
 	end
@@ -2520,6 +2524,7 @@ function MODULE_utils_network_protocols_logging_LogProtocol()
 	        function() viewLogs(self, sourceName) end,
 	        function() waitForKey(self) end
 	    )
+	    self.job.protocols.log.onLogFunc = nil
 	end
 	return LogProtocol
 end
