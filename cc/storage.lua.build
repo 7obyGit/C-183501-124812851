@@ -2484,6 +2484,7 @@ function MODULE_utils_network_protocols_logging_LogProtocol()
 	    while #self.histories[sourceName] > 10 do
 	        table.remove(self.histories[sourceName], 1)
 	    end
+	    print("onLogFunc", self.onLogFunc)
 	    if self.onLogFunc == nil then return end
 	    self.onLogFunc(sourceName, printArgs)
 	end
