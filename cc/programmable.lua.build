@@ -236,7 +236,6 @@ function MODULE_utils_network_Network()
 	local Network = {}
 	peripheral.find("modem", rednet.open)
 	function Network.isOpen()
-	    print(rednet.isOpen())
 	    return rednet.isOpen()
 	end
 	function Network.host(protocol, hostname)
