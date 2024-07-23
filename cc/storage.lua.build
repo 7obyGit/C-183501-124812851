@@ -234,10 +234,9 @@ function MODULE_utils_network_Network()
 	local Parallel = utils_controlflow_Parallel
 	local LibOs = utils_libs_LibOs
 	local Network = {}
-	local modems = peripheral.find("modem", rednet.open)
-	print(modems)
-	os.sleep(3)
+	peripheral.find("modem", rednet.open)
 	function Network.isOpen()
+	    print(rednet.isOpen())
 	    return rednet.isOpen()
 	end
 	function Network.host(protocol, hostname)
