@@ -2637,6 +2637,14 @@ end
 local utils_network_protocols_events_EventsProtocol = MODULE_utils_network_protocols_events_EventsProtocol()
 
 
+function MODULE_utils_other_Me()
+	return {
+	    Username = "3p0",
+	}
+end
+local utils_other_Me = MODULE_utils_other_Me()
+
+
 function MODULE_jobs_definitions_static_StorageJob()
 	local Storage = utils_storage_Storage
 	local Blocks  = utils_blocks_Blocks
@@ -2651,13 +2659,14 @@ function MODULE_jobs_definitions_static_StorageJob()
 	local LogProtocol = utils_network_protocols_logging_LogProtocol
 	local PlayerDetector = utils_peripherals_PlayerDetector
 	local EventsProtocol = utils_network_protocols_events_EventsProtocol
+	local Me = utils_other_Me
 	local StorageJob = {}
 	StorageJob.__index = StorageJob
 	StorageJob.name = Job.STORAGE
 	function StorageJob.new(config)
 	    local self = setmetatable({}, StorageJob)
 	    self.backgroundTasks = {
-	        function() if PlayerDetector.detector ~= nil then PlayerDetector.onPlayerMoved(self.protocols.events.onPlayerMoved) end end,
+	        function() if PlayerDetector.detector ~= nil then PlayerDetector.onPlayerMoved(self.protocols.events.onPlayerMoved, Me.Username, 1) end end,
 	    }
 	    self.backgroundTask = function() self:onBackgroundStep() end
 	    self.backgroundDelay = 5  -- This task should be infrequent
