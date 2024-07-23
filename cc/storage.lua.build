@@ -2472,8 +2472,8 @@ function MODULE_utils_network_protocols_logging_LogProtocol()
 	        message = message,
 	    }, self.protocolName)
 	end
-	function LogProtocol:sendLog(sourceName, ...)
-	    self:_send(self.commands.LOG, {sourceName = sourceName, printArgs = ...})
+	function LogProtocol:sendLog(...)
+	    self:_send(self.commands.LOG, {sourceName = self.job.name, printArgs = ...})
 	end
 	function LogProtocol:onLog(args)
 	    local sourceName = args.sourceName
@@ -2556,6 +2556,7 @@ function MODULE_jobs_definitions_static_StorageJob()
 	    end
 	end
 	function StorageJob:onBackgroundStep()
+	    self.protocols.log:sendLog("Hello world!")
 	    if self.config:get("state", nil) == self.states.COMMAND_PROMPT then
 	        self.storage:dumpAllInputs()
 	        self.storage:populateKeepFilledBarrels()
