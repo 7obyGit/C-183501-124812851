@@ -234,7 +234,9 @@ function MODULE_utils_network_Network()
 	local Parallel = utils_controlflow_Parallel
 	local LibOs = utils_libs_LibOs
 	local Network = {}
-	peripheral.find("modem", rednet.open)
+	local modems = peripheral.find("modem", rednet.open)
+	print(modems)
+	os.sleep(3)
 	function Network.isOpen()
 	    return rednet.isOpen()
 	end
@@ -257,11 +259,8 @@ function MODULE_utils_network_Network()
 	end
 	function Network.listen(protocol, timeout, func)
 	    if not Network.isOpen() then return print("Network is not open") end
-	    print("Network.listen", protocol, timeout)
-	    os.sleep(3)
 	    while true do
 	        local senderId, message = rednet.receive(protocol, timeout)
-	        print("Network.listen", senderId, message)
 	        func(senderId, message)
 	    end
 	end
@@ -271,7 +270,6 @@ function MODULE_utils_network_Network()
 	end
 	function Network.broadcast(message, protocol)
 	    if not Network.isOpen() then return print("Network is not open") end
-	    print("Network.broadcast", message, protocol)
 	    rednet.broadcast(message, protocol)
 	end
 	return Network
@@ -2401,7 +2399,6 @@ function MODULE_utils_network_protocols_example_ExampleProtocol()
 	function ExampleProtocol:listen()
 	    Network.host(self.protocolName)
 	    Network.listen(self.protocolName, nil, function(senderId, message)
-	        print(senderId, message)
 	        if type(message) ~= "table" then return end
 	        local command = message.command
 	        local args = message.message
