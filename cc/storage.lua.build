@@ -2663,7 +2663,7 @@ function MODULE_jobs_definitions_static_StorageJob()
 	function StorageJob.new(config)
 	    local self = setmetatable({}, StorageJob)
 	    self.backgroundTasks = {
-	        function() if PlayerDetector.detector ~= nil then PlayerDetector.onPlayerMoved(function (username, oldPosition, newPosition) self.protocols.events:sendOnPlayerMoved(username, oldPosition, newPosition) end, Me.Username, 1) end end,
+	        function() if PlayerDetector.detector ~= nil then PlayerDetector.onPlayerMoved(function (username, oldPosition, newPosition) self.protocols.events:sendOnPlayerMoved(username, oldPosition, newPosition) end, Me.Username, 5) end end,
 	    }
 	    self.backgroundTask = function() self:onBackgroundStep() end
 	    self.backgroundDelay = 5  -- This task should be infrequent
