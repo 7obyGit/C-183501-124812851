@@ -2438,6 +2438,54 @@ end
 local utils_network_protocols_example_ExampleProtocol = MODULE_utils_network_protocols_example_ExampleProtocol()
 
 
+function MODULE_utils_network_protocols_logging_LogProtocol()
+	local Network = utils_network_Network
+	local LogProtocol = {}
+	LogProtocol.__index = LogProtocol
+	function LogProtocol.new(job, onLogFunc)
+	    local self = setmetatable({}, LogProtocol)
+	    self.job = job  -- The job instance that is using this protocol
+	    self.onLogFunc = onLogFunc
+	    self.protocolName = "protocol:log"
+	    self.commands = {
+	        LOG = "LOG",
+	    }
+	    self.listeners = {
+	        LOG = self.onLog,
+	    }
+	    return self
+	end
+	function LogProtocol:listen()
+	    Network.host(self.protocolName)
+	    Network.listen(self.protocolName, nil, function(senderId, message)
+	        if type(message) ~= "table" then return end
+	        local command = message.command
+	        local args = message.message
+	        local listener = self.listeners[command]
+	        if listener == nil then return end
+	        listener(self, args)
+	    end)
+	end
+	function LogProtocol:_send(command, message)
+	    Network.broadcast({
+	        command = command,
+	        message = message,
+	    }, self.protocolName)
+	end
+	function LogProtocol:sendLog(sourceName, ...)
+	    self:_send(self.commands.LOG, {sourceName = sourceName, printArgs = ...})
+	end
+	function LogProtocol:onLog(args)
+	    local sourceName = args.sourceName
+	    local printArgs = args.printArgs
+	    if self.onLogFunc == nil then return end
+	    self.onLogFunc(table.unpack(printArgs))
+	end
+	return LogProtocol
+end
+local utils_network_protocols_logging_LogProtocol = MODULE_utils_network_protocols_logging_LogProtocol()
+
+
 function MODULE_jobs_definitions_static_StorageJob()
 	local Storage = utils_storage_Storage
 	local Blocks  = utils_blocks_Blocks
@@ -2450,6 +2498,7 @@ function MODULE_jobs_definitions_static_StorageJob()
 	local Math = utils_math_Math
 	local Job = jobs_Job
 	local ExampleProtocol = utils_network_protocols_example_ExampleProtocol
+	local LogProtocol = utils_network_protocols_logging_LogProtocol
 	local StorageJob = {}
 	StorageJob.__index = StorageJob
 	StorageJob.name = Job.STORAGE
