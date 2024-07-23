@@ -279,12 +279,14 @@ function MODULE_jobs_JobManager()
 	local JobConfig = utils_config_JobConfig
 	local Network = utils_network_Network
 	local Parallel = utils_controlflow_Parallel
+	local LibOs = utils_libs_LibOs
 	local JobManager = {}
 	function JobManager.run(jobClass)
 	    local config = JobConfig.load()
 	    config.job = jobClass.name
 	    config:save()
 	    local job = jobClass.new(config)
+	    job.name = jobClass.name .. LibOs.getComputerID()
 	    if job == nil then
 	        print("Job not found: " .. jobClass.name)
 	        return
