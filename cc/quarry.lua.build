@@ -257,6 +257,8 @@ function MODULE_utils_network_Network()
 	end
 	function Network.listen(protocol, timeout, func)
 	    if not Network.isOpen() then return print("Network is not open") end
+	    print("Network.listen", protocol, timeout)
+	    os.sleep(3)
 	    while true do
 	        local senderId, message = rednet.receive(protocol, timeout)
 	        print("Network.listen", senderId, message)
