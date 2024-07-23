@@ -2484,7 +2484,6 @@ function MODULE_utils_network_protocols_logging_LogProtocol()
 	    while #self.histories[sourceName] > 10 do
 	        table.remove(self.histories[sourceName], 1)
 	    end
-	    print("onLogFunc", self.onLogFunc)
 	    if self.onLogFunc == nil then return end
 	    self.onLogFunc(sourceName, printArgs)
 	end
@@ -2492,7 +2491,10 @@ function MODULE_utils_network_protocols_logging_LogProtocol()
 	    for _ = 1, 10 do print() end
 	    local history = self.histories[sourceName] or {}
 	    for _, printArgs in ipairs(history) do
-	        self.onLogFunc(sourceName, unpack(printArgs))
+	        if type(printArgs) == "table" then
+	            printArgs = table.concat(printArgs, " ")
+	        end
+	        self.onLogFunc(sourceName, printArgs)
 	    end
 	    print("------")
 	    print(sourceName)
