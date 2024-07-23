@@ -2497,7 +2497,8 @@ function MODULE_utils_network_protocols_logging_LogProtocol()
 	        print(printArgs)
 	    end
 	    print("------")
-	    print(sourceName .. "*Any Key Exit")
+	    print(sourceName)
+	    print("            *Any Key Exit")
 	end
 	return LogProtocol
 end
