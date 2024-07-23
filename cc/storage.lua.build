@@ -2396,6 +2396,8 @@ function MODULE_utils_network_protocols_example_ExampleProtocol()
 	end
 	function ExampleProtocol:listen()
 	    Network.host(self.protocolName)
+	    print("STARTING TO LISTEN")
+	    os.sleep(5)
 	    Network.listen(self.protocolName, nil, function(senderId, message)
 	        print(senderId, message)
 	        if type(message) ~= "table" then return end
