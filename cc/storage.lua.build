@@ -2594,13 +2594,10 @@ function MODULE_utils_network_protocols_events_EventsProtocol()
 	    self.job = job  -- The job instance that is using this protocol
 	    self.protocolName = "protocol:events"
 	    self.commands = {
-	        LOG = "LOG",
-	    }
-	    self.events = {
 	        ON_PLAYER_MOVED = "ON_PLAYER_MOVED",
 	    }
 	    self.listeners = {
-	        [self.events.ON_PLAYER_MOVED] = self.onPlayerMoved,
+	        [self.commands.ON_PLAYER_MOVED] = self.onPlayerMoved,
 	    }
 	    self.onPlayerMovedFunc = nil
 	    return self
