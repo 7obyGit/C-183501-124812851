@@ -2453,6 +2453,7 @@ function MODULE_utils_network_protocols_logging_LogProtocol()
 	    self.listeners = {
 	        LOG = self.onLog,
 	    }
+	    self.histories = {}
 	    return self
 	end
 	function LogProtocol:listen()
@@ -2478,8 +2479,22 @@ function MODULE_utils_network_protocols_logging_LogProtocol()
 	function LogProtocol:onLog(args)
 	    local sourceName = args.sourceName
 	    local printArgs = args.printArgs
+	    self.histories[sourceName] = self.histories[sourceName] or {}
+	    table.insert(self.histories[sourceName], printArgs)
+	    while #self.histories[sourceName] > 10 do
+	        table.remove(self.histories[sourceName], 1)
+	    end
 	    if self.onLogFunc == nil then return end
-	    self.onLogFunc(printArgs)
+	    self.onLogFunc(sourceName, printArgs)
+	end
+	function LogProtocol:display(sourceName)
+	    for _ = 1, 10 do print() end
+	    local history = self.histories[sourceName] or {}
+	    for _, printArgs in ipairs(history) do
+	        self.onLogFunc(sourceName, unpack(printArgs))
+	    end
+	    print("------")
+	    print(sourceName)
 	end
 	return LogProtocol
 end
