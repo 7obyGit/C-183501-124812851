@@ -286,7 +286,7 @@ function MODULE_jobs_JobManager()
 	    config.job = jobClass.name
 	    config:save()
 	    local job = jobClass.new(config)
-	    job.name = jobClass.name .. LibOs.getComputerID()
+	    job.name = jobClass.name .. ":" .. LibOs.getComputerID()
 	    if job == nil then
 	        print("Job not found: " .. jobClass.name)
 	        return

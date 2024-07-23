@@ -286,7 +286,7 @@ function MODULE_jobs_JobManager()
 	    config.job = jobClass.name
 	    config:save()
 	    local job = jobClass.new(config)
-	    job.name = jobClass.name .. LibOs.getComputerID()
+	    job.name = jobClass.name .. ":" .. LibOs.getComputerID()
 	    if job == nil then
 	        print("Job not found: " .. jobClass.name)
 	        return
@@ -2488,7 +2488,7 @@ function MODULE_utils_network_protocols_logging_LogProtocol()
 	    self.onLogFunc(sourceName, printArgs)
 	end
 	function LogProtocol:display(sourceName)
-	    for _ = 1, 10 do print() end
+	    for _ = 1, 20 do print() end
 	    local history = self.histories[sourceName] or {}
 	    for _, printArgs in ipairs(history) do
 	        if type(printArgs) == "table" then
@@ -2497,7 +2497,7 @@ function MODULE_utils_network_protocols_logging_LogProtocol()
 	        print(printArgs)
 	    end
 	    print("------")
-	    print(sourceName)
+	    print(sourceName .. "*Any Key Exit")
 	end
 	return LogProtocol
 end
