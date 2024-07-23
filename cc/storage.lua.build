@@ -2510,7 +2510,7 @@ function MODULE_utils_network_protocols_logging_LogProtocol()
 	            self.job.protocols.log:display(commandSourceName)
 	        end
 	    end
-	    self.job.protocols.log:onLogFunc(commandSourceName)
+	    self.job.protocols.log.onLogFunc(commandSourceName)
 	    while true do
 	        LibOs.sleep(1)
 	    end
