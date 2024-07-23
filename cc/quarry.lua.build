@@ -2020,7 +2020,7 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryCommands()
 	local Terminal = utils_terminal_Terminal
 	local QuarryCommands = {}
 	function QuarryCommands.commandSetup(self)
-	    print("Entering setup mode")
+	    self.log("Entering setup mode")
 	    print("Note that the fuel position is the position the turtle should be in when refueling, not the position of the fuel chest")
 	    self.config:set("fuelPosition", Vector3.fromTerminal("Enter the fuel position: "))
 	    self.config:set("dumpPosition", Vector3.fromTerminal("Enter the dump position: "))
@@ -2050,7 +2050,7 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryCommands()
 	    print("\t\tTotal Blocks: " .. totalBlocks)
 	end
 	function QuarryCommands.commandQuarryStart(self)
-	    print("Starting the quarry")
+	    self.log("Starting the quarry")
 	    self.config:set("state", self.states.QUARRY_STARTING)
 	end
 	return QuarryCommands
@@ -2102,17 +2102,17 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	    if self.config:get("minX", nil) == self.config:get("maxX", nil)
 	            and self.config:get("minY", nil) == self.config:get("maxY", nil)
 	            and self.config:get("minZ", nil) == self.config:get("maxZ", nil) then
-	        print("WARNING: No secondary position set")
-	        print("Have you called the 'setup' command?")
+	        self.log("WARNING: No secondary position set")
+	        self.log("Have you called the 'setup' command?")
 	        self.config:set("state", self.states.QUARRY_TERMINATING)
 	        return
 	    end
 	    if #self.config:get("columnsToMine") == 0 then
-	        print("WARNING: No columns to mine")
-	        print("Have you called the 'setup' command?")
+	        self.log("WARNING: No columns to mine")
+	        self.log("Have you called the 'setup' command?")
 	        self.config:set("state", self.states.QUARRY_TERMINATING)
 	    else
-	        print("Detected columns to mine, moving to the first one")
+	        self.log("Detected columns to mine, moving to the first one")
 	        self.config:set("currentColumn", self.config:getNext("columnsToMine"))
 	        self.config:set("state", self.states.QUARRY_MOVING_COLUMN)
 	    end
@@ -2121,7 +2121,7 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	    local currentPosition = Turtle.CURRENT_POSITION
 	    local currentColumn = self.config:get("currentColumn", nil)
 	    if currentColumn == nil then
-	        print("All columns mined!")
+	        self.log("All columns mined!")
 	        if Inventory.isEmpty() then
 	            self.config:set("state", self.states.QUARRY_TERMINATING)
 	        else
@@ -2132,10 +2132,10 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	    currentColumn = Vector3.new(currentColumn.x, currentPosition.y, currentColumn.z)
 	    if currentPosition:equals(currentColumn) then
 	        if Turtle.CURRENT_POSITION.y == self.config:get("maxY", currentPosition.y) then
-	            print("Column reached - digging down")
+	            self.log("Column reached - digging down")
 	            self.config:set("state", self.states.QUARRY_DIG_DOWN)
 	        else
-	            print("Column reached - digging up")
+	            self.log("Column reached - digging up")
 	            self.config:set("state", self.states.QUARRY_DIG_UP)
 	        end
 	        return
@@ -2145,8 +2145,8 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	    if not moved then
 	        local success = Turtle.safeDig(direction)
 	        if not success then
-	            print("Cannot move to the home position - turtle is stuck")
-	            print("Please move the turtle manually")
+	            self.log("Cannot move to the home position - turtle is stuck")
+	            self.log("Please move the turtle manually")
 	            self.config:set("state", self.states.COMMAND_PROMPT)
 	        end
 	    end
@@ -2154,7 +2154,7 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	function QuarryStates.onQuarryDigDown(self)
 	    local currentPosition = Turtle.CURRENT_POSITION
 	    if currentPosition.y == self.config:get("minY", currentPosition.y) then
-	        print("Digging down complete")
+	        self.log("Digging down complete")
 	        self.config:set("currentColumn", self.config:getNext("columnsToMine"))
 	        self.config:set("state", self.states.QUARRY_MOVING_COLUMN)
 	        return
@@ -2165,7 +2165,7 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	function QuarryStates.onQuarryDigUp(self)
 	    local currentPosition = Turtle.CURRENT_POSITION
 	    if currentPosition.y == self.config:get("maxY", currentPosition.y) then
-	        print("Digging up complete")
+	        self.log("Digging up complete")
 	        self.config:set("currentColumn", self.config:getNext("columnsToMine"))
 	        if Inventory.getEmptySlots() < 8 then
 	            self.config:set("state", self.states.QUARRY_DUMP)
@@ -2200,8 +2200,8 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	    if not moved then
 	        local success = Turtle.safeDig(direction)
 	        if not success then
-	            print("Cannot move to the home position - turtle is stuck")
-	            print("Please move the turtle manually")
+	            self.log("Cannot move to the home position - turtle is stuck")
+	            self.log("Please move the turtle manually")
 	            self.config:set("state", self.states.COMMAND_PROMPT)
 	        end
 	    end
@@ -2210,7 +2210,7 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	    local currentPosition = Turtle.CURRENT_POSITION
 	    local dumpPosition = Vector3.new(self.config:get("dumpPosition", currentPosition))
 	    if currentPosition:equals(dumpPosition) then
-	        print("Dumping items")
+	        self.log("Dumping items")
 	        Turtle.dump()
 	        self.config:set("state", self.states.QUARRY_REFUEL)
 	        return
@@ -2225,8 +2225,8 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	    if not moved then
 	        local success = Turtle.safeDig(direction)
 	        if not success then
-	            print("Cannot move to the home position - turtle is stuck")
-	            print("Please move the turtle manually")
+	            self.log("Cannot move to the home position - turtle is stuck")
+	            self.log("Please move the turtle manually")
 	            self.config:set("state", self.states.COMMAND_PROMPT)
 	        end
 	    end
@@ -2235,7 +2235,7 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	    local currentPosition = Turtle.CURRENT_POSITION
 	    local homePosition = Vector3.new(self.config:get("homePosition", currentPosition))
 	    if currentPosition:equals(homePosition) then
-	        print("Quarry terminating")
+	        self.log("Quarry terminating")
 	        self.config:set("state", self.states.COMMAND_PROMPT)
 	        return
 	    end
@@ -2249,8 +2249,8 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	    if not moved then
 	        local success = Turtle.safeDig(direction)
 	        if not success then
-	            print("Cannot move to the home position - turtle is stuck")
-	            print("Please move the turtle manually")
+	            self.log("Cannot move to the home position - turtle is stuck")
+	            self.log("Please move the turtle manually")
 	            self.config:set("state", self.states.COMMAND_PROMPT)
 	        end
 	    end
@@ -2989,6 +2989,96 @@ end
 local utils_storage_codedinventory_CodedInventory = MODULE_utils_storage_codedinventory_CodedInventory()
 
 
+function MODULE_utils_network_protocols_logging_LogProtocol()
+	local Terminal = utils_terminal_Terminal
+	local Network = utils_network_Network
+	local LibOs = utils_libs_LibOs
+	local LogProtocol = {}
+	LogProtocol.__index = LogProtocol
+	function LogProtocol.new(job, onLogFunc)
+	    local self = setmetatable({}, LogProtocol)
+	    self.job = job  -- The job instance that is using this protocol
+	    self.onLogFunc = onLogFunc
+	    self.protocolName = "protocol:log"
+	    self.commands = {
+	        LOG = "LOG",
+	    }
+	    self.listeners = {
+	        LOG = self.onLog,
+	    }
+	    self.histories = {}
+	    return self
+	end
+	function LogProtocol:listen()
+	    Network.host(self.protocolName)
+	    Network.listen(self.protocolName, nil, function(senderId, message)
+	        if type(message) ~= "table" then return end
+	        local command = message.command
+	        local args = message.message
+	        local listener = self.listeners[command]
+	        if listener == nil then return end
+	        listener(self, args)
+	    end)
+	end
+	function LogProtocol:_send(command, message)
+	    Network.broadcast({
+	        command = command,
+	        message = message,
+	    }, self.protocolName)
+	end
+	function LogProtocol:sendLog(...)
+	    self:_send(self.commands.LOG, {sourceName = self.job.name, printArgs = ...})
+	end
+	function LogProtocol:onLog(args)
+	    local sourceName = args.sourceName
+	    local printArgs = args.printArgs
+	    self.histories[sourceName] = self.histories[sourceName] or {}
+	    table.insert(self.histories[sourceName], printArgs)
+	    while #self.histories[sourceName] > 10 do
+	        table.remove(self.histories[sourceName], 1)
+	    end
+	    if self.onLogFunc == nil then return end
+	    self.onLogFunc(sourceName, printArgs)
+	end
+	function LogProtocol:display(sourceName)
+	    for _ = 1, 20 do print() end
+	    local history = self.histories[sourceName] or {}
+	    for _, printArgs in ipairs(history) do
+	        if type(printArgs) == "table" then
+	            printArgs = table.concat(printArgs, " ")
+	        end
+	        print(printArgs)
+	    end
+	    Terminal.writeLineBreak()
+	    print(sourceName)
+	    print("            *Any Key Exit")
+	end
+	local function waitForKey(self)
+	    local _, key = LibOs.pullEvent("key")
+	end
+	local function viewLogs(self, commandSourceName)
+	    self.job.protocols.log.onLogFunc = function(updatedSourceName, ...)
+	        if commandSourceName == updatedSourceName then
+	            self.job.protocols.log:display(commandSourceName)
+	        end
+	    end
+	    self.job.protocols.log.onLogFunc(commandSourceName)
+	    while true do
+	        LibOs.sleep(1)
+	    end
+	end
+	function LogProtocol:view(sourceName)
+	    parallel.waitForAny(
+	        function() viewLogs(self, sourceName) end,
+	        function() waitForKey(self) end
+	    )
+	    self.job.protocols.log.onLogFunc = nil
+	end
+	return LogProtocol
+end
+local utils_network_protocols_logging_LogProtocol = MODULE_utils_network_protocols_logging_LogProtocol()
+
+
 function MODULE_jobs_definitions_mobile_quarry_QuarryJob()
 	local Turtle = turtle_Turtle
 	local Inventory = turtle_Inventory
@@ -3001,6 +3091,7 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryJob()
 	local CodedInventory = utils_storage_codedinventory_CodedInventory
 	local Text = utils_text_Text
 	local Job = jobs_Job
+	local LogProtocol = utils_network_protocols_logging_LogProtocol
 	local QuarryJob = {}
 	QuarryJob.__index = QuarryJob
 	QuarryJob.name = Job.QUARRY
@@ -3040,6 +3131,9 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryJob()
 	    }
 	    self.codedInventory = CodedInventory.new()
 	    self.codedInventory:addDefaultListeners()
+	    self.protocols = {
+	        log = LogProtocol.new(self),
+	    }
 	    return self
 	end
 	function QuarryJob:onStart()
@@ -3059,7 +3153,7 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryJob()
 	        end
 	        local stateAction = self.stateActions[state]
 	        if stateAction == nil then
-	            print("Invalid state: " .. state)
+	            self.log("Invalid state: " .. state)
 	            self.config:set("state", self.states.COMMAND_PROMPT)
 	            return
 	        end
@@ -3070,7 +3164,7 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryJob()
 	    local state = self.config:get("state", self.states.COMMAND_PROMPT)
 	    local stateAction = self.stateActions[state]
 	    if stateAction == nil then
-	        print("Invalid state: " .. state)
+	        self.log("Invalid state: " .. state)
 	        self.config:set("state", self.states.COMMAND_PROMPT)
 	        return
 	    end
