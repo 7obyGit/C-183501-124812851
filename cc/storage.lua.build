@@ -2374,6 +2374,68 @@ end
 local utils_math_Math = MODULE_utils_math_Math()
 
 
+function MODULE_utils_network_protocols_example_ExampleProtocol()
+	local Network = utils_network_Network
+	local ExampleProtocol = {}
+	ExampleProtocol.__index = ExampleProtocol
+	function ExampleProtocol.new(job)
+	    local self = setmetatable({}, ExampleProtocol)
+	    self.job = job  -- The job instance that is using this protocol
+	    self.protocolName = "protocol:example"
+	    self.commands = {
+	        EXAMPLE1 = "EXAMPLE2",
+	        EXAMPLE2 = "EXAMPLE2",
+	        EXAMPLE3 = "EXAMPLE3",
+	    }
+	    self.listeners = {
+	        EXAMPLE1 = self.onExample1,
+	        EXAMPLE2 = self.onExample2,
+	        EXAMPLE3 = self.onExample3,
+	    }
+	    return self
+	end
+	function ExampleProtocol:listen()
+	    Network.host(self.protocolName)
+	    Network.listen(self.protocolName, nil, function(senderId, message)
+	        if type(message) ~= "table" then return end
+	        local command = message.command
+	        local args = message.message
+	        local listener = self.listeners[command]
+	        if listener == nil then return end
+	        listener(self, args)
+	    end)
+	end
+	function ExampleProtocol:_send(command, message)
+	    Network.broadcast({
+	        command = command,
+	        message = message,
+	    }, self.protocolName)
+	end
+	function ExampleProtocol:sendExample1()
+	    self:_send(self.commands.EXAMPLE1, "Example with no arguments")
+	end
+	function ExampleProtocol:onExample1()
+	    print("Example1 received")
+	end
+	function ExampleProtocol:sendExample2(arg)
+	    self:_send(self.commands.EXAMPLE1, arg)
+	end
+	function ExampleProtocol:onExample2(arg)
+	    print("Example2 received with argument: " .. arg)
+	end
+	function ExampleProtocol:sendExample3(arg1, arg2)
+	    self:_send(self.commands.EXAMPLE3, {arg1 = arg1, arg2 = arg2})
+	end
+	function ExampleProtocol:onExample3(args)
+	    local arg1 = args.arg1
+	    local arg2 = args.arg2
+	    print("Example3 received with arguments: " .. arg1 .. ", " .. arg2)
+	end
+	return ExampleProtocol
+end
+local utils_network_protocols_example_ExampleProtocol = MODULE_utils_network_protocols_example_ExampleProtocol()
+
+
 function MODULE_jobs_definitions_static_StorageJob()
 	local Storage = utils_storage_Storage
 	local Blocks  = utils_blocks_Blocks
@@ -2385,6 +2447,7 @@ function MODULE_jobs_definitions_static_StorageJob()
 	local Text = utils_text_Text
 	local Math = utils_math_Math
 	local Job = jobs_Job
+	local ExampleProtocol = utils_network_protocols_example_ExampleProtocol
 	local StorageJob = {}
 	StorageJob.__index = StorageJob
 	StorageJob.name = Job.STORAGE
@@ -2408,6 +2471,9 @@ function MODULE_jobs_definitions_static_StorageJob()
 	    self.states = {
 	        SETUP = "SETUP",
 	        COMMAND_PROMPT = "COMMAND_PROMPT",
+	    }
+	    self.protocols = {
+	        example = ExampleProtocol.new(self),
 	    }
 	    return self
 	end
