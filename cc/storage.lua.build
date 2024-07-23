@@ -259,6 +259,7 @@ function MODULE_utils_network_Network()
 	    if not Network.isOpen() then return print("Network is not open") end
 	    while true do
 	        local senderId, message = rednet.receive(protocol, timeout)
+	        print("Network.listen", senderId, message)
 	        func(senderId, message)
 	    end
 	end
@@ -268,6 +269,7 @@ function MODULE_utils_network_Network()
 	end
 	function Network.broadcast(message, protocol)
 	    if not Network.isOpen() then return print("Network is not open") end
+	    print("Network.broadcast", message, protocol)
 	    rednet.broadcast(message, protocol)
 	end
 	return Network
@@ -2396,8 +2398,6 @@ function MODULE_utils_network_protocols_example_ExampleProtocol()
 	end
 	function ExampleProtocol:listen()
 	    Network.host(self.protocolName)
-	    print("STARTING TO LISTEN")
-	    os.sleep(5)
 	    Network.listen(self.protocolName, nil, function(senderId, message)
 	        print(senderId, message)
 	        if type(message) ~= "table" then return end
