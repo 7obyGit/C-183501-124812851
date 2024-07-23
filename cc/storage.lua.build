@@ -2397,6 +2397,7 @@ function MODULE_utils_network_protocols_example_ExampleProtocol()
 	function ExampleProtocol:listen()
 	    Network.host(self.protocolName)
 	    Network.listen(self.protocolName, nil, function(senderId, message)
+	        print(senderId, message)
 	        if type(message) ~= "table" then return end
 	        local command = message.command
 	        local args = message.message
