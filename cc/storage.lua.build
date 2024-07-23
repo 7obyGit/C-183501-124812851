@@ -2491,7 +2491,10 @@ function MODULE_utils_network_protocols_logging_LogProtocol()
 	    for _ = 1, 10 do print() end
 	    local history = self.histories[sourceName] or {}
 	    for _, printArgs in ipairs(history) do
-	        self.onLogFunc(sourceName, printArgs)
+	        if type(printArgs) == "table" then
+	            printArgs = table.concat(printArgs, " ")
+	        end
+	        print(printArgs)
 	    end
 	    print("------")
 	    print(sourceName)
