@@ -2505,12 +2505,12 @@ function MODULE_utils_network_protocols_logging_LogProtocol()
 	    local _, key = LibOs.pullEvent("key")
 	end
 	local function viewLogs(self, commandSourceName)
-	    self.protocols.log.onLogFunc = function(updatedSourceName, ...)
+	    self.job.protocols.log.onLogFunc = function(updatedSourceName, ...)
 	        if commandSourceName == updatedSourceName then
-	            self.protocols.log:display(commandSourceName)
+	            self.job.protocols.log:display(commandSourceName)
 	        end
 	    end
-	    self.protocols.log:onLogFunc(commandSourceName)
+	    self.job.protocols.log:onLogFunc(commandSourceName)
 	    while true do
 	        LibOs.sleep(1)
 	    end
