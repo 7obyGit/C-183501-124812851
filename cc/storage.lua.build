@@ -2440,6 +2440,7 @@ local utils_network_protocols_example_ExampleProtocol = MODULE_utils_network_pro
 
 function MODULE_utils_network_protocols_logging_LogProtocol()
 	local Network = utils_network_Network
+	local LibOs = utils_libs_LibOs
 	local LogProtocol = {}
 	LogProtocol.__index = LogProtocol
 	function LogProtocol.new(job, onLogFunc)
@@ -2499,6 +2500,26 @@ function MODULE_utils_network_protocols_logging_LogProtocol()
 	    print("------")
 	    print(sourceName)
 	    print("            *Any Key Exit")
+	end
+	local function waitForKey(self)
+	    local _, key = LibOs.pullEvent("key")
+	end
+	local function viewLogs(self, commandSourceName)
+	    self.protocols.log.onLogFunc = function(updatedSourceName, ...)
+	        if commandSourceName == updatedSourceName then
+	            self.protocols.log:display(commandSourceName)
+	        end
+	    end
+	    self.protocols.log:onLogFunc(commandSourceName)
+	    while true do
+	        LibOs.sleep(1)
+	    end
+	end
+	function LogProtocol:view(sourceName)
+	    parallel.waitForAny(
+	        function() viewLogs(self, sourceName) end,
+	        function() waitForKey(self) end
+	    )
 	end
 	return LogProtocol
 end
