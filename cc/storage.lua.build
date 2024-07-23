@@ -2600,7 +2600,7 @@ function MODULE_utils_network_protocols_events_EventsProtocol()
 	        ON_PLAYER_MOVED = "ON_PLAYER_MOVED",
 	    }
 	    self.listeners = {
-	        [self.eventListeners.ON_PLAYER_MOVED] = self.onPlayerMoved,
+	        [self.events.ON_PLAYER_MOVED] = self.onPlayerMoved,
 	    }
 	    self.onPlayerMovedFunc = nil
 	    return self
