@@ -2479,7 +2479,7 @@ function MODULE_utils_network_protocols_logging_LogProtocol()
 	    local sourceName = args.sourceName
 	    local printArgs = args.printArgs
 	    if self.onLogFunc == nil then return end
-	    self.onLogFunc(table.unpack(printArgs))
+	    self.onLogFunc(printArgs)
 	end
 	return LogProtocol
 end
