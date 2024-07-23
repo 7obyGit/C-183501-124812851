@@ -306,6 +306,11 @@ function MODULE_jobs_JobManager()
 	            print("Network is not open - cannot use protocols defined for job")
 	        end
 	    end
+	    if job.backgroundTasks ~= nil then
+	        for _, backgroundTask in ipairs(job.backgroundTasks) do
+	            p:addTask(function() backgroundTask(job, config) end)
+	        end
+	    end
 	    p:addTask(function() JobManager.runBackgroundTask(job, config) end)
 	    p:waitForAny()
 	    job:onComplete()
@@ -2383,68 +2388,6 @@ end
 local utils_math_Math = MODULE_utils_math_Math()
 
 
-function MODULE_utils_network_protocols_example_ExampleProtocol()
-	local Network = utils_network_Network
-	local ExampleProtocol = {}
-	ExampleProtocol.__index = ExampleProtocol
-	function ExampleProtocol.new(job)
-	    local self = setmetatable({}, ExampleProtocol)
-	    self.job = job  -- The job instance that is using this protocol
-	    self.protocolName = "protocol:example"
-	    self.commands = {
-	        EXAMPLE1 = "EXAMPLE2",
-	        EXAMPLE2 = "EXAMPLE2",
-	        EXAMPLE3 = "EXAMPLE3",
-	    }
-	    self.listeners = {
-	        EXAMPLE1 = self.onExample1,
-	        EXAMPLE2 = self.onExample2,
-	        EXAMPLE3 = self.onExample3,
-	    }
-	    return self
-	end
-	function ExampleProtocol:listen()
-	    Network.host(self.protocolName)
-	    Network.listen(self.protocolName, nil, function(senderId, message)
-	        if type(message) ~= "table" then return end
-	        local command = message.command
-	        local args = message.message
-	        local listener = self.listeners[command]
-	        if listener == nil then return end
-	        listener(self, args)
-	    end)
-	end
-	function ExampleProtocol:_send(command, message)
-	    Network.broadcast({
-	        command = command,
-	        message = message,
-	    }, self.protocolName)
-	end
-	function ExampleProtocol:sendExample1()
-	    self:_send(self.commands.EXAMPLE1, "Example with no arguments")
-	end
-	function ExampleProtocol:onExample1()
-	    print("Example1 received")
-	end
-	function ExampleProtocol:sendExample2(arg)
-	    self:_send(self.commands.EXAMPLE1, arg)
-	end
-	function ExampleProtocol:onExample2(arg)
-	    print("Example2 received with argument: " .. arg)
-	end
-	function ExampleProtocol:sendExample3(arg1, arg2)
-	    self:_send(self.commands.EXAMPLE3, {arg1 = arg1, arg2 = arg2})
-	end
-	function ExampleProtocol:onExample3(args)
-	    local arg1 = args.arg1
-	    local arg2 = args.arg2
-	    print("Example3 received with arguments: " .. arg1 .. ", " .. arg2)
-	end
-	return ExampleProtocol
-end
-local utils_network_protocols_example_ExampleProtocol = MODULE_utils_network_protocols_example_ExampleProtocol()
-
-
 function MODULE_utils_network_protocols_logging_LogProtocol()
 	local Terminal = utils_terminal_Terminal
 	local Network = utils_network_Network
@@ -2535,6 +2478,165 @@ end
 local utils_network_protocols_logging_LogProtocol = MODULE_utils_network_protocols_logging_LogProtocol()
 
 
+function MODULE_utils_peripherals_PlayerDetector()
+	local Table = utils_data_Table
+	local PlayerDetector = {}
+	PlayerDetector.detector = peripheral.find("playerDetector")
+	function PlayerDetector.onPlayerClick(func)
+	    while true do
+	        local event, username, device = os.pullEvent("playerClick")
+	        func(event, username, device)
+	    end
+	end
+	function PlayerDetector.onPlayerJoin(func)
+	    while true do
+	        local event, username, dimension = os.pullEvent("playerJoin")
+	        func(event, username, dimension)
+	    end
+	end
+	function PlayerDetector.onPlayerLeave(func)
+	    while true do
+	        local event, username, dimension = os.pullEvent("playerLeave")
+	        func(event, username, dimension)
+	    end
+	end
+	function PlayerDetector.onPlayerEnterRange(func, range, period)
+	    local oldPlayers = {}
+	    while true do
+	        os.sleep(period)
+	        local newPlayers = PlayerDetector.getPlayersInRange(range)
+	        local playersAdded = {}
+	        for _, player in ipairs(newPlayers) do
+	            if not Table.contains(oldPlayers, player) then
+	                table.insert(playersAdded, player)
+	            end
+	        end
+	        func(playersAdded)
+	    end
+	end
+	function PlayerDetector.onPlayerLeaveRange(func, range, period)
+	    local oldPlayers = {}
+	    while true do
+	        os.sleep(period)
+	        local newPlayers = PlayerDetector.getPlayersInRange(range)
+	        local playersRemoved = {}
+	        for _, player in ipairs(oldPlayers) do
+	            if not Table.contains(newPlayers, player) then
+	                table.insert(playersRemoved, player)
+	            end
+	        end
+	        func(playersRemoved)
+	    end
+	end
+	function PlayerDetector.onPlayerChangedDimension(func)
+	    while true do
+	        local event, username, fromDim, toDim = os.pullEvent("playerChangedDimension")
+	        func(event, username, fromDim, toDim)
+	    end
+	end
+	function PlayerDetector.onPlayerMoved(func, username, period)
+	    if username == nil then error("No username provided to PlayerDetector.onPlayerMoved") end
+	    if period == nil then period = 5 end  -- Default period of 5 seconds
+	    local oldPosition = PlayerDetector.getPlayer(username)
+	    while true do
+	        os.sleep(period)
+	        local newPosition = PlayerDetector.getPlayer(username)
+	        if oldPosition.x ~= newPosition.x or oldPosition.y ~= newPosition.y or oldPosition.z ~= newPosition.z then
+	            func(username, oldPosition, newPosition)
+	            oldPosition = newPosition
+	        end
+	    end
+	end
+	function PlayerDetector.getPlayer(username)
+	    return PlayerDetector.detector.getPlayer(username)
+	end
+	function PlayerDetector.getOnlinePlayers()
+	    return PlayerDetector.detector.getOnlinePlayers()
+	end
+	function PlayerDetector.getPlayersInRange(range)
+	    return PlayerDetector.detector.getPlayersInRange(range)
+	end
+	function PlayerDetector.getPlayersInCoords(firstPosition, secondPosition)
+	    return PlayerDetector.detector.getPlayersInCoords(firstPosition, secondPosition)
+	end
+	function PlayerDetector.getPlayersInCubic(width, height, depth)
+	    return PlayerDetector.detector.getPlayersInCubic(width, height, depth)
+	end
+	function PlayerDetector.isPlayerInRange(range, username)
+	    return PlayerDetector.detector.isPlayerInRange(range, username)
+	end
+	function PlayerDetector.isPlayerInCoords(firstPosition, secondPosition, username)
+	    return PlayerDetector.detector.isPlayerInCoords(firstPosition, secondPosition, username)
+	end
+	function PlayerDetector.isPlayerInCubic(width, height, depth, username)
+	    return PlayerDetector.detector.isPlayerInCubic(width, height, depth, username)
+	end
+	function PlayerDetector.isPlayersInRange(range)
+	    return PlayerDetector.detector.isPlayersInRange(range)
+	end
+	function PlayerDetector.isPlayersInCoords(firstPosition, secondPosition)
+	    return PlayerDetector.detector.isPlayerInCoords(firstPosition, secondPosition)
+	end
+	function PlayerDetector.isPlayersInCubic(width, height, depth)
+	    return PlayerDetector.detector.isPlayersInCubic(width, height, depth)
+	end
+	return PlayerDetector
+end
+local utils_peripherals_PlayerDetector = MODULE_utils_peripherals_PlayerDetector()
+
+
+function MODULE_utils_network_protocols_events_EventsProtocol()
+	local Network = utils_network_Network
+	local EventsProtocol = {}
+	EventsProtocol.__index = EventsProtocol
+	function EventsProtocol.new(job)
+	    local self = setmetatable({}, EventsProtocol)
+	    self.job = job  -- The job instance that is using this protocol
+	    self.protocolName = "protocol:events"
+	    self.commands = {
+	        LOG = "LOG",
+	    }
+	    self.events = {
+	        ON_PLAYER_MOVED = "ON_PLAYER_MOVED",
+	    }
+	    self.listeners = {
+	        [self.eventListeners.ON_PLAYER_MOVED] = self.onPlayerMoved,
+	    }
+	    self.onPlayerMovedFunc = nil
+	    return self
+	end
+	function EventsProtocol:listen()
+	    Network.host(self.protocolName)
+	    Network.listen(self.protocolName, nil, function(senderId, message)
+	        if type(message) ~= "table" then return end
+	        local command = message.command
+	        local args = message.message
+	        local listener = self.listeners[command]
+	        if listener == nil then return end
+	        listener(self, args)
+	    end)
+	end
+	function EventsProtocol:_send(command, message)
+	    Network.broadcast({
+	        command = command,
+	        message = message,
+	    }, self.protocolName)
+	end
+	function EventsProtocol:sendOnPlayerMoved(username, oldPosition, newPosition)
+	    self:_send(self.commands.ON_PLAYER_MOVED, {username = username, oldPosition = oldPosition, newPosition = newPosition})
+	end
+	function EventsProtocol:onPlayerMoved(args)
+	    local username = args.username
+	    local oldPosition = args.oldPosition
+	    local newPosition = args.newPosition
+	    if self.onPlayerMovedFunc == nil then return end
+	    self.onPlayerMovedFunc(username, oldPosition, newPosition)
+	end
+	return EventsProtocol
+end
+local utils_network_protocols_events_EventsProtocol = MODULE_utils_network_protocols_events_EventsProtocol()
+
+
 function MODULE_jobs_definitions_static_StorageJob()
 	local Storage = utils_storage_Storage
 	local Blocks  = utils_blocks_Blocks
@@ -2546,13 +2648,17 @@ function MODULE_jobs_definitions_static_StorageJob()
 	local Text = utils_text_Text
 	local Math = utils_math_Math
 	local Job = jobs_Job
-	local ExampleProtocol = utils_network_protocols_example_ExampleProtocol
 	local LogProtocol = utils_network_protocols_logging_LogProtocol
+	local PlayerDetector = utils_peripherals_PlayerDetector
+	local EventsProtocol = utils_network_protocols_events_EventsProtocol
 	local StorageJob = {}
 	StorageJob.__index = StorageJob
 	StorageJob.name = Job.STORAGE
 	function StorageJob.new(config)
 	    local self = setmetatable({}, StorageJob)
+	    self.backgroundTasks = {
+	        function() if PlayerDetector.detector ~= nil then PlayerDetector.onPlayerMoved(self.protocols.events.onPlayerMoved) end end,
+	    }
 	    self.backgroundTask = function() self:onBackgroundStep() end
 	    self.backgroundDelay = 5  -- This task should be infrequent
 	    self.storage = nil
@@ -2573,8 +2679,8 @@ function MODULE_jobs_definitions_static_StorageJob()
 	        COMMAND_PROMPT = "COMMAND_PROMPT",
 	    }
 	    self.protocols = {
-	        example = ExampleProtocol.new(self),
 	        log = LogProtocol.new(self),
+	        events = EventsProtocol.new(self),
 	    }
 	    return self
 	end

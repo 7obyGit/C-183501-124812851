@@ -306,6 +306,11 @@ function MODULE_jobs_JobManager()
 	            print("Network is not open - cannot use protocols defined for job")
 	        end
 	    end
+	    if job.backgroundTasks ~= nil then
+	        for _, backgroundTask in ipairs(job.backgroundTasks) do
+	            p:addTask(function() backgroundTask(job, config) end)
+	        end
+	    end
 	    p:addTask(function() JobManager.runBackgroundTask(job, config) end)
 	    p:waitForAny()
 	    job:onComplete()
