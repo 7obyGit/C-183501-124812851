@@ -287,6 +287,10 @@ function MODULE_jobs_JobManager()
 	    config:save()
 	    local job = jobClass.new(config)
 	    job.name = jobClass.name .. ":" .. LibOs.getComputerID()
+	    job.log = function(...)
+	        print(...)
+	        if job.protocols ~= nil then job.protocols.log:sendLog(...) end
+	    end
 	    if job == nil then
 	        print("Job not found: " .. jobClass.name)
 	        return
@@ -2601,7 +2605,6 @@ function MODULE_jobs_definitions_static_StorageJob()
 	    end
 	end
 	function StorageJob:onBackgroundStep()
-	    self.protocols.log:sendLog("Hello world!")
 	    if self.config:get("state", nil) == self.states.COMMAND_PROMPT then
 	        self.storage:dumpAllInputs()
 	        self.storage:populateKeepFilledBarrels()
