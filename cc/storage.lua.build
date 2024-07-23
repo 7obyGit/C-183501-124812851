@@ -2490,7 +2490,7 @@ function MODULE_utils_network_protocols_logging_LogProtocol()
 	    local printArgs = args.printArgs
 	    self.histories[sourceName] = self.histories[sourceName] or {}
 	    table.insert(self.histories[sourceName], printArgs)
-	    while #self.histories[sourceName] > 10 do
+	    while #self.histories[sourceName] > 20 do
 	        table.remove(self.histories[sourceName], 1)
 	    end
 	    if self.onLogFunc == nil then return end
