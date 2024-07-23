@@ -2623,12 +2623,14 @@ function MODULE_utils_network_protocols_events_EventsProtocol()
 	    }, self.protocolName)
 	end
 	function EventsProtocol:sendOnPlayerMoved(username, oldPosition, newPosition)
+	    print("CALLED SEND ON PLAYER MOVED")
 	    self:_send(self.commands.ON_PLAYER_MOVED, {username = username, oldPosition = oldPosition, newPosition = newPosition})
 	end
 	function EventsProtocol:onPlayerMoved(args)
 	    local username = args.username
 	    local oldPosition = args.oldPosition
 	    local newPosition = args.newPosition
+	    print("RECEIVED ON PLAYER MOVED")
 	    if self.onPlayerMovedFunc == nil then return end
 	    self.onPlayerMovedFunc(username, oldPosition, newPosition)
 	end
