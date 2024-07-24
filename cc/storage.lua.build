@@ -2682,6 +2682,7 @@ function MODULE_utils_peripherals_EnvironmentDetector()
 	function EnvironmentDetector.getEntities(range)
 	    for k, v in pairs(EnvironmentDetector.detector) do
 	        print(k, v)
+	        os.sleep(0.5)
 	    end
 	    return EnvironmentDetector.detector.getEntities(range)
 	end
