@@ -2718,6 +2718,8 @@ function MODULE_utils_peripherals_EnvironmentDetector()
 	        local newEntities = EnvironmentDetector.getEntities(range, searchString)
 	        local entitiesAdded = {}
 	        local entitiesRemoved = {}
+	        print("Old entities: " .. Table.serialise(oldEntities))
+	        print("New entities: " .. Table.serialise(newEntities))
 	        entitiesAdded = Table.difference(newEntities, oldEntities)
 	        entitiesRemoved = Table.difference(oldEntities, newEntities)
 	        if #entitiesAdded > 0 then
