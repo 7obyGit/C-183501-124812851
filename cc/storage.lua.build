@@ -3087,61 +3087,10 @@ end
 local utils_network_protocols_remoteperipherals_ChatProtocol = MODULE_utils_network_protocols_remoteperipherals_ChatProtocol()
 
 
-function MODULE_utils_other_Debug()
-	local LibOs = utils_libs_LibOs
-	local Debug = {}
-	function Debug.showFields(obj)
-	    if type(obj) ~= "table" then
-	        print("Not a table")
-	        print(type(obj))
-	        return
-	    end
-	    local fields = {}
-	    for k, v in pairs(obj) do
-	        if type(v) ~= "function" then
-	            table.insert(fields, k)
-	        end
-	    end
-	    table.sort(fields)
-	    for _, field in ipairs(fields) do
-	        print(field)
-	    end
-	    LibOs.sleep(1)
-	end
-	function Debug.showMethods(obj)
-	    if type(obj) ~= "table" then
-	        print("Not a table")
-	        print(type(obj))
-	        return
-	    end
-	    local methods = {}
-	    for k, v in pairs(obj) do
-	        if type(v) == "function" then
-	            table.insert(methods, k)
-	        end
-	    end
-	    table.sort(methods)
-	    for _, method in ipairs(methods) do
-	        print(method)
-	    end
-	    LibOs.sleep(1)
-	end
-	function Debug.showFieldsAndMethods(obj)
-	    Debug.showFields(obj)
-	    Debug.showMethods(obj)
-	    LibOs.sleep(3)
-	end
-	return Debug
-end
-local utils_other_Debug = MODULE_utils_other_Debug()
-
-
 function MODULE_utils_peripherals_GeoScanner()
 	local LibOs = utils_libs_LibOs
-	local Debug = utils_other_Debug
 	local GeoScanner = {}
 	GeoScanner.scanner = peripheral.find("geoScanner")
-	Debug.showFieldsAndMethods(GeoScanner.scanner)
 	function GeoScanner.monitor(func, radius)
 	    while true do
 	        local blocks = GeoScanner.scan(radius)
@@ -3246,7 +3195,10 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	end
 	function StorageJob:onStart()
 	    print(GeoScanner.getScanCooldown())
-	    print(GeoScanner.scan(3))
+	    local blocks = GeoScanner.scan(3)
+	    for _, block in ipairs(blocks) do
+	        print(textutils.serializeJSON(block))
+	    end
 	    LibOs.sleep(5)
 	    self.config:set("alive", true)
 	    local storageConfig = self.config:get("storageConfig", nil)
