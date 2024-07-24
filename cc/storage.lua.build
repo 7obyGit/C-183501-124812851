@@ -2901,10 +2901,12 @@ function MODULE_jobs_definitions_static_storage_StorageJobBackgroundTasks()
 	local StorageJobBackgroundTasks = {}
 	function StorageJobBackgroundTasks.onEntityEnter(self, entities)
 	    for _, entity in ipairs(entities) do
+	        local message = "Mi: " .. Math.round(entity.x) .. " " .. Math.round(entity.y) .. " " .. Math.round(entity.z)
 	        self.logToChannel(
 	            LogChannels.ALERTS,
-	            "Mi: " .. Math.round(entity.x) .. " " .. Math.round(entity.y) .. " " .. Math.round(entity.z)
+	            message
 	        )
+	        self.protocols.chat:sendMessage("Alert", message)
 	    end
 	end
 	function StorageJobBackgroundTasks.onEntityLeave(self, entities)
