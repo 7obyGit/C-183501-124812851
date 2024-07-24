@@ -1574,6 +1574,7 @@ function MODULE_utils_text_Text()
 	    local bestMatch = nil
 	    local bestScore = math.huge
 	    for id, group in pairs(identifierGroups) do
+	        print(id, group)
 	        local simplifiedId = Text.simplifyIdentifier(id)
 	        local score = Text.levenshtein(input, simplifiedId)
 	        if score < bestScore then
