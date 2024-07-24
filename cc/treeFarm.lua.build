@@ -1,0 +1,3360 @@
+function MODULE_utils_other_file()
+	return {
+	    readText = function (path)
+	        local file = fs.open(path, "r")
+	        if file == nil then
+	            return nil
+	        end
+	        local content = file.readAll()
+	        file.close()
+	        return content
+	    end,
+	    writeText = function (path, content)
+	        local file = fs.open(path, "w")
+	        file.write(content)
+	        file.close()
+	    end,
+	}
+end
+local utils_other_file = MODULE_utils_other_file()
+
+
+function MODULE_jobs_Job()
+	local Job = {}
+	Job.EXAMPLE = "ExampleJob"
+	Job.IDLE = "IdleJob"
+	Job.SETUP = "SetupJob"
+	Job.PROGRAMMABLE_JOB = "ProgrammableJob"
+	Job.QUARRY = "QuarryJob"
+	Job.TREE_FARM = "TreeFarmJob"
+	Job.STORAGE = "StorageJob"
+	Job.TABLET_CONTROLLER = "TabletControllerJob"
+	Job.SCANNER = "ScannerJob"
+	return Job
+end
+local jobs_Job = MODULE_jobs_Job()
+
+
+function MODULE_utils_config_JobConfig()
+	local file = utils_other_file
+	local Job       = jobs_Job
+	local JobConfig = {}
+	JobConfig.__index = JobConfig
+	function JobConfig.new()
+	    local self = setmetatable({
+	        name = "My Computer",
+	        job = Job.IDLE,
+	        state = {},  -- Data specific to a job that is saved between runs
+	    }, JobConfig)
+	    return self
+	end
+	function JobConfig.fromTable(table)
+	    local self = JobConfig.new()
+	    self.name = table.name or self.name
+	    self.job = table.job or self.job
+	    self.state = table.state or self.state
+	    return self
+	end
+	function JobConfig:toTable()
+	    return {
+	        name = self.name,
+	        job = self.job,
+	        state = self.state,
+	    }
+	end
+	function JobConfig:serializeJson()
+	    return textutils.serialize(self:toTable())
+	end
+	function JobConfig.deserializeJson(json)
+	    local success, configAttributes = pcall(textutils.unserialize, json)
+	    if not success or configAttributes == nil then
+	        configAttributes = textutils.unserializeJSON(json)
+	    end
+	    local config = JobConfig.fromTable(configAttributes)
+	    return config
+	end
+	function JobConfig:save()
+	    file.writeText("job.json", self:serializeJson())
+	end
+	function JobConfig.load()
+	    local config = nil
+	    local content = file.readText("job.json")
+	    if content == nil then
+	        config = JobConfig.new()
+	    else
+	        config = JobConfig.deserializeJson(content)
+	    end
+	    config:save()  -- Save any default values that were missing
+	    return config
+	end
+	function JobConfig:get(key, defaultValue)
+	    return self.state[key] or defaultValue
+	end
+	function JobConfig:set(key, value)
+	    self.state[key] = value
+	    self:save()
+	end
+	function JobConfig:init(key, defaultValue)
+	    if self:get(key, nil) == nil then
+	        self:set(key, defaultValue)
+	    end
+	end
+	function JobConfig:getNext(key, defaultValue)
+	    local list = self:get(key, {})
+	    if #list == 0 then
+	        return defaultValue
+	    end
+	    local value = table.remove(list, 1)
+	    if #list > 0 then
+	        self:set(key, list)
+	    else
+	        self:set(key, nil)
+	    end
+	    return value
+	end
+	function JobConfig:dequeue(key, defaultValue)
+	    return self:getNext(key, defaultValue)
+	end
+	function JobConfig:enqueue(key, value)
+	    local list = self:get(key, {})
+	    table.insert(list, value)
+	    self:set(key, list)
+	end
+	return JobConfig
+end
+local utils_config_JobConfig = MODULE_utils_config_JobConfig()
+
+
+function MODULE_utils_controlflow_Parallel()
+	local Parallel = {}
+	Parallel.__index = Parallel
+	function Parallel.new()
+	    local self = setmetatable({}, Parallel)
+	    self.tasks = {}
+	    return self
+	end
+	function Parallel:addTask(task)
+	    table.insert(self.tasks, task)
+	end
+	function Parallel:run()
+	    parallel.waitForAll(table.unpack(self.tasks))
+	end
+	function Parallel:waitForAny()
+	    parallel.waitForAny(table.unpack(self.tasks))
+	end
+	function Parallel:waitForAll()
+	    parallel.waitForAll(table.unpack(self.tasks))
+	end
+	function Parallel.map(obj, func)
+	    if type(obj) == "table" then
+	        if #obj > 0 then
+	            return Parallel.mapList(obj, func)
+	        else
+	            return Parallel.mapTable(obj, func)
+	        end
+	    else
+	        return Parallel.mapList(obj, func)
+	    end
+	end
+	function Parallel.mapList(list, func)
+	    local parallel = Parallel.new()
+	    for _, item in ipairs(list) do
+	        if item ~= nil then
+	            parallel:addTask(function() func(item) end)
+	        end
+	    end
+	    parallel:run()
+	end
+	function Parallel.mapTable(table_, func)
+	    local parallel = Parallel.new()
+	    for key, item in pairs(table_) do
+	        if item ~= nil then
+	            parallel:addTask(function() func(key, item) end)
+	        end
+	    end
+	    parallel:run()
+	end
+	return Parallel
+end
+local utils_controlflow_Parallel = MODULE_utils_controlflow_Parallel()
+
+
+function MODULE_utils_libs_LibOs()
+	local LibOs = {}
+	function LibOs.getComputerID()
+	    return os.getComputerID()
+	end
+	function LibOs.getComputerLabel()
+	    return os.getComputerLabel()
+	end
+	function LibOs.setComputerLabel(label)
+	    return os.setComputerLabel(label)
+	end
+	function LibOs.sleep(time)
+	    os.sleep(time)
+	end
+	function LibOs.pullEvent(filter)
+	    return os.pullEvent(filter)
+	end
+	function LibOs.queueEvent(name, ...)
+	    return os.queueEvent(name, ...)
+	end
+	function LibOs.run(env, path, ...)
+	    return os.run(env, path, ...)
+	end
+	function LibOs.version()
+	    return os.version()
+	end
+	function LibOs.shutdown()
+	    return os.shutdown()
+	end
+	function LibOs.reboot()
+	    return os.reboot()
+	end
+	function LibOs.getSecondsSinceComputerStart()
+	    return os.clock()
+	end
+	function LibOs.time(locale)
+	    return os.time(locale)
+	end
+	function LibOs.date(format, time)
+	    return os.date(format, time)
+	end
+	function LibOs.day(...)
+	    return os.day(...)
+	end
+	function LibOs.epoch(...)
+	    return os.epoch(...)
+	end
+	return LibOs
+end
+local utils_libs_LibOs = MODULE_utils_libs_LibOs()
+
+
+function MODULE_utils_network_Network()
+	local Parallel = utils_controlflow_Parallel
+	local LibOs = utils_libs_LibOs
+	local Network = {}
+	peripheral.find("modem", rednet.open)
+	function Network.isOpen()
+	    return rednet.isOpen()
+	end
+	function Network.host(protocol, hostname)
+	    if not Network.isOpen() then return print("Network is not open") end
+	    hostname = hostname or ("computer:" .. LibOs.getComputerID())
+	    rednet.host(protocol, hostname)
+	end
+	function Network.lookup(protocol, hostname)
+	    if not Network.isOpen() then return print("Network is not open") end
+	    return rednet.lookup(protocol, hostname)
+	end
+	function Network.unhost(protocol)
+	    if not Network.isOpen() then return print("Network is not open") end
+	    rednet.unhost(protocol)
+	end
+	function Network.listenWithProtocols(protocols)
+	    if not Network.isOpen() then return print("Network is not open") end
+	    Parallel.map(protocols, function(key, protocol) protocol:listen() end)
+	end
+	function Network.listen(protocol, timeout, func)
+	    if not Network.isOpen() then return print("Network is not open") end
+	    while true do
+	        local senderId, message = rednet.receive(protocol, timeout)
+	        func(senderId, message)
+	    end
+	end
+	function Network.send(recipient, message, protocol)
+	    if not Network.isOpen() then return print("Network is not open") end
+	    rednet.send(recipient, message, protocol)
+	end
+	function Network.broadcast(message, protocol)
+	    if not Network.isOpen() then return print("Network is not open") end
+	    rednet.broadcast(message, protocol)
+	end
+	return Network
+end
+local utils_network_Network = MODULE_utils_network_Network()
+
+
+function MODULE_jobs_JobManager()
+	local JobConfig = utils_config_JobConfig
+	local Network = utils_network_Network
+	local Parallel = utils_controlflow_Parallel
+	local LibOs = utils_libs_LibOs
+	local JobManager = {}
+	function JobManager.run(jobClass)
+	    local config = JobConfig.load()
+	    config.job = jobClass.name
+	    config:save()
+	    local job = jobClass.new(config)
+	    job.name = jobClass.name .. ":" .. LibOs.getComputerID()
+	    job.log = function(...) print(...) job.logSilent(...) end
+	    job.logSilent = function(...) if job.protocols ~= nil then job.protocols.log:sendLog(...) end end
+	    job.logToChannel = function(channel, ...) if job.protocols ~= nil then job.protocols.log:sendLogToChannel(channel, ...) end end
+	    if job == nil then
+	        print("Job not found: " .. jobClass.name)
+	        return
+	    end
+	    print("Starting Job: " .. jobClass.name)
+	    job:onStart()
+	    local p = Parallel.new()
+	    p:addTask(function() JobManager.runForegroundTask(job, config, jobClass.name) end)
+	    if job.protocols ~= nil then
+	        if Network.isOpen() then
+	            p:addTask(function() Network.listenWithProtocols(job.protocols) end)
+	        else
+	            print("Network is not open - cannot use protocols defined for job")
+	        end
+	    end
+	    if job.backgroundTasks ~= nil then
+	        for _, backgroundTask in ipairs(job.backgroundTasks) do
+	            p:addTask(function() backgroundTask(job, config) end)
+	        end
+	    end
+	    p:addTask(function() JobManager.runBackgroundTask(job, config) end)
+	    p:waitForAny()
+	    job:onComplete()
+	    print("Completed Job: " .. jobClass.name)
+	    config:save()
+	end
+	function JobManager.runForegroundTask(job, config, name)
+	    print("Running Job: " .. name)
+	    while job:inProgress() do
+	        job:onStep()
+	    end
+	end
+	function JobManager.runBackgroundTask(job, config)
+	    if job.backgroundTask == nil then
+	        return
+	    end
+	    if job.backgroundDelay == nil then
+	        error("Background task defined without a job.backgroundDelay")
+	    end
+	    while job:inProgress() do
+	        job.backgroundTask()
+	        if job.backgroundDelay > 0 then
+	            os.sleep(job.backgroundDelay)
+	        end
+	    end
+	end
+	return JobManager
+end
+local jobs_JobManager = MODULE_jobs_JobManager()
+
+
+function MODULE_utils_terminal_commands_Command()
+	local Command = {}
+	Command.__index = Command
+	function Command.new(name, helpText, func)
+	    local self = setmetatable({}, Command)
+	    self.name = name
+	    self.helpText = helpText
+	    self.func = func
+	    return self
+	end
+	function Command:help()
+	    print("Command: " .. self.name)
+	    print(self.helpText)
+	end
+	function Command:run(...)
+	    self.func(...)
+	end
+	return Command
+end
+local utils_terminal_commands_Command = MODULE_utils_terminal_commands_Command()
+
+
+function MODULE_utils_data_Table()
+	local Table = {}
+	function Table.map(object, func)
+	    local newObject = {}
+	    for key, value in pairs(object) do
+	        newObject[key] = func(value)
+	    end
+	    return newObject
+	end
+	function Table.filter(object, func)
+	    local newObject = {}
+	    for key, value in pairs(object) do
+	        if func(value) then
+	            table.insert(newObject, value)
+	        end
+	    end
+	    return newObject
+	end
+	function Table.any(object, func)
+	    for _, value in ipairs(object) do
+	        if func(value) then
+	            return true
+	        end
+	    end
+	    return false
+	end
+	function Table.all(object, func)
+	    for _, value in ipairs(object) do
+	        if not func(value) then
+	            return false
+	        end
+	    end
+	    return true
+	end
+	function Table.contains(object, value)
+	    for _, v in ipairs(object) do
+	        if v == value then
+	            return true
+	        end
+	    end
+	    return false
+	end
+	function Table.size(object)
+	    local count = 0
+	    for _ in pairs(object) do count = count + 1 end
+	    return count
+	end
+	function Table.isEmpty(object)
+	    return next(object) == nil
+	end
+	function Table.copy(object)
+	    local newObject = {}
+	    for key, value in pairs(object) do
+	        newObject[key] = value
+	    end
+	    return newObject
+	end
+	function Table.addAll(object, other)
+	    object = object or {}
+	    other = other or {}
+	    for _, value in ipairs(other) do
+	        table.insert(object, value)
+	    end
+	end
+	function Table.unique(object)
+	    local unique = {}
+	    for _, value in ipairs(object) do
+	        if not Table.contains(unique, value) then
+	            table.insert(unique, value)
+	        end
+	    end
+	    return unique
+	end
+	function Table.intersection(first, second)
+	    local intersection = {}
+	    first = Table.unique(first)
+	    second = Table.unique(second)
+	    for _, value in ipairs(first) do
+	        if Table.contains(second, value) then
+	            table.insert(intersection, value)
+	        end
+	    end
+	    return intersection
+	end
+	function Table.union(first, second)
+	    local union = Table.copy(first)
+	    Table.addAll(union, second)
+	    union = Table.unique(union)
+	    return union
+	end
+	function Table.difference(first, second)
+	    local difference = {}
+	    first = Table.unique(first)
+	    second = Table.unique(second)
+	    for _, value in ipairs(first) do
+	        if not Table.contains(second, value) then
+	            table.insert(difference, value)
+	        end
+	    end
+	    return difference
+	end
+	return Table
+end
+local utils_data_Table = MODULE_utils_data_Table()
+
+
+function MODULE_utils_text_Text()
+	local Table = utils_data_Table
+	local Text = {}
+	function Text.contains(text, pattern)
+	    if type(pattern) == "table" then
+	        return Table.any(pattern, function(subPattern)
+	            return Text.contains(text, subPattern)
+	        end)
+	    else
+	        return text:find(pattern) ~= nil
+	    end
+	end
+	function Text.startsWith(text, pattern)
+	    return text:sub(1, #pattern) == pattern
+	end
+	function Text.endsWith(text, pattern)
+	    return text:sub(-#pattern) == pattern
+	end
+	function Text.split(input, delimiter)
+	    local result = {}
+	    for match in (input .. delimiter):gmatch("(.-)" .. delimiter) do
+	        table.insert(result, match)
+	    end
+	    return result
+	end
+	function Text.getDisplayName(minecraftName)
+	    local displayName = minecraftName
+	    local parts = Text.split(displayName, ":")
+	    if #parts == 2 then
+	        displayName = parts[2]
+	    end
+	    displayName = displayName:gsub("_", " ")
+	    displayName = displayName:gsub("(%l)(%w*)", function(a,b) return string.upper(a)..b end)
+	    return displayName
+	end
+	function Text.levenshtein(str1, str2)
+	    local len1, len2 = #str1, #str2
+	    local matrix = {}
+	    for i = 0, len1 do
+	        matrix[i] = { [0] = i }
+	    end
+	    for j = 0, len2 do
+	        matrix[0][j] = j
+	    end
+	    for i = 1, len1 do
+	        for j = 1, len2 do
+	            local cost = (str1:sub(i, i) == str2:sub(j, j)) and 0 or 1
+	            matrix[i][j] = math.min(
+	                matrix[i - 1][j] + 1,    -- deletion
+	                matrix[i][j - 1] + 1,    -- insertion
+	                matrix[i - 1][j - 1] + cost -- substitution
+	            )
+	        end
+	    end
+	    return matrix[len1][len2]
+	end
+	function Text.simplifyIdentifier(id)
+	    id = id:match(":(.*)") or id
+	    id = id:gsub("_", " ") or id
+	    return id
+	end
+	function Text.getClosestMatch(input, identifiers)
+	    local bestMatch = nil
+	    local bestScore = math.huge
+	    for _, id in pairs(identifiers) do
+	        local simplifiedId = Text.simplifyIdentifier(id)
+	        local score = Text.levenshtein(input, simplifiedId)
+	        if score < bestScore then
+	            bestScore = score
+	            bestMatch = id
+	        end
+	    end
+	    return bestMatch, bestScore
+	end
+	function Text.getClosestMatchingGroup(input, identifierGroups)
+	    local bestMatch = nil
+	    local bestScore = math.huge
+	    for id, group in pairs(identifierGroups) do
+	        local score = Text.levenshtein(input, id)
+	        if score < bestScore then
+	            bestScore = score
+	            bestMatch = group
+	        end
+	    end
+	    return bestMatch, bestScore
+	end
+	return Text
+end
+local utils_text_Text = MODULE_utils_text_Text()
+
+
+function MODULE_utils_terminal_commands_Commands()
+	local Command = utils_terminal_commands_Command
+	local Text = utils_text_Text
+	local Commands = {}
+	Commands.__index = Commands
+	function Commands.new()
+	    local self = setmetatable({}, Commands)
+	    self.commands = {}
+	    self:add("help", Command.new("help", "Prints a list of commands", function(...) self:help(...) end))
+	    return self
+	end
+	function Commands:add(name, command)
+	    if name ~= nil and command ~= nil then
+	        self.commands[name] = command
+	    elseif name ~= nil and command == nil then
+	        command = name
+	        self.commands[command.name] = command
+	    elseif name == nil and command == nil then
+	        print("'Commands:add' provided both name and command = nil")
+	    else
+	        print("How did this happen?")
+	    end
+	end
+	function Commands:help(commandName)
+	    if commandName ~= nil then
+	        local command = self.commands[commandName]
+	        if command == nil then
+	            print("Command not found: " .. commandName)
+	            return
+	        end
+	        command:help()
+	        return
+	    end
+	    print("Commands:")
+	    for name, command in pairs(self.commands) do
+	        print("  " .. name)
+	    end
+	    print("*Type 'help <command>' for more information")
+	end
+	function Commands:run(message)
+	    if message == nil or message == "" then
+	        print("No command entered")
+	        print("Type 'help' for a list of commands")
+	        return
+	    end
+	    local parts = Text.split(message, " ")
+	    local name = parts[1]
+	    local command = self.commands[name]
+	    if command == nil then
+	        print("Command not found '" .. message .. "'")
+	        print("\ttype 'help' for a list of commands")
+	        return
+	    end
+	    local arguments = {}
+	    for i = 2, #parts do
+	        table.insert(arguments, parts[i])
+	    end
+	    command:run(table.unpack(arguments))
+	end
+	return Commands
+end
+local utils_terminal_commands_Commands = MODULE_utils_terminal_commands_Commands()
+
+
+function MODULE_jobs_definitions_mobile_treeFarm_TreeFarmCommands()
+	local TreeFarmCommands = {}
+	function TreeFarmCommands.commandQuarryStart(self)
+	    self.log("Starting the tree farm")
+	    self.config:set("state", self.states.TREE_FARM_STARTING)
+	end
+	return TreeFarmCommands
+end
+local jobs_definitions_mobile_treeFarm_TreeFarmCommands = MODULE_jobs_definitions_mobile_treeFarm_TreeFarmCommands()
+
+
+function MODULE_utils_jobutils_CommonCommands()
+	local CommonCommands = {}
+	function CommonCommands.commandExit(self)
+	    self.config:set("alive", false)
+	end
+	function CommonCommands.commandSetup(self)
+	    print("Entering setup mode")
+	    self.config:set("state", self.states.SETUP)
+	end
+	return CommonCommands
+end
+local utils_jobutils_CommonCommands = MODULE_utils_jobutils_CommonCommands()
+
+
+function MODULE_utils_blocks_Blocks()
+	local Blocks = {
+	    ANY = "any",
+	    stone = "minecraft:stone",
+	    iron_ore = "minecraft:iron_ore",
+	    gold_ore = "minecraft:gold_ore",
+	    diamond_ore = "minecraft:diamond_ore",
+	    emerald_ore = "minecraft:emerald_ore",
+	    redstone_ore = "minecraft:redstone_ore",
+	    lapis_ore = "minecraft:lapis_ore",
+	    coal_ore = "minecraft:coal_ore",
+	    copper_ore = "minecraft:copper_ore",
+	    copper_block = "minecraft:copper_block",
+	    copper_ingot = "minecraft:copper_ingot",
+	    copper_nugget = "minecraft:copper_nugget",
+	    iron_nugget = "minecraft:iron_nugget",
+	    gold_nugget = "minecraft:gold_nugget",
+	    diamond = "minecraft:diamond",
+	    emerald = "minecraft:emerald",
+	    redstone = "minecraft:redstone",
+	    lapis = "minecraft:lapis",
+	    ancient_debris = "minecraft:ancient_debris",
+	    netherite_ingot = "minecraft:netherite_ingot",
+	    netherite_block = "minecraft:netherite_block",
+	    netherite_scrap = "minecraft:netherite_scrap",
+	    netherite_sword = "minecraft:netherite_sword",
+	    netherite_pickaxe = "minecraft:netherite_pickaxe",
+	    netherite_axe = "minecraft:netherite_axe",
+	    netherite_shovel = "minecraft:netherite_shovel",
+	    netherite_hoe = "minecraft:netherite_hoe",
+	    netherite_helmet = "minecraft:netherite_helmet",
+	    netherite_chestplate = "minecraft:netherite_chestplate",
+	    netherite_leggings = "minecraft:netherite_leggings",
+	    netherite_boots = "minecraft:netherite_boots",
+	    iron_sword = "minecraft:iron_sword",
+	    iron_pickaxe = "minecraft:iron_pickaxe",
+	    iron_axe = "minecraft:iron_axe",
+	    iron_shovel = "minecraft:iron_shovel",
+	    iron_hoe = "minecraft:iron_hoe",
+	    iron_helmet = "minecraft:iron_helmet",
+	    iron_chestplate = "minecraft:iron_chestplate",
+	    iron_leggings = "minecraft:iron_leggings",
+	    iron_boots = "minecraft:iron_boots",
+	    gold_sword = "minecraft:gold_sword",
+	    gold_pickaxe = "minecraft:gold_pickaxe",
+	    gold_axe = "minecraft:gold_axe",
+	    gold_shovel = "minecraft:gold_shovel",
+	    gold_hoe = "minecraft:gold_hoe",
+	    gold_helmet = "minecraft:gold_helmet",
+	    gold_chestplate = "minecraft:gold_chestplate",
+	    gold_leggings = "minecraft:gold_leggings",
+	    gold_boots = "minecraft:gold_boots",
+	    diamond_sword = "minecraft:diamond_sword",
+	    diamond_pickaxe = "minecraft:diamond_pickaxe",
+	    diamond_axe = "minecraft:diamond_axe",
+	    diamond_shovel = "minecraft:diamond_shovel",
+	    diamond_hoe = "minecraft:diamond_hoe",
+	    diamond_helmet = "minecraft:diamond_helmet",
+	    diamond_chestplate = "minecraft:diamond_chestplate",
+	    diamond_leggings = "minecraft:diamond_leggings",
+	    diamond_boots = "minecraft:diamond_boots",
+	    iron_block = "minecraft:iron_block",
+	    gold_block = "minecraft:gold_block",
+	    diamond_block = "minecraft:diamond_block",
+	    emerald_block = "minecraft:emerald_block",
+	    redstone_block = "minecraft:redstone_block",
+	    lapis_block = "minecraft:lapis_block",
+	    coal_block = "minecraft:coal_block",
+	    coal = "minecraft:coal",
+	    charcoal = "minecraft:charcoal",
+	    charcoal_block = "minecraft:charcoal_block",
+	    chest = "minecraft:chest",
+	    barrel = "minecraft:barrel",
+	    furnace = "minecraft:furnace",
+	    crafting_table = "minecraft:crafting_table",
+	    anvil = "minecraft:anvil",
+	    enchanting_table = "minecraft:enchanting_table",
+	    brewing_stand = "minecraft:brewing_stand",
+	    blast_furnace = "minecraft:blast_furnace",
+	    smoker = "minecraft:smoker",
+	    loom = "minecraft:loom",
+	    cartography_table = "minecraft:cartography_table",
+	    stonecutter = "minecraft:stonecutter",
+	    grindstone = "minecraft:grindstone",
+	    smithing_table = "minecraft:smithing_table",
+	    lectern = "minecraft:lectern",
+	    beehive = "minecraft:beehive",
+	    bee_nest = "minecraft:bee_nest",
+	    composter = "minecraft:composter",
+	    bell = "minecraft:bell",
+	    jukebox = "minecraft:jukebox",
+	    note_block = "minecraft:note_block",
+	    end_portal_frame = "minecraft:end_portal_frame",
+	    end_portal = "minecraft:end_portal",
+	    end_gateway = "minecraft:end_gateway",
+	    oak_planks = "minecraft:oak_planks",
+	    spruce_planks = "minecraft:spruce_planks",
+	    birch_planks = "minecraft:birch_planks",
+	    jungle_planks = "minecraft:jungle_planks",
+	    acacia_planks = "minecraft:acacia_planks",
+	    dark_oak_planks = "minecraft:dark_oak_planks",
+	    crimson_planks = "minecraft:crimson_planks",
+	    warped_planks = "minecraft:warped_planks",
+	    oak_log = "minecraft:oak_log",
+	    spruce_log = "minecraft:spruce_log",
+	    birch_log = "minecraft:birch_log",
+	    jungle_log = "minecraft:jungle_log",
+	    acacia_log = "minecraft:acacia_log",
+	    dark_oak_log = "minecraft:dark_oak_log",
+	    mangrove_log = "minecraft:mangrove_log",
+	    crimson_stem = "minecraft:crimson_stem",
+	    warped_stem = "minecraft:warped_stem",
+	    oak_wood = "minecraft:oak_wood",
+	    spruce_wood = "minecraft:spruce_wood",
+	    birch_wood = "minecraft:birch_wood",
+	    jungle_wood = "minecraft:jungle_wood",
+	    acacia_wood = "minecraft:acacia_wood",
+	    dark_oak_wood = "minecraft:dark_oak_wood",
+	    crimson_hyphae = "minecraft:crimson_hyphae",
+	    warped_hyphae = "minecraft:warped_hyphae",
+	    oak_leaves = "minecraft:oak_leaves",
+	    spruce_leaves = "minecraft:spruce_leaves",
+	    birch_leaves = "minecraft:birch_leaves",
+	    jungle_leaves = "minecraft:jungle_leaves",
+	    acacia_leaves = "minecraft:acacia_leaves",
+	    dark_oak_leaves = "minecraft:dark_oak_leaves",
+	    mangrove_leaves = "minecraft:mangrove_leaves",
+	    crimson_leaves = "minecraft:crimson_leaves",
+	    warped_leaves = "minecraft:warped_leaves",
+	    oak_sapling = "minecraft:oak_sapling",
+	    spruce_sapling = "minecraft:spruce_sapling",
+	    birch_sapling = "minecraft:birch_sapling",
+	    jungle_sapling = "minecraft:jungle_sapling",
+	    acacia_sapling = "minecraft:acacia_sapling",
+	    dark_oak_sapling = "minecraft:dark_oak_sapling",
+	    mangrove_sapling = "minecraft:mangrove_sapling",
+	    crimson_fungus = "minecraft:crimson_fungus",
+	    warped_fungus = "minecraft:warped_fungus",
+	    oak_fence = "minecraft:oak_fence",
+	    spruce_fence = "minecraft:spruce_fence",
+	    birch_fence = "minecraft:birch_fence",
+	    jungle_fence = "minecraft:jungle_fence",
+	    acacia_fence = "minecraft:acacia_fence",
+	    dark_oak_fence = "minecraft:dark_oak_fence",
+	    crimson_fence = "minecraft:crimson_fence",
+	    warped_fence = "minecraft:warped_fence",
+	    oak_fence_gate = "minecraft:oak_fence_gate",
+	    spruce_fence_gate = "minecraft:spruce_fence_gate",
+	    birch_fence_gate = "minecraft:birch_fence_gate",
+	    jungle_fence_gate = "minecraft:jungle_fence_gate",
+	    acacia_fence_gate = "minecraft:acacia_fence_gate",
+	    dark_oak_fence_gate = "minecraft:dark_oak_fence_gate",
+	    crimson_fence_gate = "minecraft:crimson_fence_gate",
+	    warped_fence_gate = "minecraft:warped_fence_gate",
+	    oak_stairs = "minecraft:oak_stairs",
+	    spruce_stairs = "minecraft:spruce_stairs",
+	    birch_stairs = "minecraft:birch_stairs",
+	    jungle_stairs = "minecraft:jungle_stairs",
+	    acacia_stairs = "minecraft:acacia_stairs",
+	    dark_oak_stairs = "minecraft:dark_oak_stairs",
+	    crimson_stairs = "minecraft:crimson_stairs",
+	    warped_stairs = "minecraft:warped_stairs",
+	    oak_slab = "minecraft:oak_slab",
+	    spruce_slab = "minecraft:spruce_slab",
+	    birch_slab = "minecraft:birch_slab",
+	    jungle_slab = "minecraft:jungle_slab",
+	    acacia_slab = "minecraft:acacia_slab",
+	    dark_oak_slab = "minecraft:dark_oak_slab",
+	    crimson_slab = "minecraft:crimson_slab",
+	    warped_slab = "minecraft:warped_slab",
+	    oak_button = "minecraft:oak_button",
+	    spruce_button = "minecraft:spruce_button",
+	    birch_button = "minecraft:birch_button",
+	    jungle_button = "minecraft:jungle_button",
+	    acacia_button = "minecraft:acacia_button",
+	    dark_oak_button = "minecraft:dark_oak_button",
+	    crimson_button = "minecraft:crimson_button",
+	    warped_button = "minecraft:warped_button",
+	    oak_pressure_plate = "minecraft:oak_pressure_plate",
+	    spruce_pressure_plate = "minecraft:spruce_pressure_plate",
+	    birch_pressure_plate = "minecraft:birch_pressure_plate",
+	    jungle_pressure_plate = "minecraft:jungle_pressure_plate",
+	    acacia_pressure_plate = "minecraft:acacia_pressure_plate",
+	    dark_oak_pressure_plate = "minecraft:dark_oak_pressure_plate",
+	    crimson_pressure_plate = "minecraft:crimson_pressure_plate",
+	    warped_pressure_plate = "minecraft:warped_pressure_plate",
+	    oak_door = "minecraft:oak_door",
+	    spruce_door = "minecraft:spruce_door",
+	    birch_door = "minecraft:birch_door",
+	    jungle_door = "minecraft:jungle_door",
+	    acacia_door = "minecraft:acacia_door",
+	    dark_oak_door = "minecraft:dark_oak_door",
+	    crimson_door = "minecraft:crimson_door",
+	    warped_door = "minecraft:warped_door",
+	    oak_trapdoor = "minecraft:oak_trapdoor",
+	    spruce_trapdoor = "minecraft:spruce_trapdoor",
+	    birch_trapdoor = "minecraft:birch_trapdoor",
+	    jungle_trapdoor = "minecraft:jungle_trapdoor",
+	    acacia_trapdoor = "minecraft:acacia_trapdoor",
+	    dark_oak_trapdoor = "minecraft:dark_oak_trapdoor",
+	    crimson_trapdoor = "minecraft:crimson_trapdoor",
+	    warped_trapdoor = "minecraft:warped_trapdoor",
+	    oak_sign = "minecraft:oak_sign",
+	    spruce_sign = "minecraft:spruce_sign",
+	    birch_sign = "minecraft:birch_sign",
+	    jungle_sign = "minecraft:jungle_sign",
+	    acacia_sign = "minecraft:acacia_sign",
+	    bone_meal = "minecraft:bone_meal",
+	    white_wool = "minecraft:white_wool",
+	    orange_wool = "minecraft:orange_wool",
+	    magenta_wool = "minecraft:magenta_wool",
+	    light_blue_wool = "minecraft:light_blue_wool",
+	    yellow_wool = "minecraft:yellow_wool",
+	    lime_wool = "minecraft:lime_wool",
+	    pink_wool = "minecraft:pink_wool",
+	    gray_wool = "minecraft:gray_wool",
+	    light_gray_wool = "minecraft:light_gray_wool",
+	    cyan_wool = "minecraft:cyan_wool",
+	    purple_wool = "minecraft:purple_wool",
+	    blue_wool = "minecraft:blue_wool",
+	    brown_wool = "minecraft:brown_wool",
+	    green_wool = "minecraft:green_wool",
+	    red_wool = "minecraft:red_wool",
+	    black_wool = "minecraft:black_wool",
+	    white_carpet = "minecraft:white_carpet",
+	    orange_carpet = "minecraft:orange_carpet",
+	    magenta_carpet = "minecraft:magenta_carpet",
+	    light_blue_carpet = "minecraft:light_blue_carpet",
+	    yellow_carpet = "minecraft:yellow_carpet",
+	    lime_carpet = "minecraft:lime_carpet",
+	    pink_carpet = "minecraft:pink_carpet",
+	    gray_carpet = "minecraft:gray_carpet",
+	    light_gray_carpet = "minecraft:light_gray_carpet",
+	    cyan_carpet = "minecraft:cyan_carpet",
+	    purple_carpet = "minecraft:purple_carpet",
+	    blue_carpet = "minecraft:blue_carpet",
+	    brown_carpet = "minecraft:brown_carpet",
+	    green_carpet = "minecraft:green_carpet",
+	    red_carpet = "minecraft:red_carpet",
+	    black_carpet = "minecraft:black_carpet",
+	    white_bed = "minecraft:white_bed",
+	    orange_bed = "minecraft:orange_bed",
+	    magenta_bed = "minecraft:magenta_bed",
+	    light_blue_bed = "minecraft:light_blue_bed",
+	    yellow_bed = "minecraft:yellow_bed",
+	    lime_bed = "minecraft:lime_bed",
+	    pink_bed = "minecraft:pink_bed",
+	    gray_bed = "minecraft:gray_bed",
+	    light_gray_bed = "minecraft:light_gray_bed",
+	    cyan_bed = "minecraft:cyan_bed",
+	    purple_bed = "minecraft:purple_bed",
+	    blue_bed = "minecraft:blue_bed",
+	    brown_bed = "minecraft:brown_bed",
+	    green_bed = "minecraft:green_bed",
+	    red_bed = "minecraft:red_bed",
+	    black_bed = "minecraft:black_bed",
+	    white_banner = "minecraft:white_banner",
+	    orange_banner = "minecraft:orange_banner",
+	    magenta_banner = "minecraft:magenta_banner",
+	    light_blue_banner = "minecraft:light_blue_banner",
+	    yellow_banner = "minecraft:yellow_banner",
+	    lime_banner = "minecraft:lime_banner",
+	    pink_banner = "minecraft:pink_banner",
+	    gray_banner = "minecraft:gray_banner",
+	    light_gray_banner = "minecraft:light_gray_banner",
+	    cyan_banner = "minecraft:cyan_banner",
+	    purple_banner = "minecraft:purple_banner",
+	    blue_banner = "minecraft:blue_banner",
+	    brown_banner = "minecraft:brown_banner",
+	    green_banner = "minecraft:green_banner",
+	    red_banner = "minecraft:red_banner",
+	    black_banner = "minecraft:black_banner",
+	    white_shulker_box = "minecraft:white_shulker_box",
+	    orange_shulker_box = "minecraft:orange_shulker_box",
+	    magenta_shulker_box = "minecraft:magenta_shulker_box",
+	    light_blue_shulker_box = "minecraft:light_blue_shulker_box",
+	    yellow_shulker_box = "minecraft:yellow_shulker_box",
+	    lime_shulker_box = "minecraft:lime_shulker_box",
+	    pink_shulker_box = "minecraft:pink_shulker_box",
+	    gray_shulker_box = "minecraft:gray_shulker_box",
+	    light_gray_shulker_box = "minecraft:light_gray_shulker_box",
+	    cyan_shulker_box = "minecraft:cyan_shulker_box",
+	    purple_shulker_box = "minecraft:purple_shulker_box",
+	    blue_shulker_box = "minecraft:blue_shulker_box",
+	    brown_shulker_box = "minecraft:brown_shulker_box",
+	    green_shulker_box = "minecraft:green_shulker_box",
+	    red_shulker_box = "minecraft:red_shulker_box",
+	    black_shulker_box = "minecraft:black_shulker_box",
+	    white_concrete = "minecraft:white_concrete",
+	    orange_concrete = "minecraft:orange_concrete",
+	    magenta_concrete = "minecraft:magenta_concrete",
+	    light_blue_concrete = "minecraft:light_blue_concrete",
+	    yellow_concrete = "minecraft:yellow_concrete",
+	    lime_concrete = "minecraft:lime_concrete",
+	    pink_concrete = "minecraft:pink_concrete",
+	    gray_concrete = "minecraft:gray_concrete",
+	    light_gray_concrete = "minecraft:light_gray_concrete",
+	    cyan_concrete = "minecraft:cyan_concrete",
+	    purple_concrete = "minecraft:purple_concrete",
+	    blue_concrete = "minecraft:blue_concrete",
+	    brown_concrete = "minecraft:brown_concrete",
+	    green_concrete = "minecraft:green_concrete",
+	    red_concrete = "minecraft:red_concrete",
+	    black_concrete = "minecraft:black_concrete",
+	    white_concrete_powder = "minecraft:white_concrete_powder",
+	    orange_concrete_powder = "minecraft:orange_concrete_powder",
+	    magenta_concrete_powder = "minecraft:magenta_concrete_powder",
+	    light_blue_concrete_powder = "minecraft:light_blue_concrete_powder",
+	    yellow_concrete_powder = "minecraft:yellow_concrete_powder",
+	    lime_concrete_powder = "minecraft:lime_concrete_powder",
+	    pink_concrete_powder = "minecraft:pink_concrete_powder",
+	    gray_concrete_powder = "minecraft:gray_concrete_powder",
+	    light_gray_concrete_powder = "minecraft:light_gray_concrete_powder",
+	    cyan_concrete_powder = "minecraft:cyan_concrete_powder",
+	    purple_concrete_powder = "minecraft:purple_concrete_powder",
+	    blue_concrete_powder = "minecraft:blue_concrete_powder",
+	    brown_concrete_powder = "minecraft:brown_concrete_powder",
+	    green_concrete_powder = "minecraft:green_concrete_powder",
+	    red_concrete_powder = "minecraft:red_concrete_powder",
+	    black_concrete_powder = "minecraft:black_concrete_powder",
+	    white_glazed_terracotta = "minecraft:white_glazed_terracotta",
+	    orange_glazed_terracotta = "minecraft:orange_glazed_terracotta",
+	    magenta_glazed_terracotta = "minecraft:magenta_glazed_terracotta",
+	    light_blue_glazed_terracotta = "minecraft:light_blue_glazed_terracotta",
+	    yellow_glazed_terracotta = "minecraft:yellow_glazed_terracotta",
+	    lime_glazed_terracotta = "minecraft:lime_glazed_terracotta",
+	    pink_glazed_terracotta = "minecraft:pink_glazed_terracotta",
+	    gray_glazed_terracotta = "minecraft:gray_glazed_terracotta",
+	    light_gray_glazed_terracotta = "minecraft:light_gray_glazed_terracotta",
+	    cyan_glazed_terracotta = "minecraft:cyan_glazed_terracotta",
+	    purple_glazed_terracotta = "minecraft:purple_glazed_terracotta",
+	    blue_glazed_terracotta = "minecraft:blue_glazed_terracotta",
+	    brown_glazed_terracotta = "minecraft:brown_glazed_terracotta",
+	    green_glazed_terracotta = "minecraft:green_glazed_terracotta",
+	    red_glazed_terracotta = "minecraft:red_glazed_terracotta",
+	    black_glazed_terracotta = "minecraft:black_glazed_terracotta",
+	    white_stained_glass = "minecraft:white_stained_glass",
+	    orange_stained_glass = "minecraft:orange_stained_glass",
+	    magenta_stained_glass = "minecraft:magenta_stained_glass",
+	    light_blue_stained_glass = "minecraft:light_blue_stained_glass",
+	    yellow_stained_glass = "minecraft:yellow_stained_glass",
+	    lime_stained_glass = "minecraft:lime_stained_glass",
+	    pink_stained_glass = "minecraft:pink_stained_glass",
+	    gray_stained_glass = "minecraft:gray_stained_glass",
+	    light_gray_stained_glass = "minecraft:light_gray_stained_glass",
+	    cyan_stained_glass = "minecraft:cyan_stained_glass",
+	    purple_stained_glass = "minecraft:purple_stained_glass",
+	    blue_stained_glass = "minecraft:blue_stained_glass",
+	    brown_stained_glass = "minecraft:brown_stained_glass",
+	    green_stained_glass = "minecraft:green_stained_glass",
+	    red_stained_glass = "minecraft:red_stained_glass",
+	    black_stained_glass = "minecraft:black_stained_glass",
+	    white_stained_glass_pane = "minecraft:white_stained_glass_pane",
+	    orange_stained_glass_pane = "minecraft:orange_stained_glass_pane",
+	    magenta_stained_glass_pane = "minecraft:magenta_stained_glass_pane",
+	    light_blue_stained_glass_pane = "minecraft:light_blue_stained_glass_pane",
+	    yellow_stained_glass_pane = "minecraft:yellow_stained_glass_pane",
+	    lime_stained_glass_pane = "minecraft:lime_stained_glass_pane",
+	    pink_stained_glass_pane = "minecraft:pink_stained_glass_pane",
+	    gray_stained_glass_pane = "minecraft:gray_stained_glass_pane",
+	    light_gray_stained_glass_pane = "minecraft:light_gray_stained_glass_pane",
+	    cyan_stained_glass_pane = "minecraft:cyan_stained_glass_pane",
+	    purple_stained_glass_pane = "minecraft:purple_stained_glass_pane",
+	    blue_stained_glass_pane = "minecraft:blue_stained_glass_pane",
+	    brown_stained_glass_pane = "minecraft:brown_stained_glass_pane",
+	    green_stained_glass_pane = "minecraft:green_stained_glass_pane",
+	    red_stained_glass_pane = "minecraft:red_stained_glass_pane",
+	    black_stained_glass_pane = "minecraft:black_stained_glass_pane",
+	    white_terracotta = "minecraft:white_terracotta",
+	    orange_terracotta = "minecraft:orange_terracotta",
+	    magenta_terracotta = "minecraft:magenta_terracotta",
+	    light_blue_terracotta = "minecraft:light_blue_terracotta",
+	    yellow_terracotta = "minecraft:yellow_terracotta",
+	    lime_terracotta = "minecraft:lime_terracotta",
+	    pink_terracotta = "minecraft:pink_terracotta",
+	    gray_terracotta = "minecraft:gray_terracotta",
+	    light_gray_terracotta = "minecraft:light_gray_terracotta",
+	    cyan_terracotta = "minecraft:cyan_terracotta",
+	    purple_terracotta = "minecraft:purple_terracotta",
+	    blue_terracotta = "minecraft:blue_terracotta",
+	    brown_terracotta = "minecraft:brown_terracotta",
+	    green_terracotta = "minecraft:green_terracotta",
+	    red_terracotta = "minecraft:red_terracotta",
+	    black_terracotta = "minecraft:black_terracotta",
+	    quartz_block = "minecraft:quartz_block",
+	    obsidian = "minecraft:obsidian",
+	    glowstone = "minecraft:glowstone",
+	    netherrack = "minecraft:netherrack",
+	    soul_sand = "minecraft:soul_sand",
+	    sand = "minecraft:sand",
+	    gravel = "minecraft:gravel",
+	    dirt = "minecraft:dirt",
+	    grass_block = "minecraft:grass_block",
+	    stone_bricks = "minecraft:stone_bricks",
+	    stone_brick_stairs = "minecraft:stone_brick_stairs",
+	    stone_brick_slab = "minecraft:stone_brick_slab",
+	    stone_brick_wall = "minecraft:stone_brick_wall",
+	    mossy_stone_bricks = "minecraft:mossy_stone_bricks",
+	    cracked_stone_bricks = "minecraft:cracked_stone_bricks",
+	    chiseled_stone_bricks = "minecraft:chiseled_stone_bricks",
+	    cobblestone = "minecraft:cobblestone",
+	    mossy_cobblestone = "minecraft:mossy_cobblestone",
+	    chiseled_sandstone = "minecraft:chiseled_sandstone",
+	    cut_sandstone = "minecraft:cut_sandstone",
+	    smooth_sandstone = "minecraft:smooth_sandstone",
+	    sandstone = "minecraft:sandstone",
+	    red_sand = "minecraft:red_sand",
+	    red_sandstone = "minecraft:red_sandstone",
+	    smooth_red_sandstone = "minecraft:smooth_red_sandstone",
+	    cut_red_sandstone = "minecraft:cut_red_sandstone",
+	    chiseled_red_sandstone = "minecraft:chiseled_red_sandstone",
+	    red_sandstone_stairs = "minecraft:red_sandstone_stairs",
+	    red_sandstone_slab = "minecraft:red_sandstone_slab",
+	    red_sandstone_wall = "minecraft:red_sandstone_wall",
+	    smooth_red_sandstone_slab = "minecraft:smooth_red_sandstone_slab",
+	    smooth_red_sandstone_stairs = "minecraft:smooth_red_sandstone_stairs",
+	    smooth_red_sandstone_wall = "minecraft:smooth_red_sandstone_wall",
+	    cut_red_sandstone_slab = "minecraft:cut_red_sandstone_slab",
+	    cut_red_sandstone_stairs = "minecraft:cut_red_sandstone_stairs",
+	    cut_red_sandstone_wall = "minecraft:cut_red_sandstone_wall",
+	    chiseled_red_sandstone_slab = "minecraft:chiseled_red_sandstone_slab",
+	    chiseled_red_sandstone_stairs = "minecraft:chiseled_red_sandstone_stairs",
+	    chiseled_red_sandstone_wall = "minecraft:chiseled_red_sandstone_wall",
+	    rotten_flesh = "minecraft:rotten_flesh",
+	    string = "minecraft:string",
+	    spider_eye = "minecraft:spider_eye",
+	    fermented_spider_eye = "minecraft:fermented_spider_eye",
+	    blaze_powder = "minecraft:blaze_powder",
+	    magma_cream = "minecraft:magma_cream",
+	    ghast_tear = "minecraft:ghast_tear",
+	    ender_pearl = "minecraft:ender_pearl",
+	    ender_eye = "minecraft:ender_eye",
+	    nether_star = "minecraft:nether_star",
+	    nether_wart = "minecraft:nether_wart",
+	    nether_brick = "minecraft:nether_brick",
+	    nether_brick_fence = "minecraft:nether_brick_fence",
+	    nether_brick_stairs = "minecraft:nether_brick_stairs",
+	    nether_brick_slab = "minecraft:nether_brick_slab",
+	    nether_brick_wall = "minecraft:nether_brick_wall",
+	    nether_brick_block = "minecraft:nether_brick_block",
+	    nether_bricks = "minecraft:nether_bricks",
+	    nether_quartz = "minecraft:nether_quartz",
+	    nether_quartz_ore = "minecraft:nether_quartz_ore",
+	    quartz_pillar = "minecraft:quartz_pillar",
+	    quartz_bricks = "minecraft:quartz_bricks",
+	    quartz_wall = "minecraft:quartz_wall",
+	    quartz_ore = "minecraft:quartz_ore",
+	    quartz = "minecraft:quartz",
+	    quartz_slab = "minecraft:quartz_slab",
+	    quartz_stairs = "minecraft:quartz_stairs",
+	    granite = "minecraft:granite",
+	    polished_granite = "minecraft:polished_granite",
+	    granite_slab = "minecraft:granite_slab",
+	    granite_stairs = "minecraft:granite_stairs",
+	    granite_wall = "minecraft:granite_wall",
+	    diorite = "minecraft:diorite",
+	    polished_diorite = "minecraft:polished_diorite",
+	    diorite_slab = "minecraft:diorite_slab",
+	    diorite_stairs = "minecraft:diorite_stairs",
+	    diorite_wall = "minecraft:diorite_wall",
+	    andesite = "minecraft:andesite",
+	    polished_andesite = "minecraft:polished_andesite",
+	    andesite_slab = "minecraft:andesite_slab",
+	    andesite_stairs = "minecraft:andesite_stairs",
+	    andesite_wall = "minecraft:andesite_wall",
+	    prismarine = "minecraft:prismarine",
+	    prismarine_bricks = "minecraft:prismarine_bricks",
+	    dark_prismarine = "minecraft:dark_prismarine",
+	    prismarine_slab = "minecraft:prismarine_slab",
+	    prismarine_stairs = "minecraft:prismarine_stairs",
+	    prismarine_wall = "minecraft:prismarine_wall",
+	    prismarine_brick_slab = "minecraft:prismarine_brick_slab",
+	    prismarine_brick_stairs = "minecraft:prismarine_brick_stairs",
+	    prismarine_brick_wall = "minecraft:prismarine_brick_wall",
+	    dark_prismarine_slab = "minecraft:dark_prismarine_slab",
+	    dark_prismarine_stairs = "minecraft:dark_prismarine_stairs",
+	    dark_prismarine_wall = "minecraft:dark_prismarine_wall",
+	    sea_lantern = "minecraft:sea_lantern",
+	    end_stone = "minecraft:end_stone",
+	    end_stone_bricks = "minecraft:end_stone_bricks",
+	    end_stone_brick_slab = "minecraft:end_stone_brick_slab",
+	    end_stone_brick_stairs = "minecraft:end_stone_brick_stairs",
+	    end_stone_brick_wall = "minecraft:end_stone_brick_wall",
+	    purpur_block = "minecraft:purpur_block",
+	    purpur_pillar = "minecraft:purpur_pillar",
+	    purpur_slab = "minecraft:purpur_slab",
+	    purpur_stairs = "minecraft:purpur_stairs",
+	    purpur_purpur_block = "minecraft:purpur_purpur_block",
+	    purpur_purpur_pillar = "minecraft:purpur_purpur_pillar",
+	    purpur_purpur_slab = "minecraft:purpur_purpur_slab",
+	    purpur_purpur_stairs = "minecraft:purpur_purpur_stairs",
+	    end_bricks = "minecraft:end_bricks",
+	    end_rod = "minecraft:end_rod",
+	    blackstone = "minecraft:blackstone",
+	    polished_blackstone = "minecraft:polished_blackstone",
+	    polished_blackstone_slab = "minecraft:polished_blackstone_slab",
+	    polished_blackstone_stairs = "minecraft:polished_blackstone_stairs",
+	    polished_blackstone_wall = "minecraft:polished_blackstone_wall",
+	    polished_blackstone_brick_slab = "minecraft:polished_blackstone_brick_slab",
+	    polished_blackstone_brick_stairs = "minecraft:polished_blackstone_brick_stairs",
+	    polished_blackstone_brick_wall = "minecraft:polished_blackstone_brick_wall",
+	    blackstone_slab = "minecraft:blackstone_slab",
+	    blackstone_stairs = "minecraft:blackstone_stairs",
+	    blackstone_wall = "minecraft:blackstone_wall",
+	    blackstone_bricks = "minecraft:blackstone_bricks",
+	    polished_blackstone_bricks = "minecraft:polished_blackstone_bricks",
+	    polished_blackstone_brick = "minecraft:polished_blackstone_brick",
+	    blackstone_brick_slab = "minecraft:blackstone_brick_slab",
+	    blackstone_brick_stairs = "minecraft:blackstone_brick_stairs",
+	    blackstone_brick_wall = "minecraft:blackstone_brick_wall",
+	    water = "minecraft:water",
+	    lava = "minecraft:lava",
+	    computercraft_cable = "computercraft:cable",
+	    computercraft_computer = "computercraft:computer",
+	    computercraft_computer_advanced = "computercraft:computer_advanced",
+	    computercraft_computer_command = "computercraft:computer_command",
+	    computercraft_wireless_modem_advanced = "computercraft:wireless_modem_advanced",
+	    computercraft_wired_modem_full = "computercraft:wired_modem_full",
+	    computercraft_wired_modem = "computercraft:wired_modem",
+	    computercraft_turtle = "computercraft:turtle",
+	}
+	return Blocks
+end
+local utils_blocks_Blocks = MODULE_utils_blocks_Blocks()
+
+
+function MODULE_utils_movement_Rotations()
+	Rotations = {}
+	Rotations.NONE = "None"
+	Rotations.UP = "Up"
+	Rotations.DOWN = "Down"
+	Rotations.LEFT = "Left"
+	Rotations.RIGHT = "Right"
+	function Rotations.opposite(direction)
+	    if direction == Rotations.UP then
+	        return Rotations.DOWN
+	    elseif direction == Rotations.DOWN then
+	        return Rotations.UP
+	    elseif direction == Rotations.LEFT then
+	        return Rotations.RIGHT
+	    elseif direction == Rotations.RIGHT then
+	        return Rotations.LEFT
+	    end
+	end
+	return Rotations
+end
+local utils_movement_Rotations = MODULE_utils_movement_Rotations()
+
+
+function MODULE_utils_movement_Direction()
+	local Rotations = utils_movement_Rotations
+	local Direction = {}
+	Direction.__index = Direction
+	Direction.NORTH = "North"  -- -z
+	Direction.EAST = "East"  -- +x
+	Direction.SOUTH = "South"  -- +z
+	Direction.WEST = "West"  -- -x
+	Direction.UP = "Up"  -- +y
+	Direction.DOWN = "Down"  -- -y
+	Direction.DIRECTIONS = {
+	    Direction.NORTH,
+	    Direction.EAST,
+	    Direction.SOUTH,
+	    Direction.WEST,
+	    Direction.UP,
+	    Direction.DOWN,
+	}
+	Direction.HORIZONTAL_DIRECTIONS = {
+	    Direction.NORTH,
+	    Direction.EAST,
+	    Direction.SOUTH,
+	    Direction.WEST,
+	}
+	function Direction.opposite(direction)
+	    if direction == Direction.NORTH then
+	        return Direction.SOUTH
+	    elseif direction == Direction.SOUTH then
+	        return Direction.NORTH
+	    elseif direction == Direction.EAST then
+	        return Direction.WEST
+	    elseif direction == Direction.WEST then
+	        return Direction.EAST
+	    elseif direction == Direction.UP then
+	        return Direction.DOWN
+	    elseif direction == Direction.DOWN then
+	        return Direction.UP
+	    end
+	end
+	function Direction.nextLeft(direction)
+	    if direction == Direction.NORTH then
+	        return Direction.WEST
+	    elseif direction == Direction.WEST then
+	        return Direction.SOUTH
+	    elseif direction == Direction.SOUTH then
+	        return Direction.EAST
+	    elseif direction == Direction.EAST then
+	        return Direction.NORTH
+	    end
+	end
+	function Direction.nextRight(direction)
+	    if direction == Direction.NORTH then
+	        return Direction.EAST
+	    elseif direction == Direction.EAST then
+	        return Direction.SOUTH
+	    elseif direction == Direction.SOUTH then
+	        return Direction.WEST
+	    elseif direction == Direction.WEST then
+	        return Direction.NORTH
+	    end
+	end
+	function Direction.getBestDirectionToTurn(currentDirection, targetDirection)
+	    if currentDirection == targetDirection then
+	        return Rotations.NONE
+	    elseif Direction.nextLeft(currentDirection) == targetDirection then
+	        return Rotations.LEFT
+	    elseif Direction.nextRight(currentDirection) == targetDirection then
+	        return Rotations.RIGHT
+	    else
+	        return Rotations.LEFT  -- Both are acceptable, pick a default
+	    end
+	end
+	return Direction
+end
+local utils_movement_Direction = MODULE_utils_movement_Direction()
+
+
+function MODULE_utils_terminal_Terminal()
+	local LibOs = utils_libs_LibOs
+	local Terminal = {}
+	Terminal.__index = Terminal
+	function Terminal.clear()
+	    term.clear()
+	    term.setCursorPos(1, 1)
+	end
+	function Terminal.waitForKey()
+	    local _, key = LibOs.pullEvent("key")
+	    return key
+	end
+	function Terminal.writeLineBreak()
+	    print("-------------------------")
+	end
+	function Terminal.write(text)
+	    print(text)
+	end
+	function Terminal.read(prompt)
+	    if prompt ~= nil then
+	        write(prompt)
+	    end
+	    return read()
+	end
+	function Terminal.readNumber(prompt)
+	    local value = nil
+	    while value == nil do
+	        local input = Terminal.read(prompt)
+	        value = tonumber(input)
+	    end
+	    return value
+	end
+	function Terminal.readBoolean(prompt)
+	    local value = nil
+	    while value == nil do
+	        local input = Terminal.read(prompt):lower()
+	        if input == "true" or input == "y" or input == "yes" then
+	            value = true
+	        elseif input == "false" or input == "n" or input == "no" then
+	            value = false
+	        end
+	    end
+	    return value
+	end
+	function Terminal.readTable(prompt, requiredFields)
+	    local value = nil
+	    local validationPassed = false
+	    while validationPassed == false do
+	        local input = Terminal.read(prompt)
+	        value = textutils.unserialize(input)
+	        if value ~= nil then
+	            validationPassed = true
+	            for key, _ in pairs(requiredFields) do
+	                if value[key] == nil then
+	                    validationPassed = false
+	                    Terminal.write("\t\tMissing field: '" .. key .. "'")
+	                end
+	            end
+	            if not validationPassed then
+	                Terminal.write("\t\tExpected format: " .. textutils.serialize(requiredFields))
+	            end
+	        end
+	    end
+	    return value or {}
+	end
+	return Terminal
+end
+local utils_terminal_Terminal = MODULE_utils_terminal_Terminal()
+
+
+function MODULE_utils_math_Vector3()
+	local Direction = utils_movement_Direction
+	local Terminal = utils_terminal_Terminal
+	local Vector3 = {}
+	Vector3.__index = Vector3
+	function Vector3.new(x, y, z)
+	    if type(x) == "table" then
+	        x, y, z = x.x, x.y, x.z
+	    end
+	    return setmetatable({x = x or 0, y = y or 0, z = z or 0}, Vector3)
+	end
+	function Vector3.fromTerminal(prompt)
+	    prompt = prompt or "Enter a Vector3: "
+	    local table = Terminal.readTable(prompt, Vector3.new(0, 0, 0):toTable())
+	    return Vector3.new(table.x, table.y, table.z)
+	end
+	function Vector3.fromTable(tbl)
+	    return Vector3.new(tbl.x, tbl.y, tbl.z)
+	end
+	function Vector3:toTable()
+	    return {x = self.x, y = self.y, z = self.z}
+	end
+	function Vector3:equals(other)
+	    return self.x == other.x and self.y == other.y and self.z == other.z
+	end
+	function Vector3:copy()
+	    return Vector3.new(self.x, self.y, self.z)
+	end
+	function Vector3:add(other)
+	    return Vector3.new(self.x + other.x, self.y + other.y, self.z + other.z)
+	end
+	function Vector3:addInDirection(direction, distance)
+	    distance = distance or 1
+	    local result = self:copy()
+	    if direction == Direction.NORTH then
+	        result.z = result.z - distance
+	    elseif direction == Direction.SOUTH then
+	        result.z = result.z + distance
+	    elseif direction == Direction.EAST then
+	        result.x = result.x + distance
+	    elseif direction == Direction.WEST then
+	        result.x = result.x - distance
+	    elseif direction == Direction.UP then
+	        result.y = result.y + distance
+	    elseif direction == Direction.DOWN then
+	        result.y = result.y - distance
+	    end
+	    return result
+	end
+	function Vector3:sub(other)
+	    return Vector3.new(self.x - other.x, self.y - other.y, self.z - other.z)
+	end
+	function Vector3:mul(scalar)
+	    return Vector3.new(self.x * scalar, self.y * scalar, self.z * scalar)
+	end
+	function Vector3:dot(other)
+	    return self.x * other.x + self.y * other.y + self.z * other.z
+	end
+	function Vector3:cross(other)
+	    return Vector3.new(
+	        self.y * other.z - self.z * other.y,
+	        self.z * other.x - self.x * other.z,
+	        self.x * other.y - self.y * other.x
+	    )
+	end
+	function Vector3:magnitude()
+	    return math.sqrt(self.x^2 + self.y^2 + self.z^2)
+	end
+	function Vector3:normalize()
+	    local mag = self:magnitude()
+	    if mag > 0 then
+	        return Vector3.new(self.x / mag, self.y / mag, self.z / mag)
+	    else
+	        return Vector3.new(0, 0, 0)
+	    end
+	end
+	function Vector3:serialize()
+	    return string.format("%.6f,%.6f,%.6f", self.x, self.y, self.z)
+	end
+	function Vector3.deserialize(str)
+	    local x, y, z = str:match("([^,]+),([^,]+),([^,]+)")
+	    return Vector3.new(tonumber(x), tonumber(y), tonumber(z))
+	end
+	function Vector3:directionTo(other)
+	    local diff = other:sub(self)
+	    if diff:equals(Vector3.new(0, 0, 0)) then
+	        return nil
+	    end
+	    if diff.x > 0 then
+	        return Direction.EAST
+	    elseif diff.x < 0 then
+	        return Direction.WEST
+	    elseif diff.z > 0 then
+	        return Direction.SOUTH
+	    elseif diff.z < 0 then
+	        return Direction.NORTH
+	    elseif diff.y > 0 then
+	        return Direction.UP
+	    elseif diff.y < 0 then
+	        return Direction.DOWN
+	    end
+	end
+	function Vector3:verticalDirectionTo(other)
+	    local diff = other:sub(self)
+	    if diff:equals(Vector3.new(0, 0, 0)) then
+	        return nil
+	    end
+	    if diff.y > 0 then
+	        return Direction.UP
+	    elseif diff.y < 0 then
+	        return Direction.DOWN
+	    end
+	end
+	function Vector3:__tostring()
+	    return string.format("Vector3(%.2f, %.2f, %.2f)", self.x, self.y, self.z)
+	end
+	return Vector3
+end
+local utils_math_Vector3 = MODULE_utils_math_Vector3()
+
+
+function MODULE_utils_blocks_Block()
+	local Blocks = utils_blocks_Blocks
+	local Table = utils_data_Table
+	local Vector3= utils_math_Vector3
+	local Text = utils_text_Text
+	local blockLookupTable = {}
+	for blocksKey, blockName in pairs(Blocks) do
+	    blockLookupTable[blockName] = blocksKey
+	end
+	local protectedBlocks = {
+	    Blocks.barrel,
+	    Blocks.chest,
+	    Blocks.enderChest,
+	    Blocks.shulkerBox,
+	    Blocks.trappedChest,
+	    Blocks.hopper,
+	    Blocks.dispenser,
+	    Blocks.dropper,
+	    Blocks.furnace,
+	    Blocks.blastFurnace,
+	    Blocks.smoker,
+	    Blocks.brewingStand,
+	    Blocks.enchantingTable,
+	    Blocks.craftingTable,
+	    Blocks.anvil,
+	    Blocks.grindstone,
+	    Blocks.smithingTable,
+	    Blocks.loom,
+	    Blocks.cartographyTable,
+	    Blocks.stonecutter,
+	    Blocks.beehive,
+	    Blocks.beeNest,
+	    Blocks.computercraft_cable,
+	    Blocks.computercraft_computer,
+	    Blocks.computercraft_computer_advanced,
+	    Blocks.computercraft_computer_command,
+	    Blocks.computercraft_wireless_modem_advanced,
+	    Blocks.computercraft_wired_modem_full,
+	    Blocks.computercraft_wired_modem,
+	    Blocks.computercraft_turtle,
+	}
+	local liquidBlocks = {
+	    Blocks.water,
+	    Blocks.lava,
+	}
+	local treeBlocks = {
+	    Blocks.acacia_leaves,
+	    Blocks.acacia_log,
+	    Blocks.spruce_leaves,
+	    Blocks.spruce_log,
+	    Blocks.birch_leaves,
+	    Blocks.birch_log,
+	    Blocks.dark_oak_leaves,
+	    Blocks.dark_oak_log,
+	    Blocks.jungle_leaves,
+	    Blocks.jungle_log,
+	    Blocks.oak_leaves,
+	    Blocks.oak_log,
+	    Blocks.mangrove_leaves,
+	    Blocks.mangrove_log,
+	}
+	local groups = {
+	    wood = {Blocks.oak_wood, Blocks.spruce_wood, Blocks.birch_wood, Blocks.jungle_wood, Blocks.acacia_wood, Blocks.dark_oak_wood, Blocks.mangrove_wood},
+	    log = {Blocks.oak_log, Blocks.spruce_log, Blocks.birch_log, Blocks.jungle_log, Blocks.acacia_log, Blocks.dark_oak_log, Blocks.mangrove_log},
+	    leaves = {Blocks.oak_leaves, Blocks.spruce_leaves, Blocks.birch_leaves, Blocks.jungle_leaves, Blocks.acacia_leaves, Blocks.dark_oak_leaves, Blocks.mangrove_leaves},
+	    sapling = {Blocks.oak_sapling, Blocks.spruce_sapling, Blocks.birch_sapling, Blocks.jungle_sapling, Blocks.acacia_sapling, Blocks.dark_oak_sapling, Blocks.mangrove_sapling},
+	    planks = {Blocks.oak_planks, Blocks.spruce_planks, Blocks.birch_planks, Blocks.jungle_planks, Blocks.acacia_planks, Blocks.dark_oak_planks, Blocks.mangrove_planks},
+	    slab = {Blocks.oak_slab, Blocks.spruce_slab, Blocks.birch_slab, Blocks.jungle_slab, Blocks.acacia_slab, Blocks.dark_oak_slab, Blocks.mangrove_slab},
+	    stairs = {Blocks.oak_stairs, Blocks.spruce_stairs, Blocks.birch_stairs, Blocks.jungle_stairs, Blocks.acacia_stairs, Blocks.dark_oak_stairs, Blocks.mangrove_stairs},
+	    fence = {Blocks.oak_fence, Blocks.spruce_fence, Blocks.birch_fence, Blocks.jungle_fence, Blocks.acacia_fence, Blocks.dark_oak_fence, Blocks.mangrove_fence},
+	    fenceGate = {Blocks.oak_fence_gate, Blocks.spruce_fence_gate, Blocks.birch_fence_gate, Blocks.jungle_fence_gate, Blocks.acacia_fence_gate, Blocks.dark_oak_fence_gate, Blocks.mangrove_fence_gate},
+	    door = {Blocks.oak_door, Blocks.spruce_door, Blocks.birch_door, Blocks.jungle_door, Blocks.acacia_door, Blocks.dark_oak_door, Blocks.mangrove_door},
+	    trapdoor = {Blocks.oak_trapdoor, Blocks.spruce_trapdoor, Blocks.birch_trapdoor, Blocks.jungle_trapdoor, Blocks.acacia_trapdoor, Blocks.dark_oak_trapdoor, Blocks.mangrove_trapdoor},
+	    button = {Blocks.oak_button, Blocks.spruce_button, Blocks.birch_button, Blocks.jungle_button, Blocks.acacia_button, Blocks.dark_oak_button, Blocks.mangrove_button},
+	    pressurePlate = {Blocks.oak_pressure_plate, Blocks.spruce_pressure_plate, Blocks.birch_pressure_plate, Blocks.jungle_pressure_plate, Blocks.acacia_pressure_plate, Blocks.dark_oak_pressure_plate, Blocks.mangrove_pressure_plate},
+	    sign = {Blocks.oak_sign, Blocks.spruce_sign, Blocks.birch_sign, Blocks.jungle_sign, Blocks.acacia_sign, Blocks.dark_oak_sign, Blocks.mangrove_sign},
+	    boat = {Blocks.oak_boat, Blocks.spruce_boat, Blocks.birch_boat, Blocks.jungle_boat, Blocks.acacia_boat, Blocks.dark_oak_boat, Blocks.mangrove_boat},
+	}
+	local Block = {}
+	Block.__index = Block
+	function Block.new(name, position, state, tags)
+	    if Block.exists(name) == false then
+	        print("Block with name " .. name .. " does not exist")
+	    end
+	    return setmetatable({
+	        name = name,
+	        position = position or Vector3.new(0, 0, 0),
+	        state = state or {},
+	        tags = tags or {},
+	    }, Block)
+	end
+	function Block.isAllowedToBreak(name)
+	    for _, protectedBlockName in ipairs(protectedBlocks) do
+	        if name == protectedBlockName then
+	            return false
+	        end
+	    end
+	    return true
+	end
+	function Block.isLiquid(name)
+	    for _, liquidBlockName in ipairs(liquidBlocks) do
+	        if name == liquidBlockName then
+	            return true
+	        end
+	    end
+	    return false
+	end
+	function Block.isTree(name)
+	    for _, treeBlockName in ipairs(treeBlocks) do
+	        if name == treeBlockName then
+	            return true
+	        end
+	    end
+	    return false
+	end
+	function Block.isLog(name)
+	    return name == Blocks.acacia_log
+	        or name == Blocks.spruce_log
+	        or name == Blocks.birch_log
+	        or name == Blocks.dark_oak_log
+	        or name == Blocks.jungle_log
+	        or name == Blocks.oak_log
+	        or name == Blocks.mangrove_log
+	end
+	function Block.isSapling(name)
+	    return name == Blocks.acacia_sapling
+	        or name == Blocks.spruce_sapling
+	        or name == Blocks.birch_sapling
+	        or name == Blocks.dark_oak_sapling
+	        or name == Blocks.jungle_sapling
+	        or name == Blocks.oak_sapling
+	        or name == Blocks.mangrove_sapling
+	end
+	function Block.isLeaf(name)
+	    return name == Blocks.acacia_leaves
+	        or name == Blocks.spruce_leaves
+	        or name == Blocks.birch_leaves
+	        or name == Blocks.dark_oak_leaves
+	        or name == Blocks.jungle_leaves
+	        or name == Blocks.oak_leaves
+	        or name == Blocks.mangrove_leaves
+	end
+	function Block.isFuel(name)
+	    return name == Blocks.charcoal
+	    or name == Blocks.charcoal_block
+	    or name == Blocks.coal
+	    or name == Blocks.coal_block
+	end
+	function Block.exists(name)
+	    return blockLookupTable[name] ~= nil
+	end
+	function Block:__tostring()
+	    return string.format(
+	        "Block(%s, %s)",
+	        self.name,
+	        self.position
+	    )
+	end
+	function Block.getClosestMatch(name, customBlocksList)
+	    customBlocksList = customBlocksList or Blocks
+	    local closestMatch, score = Text.getClosestMatch(name, customBlocksList)
+	    local closestMatchGroup, groupScore = Text.getClosestMatchingGroup(name, groups)
+	    if groupScore <= score then
+	        closestMatchGroup = Table.intersection(customBlocksList, closestMatchGroup)
+	        return {name = name, closestMatch = closestMatchGroup, score = groupScore}
+	    else
+	        return {name = name, closestMatch = closestMatch, score = score}
+	    end
+	end
+	return Block
+end
+local utils_blocks_Block = MODULE_utils_blocks_Block()
+
+
+function MODULE_turtle_Side()
+	local Side = {}
+	Side.TOP = "top"
+	Side.BOTTOM = "bottom"
+	Side.FRONT = "front"
+	Side.BACK = "back"
+	Side.LEFT = "left"
+	Side.RIGHT = "right"
+	return Side
+end
+local turtle_Side = MODULE_turtle_Side()
+
+
+function MODULE_utils_config_Config()
+	local Vector3 = utils_math_Vector3
+	local file = utils_other_file
+	local Direction = utils_movement_Direction
+	local Job       = jobs_Job
+	local Blocks = utils_blocks_Blocks
+	local Config = {}
+	Config.__index = Config
+	function Config.new()
+	    local self = setmetatable({
+	        turtleName = "MyTurtle",
+	        job = Job.SETUP,
+	        homePosition = Vector3.new({x = 0, y = 0, z = 0}),
+	        homeDirection = Direction.NORTH,
+	        fuelMinimum = 64,
+	        fuelTarget = 256,
+	        fuelItem = Blocks.charcoal,
+	    }, Config)
+	    return self
+	end
+	function Config.fromTable(table)
+	    local self = Config.new()
+	    self.turtleName = table.turtleName or self.turtleName
+	    self.task = table.task or self.tasks
+	    self.homePosition = Vector3.fromTable(table.homePosition) or self.homePosition
+	    self.homeDirection = table.homeDirection or self.homeDirection
+	    self.fuelMinimum = table.fuelMinimum or self.fuelMinimum
+	    self.fuelTarget = table.fuelTarget or self.fuelTarget
+	    self.fuelItem = table.fuelItem or self.fuelItem
+	    return self
+	end
+	function Config:toTable()
+	    return {
+	        turtleName = self.turtleName,
+	        task = self.task,
+	        homePosition = self.homePosition:toTable(),
+	        homeDirection = self.homeDirection,
+	        fuelMinimum = self.fuelMinimum,
+	        fuelTarget = self.fuelTarget,
+	        fuelItem = self.fuelItem,
+	    }
+	end
+	function Config:serializeJson()
+	    local text = textutils.serializeJSON(self:toTable())
+	    return text
+	end
+	function Config.deserializeJson(json)
+	    local configAttributes = textutils.unserializeJSON(json)
+	    local config = Config.fromTable(configAttributes)
+	    return config
+	end
+	function Config:save()
+	   file.writeText("config.json", self:serializeJson())
+	end
+	function Config.load()
+	    local config = nil
+	    local content = file.readText("config.json")
+	    if content == nil then
+	        config = Config.new()
+	    else
+	        config = Config.deserializeJson(content)
+	    end
+	    config:save()  -- Save any default values that were missing
+	    return config
+	end
+	return Config
+end
+local utils_config_Config = MODULE_utils_config_Config()
+
+
+function MODULE_turtle_Inventory()
+	local Blocks = utils_blocks_Blocks
+	local Block = utils_blocks_Block
+	local Side = turtle_Side
+	local Inventory = {}
+	function Inventory.isFull()
+	    return Inventory.getEmptySlot() == nil
+	end
+	function Inventory.isEmpty()
+	    return Inventory.isFull() == false
+	end
+	function Inventory.getEmptySlot()
+	    for i = 1, 16 do
+	        if turtle.getItemCount(i) == 0 then
+	            return i
+	        end
+	    end
+	    return nil
+	end
+	function Inventory.getSlotWithItem(name)
+	    for i = 1, 16 do
+	        local item = turtle.getItemDetail(i)
+	        if item ~= nil and item.name == name then
+	            return i
+	        end
+	    end
+	    return nil
+	end
+	function Inventory.getSlotWithSapling()
+	    for i = 1, 16 do
+	        local item = turtle.getItemDetail(i)
+	        if item ~= nil and Block.isSapling(item.name) then
+	            return i
+	        end
+	    end
+	    return nil
+	end
+	function Inventory.getSlotWithFuel()
+	    for i = 1, 16 do
+	        local item = turtle.getItemDetail(i)
+	        if item ~= nil and Block.isFuel(item.name) then
+	            return i
+	        end
+	    end
+	    return nil
+	end
+	function Inventory.getItemCount(name)
+	    local count = 0
+	    for i = 1, 16 do
+	        local item = turtle.getItemDetail(i)
+	        if item ~= nil and item.name == name then
+	            count = count + item.count
+	        end
+	    end
+	    return count
+	end
+	function Inventory.countSaplings()
+	    return Inventory.getItemCount(Blocks.acacia_sapling)
+	        + Inventory.getItemCount(Blocks.birch_sapling)
+	        + Inventory.getItemCount(Blocks.dark_oak_sapling)
+	        + Inventory.getItemCount(Blocks.jungle_sapling)
+	        + Inventory.getItemCount(Blocks.oak_sapling)
+	        + Inventory.getItemCount(Blocks.spruce_sapling)
+	        + Inventory.getItemCount(Blocks.mangrove_sapling)
+	end
+	function Inventory.findContainerSide()
+	    for _, side in pairs(Side) do
+	        local peripheralType = peripheral.getType(side)
+	        if peripheralType == Blocks.barrel or peripheralType == Blocks.chest then
+	            return side
+	        end
+	    end
+	end
+	function Inventory.pullFromContainer()
+	    local side = Inventory.findContainerSide()
+	    if side == nil then
+	        return false
+	    end
+	    local suckFunction = turtle.suck
+	    if side == Side.up then
+	        suckFunction = turtle.suckUp
+	    elseif side == Side.down then
+	        suckFunction = turtle.suckDown
+	    end
+	    while suckFunction() do end
+	    return
+	end
+	function Inventory.dumpIntoContainer()
+	    local side = Inventory.findContainerSide()
+	    if side == nil then
+	        return false
+	    end
+	    local dropFunction = turtle.drop
+	    if side == Side.up then
+	        dropFunction = turtle.dropUp
+	    elseif side == Side.down then
+	        dropFunction = turtle.dropDown
+	    end
+	    for i = 1, 16 do
+	        turtle.select(i)
+	        dropFunction()
+	    end
+	end
+	function Inventory.getEmptySlots()
+	    local emptySlots = 0
+	    for i = 1, 16 do
+	        if turtle.getItemCount(i) == 0 then
+	            emptySlots = emptySlots + 1
+	        end
+	    end
+	    return emptySlots
+	end
+	return Inventory
+end
+local turtle_Inventory = MODULE_turtle_Inventory()
+
+
+function MODULE_utils_peripherals_Compass()
+	local Compass = {}
+	function Compass.new()
+	    local self = setmetatable({}, Compass)
+	    self.internal = peripheral.find("compass")
+	    if self.internal == nil then
+	        return nil
+	    end
+	    return self
+	end
+	function Compass:getFacing()
+	    return self.internal.getFacing()
+	end
+	function Compass:getName()
+	    return self.internal.getName()
+	end
+	function Compass:getConfiguration()
+	    return self.internal.getConfiguration()
+	end
+	return Compass
+end
+local utils_peripherals_Compass = MODULE_utils_peripherals_Compass()
+
+
+function MODULE_turtle_Turtle()
+	local Block   = utils_blocks_Block
+	local Vector3 = utils_math_Vector3
+	local Direction = utils_movement_Direction
+	local Side = turtle_Side
+	local Config = utils_config_Config
+	local file = utils_other_file
+	local Inventory = turtle_Inventory
+	local Blocks    = utils_blocks_Blocks
+	local Table = utils_data_Table
+	local Compass = utils_peripherals_Compass
+	local Turtle = {}
+	Turtle.CONFIG = Config.load()
+	function Turtle.getGpsPosition()
+	    local x, y, z = gps.locate()
+	    return Vector3.new(x, y, z)
+	end
+	Turtle.CURRENT_POSITION = Turtle.getGpsPosition()
+	Turtle.CURRENT_DIRECTION = Turtle.CONFIG.homeDirection
+	Turtle._UNCHECKED_DIRECTION = true  -- Used to determine if the direction has been checked
+	local compass = Compass.new()
+	if compass ~= nil then
+	    print("Using compass to determine direction")
+	    Turtle.CURRENT_DIRECTION = compass.getFacing()
+	    Turtle._UNCHECKED_DIRECTION = false
+	    print("Facing " .. Turtle.CURRENT_DIRECTION)
+	end
+	function Turtle.moveInDirection(direction)
+	    Turtle.turnTo(direction)
+	    if direction == Direction.UP then
+	        return Turtle.up()
+	    elseif direction == Direction.DOWN then
+	        return Turtle.down()
+	    else
+	        return Turtle.forward()
+	    end
+	end
+	function Turtle.forward()
+	    local block = Turtle.getBlockInFront()
+	    if block ~= nil and not Block.isLiquid(block.name) then
+	        return false
+	    end
+	    local oldPosition = Turtle.CURRENT_POSITION:copy()
+	    local moved = turtle.forward()
+	    local expectedNewPosition = Turtle.CURRENT_POSITION:addInDirection(Turtle.CURRENT_DIRECTION, 1)
+	    if not moved then
+	        return false
+	    end
+	    if Turtle._UNCHECKED_DIRECTION then
+	        local newPosition = Turtle.getGpsPosition()
+	        if not newPosition:equals(expectedNewPosition) then
+	            Turtle.CURRENT_DIRECTION = oldPosition:directionTo(newPosition)
+	        end
+	        Turtle.CURRENT_POSITION = newPosition
+	        Turtle._UNCHECKED_DIRECTION = false  -- The direction is now known
+	    else
+	        Turtle.CURRENT_POSITION = expectedNewPosition
+	    end
+	    return true
+	end
+	function Turtle.up()
+	    local block = Turtle.getBlockAbove()
+	    if block ~= nil and not Block.isLiquid(block.name) then return false end
+	    turtle.up()
+	    Turtle.CURRENT_POSITION = Turtle.CURRENT_POSITION:addInDirection(Direction.UP, 1)
+	    return true
+	end
+	function Turtle.down()
+	    local block = Turtle.getBlockBelow()
+	    if block ~= nil and not Block.isLiquid(block.name) then return false end
+	    turtle.down()
+	    Turtle.CURRENT_POSITION = Turtle.CURRENT_POSITION:addInDirection(Direction.DOWN, 1)
+	    return true
+	end
+	function Turtle.move(direction)
+	    if direction == Direction.NORTH or direction == Direction.SOUTH or direction == Direction.WEST or direction == Direction.EAST then
+	        Turtle.turnTo(direction)
+	        return Turtle.forward()
+	    elseif direction == Direction.UP then
+	        return Turtle.up()
+	    elseif direction == Direction.DOWN then
+	        return Turtle.down()
+	    else
+	        print("Invalid direction")
+	    end
+	    return false
+	end
+	function Turtle.getFuelLevel()
+	    return turtle.getFuelLevel()
+	end
+	function Turtle.refuel()
+	    if Turtle.getFuelLevel() >= Turtle.CONFIG.fuelTarget then
+	        return
+	    end
+	    local slot = nil
+	    slot = 0
+	    while Turtle.getFuelLevel() < Turtle.CONFIG.fuelTarget and slot ~= nil do
+	        slot = Inventory.getSlotWithFuel()
+	        turtle.select(slot)
+	        turtle.refuel()
+	    end
+	end
+	function Turtle.refuelUsingAdjacentContainer(targetFuelLevel, side)
+	    local slot = nil
+	    slot = 0
+	    while Turtle.getFuelLevel() < targetFuelLevel and slot ~= nil do
+	        print("Current Fuel Level: " .. Turtle.getFuelLevel())
+	        if side == nil then
+	            side = Inventory.findContainerSide()
+	            if side == nil then
+	                os.sleep(1)
+	            end
+	        end
+	        Turtle.turnToSide(side)
+	        Inventory.pullFromContainer()
+	        slot = Inventory.getSlotWithFuel()
+	        if slot ~= nil then
+	            turtle.select(slot)
+	            turtle.refuel()
+	        else
+	            print("No fuel found")
+	            os.sleep(1)
+	        end
+	    end
+	    print("Current Fuel Level: " .. Turtle.getFuelLevel())
+	end
+	function Turtle.turnTo(direction)
+	    local bestDirectionToTurn = Direction.getBestDirectionToTurn(Turtle.CURRENT_DIRECTION, direction)
+	    if bestDirectionToTurn == Rotations.LEFT then
+	        while Turtle.CURRENT_DIRECTION ~= direction do
+	            Turtle.turnLeft()
+	        end
+	    elseif bestDirectionToTurn == Rotations.RIGHT then
+	        while Turtle.CURRENT_DIRECTION ~= direction do
+	            Turtle.turnRight()
+	        end
+	    end
+	end
+	function Turtle.turnToSide(side)
+	    if side == Side.FRONT then
+	        return
+	    elseif side == Side.LEFT then
+	        Turtle.turnLeft()
+	    elseif side == Side.RIGHT then
+	        Turtle.turnRight()
+	    elseif side == Side.BACK then
+	        Turtle.turnLeft()
+	        Turtle.turnLeft()
+	    end
+	end
+	function Turtle.turnLeft()
+	    turtle.turnLeft()
+	    Turtle.CURRENT_DIRECTION = Direction.nextLeft(Turtle.CURRENT_DIRECTION)
+	end
+	function Turtle.turnRight()
+	    turtle.turnRight()
+	    Turtle.CURRENT_DIRECTION = Direction.nextRight(Turtle.CURRENT_DIRECTION)
+	end
+	function Turtle.goTo(destination)
+	    local distance = destination:sub(Turtle.CURRENT_POSITION)
+	    if distance.y > 0 then
+	        for i = 1, distance.y do
+	            turtle.up()
+	        end
+	    elseif distance.y < 0 then
+	        for i = 1, math.abs(distance.y) do
+	            turtle.down()
+	        end
+	    end
+	    if distance.x > 0 then
+	        Turtle.turnTo(Direction.EAST)
+	        for i = 1, distance.x do
+	            turtle.forward()
+	        end
+	    elseif distance.x < 0 then
+	        Turtle.turnTo(Direction.WEST)
+	        for i = 1, math.abs(distance.x) do
+	            turtle.back()
+	        end
+	    end
+	    if distance.z > 0 then
+	        Turtle.turnTo(Direction.SOUTH)
+	        for i = 1, distance.z do
+	            turtle.forward()
+	        end
+	    elseif distance.z < 0 then
+	        Turtle.turnTo(Direction.NORTH)
+	        for i = 1, math.abs(distance.z) do
+	            turtle.back()
+	        end
+	    end
+	end
+	function Turtle.goHome()
+	    Turtle.goTo(Turtle.CONFIG.homePosition)
+	    Turtle.turnTo(Turtle.CONFIG.homeDirection)
+	end
+	function Turtle.getBlockInFront()
+	    local present, data = turtle.inspect()
+	    if present == false then
+	        return nil
+	    end
+	    local blockPosition = Turtle.CURRENT_POSITION:addInDirection(Turtle.CURRENT_DIRECTION, 1)
+	    return Block.new(data.name, blockPosition, data.state, data.tags)
+	end
+	function Turtle.getBlockAbove()
+	    local present, data = turtle.inspectUp()
+	    if present == false then
+	        return nil
+	    end
+	    local blockPosition = Turtle.CURRENT_POSITION:addInDirection(Direction.UP, 1)
+	    return Block.new(data.name, blockPosition, data.state, data.tags)
+	end
+	function Turtle.getBlockBelow()
+	    local present, data = turtle.inspectDown()
+	    if present == false then
+	        return nil
+	    end
+	    local blockPosition = Turtle.CURRENT_POSITION:addInDirection(Direction.DOWN, 1)
+	    return Block.new(data.name, blockPosition, data.state, data.tags)
+	end
+	function Turtle.suck(count)
+	    turtle.suck(count)
+	end
+	function Turtle.suckUp(count)
+	    turtle.suckUp(count)
+	end
+	function Turtle.suckDown(count)
+	    turtle.suckDown(count)
+	end
+	function Turtle.suckLeft(count)
+	    Turtle.turnLeft()
+	    Turtle.suck(count)
+	    Turtle.turnRight()
+	end
+	function Turtle.suckRight(count)
+	    Turtle.turnRight()
+	    Turtle.suck(count)
+	    Turtle.turnLeft()
+	end
+	function Turtle.suckBack(count)
+	    Turtle.turnLeft()
+	    Turtle.turnLeft()
+	    Turtle.suck(count)
+	    Turtle.turnLeft()
+	    Turtle.turnLeft()
+	end
+	function Turtle.suckAll(count)
+	    Turtle.suckUp(count)
+	    Turtle.suckDown(count)
+	    for i = 1, 4 do
+	        Turtle.turnRight()
+	        Turtle.suck(count)
+	    end
+	end
+	function Turtle.tryDrop(slot, count)
+	    local block = Turtle.getBlockInFront()
+	    if block == nil then
+	        return false
+	    end
+	    turtle.select(slot)
+	    turtle.drop(count)
+	    return true
+	end
+	function Turtle.tryDropUp(slot, count)
+	    local block = Turtle.getBlockAbove()
+	    if block == nil then
+	        return false
+	    end
+	    turtle.select(slot)
+	    turtle.dropUp(count)
+	    return true
+	end
+	function Turtle.tryDropDown(slot, count)
+	    local block = Turtle.getBlockBelow()
+	    if block == nil then
+	        return false
+	    end
+	    turtle.select(slot)
+	    turtle.dropDown(count)
+	    return true
+	end
+	function Turtle.tryDropAll(slot, count)
+	    if Turtle.tryDropDown(slot, count) then
+	        return true
+	    elseif Turtle.tryDropUp(slot, count) then
+	        return true
+	    end
+	    for i = 1, 4 do
+	        Turtle.turnRight()
+	        if Turtle.tryDrop(slot, count) then
+	            return true
+	        end
+	    end
+	    return false
+	end
+	function Turtle.dump(side)
+	    if side == nil then
+	        side = Inventory.findContainerSide()
+	        if side == nil then
+	            print("No dump container found - please place one")
+	            os.sleep(1)
+	        end
+	    end
+	    Turtle.turnToSide(side)
+	    Inventory.dumpIntoContainer()
+	end
+	function Turtle.safeDig(direction)
+	    local hasBlock = nil
+	    local data = nil
+	    if direction == nil then
+	        hasBlock, data = turtle.inspect()
+	    elseif direction == Direction.UP then
+	        hasBlock, data = turtle.inspectUp()
+	    elseif direction == Direction.DOWN then
+	        hasBlock, data = turtle.inspectDown()
+	    else
+	        Turtle.turnTo(direction)
+	        hasBlock, data = turtle.inspect()
+	    end
+	    if not hasBlock or data == nil then
+	        return true
+	    end
+	    if Block.isAllowedToBreak(data.name) then
+	        Turtle.dig(direction)
+	        return true
+	    else
+	        return false
+	    end
+	end
+	function Turtle.dig(direction)
+	    if direction == nil then
+	        turtle.dig()
+	    elseif direction == Direction.UP then
+	        turtle.digUp()
+	    elseif direction == Direction.DOWN then
+	        turtle.digDown()
+	    else
+	        Turtle.turnTo(direction)
+	        turtle.dig()
+	    end
+	end
+	function Turtle.select(slot)
+	    if slot == nil then
+	        return
+	    end
+	    turtle.select(slot)
+	end
+	function Turtle.digUp()
+	    turtle.digUp()
+	end
+	function Turtle.digDown()
+	    turtle.digDown()
+	end
+	function Turtle.place()
+	    turtle.place()
+	end
+	function Turtle.placeUp()
+	    turtle.placeUp()
+	end
+	function Turtle.placeDown()
+	    turtle.placeDown()
+	end
+	return Turtle
+end
+local turtle_Turtle = MODULE_turtle_Turtle()
+
+
+function MODULE_jobs_definitions_mobile_treeFarm_TreeFarmStates()
+	local Turtle = turtle_Turtle
+	local Inventory = turtle_Inventory
+	local Block = utils_blocks_Block
+	local Blocks = utils_blocks_Blocks
+	local TreeFarmStates = {}
+	function TreeFarmStates.onTreeFarmStarting(self)
+	    self.log("Tree farm is starting...")
+	    self.config:init("waitSeconds", 64)
+	    self.config:init("homePosition", Turtle.CURRENT_POSITION:toTable())
+	end
+	function TreeFarmStates.onTreeFarmMovingForward(self)
+	    local block = Turtle.getBlockInFront()
+	    if block == nil then
+	        Turtle.forward()
+	        return
+	    end
+	    local isTree = Block.isTree(block.name)
+	    if isTree then
+	        Turtle.dig()
+	        Turtle.forward()
+	        if Block.isLog(block.name) then
+	            self.config:set("state", self.states.TREE_FARM_MINING_UP)
+	            return
+	        end
+	        return
+	    end
+	    self.log("Unable to continue moving forward - terminating")
+	    self.config:set("state", self.states.TREE_FARM_TERMINATING)
+	end
+	function TreeFarmStates.onTreeFarmReturningToHomeHeight(self)
+	    local homePosition = self.config:get("homePosition", nil)
+	    if homePosition == nil then
+	        self.log("Home position not set - terminating")
+	        self.config:set("state", self.states.TREE_FARM_TERMINATING)
+	        return
+	    end
+	    if Turtle.CURRENT_POSITION.y < homePosition.y then
+	        Turtle.up()
+	        return
+	    end
+	    if Turtle.CURRENT_POSITION.y > homePosition.y then
+	        Turtle.down()
+	        return
+	    end
+	    self.config:set("state", self.states.TREE_FARM_MOVING_FORWARD)
+	end
+	function TreeFarmStates.onTreeFarmMiningUp(self)
+	    local block = Turtle.getBlockAbove()
+	    if block == nil then
+	        self.config:set("state", self.states.TREE_FARM_MINING_DOWN)
+	        return
+	    end
+	    local isTree = Block.isLog(block.name)
+	    if isTree then
+	        Turtle.digUp()
+	        Turtle.up()
+	        return
+	    end
+	    local isLeaf = Block.isLeaf(block.name)
+	    if isLeaf then
+	        self.config:set("state", self.states.TREE_FARM_MINING_DOWN)
+	        return
+	    end
+	    self.log("Unable to continue moving up - terminating")
+	    self.config:set("state", self.states.TREE_FARM_TERMINATING)
+	end
+	function TreeFarmStates.onTreeFarmMiningDown(self)
+	    local block = Turtle.getBlockBelow()
+	    if block == nil then
+	        Turtle.down()
+	        return
+	    end
+	    local isDirt = block.name == Blocks.dirt
+	    if isDirt then
+	        self.config:set("state", self.states.TREE_FARM_REPLANTING)
+	        return
+	    end
+	    local isTree = Block.isTree(block.name)
+	    if isTree then
+	        Turtle.digDown()
+	        Turtle.down()
+	        return
+	    end
+	    self.log("Unable to continue moving down - returning to home height")
+	    self.config:set("state", self.states.TREE_FARM_RETURNING_TO_HOME_HEIGHT)
+	end
+	function TreeFarmStates.onTreeFarmReplanting(self)
+	    local block = Turtle.getBlockBelow()
+	    if block == nil then
+	        local saplingSlot = Inventory.getSlotWithSapling()
+	        if saplingSlot ~= nil then
+	            Turtle.select(saplingSlot)
+	            Turtle.placeDown()
+	        else
+	            self.log("No saplings available - continuing")
+	        end
+	        self.config:set("state", self.states.TREE_FARM_MOVING_FORWARD)
+	        return
+	    end
+	    local isPlantable = block.name == Blocks.dirt or block.name == Blocks.grass_block
+	    if isPlantable then
+	        Turtle.up()
+	        return
+	    end
+	    self.log("Unable to replant - terminating")
+	    self.config:set("state", self.states.TREE_FARM_TERMINATING)
+	end
+	function TreeFarmStates.onTreeFarmTerminating(self)
+	    self.log("Tree farm is terminating...")
+	    self.config:set("state", self.states.COMMAND_PROMPT)
+	end
+	return TreeFarmStates
+end
+local jobs_definitions_mobile_treeFarm_TreeFarmStates = MODULE_jobs_definitions_mobile_treeFarm_TreeFarmStates()
+
+
+function MODULE_utils_storage_patterns_ContainerPatternNames()
+	local Side = turtle_Side
+	local ContainerPatternNames = {}
+	ContainerPatternNames.DIRECTION_UP = Side.TOP
+	ContainerPatternNames.DIRECTION_DOWN = Side.BOTTOM
+	ContainerPatternNames.DIRECTION_FORWARD = Side.FRONT
+	ContainerPatternNames.DIRECTION_BACK = Side.BACK
+	ContainerPatternNames.DIRECTION_LEFT = Side.LEFT
+	ContainerPatternNames.DIRECTION_RIGHT = Side.RIGHT
+	ContainerPatternNames.ACTION_STOP = "ACTION_STOP"
+	ContainerPatternNames.ACTION_HOME = "ACTION_HOME"
+	ContainerPatternNames.ACTION_MOVE = "ACTION_MOVE"
+	ContainerPatternNames.ACTION_BREAK = "ACTION_BREAK"
+	ContainerPatternNames.ACTION_PLACE = "ACTION_PLACE"
+	ContainerPatternNames.ACTION_MARKER = "ACTION_MARKER"
+	ContainerPatternNames.ACTION_DROP = "ACTION_DROP"
+	ContainerPatternNames.ACTION_SUCK = "ACTION_SUCK"
+	ContainerPatternNames.ACTION_REFUEL = "ACTION_REFUEL"
+	return ContainerPatternNames
+end
+local utils_storage_patterns_ContainerPatternNames = MODULE_utils_storage_patterns_ContainerPatternNames()
+
+
+function MODULE_utils_jobutils_CommonStates()
+	local ContainerPatternNames = utils_storage_patterns_ContainerPatternNames
+	local Turtle = turtle_Turtle
+	local Terminal = utils_terminal_Terminal
+	local CommonStates = {}
+	function CommonStates.onCommandPrompt(self)
+	    local userInput = Terminal.read("\nEnter Command: ")
+	    print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
+	    self.commands:run(userInput)
+	end
+	function CommonStates.onMoving(self)
+	    local actionSide = self.config:get("actionSide", ContainerPatternNames.DIRECTION_FORWARD)
+	    if actionSide == ContainerPatternNames.DIRECTION_UP then
+	        Turtle.up()
+	    elseif actionSide == ContainerPatternNames.DIRECTION_DOWN then
+	        Turtle.down()
+	    else
+	        Turtle.forward()
+	    end
+	end
+	return CommonStates
+end
+local utils_jobutils_CommonStates = MODULE_utils_jobutils_CommonStates()
+
+
+function MODULE_utils_jobutils_CommonCodedInventoryListeners()
+	local Turtle = turtle_Turtle
+	local ContainerPatternNames = utils_storage_patterns_ContainerPatternNames
+	local CommonCodedInventoryListeners = {}
+	function CommonCodedInventoryListeners.defaultListener(self, name, side, count)
+	    print("Ignoring pattern: " .. name)
+	end
+	function CommonCodedInventoryListeners.actionStop(self, name, side, count)
+	    self.config:set("state", self.states.COMMAND_PROMPT)
+	    self.config:set("alive", false)
+	end
+	function CommonCodedInventoryListeners.actionHome(self, name, side, count)
+	    Turtle.goHome()
+	    self.config:set("state", self.states.COMMAND_PROMPT)
+	end
+	function CommonCodedInventoryListeners.actionMove(self, name, side, count)
+	    if side == ContainerPatternNames.DIRECTION_LEFT then
+	        Turtle.turnLeft()
+	    elseif side == ContainerPatternNames.DIRECTION_RIGHT then
+	        Turtle.turnRight()
+	    elseif side == ContainerPatternNames.DIRECTION_BACK then
+	        Turtle.turnLeft()
+	        Turtle.turnLeft()
+	    end
+	    self.config:set("state", self.states.MOVING)
+	    self.config:set("actionSide", side)
+	end
+	function CommonCodedInventoryListeners.actionBreak(self, name, side, count)
+	    if side == ContainerPatternNames.DIRECTION_FORWARD then
+	        Turtle.dig()
+	    elseif side == ContainerPatternNames.DIRECTION_UP then
+	        Turtle.digUp()
+	    elseif side == ContainerPatternNames.DIRECTION_DOWN then
+	        Turtle.digDown()
+	    elseif side == ContainerPatternNames.DIRECTION_LEFT then
+	        Turtle.turnLeft()
+	        Turtle.dig()
+	        Turtle.turnRight()
+	    elseif side == ContainerPatternNames.DIRECTION_RIGHT then
+	        Turtle.turnRight()
+	        Turtle.dig()
+	        Turtle.turnLeft()
+	    elseif side == ContainerPatternNames.DIRECTION_BACK then
+	        Turtle.turnLeft()
+	        Turtle.turnLeft()
+	        Turtle.dig()
+	        Turtle.turnLeft()
+	        Turtle.turnLeft()
+	    end
+	    self.config:set("state", self.states.COMMAND_PROMPT)
+	end
+	function CommonCodedInventoryListeners.actionPlace(self, name, side, count)
+	    local slot = 1
+	    turtle.select(slot)
+	    if side == ContainerPatternNames.DIRECTION_FORWARD then
+	        Turtle.place()
+	    elseif side == ContainerPatternNames.DIRECTION_UP then
+	        Turtle.placeUp()
+	    elseif side == ContainerPatternNames.DIRECTION_DOWN then
+	        Turtle.placeDown()
+	    elseif side == ContainerPatternNames.DIRECTION_LEFT then
+	        Turtle.turnLeft()
+	        Turtle.place()
+	        Turtle.turnRight()
+	    elseif side == ContainerPatternNames.DIRECTION_RIGHT then
+	        Turtle.turnRight()
+	        Turtle.place()
+	        Turtle.turnLeft()
+	    elseif side == ContainerPatternNames.DIRECTION_BACK then
+	        Turtle.turnLeft()
+	        Turtle.turnLeft()
+	        Turtle.place()
+	        Turtle.turnLeft()
+	        Turtle.turnLeft()
+	    end
+	    self.config:set("state", self.states.COMMAND_PROMPT)
+	end
+	function CommonCodedInventoryListeners.actionMarker(self, name, side, count)
+	    local existingMarkers = self.config:get("markers", {})
+	    existingMarkers[count] = Turtle.CURRENT_POSITION:copy():toTable()
+	    self.config:set("markers", existingMarkers)
+	    self.config:set("state", self.states.COMMAND_PROMPT)
+	end
+	function CommonCodedInventoryListeners.actionDrop(self, name, side, count)
+	    local slot = 1
+	    if side == ContainerPatternNames.DIRECTION_FORWARD then
+	        Turtle.tryDrop(slot, count)
+	    elseif side == ContainerPatternNames.DIRECTION_UP then
+	        Turtle.tryDropUp(slot, count)
+	    elseif side == ContainerPatternNames.DIRECTION_DOWN then
+	        Turtle.tryDropDown(slot, count)
+	    elseif side == ContainerPatternNames.DIRECTION_LEFT then
+	        Turtle.turnLeft()
+	        Turtle.tryDrop(slot, count)
+	        Turtle.turnRight()
+	    elseif side == ContainerPatternNames.DIRECTION_RIGHT then
+	        Turtle.turnRight()
+	        Turtle.tryDrop(slot, count)
+	        Turtle.turnLeft()
+	    elseif side == ContainerPatternNames.DIRECTION_BACK then
+	        Turtle.turnLeft()
+	        Turtle.turnLeft()
+	        Turtle.tryDrop(slot, count)
+	        Turtle.turnLeft()
+	        Turtle.turnLeft()
+	    end
+	    self.config:set("state", self.states.COMMAND_PROMPT)
+	end
+	function CommonCodedInventoryListeners.actionSuck(self, name, side, count)
+	    local slot = 1
+	    turtle.select(slot)
+	    if side == ContainerPatternNames.DIRECTION_FORWARD then
+	        Turtle.suck(count)
+	    elseif side == ContainerPatternNames.DIRECTION_UP then
+	        Turtle.suckUp(count)
+	    elseif side == ContainerPatternNames.DIRECTION_DOWN then
+	        Turtle.suckDown(count)
+	    elseif side == ContainerPatternNames.DIRECTION_LEFT then
+	        Turtle.suckLeft(count)
+	    elseif side == ContainerPatternNames.DIRECTION_RIGHT then
+	        Turtle.suckRight(count)
+	    elseif side == ContainerPatternNames.DIRECTION_BACK then
+	        Turtle.suckBack(count)
+	    end
+	    self.config:set("state", self.states.COMMAND_PROMPT)
+	end
+	function CommonCodedInventoryListeners.actionRefuel(self, name, side, count)
+	    local slot = 1
+	    turtle.select(slot)
+	    if side == ContainerPatternNames.DIRECTION_FORWARD then
+	        Turtle.suck(count)
+	    elseif side == ContainerPatternNames.DIRECTION_UP then
+	        Turtle.suckUp(count)
+	    elseif side == ContainerPatternNames.DIRECTION_DOWN then
+	        Turtle.suckDown(count)
+	    elseif side == ContainerPatternNames.DIRECTION_LEFT then
+	        Turtle.suckLeft(count)
+	    elseif side == ContainerPatternNames.DIRECTION_RIGHT then
+	        Turtle.suckRight(count)
+	    elseif side == ContainerPatternNames.DIRECTION_BACK then
+	        Turtle.suckBack(count)
+	    end
+	    turtle.refuel()
+	    self.config:set("state", self.states.COMMAND_PROMPT)
+	end
+	return CommonCodedInventoryListeners
+end
+local utils_jobutils_CommonCodedInventoryListeners = MODULE_utils_jobutils_CommonCodedInventoryListeners()
+
+
+function MODULE_utils_storage_ContainerIndex()
+	local ContainerIndex = {}
+	ContainerIndex.__index = ContainerIndex
+	function ContainerIndex.new(slotCount)
+	    local self = setmetatable({}, ContainerIndex)
+	    self.slotCount = slotCount
+	    self.slotIndex = {}  -- slotIndex[slot] = {name = itemName, count = itemCount}
+	    self.itemIndex = {}  -- itemIndex[itemName] = {slot1 = itemCount1, slot2 = itemCount2, ...}
+	    return self
+	end
+	function ContainerIndex:addSlot(slot, itemName, itemCount)
+	    self.slotIndex[slot] = {name = itemName, count = itemCount}
+	    if self.itemIndex[itemName] == nil then
+	        self.itemIndex[itemName] = {}
+	    end
+	    self.itemIndex[itemName][slot] = itemCount
+	end
+	function ContainerIndex:getSlot(slot)
+	    local slotIndexValue = self.slotIndex[slot]
+	    if slotIndexValue == nil then
+	        return nil
+	    end
+	    return {slot = slot, name = slotIndexValue.name, count = slotIndexValue.count}
+	end
+	function ContainerIndex:getSlotWithItem(itemName)
+	    local slots = self:getSlotsWithItem(itemName)
+	    if #slots == 0 then
+	        return nil
+	    end
+	    return slots[1]
+	end
+	function ContainerIndex:getSlotsWithItem(itemName)
+	    local slots = {}
+	    local itemSlots = self.itemIndex[itemName]
+	    if itemSlots == nil then
+	        return slots
+	    end
+	    for slot, itemCount in pairs(itemSlots) do
+	        table.insert(slots, {slot = slot, name = itemName, count = itemCount})
+	    end
+	    return slots
+	end
+	function ContainerIndex:getEmptySlot()
+	    for slot = 1, self.slotCount do
+	        if self.slotIndex[slot] == nil then
+	            return slot
+	        end
+	    end
+	    return nil
+	end
+	function ContainerIndex:getEmptySlots()
+	    local slots = {}
+	    for slot = 1, self.slotCount do
+	        if self.slotIndex[slot] == nil then
+	            table.insert(slots, slot)
+	        end
+	    end
+	    return slots
+	end
+	function ContainerIndex:getUsedSlots()
+	    local slots = {}
+	    for slot = 1, self.slotCount do
+	        if self.slotIndex[slot] ~= nil then
+	            table.insert(slots, slot)
+	        end
+	    end
+	    return slots
+	end
+	function ContainerIndex:hasItem(itemName)
+	    return self.itemIndex[itemName] ~= nil
+	end
+	function ContainerIndex:getItemDetail(itemName)
+	    if not self:hasItem(itemName) then
+	        return nil
+	    end
+	    local slots = self:getSlotsWithItem(itemName)
+	    local itemCount = 0
+	    for _, slot in pairs(slots) do
+	        itemCount = itemCount + slot.count
+	    end
+	    return {name = itemName, count = itemCount, slots = slots}
+	end
+	function ContainerIndex:updateSlot(slot, itemName, itemCount)
+	    if slot == nil then
+	        error("Slot should not be nil")
+	    end
+	    if self.slotIndex[slot] == nil then
+	        self:addSlot(slot, itemName, itemCount)
+	    end
+	    if self.itemIndex[itemName] == nil then
+	        self.itemIndex[itemName] = {}
+	    end
+	    self.slotIndex[slot] = {name = itemName, count = itemCount}
+	    self.itemIndex[itemName][slot] = itemCount
+	    if itemCount == 0 then
+	        self:removeSlot(slot)
+	    end
+	end
+	function ContainerIndex:removeSlot(slot)
+	    local itemName = self.slotIndex[slot].name
+	    self.slotIndex[slot] = nil
+	    self.itemIndex[itemName][slot] = nil
+	end
+	function ContainerIndex:getItemList()
+	    local items = {}
+	    for itemName, slots in pairs(self.itemIndex) do
+	        local itemCount = 0
+	        for slot, count in pairs(slots) do
+	            itemCount = itemCount + count
+	        end
+	        table.insert(items, {name = itemName, count = itemCount})
+	    end
+	    return items
+	end
+	function ContainerIndex:getItemCount(name)
+	    local slots = self:getSlotsWithItem(name)
+	    local count = 0
+	    for _, slot in pairs(slots) do
+	        count = count + slot.count
+	    end
+	    return count
+	end
+	return ContainerIndex
+end
+local utils_storage_ContainerIndex = MODULE_utils_storage_ContainerIndex()
+
+
+function MODULE_utils_blocks_BlockIndicators()
+	local Blocks = utils_blocks_Blocks
+	local BlockIndicators = {}
+	BlockIndicators.INPUT = Blocks.green_wool
+	BlockIndicators.OUTPUT = Blocks.red_wool
+	BlockIndicators.KEEP_FILLED = Blocks.pink_wool
+	BlockIndicators.DIRECTION = Blocks.white_wool
+	BlockIndicators.ACTION_STOP = Blocks.red_wool
+	BlockIndicators.ACTION_HOME = Blocks.cyan_wool
+	BlockIndicators.ACTION_MOVE = Blocks.green_wool
+	BlockIndicators.ACTION_BREAK = Blocks.brown_wool
+	BlockIndicators.ACTION_PLACE = Blocks.pink_wool
+	BlockIndicators.ACTION_MARKER = Blocks.magenta_wool
+	BlockIndicators.ACTION_DROP = Blocks.purple_wool
+	BlockIndicators.ACTION_SUCK = Blocks.blue_wool
+	BlockIndicators.ACTION_REFUEL = Blocks.black_wool
+	return BlockIndicators
+end
+local utils_blocks_BlockIndicators = MODULE_utils_blocks_BlockIndicators()
+
+
+function MODULE_utils_storage_patterns_ContainerPattern()
+	local Blocks = utils_blocks_Blocks
+	local ContainerPattern = {}
+	ContainerPattern.__index = ContainerPattern
+	ContainerPattern.indexes = {
+	    [1] = {1, 2, 3, 10, 11, 12, 19, 20, 21},
+	    [2] = {4, 5, 6, 13, 14, 15, 22, 23, 24},
+	    [3] = {7, 8, 9, 16, 17, 18, 25, 26, 27},
+	}
+	function ContainerPattern.new(name, pattern)
+	    local self = setmetatable({}, ContainerPattern)
+	    self.name = name
+	    self.pattern = pattern
+	    return self
+	end
+	function ContainerPattern:match(containerIndex, positionToCheck)
+	    if positionToCheck ~= nil then
+	        if self:_matchWithOffset(containerIndex, positionToCheck) then
+	            return {name = self.name, matchPosition = positionToCheck}
+	        else
+	            return nil
+	        end
+	    end
+	    for offset = 1, 3 do
+	        if self:_matchWithOffset(containerIndex, offset) then
+	            return {name = self.name, matchPosition = offset, count = self:_getCount(containerIndex, offset)}
+	        end
+	    end
+	    return nil
+	end
+	function ContainerPattern:_getCount(containerIndex, offset)
+	    local index = {
+	        [1] = 11,
+	        [2] = 14,
+	        [3] = 17,
+	    }
+	    local slot = containerIndex:getSlot(index[offset])
+	    if slot == nil then
+	        return 0
+	    end
+	    return slot.count
+	end
+	function ContainerPattern:_matchWithOffset(containerIndex, offset)
+	    local indexes = ContainerPattern.indexes[offset]
+	    for index = 1, 9 do
+	        local patternSlotNumber = index
+	        local containerSlotNumber = indexes[index]
+	        local block = self.pattern[patternSlotNumber]
+	        if block ~= nil and block ~= Blocks.ANY then
+	            local slot = containerIndex:getSlot(containerSlotNumber)
+	            if slot == nil or slot.name ~= block then
+	                return nil
+	            end
+	        end
+	    end
+	    return true
+	end
+	return ContainerPattern
+end
+local utils_storage_patterns_ContainerPattern = MODULE_utils_storage_patterns_ContainerPattern()
+
+
+function MODULE_utils_storage_patterns_ContainerPatterns()
+	local BlockIndicators = utils_blocks_BlockIndicators
+	local ContainerPattern = utils_storage_patterns_ContainerPattern
+	local ContainerPatterns = {}
+	ContainerPatterns.ACTION_STOP = ContainerPattern.new("ACTION_STOP", {[5] = BlockIndicators.ACTION_STOP})
+	ContainerPatterns.ACTION_HOME = ContainerPattern.new("ACTION_HOME", {[5] = BlockIndicators.ACTION_HOME})
+	ContainerPatterns.ACTION_MOVE = ContainerPattern.new("ACTION_MOVE", {[5] = BlockIndicators.ACTION_MOVE})
+	ContainerPatterns.ACTION_BREAK = ContainerPattern.new("ACTION_BREAK", {[5] = BlockIndicators.ACTION_BREAK})
+	ContainerPatterns.ACTION_PLACE = ContainerPattern.new("ACTION_PLACE", {[5] = BlockIndicators.ACTION_PLACE})
+	ContainerPatterns.ACTION_MARKER = ContainerPattern.new("ACTION_MARKER", {[5] = BlockIndicators.ACTION_MARKER})
+	ContainerPatterns.ACTION_DROP = ContainerPattern.new("ACTION_DROP", {[5] = BlockIndicators.ACTION_DROP})
+	ContainerPatterns.ACTION_SUCK = ContainerPattern.new("ACTION_SUCK", {[5] = BlockIndicators.ACTION_SUCK})
+	ContainerPatterns.ACTION_REFUEL = ContainerPattern.new("ACTION_REFUEL", {[5] = BlockIndicators.ACTION_REFUEL})
+	return ContainerPatterns
+end
+local utils_storage_patterns_ContainerPatterns = MODULE_utils_storage_patterns_ContainerPatterns()
+
+
+function MODULE_utils_storage_patterns_ContainerDirections()
+	local Side = turtle_Side
+	local BlockIndicators = utils_blocks_BlockIndicators
+	local ContainerPattern = utils_storage_patterns_ContainerPattern
+	local ContainerDirections = {}
+	ContainerDirections.DIRECTION_UP = ContainerPattern.new(Side.TOP, {
+	    [2] = BlockIndicators.DIRECTION,
+	    [4] = BlockIndicators.DIRECTION,
+	    [6] = BlockIndicators.DIRECTION,
+	})
+	ContainerDirections.DIRECTION_DOWN = ContainerPattern.new(Side.BOTTOM, {
+	    [8] = BlockIndicators.DIRECTION,
+	    [4] = BlockIndicators.DIRECTION,
+	    [6] = BlockIndicators.DIRECTION,
+	})
+	ContainerDirections.DIRECTION_FORWARD = ContainerPattern.new(Side.FRONT, {[2] = BlockIndicators.DIRECTION})
+	ContainerDirections.DIRECTION_BACK = ContainerPattern.new(Side.BACK, {[8] = BlockIndicators.DIRECTION})
+	ContainerDirections.DIRECTION_LEFT = ContainerPattern.new(Side.LEFT, {[4] = BlockIndicators.DIRECTION})
+	ContainerDirections.DIRECTION_RIGHT = ContainerPattern.new(Side.RIGHT, {[6] = BlockIndicators.DIRECTION})
+	return ContainerDirections
+end
+local utils_storage_patterns_ContainerDirections = MODULE_utils_storage_patterns_ContainerDirections()
+
+
+function MODULE_utils_storage_Container()
+	local Table = utils_data_Table
+	local ContainerIndex = utils_storage_ContainerIndex
+	local Parallel = utils_controlflow_Parallel
+	local ContainerPatterns = utils_storage_patterns_ContainerPatterns
+	local ContainerDirections = utils_storage_patterns_ContainerDirections
+	local Blocks = utils_blocks_Blocks
+	local Side = turtle_Side
+	local Container = {}
+	Container.__index = Container
+	function Container.new(name)
+	    local self = setmetatable({}, Container)
+	    self.name = name
+	    self.internal = peripheral.wrap(name)
+	    if self.internal == nil then
+	        return nil
+	    end
+	    self.size = self.internal.size()
+	    self.index = ContainerIndex.new(self.internal.size())
+	    self:updateIndex()
+	    return self
+	end
+	function Container:updateIndex()
+	    if self.internal == nil then
+	        return
+	    end
+	    self.index = ContainerIndex.new(self.internal.size())
+	    for slot, item in pairs(self.internal.list()) do
+	        self.index:addSlot(slot, item.name, item.count)
+	    end
+	end
+	function Container:hasItem(itemName)
+	    return self.index:hasItem(itemName)
+	end
+	function Container:getItemLimit(slotNumber)
+	    if self.internal == nil then
+	        return 0
+	    end
+	    return self.internal.getItemLimit(slotNumber)
+	end
+	function Container:putItems(sourceContainer, itemName, count)
+	    if self.internal == nil or sourceContainer.internal == nil then
+	        return count
+	    end
+	    local destContainer = self
+	    local remainingCount = count
+	    while remainingCount > 0 do
+	        local sourceSlotTable = sourceContainer:findItemSlot(itemName)
+	        if sourceSlotTable == nil then
+	            return remainingCount  -- Source container is empty
+	        end
+	        local sourceSlot = sourceSlotTable.slot
+	        local destSlot = destContainer:getEmptySlot()
+	        if destSlot == nil then
+	            return remainingCount  -- Destination container is full
+	        end
+	        local moved = sourceContainer.internal.pushItems(destContainer.name, sourceSlot, remainingCount, destSlot)
+	        remainingCount = remainingCount - moved  -- Track the remaining count
+	        local sourceSlotTable = sourceContainer.index:getSlot(sourceSlot) or {count = 0}
+	        local sourceSlotCount = sourceSlotTable.count - moved
+	        local destSlotCount = moved  -- Was initially empty
+	        sourceContainer.index:updateSlot(sourceSlot, itemName, sourceSlotCount)
+	        destContainer.index:updateSlot(destSlot, itemName, destSlotCount)
+	    end
+	    return remainingCount
+	end
+	function Container:sendItems(destinationContainer, itemName, count)
+	    local sourceContainer = self
+	    return destinationContainer:putItems(sourceContainer, itemName, count)
+	end
+	function Container:findItemSlot(itemName)
+	    return self.index:getSlotWithItem(itemName)
+	end
+	function Container:findItemSlots(itemName)
+	    return self.index:getSlotsWithItem(itemName)
+	end
+	function Container:getItemCount(slotOrItemName)
+	    local item = self.index:getSlot(slotOrItemName)
+	    if item ~= nil then
+	        return item.count
+	    end
+	    local count = self.index:getItemCount(slotOrItemName)
+	    if count ~= nil then
+	        return count
+	    end
+	    return 0  -- Not found
+	end
+	function Container:getSlot(slot)
+	    return self.index:getSlot(slot)
+	end
+	function Container:getEmptySlot()
+	    return self.index:getEmptySlot()
+	end
+	function Container:getEmptySlots()
+	    return self.index:getEmptySlots()
+	end
+	function Container:getUsedSlots()
+	    return self.index:getUsedSlots()
+	end
+	function Container:getItemList()
+	    return self.index:getItemList()
+	end
+	function Container:getMaxCount(slot)
+	    if self.internal == nil then
+	        return 0
+	    end
+	    local itemDetail = self.internal.getItemDetail(slot)
+	    if itemDetail == nil then
+	        return self:getItemLimit(slot)
+	    end
+	    return itemDetail.maxCount
+	end
+	function Container:defragment()
+	    if self.internal == nil then
+	        return
+	    end
+	    local items = self:getItemList()
+	    local p = Parallel.new()
+	    for _, item in pairs(items) do
+	        p:addTask(function() self:_defragmentSingleItem(item) end)
+	    end
+	    p:run()
+	end
+	function Container:_defragmentSingleItem(item)
+	    local slots = self:findItemSlots(item.name)
+	    if #slots == 0 then
+	        return
+	    end
+	    local maxItems = self:getMaxCount(slots[1].slot)
+	    for i = #slots, 1, -1 do
+	        if slots[i].count == maxItems then
+	            table.remove(slots, i)
+	        end
+	    end
+	    if #slots >= 2 then
+	        for _ = 1, #slots - 1 do
+	            local currentSlotIndex = 1
+	            while currentSlotIndex < #slots do
+	                local currentSlot = slots[currentSlotIndex]
+	                local nextSlot = slots[currentSlotIndex + 1]
+	                local itemsMoved = self.internal.pushItems(self.name, currentSlot.slot, maxItems, nextSlot.slot)
+	                currentSlot.count = currentSlot.count - itemsMoved
+	                nextSlot.count = nextSlot.count + itemsMoved
+	                self.index:updateSlot(currentSlot.slot, item.name, currentSlot.count)
+	                self.index:updateSlot(nextSlot.slot, item.name, nextSlot.count)
+	                currentSlotIndex = currentSlotIndex + 1
+	            end
+	            for i = #slots, 1, -1 do
+	                if slots[i].count == maxItems or slots[i].count == 0 then
+	                    table.remove(slots, i)
+	                end
+	            end
+	        end
+	    end
+	end
+	function Container:tostring()
+	    return self.name
+	end
+	function Container:getMatchingContainerPatterns()
+	    if self.internal == nil then
+	        return nil
+	    end
+	    local matchingPatterns = {}
+	    for _, pattern in pairs(ContainerPatterns) do
+	        local match = pattern:match(self.index)
+	        if match ~= nil then
+	            local direction = nil
+	            for _, directionPattern in pairs(ContainerDirections) do
+	                local directionMatch = directionPattern:match(self.index, match.matchPosition)
+	                if directionMatch ~= nil then
+	                    direction = directionMatch
+	                end
+	            end
+	            if direction == nil then
+	                match.direction = nil
+	            else
+	                match.direction = direction.name
+	            end
+	            matchingPatterns[match.matchPosition] = match
+	        end
+	    end
+	    if Table.isEmpty(matchingPatterns) then
+	        return nil
+	    end
+	    local newMatchingPatterns = {}
+	    for _, match in pairs(matchingPatterns) do
+	        table.insert(newMatchingPatterns, match)
+	    end
+	    return newMatchingPatterns
+	end
+	return Container
+end
+local utils_storage_Container = MODULE_utils_storage_Container()
+
+
+function MODULE_utils_storage_codedinventory_CodedInventory()
+	local CommonCodedInventoryListeners = utils_jobutils_CommonCodedInventoryListeners
+	local ContainerPatternNames = utils_storage_patterns_ContainerPatternNames
+	local Turtle = turtle_Turtle
+	local Blocks = utils_blocks_Blocks
+	local Side = turtle_Side
+	local Container = utils_storage_Container
+	local CodedInventory = {}
+	CodedInventory.__index = CodedInventory
+	function CodedInventory.new()
+	    local self = setmetatable({}, CodedInventory)
+	    self.listeners = {}
+	    self.defaultListener = nil
+	    return self
+	end
+	function CodedInventory:addListener(patternName, listenerFunction)
+	    self.listeners[patternName] = listenerFunction
+	end
+	function CodedInventory:addDefaultListeners()
+	    self.defaultListener = CommonCodedInventoryListeners.defaultListener
+	    self:addListener(ContainerPatternNames.ACTION_STOP, CommonCodedInventoryListeners.actionStop)
+	    self:addListener(ContainerPatternNames.ACTION_HOME, CommonCodedInventoryListeners.actionHome)
+	    self:addListener(ContainerPatternNames.ACTION_MOVE, CommonCodedInventoryListeners.actionMove)
+	    self:addListener(ContainerPatternNames.ACTION_BREAK, CommonCodedInventoryListeners.actionBreak)
+	    self:addListener(ContainerPatternNames.ACTION_PLACE, CommonCodedInventoryListeners.actionPlace)
+	    self:addListener(ContainerPatternNames.ACTION_MARKER, CommonCodedInventoryListeners.actionMarker)
+	    self:addListener(ContainerPatternNames.ACTION_DROP, CommonCodedInventoryListeners.actionDrop)
+	    self:addListener(ContainerPatternNames.ACTION_SUCK, CommonCodedInventoryListeners.actionSuck)
+	    self:addListener(ContainerPatternNames.ACTION_REFUEL, CommonCodedInventoryListeners.actionRefuel)
+	end
+	function CodedInventory:notifyListeners(jobSelf, patternName, side, count)
+	    if self.listeners[patternName] ~= nil then
+	        self.listeners[patternName](jobSelf, patternName, side, count)
+	        return
+	    end
+	    if self.defaultListener ~= nil then
+	        self.defaultListener(jobSelf, patternName, side, count)
+	        return
+	    end
+	    print("WARNING: No listener found for pattern '" .. patternName .. "'")
+	end
+	function CodedInventory:getInventories()
+	    local codedInventories = {
+	        [Side.TOP] = Container.new(Side.TOP),
+	        [Side.BOTTOM] = Container.new(Side.BOTTOM),
+	    }
+	    local presentInventories = {}
+	    for side, container in pairs(codedInventories) do
+	        if container ~= nil then
+	            presentInventories[side] = container
+	        end
+	    end
+	    return presentInventories
+	end
+	function CodedInventory:getMatchingPatterns()
+	    local containers = self:getInventories()
+	    local allPatterns = {}
+	    for _, container in pairs(containers) do
+	        local matchingPatterns = container:getMatchingContainerPatterns()
+	        if matchingPatterns ~= nil then
+	            for _, pattern in pairs(matchingPatterns) do
+	                table.insert(allPatterns, pattern)
+	            end
+	        end
+	    end
+	    if #allPatterns == 0 then
+	        return nil
+	    end
+	    return allPatterns
+	end
+	function CodedInventory:run(jobSelf)
+	    local patterns = self:getMatchingPatterns()
+	    if patterns == nil then
+	        return
+	    end
+	    for _, pattern in pairs(patterns) do
+	        self:notifyListeners(jobSelf, pattern.name, pattern.direction, pattern.count)
+	    end
+	end
+	return CodedInventory
+end
+local utils_storage_codedinventory_CodedInventory = MODULE_utils_storage_codedinventory_CodedInventory()
+
+
+function MODULE_utils_jobutils_CommonEventImplementations()
+	local Network = utils_network_Network
+	local CommonEventImplementations = {}
+	local function onStepBase(self)
+	    local state = self.config:get("state", self.states.COMMAND_PROMPT)
+	    local stateAction = self.stateActions[state]
+	    if stateAction == nil then
+	        print("Invalid state: " .. state)
+	        self.config:set("state", self.states.COMMAND_PROMPT)
+	        return
+	    end
+	    stateAction(self)
+	end
+	function CommonEventImplementations.onStart(self)
+	    return self.config:set("alive", true)
+	end
+	function CommonEventImplementations.onResume(self)
+	    return
+	end
+	function CommonEventImplementations.inProgress(self)
+	    return self.config:get("alive", false)
+	end
+	function CommonEventImplementations.onStepStatic(self)
+	    return onStepBase(self)
+	end
+	function CommonEventImplementations.onStepMobile(self)
+	    self.codedInventory:run(self)
+	    return onStepBase(self)
+	end
+	function CommonEventImplementations.onStepTablet(self)
+	    return onStepBase(self)
+	end
+	function CommonEventImplementations.onBackgroundStep(self)
+	    return
+	end
+	function CommonEventImplementations.onComplete(self)
+	    return
+	end
+	return CommonEventImplementations
+end
+local utils_jobutils_CommonEventImplementations = MODULE_utils_jobutils_CommonEventImplementations()
+
+
+function MODULE_jobs_definitions_mobile_treeFarm_TreeFarmCodedInventoryListeners()
+	local Turtle = turtle_Turtle
+	local Inventory = turtle_Inventory
+	local ContainerPatternNames = utils_storage_patterns_ContainerPatternNames
+	local TreeFarmCodedInventoryListeners = {}
+	function TreeFarmCodedInventoryListeners.actionHome(self, name, side, count)
+	    self.log("Home Detected - Watiting")
+	    local waitSeconds = self.config:get("waitSeconds", 15)
+	    os.sleep(waitSeconds)
+	end
+	function TreeFarmCodedInventoryListeners.actionMove(self, name, side, count)
+	    self.log("Turning to side: " .. side)
+	    if side == ContainerPatternNames.DIRECTION_FORWARD then
+	        self.config:set("state", self.states.TREE_FARM_MOVING_FORWARD)
+	    elseif side == ContainerPatternNames.DIRECTION_LEFT then
+	        Turtle.turnLeft()
+	        self.config:set("state", self.states.TREE_FARM_MOVING_FORWARD)
+	    elseif side == ContainerPatternNames.DIRECTION_RIGHT then
+	        Turtle.turnRight()
+	        self.config:set("state", self.states.TREE_FARM_MOVING_FORWARD)
+	    elseif side == ContainerPatternNames.DIRECTION_BACK then
+	        Turtle.turnLeft()
+	        Turtle.turnLeft()
+	        self.config:set("state", self.states.TREE_FARM_MOVING_FORWARD)
+	    else
+	        self.log("Unexpected direction: " .. side)
+	    end
+	end
+	function TreeFarmCodedInventoryListeners.actionDrop(self, name, side, count)
+	    self.log("Dumping items")
+	    local originalDirection = Turtle.CURRENT_DIRECTION
+	    Turtle.dump(side)
+	    Turtle.turnTo(originalDirection)
+	end
+	function TreeFarmCodedInventoryListeners.actionSuck(self, name, side, count)
+	    local originalDirection = Turtle.CURRENT_DIRECTION
+	    local saplingTarget = self.config:get("saplingTarget", 128)
+	    local currentSaplingCount = Inventory.countSaplings()
+	    Turtle.turnToSide(side)
+	    while currentSaplingCount < saplingTarget do
+	        self.log("Sapling Count: " .. currentSaplingCount)
+	        Turtle.suck()
+	        currentSaplingCount = Inventory.countSaplings()
+	    end
+	    self.log("Sapling Count: " .. currentSaplingCount)
+	    Turtle.turnTo(originalDirection)
+	end
+	function TreeFarmCodedInventoryListeners.actionRefuel(self, name, side, count)
+	    self.log("Refueling")
+	    local fuelTarget = self.config:get("targetFuelLevel", 1024)
+	    local originalDirection = Turtle.CURRENT_DIRECTION
+	    Turtle.refuelUsingAdjacentContainer(fuelTarget, side)
+	    Turtle.turnTo(originalDirection)
+	end
+	return TreeFarmCodedInventoryListeners
+end
+local jobs_definitions_mobile_treeFarm_TreeFarmCodedInventoryListeners = MODULE_jobs_definitions_mobile_treeFarm_TreeFarmCodedInventoryListeners()
+
+
+function MODULE_utils_network_protocols_logging_LogProtocol()
+	local Terminal = utils_terminal_Terminal
+	local Network = utils_network_Network
+	local LibOs = utils_libs_LibOs
+	local LogProtocol = {}
+	LogProtocol.__index = LogProtocol
+	function LogProtocol.new(job, onLogFunc)
+	    local self = setmetatable({}, LogProtocol)
+	    self.job = job  -- The job instance that is using this protocol
+	    self.onLogFunc = onLogFunc
+	    self.protocolName = "protocol:log"
+	    self.commands = {
+	        LOG = "LOG",
+	    }
+	    self.listeners = {
+	        LOG = self.onLog,
+	    }
+	    self.histories = {}
+	    return self
+	end
+	function LogProtocol:listen()
+	    Network.host(self.protocolName)
+	    Network.listen(self.protocolName, nil, function(senderId, message)
+	        if type(message) ~= "table" then return end
+	        local command = message.command
+	        local args = message.message
+	        local listener = self.listeners[command]
+	        if listener == nil then return end
+	        listener(self, args)
+	    end)
+	end
+	function LogProtocol:_send(command, message)
+	    Network.broadcast({
+	        command = command,
+	        message = message,
+	    }, self.protocolName)
+	end
+	function LogProtocol:sendLog(...)
+	    self:_send(self.commands.LOG, {sourceName = self.job.name, printArgs = ...})
+	end
+	function LogProtocol:sendLogToChannel(channel, ...)
+	    self:_send(self.commands.LOG, {sourceName = channel, printArgs = ...})
+	end
+	function LogProtocol:onLog(args)
+	    local sourceName = args.sourceName
+	    local printArgs = args.printArgs
+	    self.histories[sourceName] = self.histories[sourceName] or {}
+	    table.insert(self.histories[sourceName], printArgs)
+	    while #self.histories[sourceName] > 20 do
+	        table.remove(self.histories[sourceName], 1)
+	    end
+	    if self.onLogFunc == nil then return end
+	    self.onLogFunc(sourceName, printArgs)
+	end
+	function LogProtocol:display(sourceName)
+	    for _ = 1, 20 do print() end
+	    local history = self.histories[sourceName] or {}
+	    for _, printArgs in ipairs(history) do
+	        if type(printArgs) == "table" then
+	            printArgs = table.concat(printArgs, " ")
+	        end
+	        print(printArgs)
+	    end
+	    Terminal.writeLineBreak()
+	    print(sourceName)
+	    print("            *Any Key Exit")
+	end
+	local function viewLogs(self, commandSourceName)
+	    self.job.protocols.log.onLogFunc = function(updatedSourceName, ...)
+	        if commandSourceName == updatedSourceName then
+	            self.job.protocols.log:display(commandSourceName)
+	        end
+	    end
+	    self.job.protocols.log.onLogFunc(commandSourceName)
+	    while true do
+	        LibOs.sleep(1)
+	    end
+	end
+	function LogProtocol:view(sourceName)
+	    parallel.waitForAny(
+	        function() viewLogs(self, sourceName) end,
+	        function() Terminal.waitForKey() end
+	    )
+	    self.job.protocols.log.onLogFunc = nil
+	end
+	return LogProtocol
+end
+local utils_network_protocols_logging_LogProtocol = MODULE_utils_network_protocols_logging_LogProtocol()
+
+
+function MODULE_jobs_definitions_mobile_treeFarm_TreeFarmJob()
+	local Commands = utils_terminal_commands_Commands
+	local Command = utils_terminal_commands_Command
+	local TreeFarmCommands = jobs_definitions_mobile_treeFarm_TreeFarmCommands
+	local CommonCommands = utils_jobutils_CommonCommands
+	local TreeFarmStates = jobs_definitions_mobile_treeFarm_TreeFarmStates
+	local CommonStates = utils_jobutils_CommonStates
+	local CodedInventory = utils_storage_codedinventory_CodedInventory
+	local CommonEventImplementations = utils_jobutils_CommonEventImplementations
+	local ContainerPatternNames = utils_storage_patterns_ContainerPatternNames
+	local TreeFarmCodedInventoryListeners = jobs_definitions_mobile_treeFarm_TreeFarmCodedInventoryListeners
+	local Job = jobs_Job
+	local LogProtocol = utils_network_protocols_logging_LogProtocol
+	local TreeFarmJob = {}
+	TreeFarmJob.__index = TreeFarmJob
+	TreeFarmJob.name = Job.TREE_FARM
+	function TreeFarmJob.new(config)
+	    local self = setmetatable({}, TreeFarmJob)
+	    self.backgroundTask = function() self:onBackgroundStep() end
+	    self.backgroundDelay = 5  -- This task should be infrequent
+	    self.commands = Commands.new()
+	    self.commands:add(Command.new("exit", "Terminates the program", function(...) CommonCommands.commandExit(self, ...) end))
+	    self.commands:add(Command.new("start", "Starts the program", function(...) TreeFarmCommands.commandTreeFarmStart(self, ...) end))
+	    self.config = config
+	    self.states = {
+	        COMMAND_PROMPT = "COMMAND_PROMPT",
+	        MOVING = "MOVING",
+	        TREE_FARM_STARTING = "TREE_FARM_STARTING",  -- Turtle initiates tree farm details in the config file and reads coded inventories
+	        TREE_FARM_MOVING_FORWARD = "TREE_FARM_MOVING_FORWARD",
+	        TREE_FARM_RETURNING_TO_HOME_HEIGHT = "TREE_FARM_RETURNING_TO_HOME_HEIGHT",
+	        TREE_FARM_MINING_UP = "TREE_FARM_MINING_UP",
+	        TREE_FARM_MINING_DOWN = "TREE_FARM_MINING_DOWN",
+	        TREE_FARM_REPLANTING = "TREE_FARM_REPLANTING",  -- Finally - Starts from the lowest block before dirt and places sapling after moving one block up
+	        TREE_FARM_WAITING = "TREE_FARM_WAITING",  -- Turtle waits for saplings to grow
+	        TREE_FARM_TERMINATING = "TREE_FARM_TERMINATING",  -- Turtle stops
+	    }
+	    self.stateActions = {
+	        [self.states.COMMAND_PROMPT] = CommonStates.onCommandPrompt,
+	        [self.states.MOVING] = CommonStates.onMoving,
+	        [self.states.TREE_FARM_STARTING] = TreeFarmStates.onTreeFarmStarting,
+	        [self.states.TREE_FARM_MOVING_FORWARD] = TreeFarmStates.onTreeFarmMovingForward,
+	        [self.states.TREE_FARM_RETURNING_TO_HOME_HEIGHT] = TreeFarmStates.onTreeFarmReturningToHomeHeight,
+	        [self.states.TREE_FARM_MINING_UP] = TreeFarmStates.onTreeFarmMiningUp,
+	        [self.states.TREE_FARM_MINING_DOWN] = TreeFarmStates.onTreeFarmMiningDown,
+	        [self.states.TREE_FARM_REPLANTING] = TreeFarmStates.onTreeFarmReplanting,
+	        [self.states.TREE_FARM_TERMINATING] = TreeFarmStates.onTreeFarmTerminating,
+	    }
+	    self.codedInventory = CodedInventory.new()
+	    self.codedInventory:addDefaultListeners()
+	    self.codedInventory:addListener(ContainerPatternNames.ACTION_HOME, TreeFarmCodedInventoryListeners.actionHome)
+	    self.codedInventory:addListener(ContainerPatternNames.ACTION_MOVE, TreeFarmCodedInventoryListeners.actionMove)
+	    self.codedInventory:addListener(ContainerPatternNames.ACTION_DROP, TreeFarmCodedInventoryListeners.actionDrop)
+	    self.codedInventory:addListener(ContainerPatternNames.ACTION_SUCK, TreeFarmCodedInventoryListeners.actionSuck)
+	    self.codedInventory:addListener(ContainerPatternNames.ACTION_REFUEL, TreeFarmCodedInventoryListeners.actionRefuel)
+	    self.protocols = {
+	        log = LogProtocol.new(self),
+	    }
+	    return self
+	end
+	function TreeFarmJob:onStart()
+	    return CommonEventImplementations.onStart(self)
+	end
+	function TreeFarmJob:onResume()
+	    return CommonEventImplementations.onResume(self)
+	end
+	function TreeFarmJob:inProgress()
+	    return CommonEventImplementations.inProgress(self)
+	end
+	function TreeFarmJob:onStep()
+	    return CommonEventImplementations.onStepMobile(self)
+	end
+	function TreeFarmJob:onBackgroundStep()
+	    return CommonEventImplementations.onBackgroundStep(self)
+	end
+	function TreeFarmJob:onComplete()
+	    return CommonEventImplementations.onComplete(self)
+	end
+	return TreeFarmJob
+end
+local jobs_definitions_mobile_treeFarm_TreeFarmJob = MODULE_jobs_definitions_mobile_treeFarm_TreeFarmJob()
+
+
+function MODULE_entrypoints_treeFarm()
+	local JobManager = jobs_JobManager
+	local TreeFarmJob = jobs_definitions_mobile_treeFarm_TreeFarmJob
+	JobManager.run(TreeFarmJob)
+end
+local entrypoints_treeFarm = MODULE_entrypoints_treeFarm()
