@@ -3250,12 +3250,15 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	StorageJob.name = Job.STORAGE
 	function StorageJob.new(config)
 	    local self = setmetatable({}, StorageJob)
+	    print("Adding background tasks")
 	    self.backgroundTasks = {}
 	    if PlayerDetector.detector ~= nil then table.insert(self.backgroundTasks, function() PlayerDetector.onPlayerMoved(function (username, oldPosition, newPosition) self.protocols.events:sendOnPlayerMoved(username, oldPosition, newPosition) end, Me.username, 5) end) end
 	    if EnvironmentDetector.detector ~= nil then table.insert(self.backgroundTasks, StorageJobBackgroundTasks.onEntityEnterOrLeave) end
 	    if ChatBox.internal ~= nil then table.insert(self.backgroundTasks, StorageJobBackgroundTasks.onChatMessage) end
+	    print("Adding 'the' background task")
 	    self.backgroundTask = function() self:onBackgroundStep() end
 	    self.backgroundDelay = 5  -- This task should be infrequent
+	    print("Defining the commands")
 	    self.storage = nil
 	    self.commands = Commands.new()
 	    self.commands:add("exit", Command.new("exit", "Terminates the storage program", function(...) self:commandExit(...) end))
@@ -3268,25 +3271,35 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	    self.commands:add("defragment", Command.new("defragment", "Compacts item stacks in the storage so that stacks of e.g. 1 are combined into fewer bigger stacks", function(...) self:commandDefragment(...) end))
 	    self.commands:add("updateIndex", Command.new("updateindex", "Updates the index of the storage", function(...) self:commandUpdateIndex(...) end))
 	    self.commands:add("smelt", Command.new("smelt", "Smelts an item in the furnace\nExample 1: smelt <quantity> <item>\nExample 2: smelt <item>\nExample 3: smelt list\n*Default quantity is 64", function(...) self:commandSmelt(...) end))
+	    print("Setting states and config")
 	    self.config = config
 	    self.states = {
 	        SETUP = "SETUP",
 	        COMMAND_PROMPT = "COMMAND_PROMPT",
 	    }
+	    print("Adding protocols")
 	    self.protocols = {
 	        log = LogProtocol.new(self),
 	        events = EventsProtocol.new(self),
 	        chat = ChatProtocol.new(self),
 	    }
+	    print("Ready to go!")
 	    return self
 	end
 	function StorageJob:onStart()
 	    self.config:set("alive", true)
+	    print("Loading stroage config...")
 	    local storageConfig = self.config:get("storageConfig", nil)
+	    print("Creating the stroage...")
 	    self.storage = Storage.new(storageConfig)
+	    print("Updating the index...")
 	    self.storage:updateIndex()
+	    print("Dumping...")
 	    self.storage:dump()
+	    print("Defragmenting...")
 	    self.storage:defragment()
+	    print("Start complete!")
+	    LibOs.sleep(0.5)
 	    print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
 	    self.logToChannel(LogChannels.ALERTS, "Storage has started!")
 	end
