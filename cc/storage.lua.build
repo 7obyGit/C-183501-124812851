@@ -3106,7 +3106,7 @@ function MODULE_utils_other_Debug()
 	    for _, field in ipairs(fields) do
 	        print(field)
 	    end
-	    LibOs.sleep(5)
+	    LibOs.sleep(1)
 	end
 	function Debug.showMethods(obj)
 	    if type(obj) ~= "table" then
@@ -3124,12 +3124,12 @@ function MODULE_utils_other_Debug()
 	    for _, method in ipairs(methods) do
 	        print(method)
 	    end
-	    LibOs.sleep(5)
+	    LibOs.sleep(1)
 	end
 	function Debug.showFieldsAndMethods(obj)
 	    Debug.showFields(obj)
 	    Debug.showMethods(obj)
-	    LibOs.sleep(5)
+	    LibOs.sleep(3)
 	end
 	return Debug
 end
@@ -3176,7 +3176,7 @@ function MODULE_utils_peripherals_GeoScanner()
 	end
 	function GeoScanner.getScanCooldown()
 	    if GeoScanner.scanner == nil then return 0 end
-	    return GeoScanner.scanner.getOperationCooldown()
+	    return GeoScanner.scanner.getOperationCooldown("scan")
 	end
 	function GeoScanner.chunkAnalyze()
 	    if GeoScanner.scanner == nil then return nil end
