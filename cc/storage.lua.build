@@ -2638,7 +2638,7 @@ function MODULE_utils_peripherals_EnvironmentDetector()
 	local Text = utils_text_Text
 	local EnvironmentDetector = {}
 	EnvironmentDetector.detector = peripheral.find("environmentDetector")
-	EnvironmentDetector.MAX_SCAN_RANGE = 17
+	EnvironmentDetector.MAX_SCAN_RANGE = 16
 	function EnvironmentDetector.getBiome()
 	    return EnvironmentDetector.detector.getBiome()
 	end
@@ -2681,8 +2681,21 @@ function MODULE_utils_peripherals_EnvironmentDetector()
 	function EnvironmentDetector.listDimensions()
 	    return EnvironmentDetector.detector.listDimensions()
 	end
-	function EnvironmentDetector.getEntities(range)
-	    return EnvironmentDetector.detector.scanEntities(range or EnvironmentDetector.MAX_SCAN_RANGE)
+	function EnvironmentDetector.getEntities(range, searchString)
+	    local entities = EnvironmentDetector.detector.scanEntities(range or EnvironmentDetector.MAX_SCAN_RANGE)
+	    if entities == nil then
+	        return {}
+	    end
+	    if searchString ~= nil then
+	        local filteredEntities = {}
+	        for _, entity in ipairs(entities) do
+	            if Text.contains(entity.name, searchString) then
+	                table.insert(filteredEntities, entity)
+	            end
+	        end
+	        return filteredEntities
+	    end
+	    return entities
 	end
 	return EnvironmentDetector
 end
