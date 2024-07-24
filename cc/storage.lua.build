@@ -3101,27 +3101,34 @@ function MODULE_utils_peripherals_GeoScanner()
 	    end
 	end
 	function GeoScanner.getFuelLevel()
+	    if GeoScanner.scanner == nil then return 0 end
 	    return GeoScanner.scanner.getFuelLevel()
 	end
 	function GeoScanner.getMaxFuelLevel()
+	    if GeoScanner.scanner == nil then return 0 end
 	    return GeoScanner.scanner.getMaxFuelLevel()
 	end
 	function GeoScanner.getCostOfRadius(radius)
+	    if GeoScanner.scanner == nil then return 0 end
 	    return GeoScanner.scanner.cost(radius)
 	end
 	function GeoScanner.scan(radius)
+	    if GeoScanner.scanner == nil then return nil end
 	    return GeoScanner.scanner.scan(radius)
 	end
 	function GeoScanner.safeScan(radius)
+	    if GeoScanner.scanner == nil then return nil end
 	    local timeRemaining = GeoScanner.getScanCooldown() + 1
 	    print("Waiting for " .. timeRemaining .. " seconds before scanning")
 	    LibOs.sleep(timeRemaining)
 	    return GeoScanner.scan(radius)
 	end
 	function GeoScanner.getScanCooldown()
+	    if GeoScanner.scanner == nil then return 0 end
 	    return GeoScanner.scanner.getScanCooldown()
 	end
 	function GeoScanner.chunkAnalyze()
+	    if GeoScanner.scanner == nil then return nil end
 	    return GeoScanner.scanner.chunkAnalyze()
 	end
 	return GeoScanner
