@@ -2836,7 +2836,7 @@ function MODULE_jobs_definitions_static_storage_StorageJobBackgroundTasks()
 	        function(entitiesRemoved) StorageJobBackgroundTasks.onEntityLeave(self, entitiesRemoved) end,
 	        EnvironmentDetector.MAX_SCAN_RANGE,
 	        "ig",
-	        3
+	        1
 	    )
 	end
 	return StorageJobBackgroundTasks
