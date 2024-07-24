@@ -2823,12 +2823,12 @@ function MODULE_jobs_definitions_static_storage_StorageJobBackgroundTasks()
 	local StorageJobBackgroundTasks = {}
 	function StorageJobBackgroundTasks.onEntityEnter(self, entities)
 	    for _, entity in ipairs(entities) do
-	        print("Entity entered: " .. entity.name)
+	        self.log("Entity entered: " .. entity.name)
 	    end
 	end
 	function StorageJobBackgroundTasks.onEntityLeave(self, entities)
 	    for _, entity in ipairs(entities) do
-	        print("Entity left: " .. entity.name)
+	        self.log("Entity left: " .. entity.name)
 	    end
 	end
 	function StorageJobBackgroundTasks.onEntityEnterOrLeave(self)
