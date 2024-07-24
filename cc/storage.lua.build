@@ -2664,6 +2664,14 @@ function MODULE_utils_peripherals_EnvironmentDetector()
 	EnvironmentDetector.MAX_SCAN_RANGE = 16
 	EnvironmentDetector.detectors = Peripherals.findAll("environmentDetector")
 	EnvironmentDetector.detector = EnvironmentDetector.detectors[1]
+	function EnvironmentDetector.onEntityDetected(func, range, searchString, period)
+	    period = period or 5
+	    while true do
+	        local entities = EnvironmentDetector.getEntities(range, searchString)
+	        func(entities)
+	        os.sleep(period)
+	    end
+	end
 	function EnvironmentDetector.getBiome()
 	    return EnvironmentDetector.detector.getBiome()
 	end
@@ -2718,10 +2726,8 @@ function MODULE_utils_peripherals_EnvironmentDetector()
 	    end
 	    if searchString ~= nil then
 	        local filteredEntities = {}
-	        print("Filtering")
 	        for _, entity in ipairs(allEntities) do
 	            if Text.contains(entity.name, searchString) then
-	                print("Found entity: " .. entity.name)
 	                table.insert(filteredEntities, entity)
 	            end
 	        end
@@ -2775,7 +2781,7 @@ function MODULE_jobs_definitions_static_StorageJob()
 	    local self = setmetatable({}, StorageJob)
 	    self.backgroundTasks = {}
 	    if PlayerDetector.detector ~= nil then table.insert(self.backgroundTasks, function() PlayerDetector.onPlayerMoved(function (username, oldPosition, newPosition) self.protocols.events:sendOnPlayerMoved(username, oldPosition, newPosition) end, Me.Username, 5) end) end
-	    if EnvironmentDetector.detector ~= nil then table.insert(self.backgroundTasks, function() EnvironmentDetector.getEntities(EnvironmentDetector.MAX_SCAN_RANGE, "ig") end) end
+	    if EnvironmentDetector.detector ~= nil then table.insert(self.backgroundTasks, function() EnvironmentDetector.onEntityDetected(function(entities) print("DETECTED") end, EnvironmentDetector.MAX_SCAN_RANGE, "ig", 1) end) end
 	    self.backgroundTask = function() self:onBackgroundStep() end
 	    self.backgroundDelay = 5  -- This task should be infrequent
 	    self.storage = nil
