@@ -3087,6 +3087,48 @@ end
 local utils_network_protocols_remoteperipherals_ChatProtocol = MODULE_utils_network_protocols_remoteperipherals_ChatProtocol()
 
 
+function MODULE_utils_peripherals_GeoScanner()
+	local LibOs = utils_libs_LibOs
+	local GeoScanner = {}
+	GeoScanner.scanner = peripheral.find("geoScanner")
+	function GeoScanner.monitor(func, radius)
+	    while true do
+	        local blocks = GeoScanner.scan(radius)
+	        func(blocks)
+	        local timeRemaining = GeoScanner.getScanCooldown() + 1  -- Ensure that the peripheral does not attempt to scan early
+	        print("Waiting for " .. timeRemaining .. " seconds before next scan")
+	        LibOs.sleep(timeRemaining)
+	    end
+	end
+	function GeoScanner.getFuelLevel()
+	    return GeoScanner.scanner.getFuelLevel()
+	end
+	function GeoScanner.getMaxFuelLevel()
+	    return GeoScanner.scanner.getMaxFuelLevel()
+	end
+	function GeoScanner.getCostOfRadius(radius)
+	    return GeoScanner.scanner.cost(radius)
+	end
+	function GeoScanner.scan(radius)
+	    return GeoScanner.scanner.scan(radius)
+	end
+	function GeoScanner.safeScan(radius)
+	    local timeRemaining = GeoScanner.getScanCooldown() + 1
+	    print("Waiting for " .. timeRemaining .. " seconds before scanning")
+	    LibOs.sleep(timeRemaining)
+	    return GeoScanner.scan(radius)
+	end
+	function GeoScanner.getScanCooldown()
+	    return GeoScanner.scanner.getScanCooldown()
+	end
+	function GeoScanner.chunkAnalyze()
+	    return GeoScanner.scanner.chunkAnalyze()
+	end
+	return GeoScanner
+end
+local utils_peripherals_GeoScanner = MODULE_utils_peripherals_GeoScanner()
+
+
 function MODULE_jobs_definitions_static_storage_StorageJob()
 	local Storage = utils_storage_Storage
 	local Blocks  = utils_blocks_Blocks
@@ -3107,6 +3149,7 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	local LogChannels = utils_network_protocols_logging_LogChannels
 	local ChatBox = utils_peripherals_ChatBox
 	local ChatProtocol = utils_network_protocols_remoteperipherals_ChatProtocol
+	local GeoScanner = utils_peripherals_GeoScanner
 	local StorageJob = {}
 	StorageJob.__index = StorageJob
 	StorageJob.name = Job.STORAGE
@@ -3143,6 +3186,8 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	    return self
 	end
 	function StorageJob:onStart()
+	    print(GeoScanner.getScanCooldown())
+	    print(GeoScanner.scan(3))
 	    self.config:set("alive", true)
 	    local storageConfig = self.config:get("storageConfig", nil)
 	    self.storage = Storage.new(storageConfig)
