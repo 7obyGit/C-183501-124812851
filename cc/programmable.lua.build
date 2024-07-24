@@ -1080,6 +1080,7 @@ function MODULE_utils_terminal_Terminal()
 	Terminal.__index = Terminal
 	function Terminal.clear()
 	    term.clear()
+	    term.setCursorPos(1, 1)
 	end
 	function Terminal.waitForKey()
 	    local _, key = LibOs.pullEvent("key")
