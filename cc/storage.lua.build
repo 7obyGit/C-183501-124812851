@@ -3195,10 +3195,8 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	end
 	function StorageJob:onStart()
 	    print(GeoScanner.getScanCooldown())
-	    local blocks = GeoScanner.scan(3)
-	    for _, block in ipairs(blocks) do
-	        print(textutils.serializeJSON(block))
-	    end
+	    local blocks = GeoScanner.scan(16)
+	    print("Blocks: " .. #blocks)
 	    LibOs.sleep(5)
 	    self.config:set("alive", true)
 	    local storageConfig = self.config:get("storageConfig", nil)
