@@ -2117,6 +2117,9 @@ function MODULE_utils_terminal_Terminal()
 	local LibOs = utils_libs_LibOs
 	local Terminal = {}
 	Terminal.__index = Terminal
+	function Terminal.clear()
+	    term.clear()
+	end
 	function Terminal.waitForKey()
 	    local _, key = LibOs.pullEvent("key")
 	    return key
