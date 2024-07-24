@@ -1719,13 +1719,9 @@ function MODULE_utils_storage_Storage()
 	    Parallel.map(self.barrels, function(name, container) container:updateIndex() end)
 	end
 	function Storage:defragment()
-	    print("Copying inventories...")
 	    local inventories = Table.copy(self.inventories)
-	    print("Inventories copied")
 	    inventories["IO"] = self.io
-	    print("Starting to defragment all containers")
 	    Parallel.map(inventories, function(name, container) container:defragment() end)
-	    print("Finished defragmenting all containers")
 	end
 	function Storage:hasItem(itemName)
 	    for _, container in pairs(self.inventories) do
