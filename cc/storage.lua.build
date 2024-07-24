@@ -2727,7 +2727,7 @@ function MODULE_utils_peripherals_ChatBox()
 	        message = table.concat(message, "\n")
 	    end
 	    ChatBox.sleep()
-	    ChatBox.internal.sendToastToPlayer(message, title, player, senderName)
+	    ChatBox.internal.sendToastToPlayer(message, title, player, "&4&l" .. senderName, "()", "&c&l")
 	end
 	function ChatBox.localAlert(title, message)
 	    if ChatBox.internal == nil then return end
