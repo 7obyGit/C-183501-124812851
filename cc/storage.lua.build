@@ -2670,8 +2670,35 @@ end
 local utils_peripherals_PlayerDetector = MODULE_utils_peripherals_PlayerDetector()
 
 
+function MODULE_utils_peripherals_ChatBox()
+	local ChatBox = {}
+	ChatBox.internal = peripheral.find("chatBox")
+	function ChatBox.listen(func)
+	    while true do
+	        local event, username, message, uuid, isHidden = os.pullEvent("chat")
+	        func(event, username, message, uuid, isHidden)
+	    end
+	end
+	function ChatBox.sendMessage(senderName, message)
+	    if ChatBox.internal == nil then return end
+	    ChatBox.internal.sendMessage(message, senderName)
+	end
+	function ChatBox.sendMessageToPlayer(player, message)
+	    if ChatBox.internal == nil then return end
+	    ChatBox.internal.sendMessageToPlayer(player, message)
+	end
+	function ChatBox.sendToastToPlayer(player, title, message)
+	    if ChatBox.internal == nil then return end
+	    ChatBox.internal.sendToastToPlayer(message, title, player)
+	end
+	return ChatBox
+end
+local utils_peripherals_ChatBox = MODULE_utils_peripherals_ChatBox()
+
+
 function MODULE_utils_network_protocols_events_EventsProtocol()
 	local Network = utils_network_Network
+	local ChatBox = utils_peripherals_ChatBox
 	local EventsProtocol = {}
 	EventsProtocol.__index = EventsProtocol
 	function EventsProtocol.new(job)
@@ -2680,11 +2707,14 @@ function MODULE_utils_network_protocols_events_EventsProtocol()
 	    self.protocolName = "protocol:events"
 	    self.commands = {
 	        ON_PLAYER_MOVED = "ON_PLAYER_MOVED",
+	        ON_CHAT_MESSAGE = "ON_CHAT_MESSAGE",
 	    }
 	    self.listeners = {
 	        [self.commands.ON_PLAYER_MOVED] = self.onPlayerMoved,
+	        [self.commands.ON_CHAT_MESSAGE] = self.onChatMessage,
 	    }
 	    self.onPlayerMovedFunc = nil
+	    self.onChatMessageFunc = nil
 	    return self
 	end
 	function EventsProtocol:listen()
@@ -2713,6 +2743,18 @@ function MODULE_utils_network_protocols_events_EventsProtocol()
 	    local newPosition = args.newPosition
 	    if self.onPlayerMovedFunc == nil then return end
 	    self.onPlayerMovedFunc(username, oldPosition, newPosition)
+	end
+	function EventsProtocol:sendOnChatMessage(event, username, message, uuid, isHidden)
+	    self:_send(self.commands.ON_CHAT_MESSAGE, {event = event, username = username, message = message, uuid = uuid, isHidden = isHidden})
+	end
+	function EventsProtocol:onChatMessage(args)
+	    local event = args.event
+	    local username = args.username
+	    local message = args.message
+	    local uuid = args.uuid
+	    local isHidden = args.isHidden
+	    if self.onChatMessageFunc == nil then return end
+	    self.onChatMessageFunc(event, username, message, uuid, isHidden)
 	end
 	return EventsProtocol
 end
@@ -2855,6 +2897,7 @@ function MODULE_jobs_definitions_static_storage_StorageJobBackgroundTasks()
 	local EnvironmentDetector = utils_peripherals_EnvironmentDetector
 	local LogChannels = utils_network_protocols_logging_LogChannels
 	local Math = utils_math_Math
+	local ChatBox = utils_peripherals_ChatBox
 	local StorageJobBackgroundTasks = {}
 	function StorageJobBackgroundTasks.onEntityEnter(self, entities)
 	    for _, entity in ipairs(entities) do
@@ -2878,6 +2921,11 @@ function MODULE_jobs_definitions_static_storage_StorageJobBackgroundTasks()
 	        5
 	    )
 	end
+	function StorageJobBackgroundTasks.onChatMessage(self)
+	    ChatBox.listen(function(event, username, message, uuid, isHidden)
+	        self.protocols.events.sendOnChatMessage(event, username, message, uuid, isHidden)
+	    end)
+	end
 	return StorageJobBackgroundTasks
 end
 local jobs_definitions_static_storage_StorageJobBackgroundTasks = MODULE_jobs_definitions_static_storage_StorageJobBackgroundTasks()
@@ -2889,6 +2937,77 @@ function MODULE_utils_other_Me()
 	}
 end
 local utils_other_Me = MODULE_utils_other_Me()
+
+
+function MODULE_utils_network_protocols_remoteperipherals_ChatProtocol()
+	local Network = utils_network_Network
+	local ChatBox = utils_peripherals_ChatBox
+	local ChatProtocol = {}
+	ChatProtocol.__index = ChatProtocol
+	function ChatProtocol.new(job)
+	    local self = setmetatable({}, ChatProtocol)
+	    self.job = job  -- The job instance that is using this protocol
+	    self.protocolName = "protocol:chat"
+	    self.commands = {
+	        SEND_MESSAGE = "SEND_MESSAGE",
+	        SEND_MESSAGE_TO_PLAYER = "SEND_MESSAGE_TO_PLAYER",
+	        SEND_TOAST_TO_PLAYER = "SEND_TOAST_TO_PLAYER",
+	    }
+	    self.listeners = {
+	        [self.commands.SEND_MESSAGE] = self.onMessage,
+	        [self.commands.SEND_MESSAGE_TO_PLAYER] = self.onMessageToPlayer,
+	        [self.commands.SEND_TOAST_TO_PLAYER] = self.onToastToPlayer,
+	    }
+	    return self
+	end
+	function ChatProtocol:listen()
+	    Network.host(self.protocolName)
+	    Network.listen(self.protocolName, nil, function(senderId, message)
+	        if type(message) ~= "table" then return end
+	        local command = message.command
+	        local args = message.message
+	        local listener = self.listeners[command]
+	        if listener == nil then return end
+	        listener(self, args)
+	    end)
+	end
+	function ChatProtocol:_send(command, message)
+	    Network.broadcast({
+	        command = command,
+	        message = message,
+	    }, self.protocolName)
+	end
+	function ChatProtocol:sendMessage(senderName, message)
+	    self:_send(self.commands.SEND_MESSAGE, {senderName = senderName, message = message})
+	end
+	function ChatProtocol:onMessage(args)
+	    local senderName = args.senderName
+	    local message = args.message
+	    if self.onMessageFunc == nil then return end
+	    ChatBox.sendMessage(senderName, message)
+	end
+	function ChatProtocol:sendMessageToPlayer(player, message)
+	    self:_send(self.commands.SEND_MESSAGE_TO_PLAYER, {player = player, message = message})
+	end
+	function ChatProtocol:onMessageToPlayer(args)
+	    local player = args.player
+	    local message = args.message
+	    if self.onMessageToPlayerFunc == nil then return end
+	    ChatBox.sendMessageToPlayer(player, message)
+	end
+	function ChatProtocol:sendToastToPlayer(player, title, message)
+	    self:_send(self.commands.SEND_TOAST_TO_PLAYER, {player = player, title = title, message = message})
+	end
+	function ChatProtocol:onToastToPlayer(args)
+	    local player = args.player
+	    local title = args.title
+	    local message = args.message
+	    if self.onToastToPlayerFunc == nil then return end
+	    ChatBox.sendToastToPlayer(player, title, message)
+	end
+	return ChatProtocol
+end
+local utils_network_protocols_remoteperipherals_ChatProtocol = MODULE_utils_network_protocols_remoteperipherals_ChatProtocol()
 
 
 function MODULE_jobs_definitions_static_storage_StorageJob()
@@ -2909,6 +3028,8 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	local StorageJobBackgroundTasks = jobs_definitions_static_storage_StorageJobBackgroundTasks
 	local Me = utils_other_Me
 	local LogChannels = utils_network_protocols_logging_LogChannels
+	local ChatBox = utils_peripherals_ChatBox
+	local ChatProtocol = utils_network_protocols_remoteperipherals_ChatProtocol
 	local StorageJob = {}
 	StorageJob.__index = StorageJob
 	StorageJob.name = Job.STORAGE
@@ -2917,6 +3038,7 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	    self.backgroundTasks = {}
 	    if PlayerDetector.detector ~= nil then table.insert(self.backgroundTasks, function() PlayerDetector.onPlayerMoved(function (username, oldPosition, newPosition) self.protocols.events:sendOnPlayerMoved(username, oldPosition, newPosition) end, Me.Username, 5) end) end
 	    if EnvironmentDetector.detector ~= nil then table.insert(self.backgroundTasks, StorageJobBackgroundTasks.onEntityEnterOrLeave) end
+	    if ChatBox.internal ~= nil then table.insert(self.backgroundTasks, StorageJobBackgroundTasks.onChatMessage) end
 	    self.backgroundTask = function() self:onBackgroundStep() end
 	    self.backgroundDelay = 5  -- This task should be infrequent
 	    self.storage = nil
@@ -2939,6 +3061,7 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	    self.protocols = {
 	        log = LogProtocol.new(self),
 	        events = EventsProtocol.new(self),
+	        chat = ChatProtocol.new(self),
 	    }
 	    return self
 	end
