@@ -3199,8 +3199,11 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	function StorageJob:onStart()
 	    print(GeoScanner.getScanCooldown())
 	    for _ = 1, 5 do
-	        local blocks = GeoScanner.scan(16)
+	        local blocks = GeoScanner.scan(2)
 	        print("Blocks: " .. #blocks)
+	        for _, block in pairs(blocks) do
+	            print("\t\t" .. block.y)
+	        end
 	        LibOs.sleep(2)
 	    end
 	    LibOs.sleep(5)
