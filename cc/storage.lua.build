@@ -2634,6 +2634,59 @@ end
 local utils_network_protocols_events_EventsProtocol = MODULE_utils_network_protocols_events_EventsProtocol()
 
 
+function MODULE_utils_peripherals_EnvironmentDetector()
+	local EnvironmentDetector = {}
+	EnvironmentDetector.detector = peripheral.find("environmentDetector")
+	function EnvironmentDetector.getBiome()
+	    return EnvironmentDetector.detector.getBiome()
+	end
+	function EnvironmentDetector.getBlockLightLevel()
+	    return EnvironmentDetector.detector.getBlockLightLevel()
+	end
+	function EnvironmentDetector.getDayLightLevel()
+	    return EnvironmentDetector.detector.getDayLightLevel()
+	end
+	function EnvironmentDetector.getSkyLightLevel()
+	    return EnvironmentDetector.detector.getSkyLightLevel()
+	end
+	function EnvironmentDetector.getDimensionNameNoPrefix()
+	    return EnvironmentDetector.detector.getDimensionName()
+	end
+	function EnvironmentDetector.getDimensionName()
+	    return EnvironmentDetector.detector.getDimensionPaN()
+	end
+	function EnvironmentDetector.getMoonId()
+	    return EnvironmentDetector.detector.getMoonId()
+	end
+	function EnvironmentDetector.getMoonName()
+	    return EnvironmentDetector.detector.getMoonName()
+	end
+	function EnvironmentDetector.getTime()
+	    return EnvironmentDetector.detector.getTime()
+	end
+	function EnvironmentDetector.isRaining()
+	    return EnvironmentDetector.detector.isRaining()
+	end
+	function EnvironmentDetector.isSunny()
+	    return EnvironmentDetector.detector.isSunny()
+	end
+	function EnvironmentDetector.isThunder()
+	    return EnvironmentDetector.detector.isThunder()
+	end
+	function EnvironmentDetector.isSlimeChunk()
+	    return EnvironmentDetector.detector.isSlimeChunk()
+	end
+	function EnvironmentDetector.listDimensions()
+	    return EnvironmentDetector.detector.listDimensions()
+	end
+	function EnvironmentDetector.getEntities(range)
+	    return EnvironmentDetector.detector.getEntities(range)
+	end
+	return EnvironmentDetector
+end
+local utils_peripherals_EnvironmentDetector = MODULE_utils_peripherals_EnvironmentDetector()
+
+
 function MODULE_utils_other_Me()
 	return {
 	    Username = "3p0",
@@ -2656,6 +2709,7 @@ function MODULE_jobs_definitions_static_StorageJob()
 	local LogProtocol = utils_network_protocols_logging_LogProtocol
 	local PlayerDetector = utils_peripherals_PlayerDetector
 	local EventsProtocol = utils_network_protocols_events_EventsProtocol
+	local EnvironmentDetector = utils_peripherals_EnvironmentDetector
 	local Me = utils_other_Me
 	local StorageJob = {}
 	StorageJob.__index = StorageJob
@@ -2664,6 +2718,7 @@ function MODULE_jobs_definitions_static_StorageJob()
 	    local self = setmetatable({}, StorageJob)
 	    self.backgroundTasks = {
 	        function() if PlayerDetector.detector ~= nil then PlayerDetector.onPlayerMoved(function (username, oldPosition, newPosition) self.protocols.events:sendOnPlayerMoved(username, oldPosition, newPosition) end, Me.Username, 5) end end,
+	        function() if EnvironmentDetector.detector ~= nil then print(textutils.serializeJson(EnvironmentDetector.getEntities(10))) end end,
 	    }
 	    self.backgroundTask = function() self:onBackgroundStep() end
 	    self.backgroundDelay = 5  -- This task should be infrequent
