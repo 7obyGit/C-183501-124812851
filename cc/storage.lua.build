@@ -3150,6 +3150,7 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	local ChatBox = utils_peripherals_ChatBox
 	local ChatProtocol = utils_network_protocols_remoteperipherals_ChatProtocol
 	local GeoScanner = utils_peripherals_GeoScanner
+	local LibOs = utils_libs_LibOs
 	local StorageJob = {}
 	StorageJob.__index = StorageJob
 	StorageJob.name = Job.STORAGE
@@ -3188,6 +3189,7 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	function StorageJob:onStart()
 	    print(GeoScanner.getScanCooldown())
 	    print(GeoScanner.scan(3))
+	    LibOs.sleep(5)
 	    self.config:set("alive", true)
 	    local storageConfig = self.config:get("storageConfig", nil)
 	    self.storage = Storage.new(storageConfig)
