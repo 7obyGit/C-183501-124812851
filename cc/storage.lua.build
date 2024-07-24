@@ -3090,6 +3090,7 @@ local utils_network_protocols_remoteperipherals_ChatProtocol = MODULE_utils_netw
 function MODULE_utils_peripherals_GeoScanner()
 	local LibOs = utils_libs_LibOs
 	local GeoScanner = {}
+	GeoScanner.MAX_SCAN_RANGE = 16
 	GeoScanner.scanner = peripheral.find("geoScanner")
 	function GeoScanner.monitor(func, radius)
 	    while true do
@@ -3114,6 +3115,8 @@ function MODULE_utils_peripherals_GeoScanner()
 	end
 	function GeoScanner.scan(radius)
 	    if GeoScanner.scanner == nil then return nil end
+	    radius = radius or GeoScanner.MAX_SCAN_RANGE
+	    radius = math.min(radius, GeoScanner.MAX_SCAN_RANGE)
 	    return GeoScanner.scanner.scan(radius)
 	end
 	function GeoScanner.safeScan(radius)
@@ -3195,8 +3198,10 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	end
 	function StorageJob:onStart()
 	    print(GeoScanner.getScanCooldown())
-	    local blocks = GeoScanner.scan(16)
+	    for _ = 1, 5 do
+	        local blocks = GeoScanner.scan(16)
 	    print("Blocks: " .. #blocks)
+	    end
 	    LibOs.sleep(5)
 	    self.config:set("alive", true)
 	    local storageConfig = self.config:get("storageConfig", nil)
