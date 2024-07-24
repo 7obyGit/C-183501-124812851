@@ -2705,43 +2705,34 @@ function MODULE_utils_peripherals_ChatBox()
 	function ChatBox.sleep()
 	    LibOs.sleep(ChatBox.MESSAGE_DELAY)
 	end
-	function ChatBox.sendMessages(senderName, messages)
-	    if ChatBox.internal == nil then return end
-	    local message = table.concat(messages, "\n")
-	    ChatBox.sendMessage(senderName, message)
-	end
 	function ChatBox.sendMessage(senderName, message)
-	    if ChatBox.internal == nil then return end
-	    ChatBox.sleep()
-	    ChatBox.internal.sendMessage(message, senderName)
-	end
-	function ChatBox.sendMessagesToPlayer(senderName, player, messages)
-	    if ChatBox.internal == nil then return end
-	    local message = table.concat(messages, "\n")
-	    ChatBox.sendMessageToPlayer(senderName, player, message)
-	end
-	function ChatBox.sendMessageToPlayer(senderName, player, message)
-	    if ChatBox.internal == nil then return end
-	    ChatBox.sleep()
-	    ChatBox.internal.sendMessageToPlayer(message, player, senderName)
-	end
-	function ChatBox.sendToastsToPlayer(player, title, messages)
-	    if ChatBox.internal == nil then return end
-	    local message = table.concat(messages, "\n")
-	    ChatBox.sendToastToPlayer(player, title, message)
-	end
-	function ChatBox.sendToastToPlayer(player, title, message)
-	    if ChatBox.internal == nil then return end
-	    ChatBox.sleep()
-	    ChatBox.internal.sendToastToPlayer(message, title, player)
-	end
-	function ChatBox.localAlert(message)
 	    if ChatBox.internal == nil then return end
 	    if type(message) == "table" then
 	        message = table.concat(message, "\n")
 	    end
-	    ChatBox.sendMessageToPlayer("Alert", Me.username, message)
-	    ChatBox.sendMessageToPlayer("Alert", Players.names.FuturePr0, message)
+	    ChatBox.sleep()
+	    ChatBox.internal.sendMessage(message, senderName)
+	end
+	function ChatBox.sendMessageToPlayer(senderName, player, message)
+	    if ChatBox.internal == nil then return end
+	    if type(message) == "table" then
+	        message = table.concat(message, "\n")
+	    end
+	    ChatBox.sleep()
+	    ChatBox.internal.sendMessageToPlayer(message, player, senderName)
+	end
+	function ChatBox.sendToastToPlayer(senderName, player, title, message)
+	    if ChatBox.internal == nil then return end
+	    if type(message) == "table" then
+	        message = table.concat(message, "\n")
+	    end
+	    ChatBox.sleep()
+	    ChatBox.internal.sendToastToPlayer(message, title, player, senderName)
+	end
+	function ChatBox.localAlert(title, message)
+	    if ChatBox.internal == nil then return end
+	    ChatBox.sendToastToPlayer("Alert", Me.username, title, message)
+	    ChatBox.sendToastToPlayer("Alert", Players.names.FuturePr0, title, message)
 	end
 	return ChatBox
 end
@@ -2962,8 +2953,7 @@ function MODULE_jobs_definitions_static_storage_StorageJobBackgroundTasks()
 	        )
 	        table.insert(messages, message)
 	    end
-	    ChatBox.localAlert(messages)
-	    ChatBox.sendToastsToPlayer(Me.username, "Entities detected", messages)
+	    ChatBox.localAlert("Mi Detected", messages)
 	end
 	function StorageJobBackgroundTasks.onEntityLeave(self, entities)
 	    for _, entity in ipairs(entities) do
@@ -3045,14 +3035,15 @@ function MODULE_utils_network_protocols_remoteperipherals_ChatProtocol()
 	    local message = args.message
 	    ChatBox.sendMessageToPlayer(senderName, player, message)
 	end
-	function ChatProtocol:sendToastToPlayer(player, title, message)
-	    self:_send(self.commands.SEND_TOAST_TO_PLAYER, {player = player, title = title, message = message})
+	function ChatProtocol:sendToastToPlayer(senderName, player, title, message)
+	    self:_send(self.commands.SEND_TOAST_TO_PLAYER, {senderName = senderName, player = player, title = title, message = message})
 	end
 	function ChatProtocol:onToastToPlayer(args)
+	    local senderName = args.senderName
 	    local player = args.player
 	    local title = args.title
 	    local message = args.message
-	    ChatBox.sendToastToPlayer(player, title, message)
+	    ChatBox.sendToastToPlayer(senderName, player, title, message)
 	end
 	return ChatProtocol
 end
