@@ -2963,7 +2963,7 @@ function MODULE_jobs_definitions_static_storage_StorageJobBackgroundTasks()
 	        table.insert(messages, message)
 	    end
 	    ChatBox.localAlert(messages)
-	    ChatBox.sendToastToPlayer(Me.username, "Entities detected", messages)
+	    ChatBox.sendToastsToPlayer(Me.username, "Entities detected", messages)
 	end
 	function StorageJobBackgroundTasks.onEntityLeave(self, entities)
 	    for _, entity in ipairs(entities) do
