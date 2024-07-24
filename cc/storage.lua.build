@@ -2702,7 +2702,7 @@ function MODULE_utils_peripherals_ChatBox()
 	function ChatBox.sendMessageToPlayer(player, message)
 	    if ChatBox.internal == nil then return end
 	    ChatBox.sleep()
-	    ChatBox.internal.sendMessageToPlayer(message, player)
+	    ChatBox.internal.sendMessageToPlayer(message, player, "TEST")
 	end
 	function ChatBox.sendToastsToPlayer(player, title, messages)
 	    if ChatBox.internal == nil then return end
