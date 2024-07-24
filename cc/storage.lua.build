@@ -2728,7 +2728,7 @@ function MODULE_utils_peripherals_ChatBox()
 	function ChatBox.sendToastsToPlayer(player, title, messages)
 	    if ChatBox.internal == nil then return end
 	    local message = table.concat(messages, "\n")
-	    ChatBox.internal.sendToastToPlayer(player, title, message)
+	    ChatBox.sendToastToPlayer(player, title, message)
 	end
 	function ChatBox.sendToastToPlayer(player, title, message)
 	    if ChatBox.internal == nil then return end
