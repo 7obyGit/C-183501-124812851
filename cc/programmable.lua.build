@@ -1538,6 +1538,8 @@ function MODULE_utils_data_Table()
 	    return newObject
 	end
 	function Table.addAll(object, other)
+	    object = object or {}
+	    other = other or {}
 	    for _, value in ipairs(other) do
 	        table.insert(object, value)
 	    end
