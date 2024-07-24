@@ -2694,10 +2694,20 @@ function MODULE_utils_peripherals_ChatBox()
 	    ChatBox.sleep()
 	    ChatBox.internal.sendMessage(message, senderName)
 	end
+	function ChatBox.sendMessagesToPlayer(player, messages)
+	    if ChatBox.internal == nil then return end
+	    local message = table.concat(messages, "\n")
+	    ChatBox.sendMessageToPlayer(player, message)
+	end
 	function ChatBox.sendMessageToPlayer(player, message)
 	    if ChatBox.internal == nil then return end
 	    ChatBox.sleep()
 	    ChatBox.internal.sendMessageToPlayer(player, message)
+	end
+	function ChatBox.sendToastsToPlayer(player, title, messages)
+	    if ChatBox.internal == nil then return end
+	    local message = table.concat(messages, "\n")
+	    ChatBox.internal.sendToast(player, title, message)
 	end
 	function ChatBox.sendToastToPlayer(player, title, message)
 	    if ChatBox.internal == nil then return end
@@ -2922,7 +2932,7 @@ function MODULE_jobs_definitions_static_storage_StorageJobBackgroundTasks()
 	        )
 	        table.insert(messages, message)
 	    end
-	    ChatBox.sendMessages("Alert", messages)
+	    ChatBox.sendMessagesToPlayer("Alert", messages)
 	end
 	function StorageJobBackgroundTasks.onEntityLeave(self, entities)
 	    for _, entity in ipairs(entities) do
@@ -2940,7 +2950,6 @@ function MODULE_jobs_definitions_static_storage_StorageJobBackgroundTasks()
 	end
 	function StorageJobBackgroundTasks.onChatMessage(self)
 	    ChatBox.listen(function(event, username, message, uuid, isHidden)
-	        print("Chat message received", event, username, message, uuid, isHidden)
 	        self.protocols.events:sendOnChatMessage(event, username, message, uuid, isHidden)
 	    end)
 	end
