@@ -1186,7 +1186,7 @@ function MODULE_utils_text_Text()
 	local Table = utils_data_Table
 	local Text = {}
 	function Text.contains(text, pattern)
-	    if type(text) == "table" then
+	    if type(pattern) == "table" then
 	        return Table.any(pattern, function(subPattern)
 	            return Text.contains(text, subPattern)
 	        end)
