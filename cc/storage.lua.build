@@ -1483,9 +1483,16 @@ local utils_storage_machines_Furnace = MODULE_utils_storage_machines_Furnace()
 
 
 function MODULE_utils_text_Text()
+	local Table = utils_data_Table
 	local Text = {}
 	function Text.contains(text, pattern)
-	    return text:find(pattern) ~= nil
+	    if type(text) == "table" then
+	        return Table.any(pattern, function(subPattern)
+	            return Text.contains(text, subPattern)
+	        end)
+	    else
+	        return text:find(pattern) ~= nil
+	    end
 	end
 	function Text.startsWith(text, pattern)
 	    return text:sub(1, #pattern) == pattern
@@ -2722,10 +2729,10 @@ function MODULE_utils_peripherals_EnvironmentDetector()
 	EnvironmentDetector.MAX_SCAN_RANGE = 16
 	EnvironmentDetector.detectors = Peripherals.findAll("environmentDetector")
 	EnvironmentDetector.detector = EnvironmentDetector.detectors[1]
-	function EnvironmentDetector.onEntityDetected(func, range, searchString, period)
+	function EnvironmentDetector.onEntityDetected(func, range, searchStrings, period)
 	    period = period or 5
 	    while true do
-	        local entities = EnvironmentDetector.getEntities(range, searchString)
+	        local entities = EnvironmentDetector.getEntities(range, searchStrings)
 	        func(entities)
 	        os.sleep(period)
 	    end
@@ -2794,7 +2801,7 @@ function MODULE_utils_peripherals_EnvironmentDetector()
 	function EnvironmentDetector.listDimensions()
 	    return EnvironmentDetector.detector.listDimensions()
 	end
-	function EnvironmentDetector.getEntities(range, searchString)
+	function EnvironmentDetector.getEntities(range, searchStrings)
 	    range = range or EnvironmentDetector.MAX_SCAN_RANGE
 	    local allEntities = {}
 	    Parallel.map(EnvironmentDetector.detectors, function(detector)
@@ -2804,10 +2811,10 @@ function MODULE_utils_peripherals_EnvironmentDetector()
 	    if allEntities == nil then
 	        return {}
 	    end
-	    if searchString ~= nil then
+	    if searchStrings ~= nil then
 	        local filteredEntities = {}
 	        for _, entity in ipairs(allEntities) do
-	            if Text.contains(entity.name, searchString) then
+	            if Text.contains(entity.name, searchStrings) then
 	                table.insert(filteredEntities, entity)
 	            end
 	        end
@@ -2851,7 +2858,7 @@ function MODULE_jobs_definitions_static_storage_StorageJobBackgroundTasks()
 	        function(entitiesAdded) StorageJobBackgroundTasks.onEntityEnter(self, entitiesAdded) end,
 	        function(entitiesRemoved) StorageJobBackgroundTasks.onEntityLeave(self, entitiesRemoved) end,
 	        EnvironmentDetector.MAX_SCAN_RANGE,
-	        nil,
+	        {"ig", "eep"},
 	        5
 	    )
 	end

@@ -1092,10 +1092,107 @@ end
 local utils_math_Vector3 = MODULE_utils_math_Vector3()
 
 
+function MODULE_utils_data_Table()
+	local Table = {}
+	function Table.map(object, func)
+	    local newObject = {}
+	    for key, value in pairs(object) do
+	        newObject[key] = func(value)
+	    end
+	    return newObject
+	end
+	function Table.filter(object, func)
+	    local newObject = {}
+	    for key, value in pairs(object) do
+	        if func(value) then
+	            table.insert(newObject, value)
+	        end
+	    end
+	    return newObject
+	end
+	function Table.contains(object, value)
+	    for _, v in ipairs(object) do
+	        if v == value then
+	            return true
+	        end
+	    end
+	    return false
+	end
+	function Table.size(object)
+	    local count = 0
+	    for _ in pairs(object) do count = count + 1 end
+	    return count
+	end
+	function Table.isEmpty(object)
+	    return next(object) == nil
+	end
+	function Table.copy(object)
+	    local newObject = {}
+	    for key, value in pairs(object) do
+	        newObject[key] = value
+	    end
+	    return newObject
+	end
+	function Table.addAll(object, other)
+	    object = object or {}
+	    other = other or {}
+	    for _, value in ipairs(other) do
+	        table.insert(object, value)
+	    end
+	end
+	function Table.unique(object)
+	    local unique = {}
+	    for _, value in ipairs(object) do
+	        if not Table.contains(unique, value) then
+	            table.insert(unique, value)
+	        end
+	    end
+	    return unique
+	end
+	function Table.intersection(first, second)
+	    local intersection = {}
+	    first = Table.unique(first)
+	    second = Table.unique(second)
+	    for _, value in ipairs(first) do
+	        if Table.contains(second, value) then
+	            table.insert(intersection, value)
+	        end
+	    end
+	    return intersection
+	end
+	function Table.union(first, second)
+	    local union = Table.copy(first)
+	    Table.addAll(union, second)
+	    union = Table.unique(union)
+	    return union
+	end
+	function Table.difference(first, second)
+	    local difference = {}
+	    first = Table.unique(first)
+	    second = Table.unique(second)
+	    for _, value in ipairs(first) do
+	        if not Table.contains(second, value) then
+	            table.insert(difference, value)
+	        end
+	    end
+	    return difference
+	end
+	return Table
+end
+local utils_data_Table = MODULE_utils_data_Table()
+
+
 function MODULE_utils_text_Text()
+	local Table = utils_data_Table
 	local Text = {}
 	function Text.contains(text, pattern)
-	    return text:find(pattern) ~= nil
+	    if type(text) == "table" then
+	        return Table.any(pattern, function(subPattern)
+	            return Text.contains(text, subPattern)
+	        end)
+	    else
+	        return text:find(pattern) ~= nil
+	    end
 	end
 	function Text.startsWith(text, pattern)
 	    return text:sub(1, #pattern) == pattern
@@ -1509,96 +1606,6 @@ function MODULE_turtle_Inventory()
 	return Inventory
 end
 local turtle_Inventory = MODULE_turtle_Inventory()
-
-
-function MODULE_utils_data_Table()
-	local Table = {}
-	function Table.map(object, func)
-	    local newObject = {}
-	    for key, value in pairs(object) do
-	        newObject[key] = func(value)
-	    end
-	    return newObject
-	end
-	function Table.filter(object, func)
-	    local newObject = {}
-	    for key, value in pairs(object) do
-	        if func(value) then
-	            table.insert(newObject, value)
-	        end
-	    end
-	    return newObject
-	end
-	function Table.contains(object, value)
-	    for _, v in ipairs(object) do
-	        if v == value then
-	            return true
-	        end
-	    end
-	    return false
-	end
-	function Table.size(object)
-	    local count = 0
-	    for _ in pairs(object) do count = count + 1 end
-	    return count
-	end
-	function Table.isEmpty(object)
-	    return next(object) == nil
-	end
-	function Table.copy(object)
-	    local newObject = {}
-	    for key, value in pairs(object) do
-	        newObject[key] = value
-	    end
-	    return newObject
-	end
-	function Table.addAll(object, other)
-	    object = object or {}
-	    other = other or {}
-	    for _, value in ipairs(other) do
-	        table.insert(object, value)
-	    end
-	end
-	function Table.unique(object)
-	    local unique = {}
-	    for _, value in ipairs(object) do
-	        if not Table.contains(unique, value) then
-	            table.insert(unique, value)
-	        end
-	    end
-	    return unique
-	end
-	function Table.intersection(first, second)
-	    local intersection = {}
-	    first = Table.unique(first)
-	    second = Table.unique(second)
-	    for _, value in ipairs(first) do
-	        if Table.contains(second, value) then
-	            table.insert(intersection, value)
-	        end
-	    end
-	    return intersection
-	end
-	function Table.union(first, second)
-	    local union = Table.copy(first)
-	    Table.addAll(union, second)
-	    union = Table.unique(union)
-	    return union
-	end
-	function Table.difference(first, second)
-	    local difference = {}
-	    first = Table.unique(first)
-	    second = Table.unique(second)
-	    for _, value in ipairs(first) do
-	        if not Table.contains(second, value) then
-	            table.insert(difference, value)
-	        end
-	    end
-	    return difference
-	end
-	return Table
-end
-local utils_data_Table = MODULE_utils_data_Table()
 
 
 function MODULE_utils_peripherals_Compass()
