@@ -289,6 +289,7 @@ function MODULE_jobs_JobManager()
 	    job.name = jobClass.name .. ":" .. LibOs.getComputerID()
 	    job.log = function(...) print(...) job.logSilent(...) end
 	    job.logSilent = function(...) if job.protocols ~= nil then job.protocols.log:sendLog(...) end end
+	    job.logToChannel = function(channel, ...) if job.protocols ~= nil then job.protocols.log:sendLogToChannel(channel, ...) end end
 	    if job == nil then
 	        print("Job not found: " .. jobClass.name)
 	        return

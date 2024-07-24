@@ -289,6 +289,7 @@ function MODULE_jobs_JobManager()
 	    job.name = jobClass.name .. ":" .. LibOs.getComputerID()
 	    job.log = function(...) print(...) job.logSilent(...) end
 	    job.logSilent = function(...) if job.protocols ~= nil then job.protocols.log:sendLog(...) end end
+	    job.logToChannel = function(channel, ...) if job.protocols ~= nil then job.protocols.log:sendLogToChannel(channel, ...) end end
 	    if job == nil then
 	        print("Job not found: " .. jobClass.name)
 	        return
@@ -3091,6 +3092,9 @@ function MODULE_utils_network_protocols_logging_LogProtocol()
 	end
 	function LogProtocol:sendLog(...)
 	    self:_send(self.commands.LOG, {sourceName = self.job.name, printArgs = ...})
+	end
+	function LogProtocol:sendLogToChannel(channel, ...)
+	    self:_send(self.commands.LOG, {sourceName = channel, printArgs = ...})
 	end
 	function LogProtocol:onLog(args)
 	    local sourceName = args.sourceName
