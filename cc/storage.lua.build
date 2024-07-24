@@ -2820,12 +2820,21 @@ end
 local utils_peripherals_EnvironmentDetector = MODULE_utils_peripherals_EnvironmentDetector()
 
 
+function MODULE_utils_network_protocols_logging_LogChannels()
+	return {
+	    ALERTS = "ALERTS",
+	}
+end
+local utils_network_protocols_logging_LogChannels = MODULE_utils_network_protocols_logging_LogChannels()
+
+
 function MODULE_jobs_definitions_static_storage_StorageJobBackgroundTasks()
 	local EnvironmentDetector = utils_peripherals_EnvironmentDetector
+	local LogChannels = utils_network_protocols_logging_LogChannels
 	local StorageJobBackgroundTasks = {}
 	function StorageJobBackgroundTasks.onEntityEnter(self, entities)
 	    for _, entity in ipairs(entities) do
-	        self.logToChannel("Mi: " .. textutils.serialiseJSON({x=entity.x, y=entity.y, z=entity.z}))
+	        self.logToChannel(LogChannels.ALERTS, "Mi: " .. textutils.serialiseJSON({x=entity.x, y=entity.y, z=entity.z}))
 	    end
 	end
 	function StorageJobBackgroundTasks.onEntityLeave(self, entities)
@@ -2853,14 +2862,6 @@ function MODULE_utils_other_Me()
 	}
 end
 local utils_other_Me = MODULE_utils_other_Me()
-
-
-function MODULE_utils_network_protocols_logging_LogChannels()
-	return {
-	    ALERTS = "ALERTS",
-	}
-end
-local utils_network_protocols_logging_LogChannels = MODULE_utils_network_protocols_logging_LogChannels()
 
 
 function MODULE_jobs_definitions_static_storage_StorageJob()
