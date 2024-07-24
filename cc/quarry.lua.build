@@ -1514,6 +1514,22 @@ local turtle_Inventory = MODULE_turtle_Inventory()
 
 function MODULE_utils_data_Table()
 	local Table = {}
+	function Table.map(object, func)
+	    local newObject = {}
+	    for key, value in pairs(object) do
+	        newObject[key] = func(value)
+	    end
+	    return newObject
+	end
+	function Table.filter(object, func)
+	    local newObject = {}
+	    for key, value in pairs(object) do
+	        if func(value) then
+	            table.insert(newObject, value)
+	        end
+	    end
+	    return newObject
+	end
 	function Table.contains(object, value)
 	    for _, v in ipairs(object) do
 	        if v == value then
