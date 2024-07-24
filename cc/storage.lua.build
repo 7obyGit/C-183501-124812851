@@ -287,10 +287,8 @@ function MODULE_jobs_JobManager()
 	    config:save()
 	    local job = jobClass.new(config)
 	    job.name = jobClass.name .. ":" .. LibOs.getComputerID()
-	    job.log = function(...)
-	        print(...)
-	        if job.protocols ~= nil then job.protocols.log:sendLog(...) end
-	    end
+	    job.log = function(...) print(...) job.logSilent(...) end
+	    job.logSilent = function(...) if job.protocols ~= nil then job.protocols.log:sendLog(...) end end
 	    if job == nil then
 	        print("Job not found: " .. jobClass.name)
 	        return
@@ -2823,12 +2821,12 @@ function MODULE_jobs_definitions_static_storage_StorageJobBackgroundTasks()
 	local StorageJobBackgroundTasks = {}
 	function StorageJobBackgroundTasks.onEntityEnter(self, entities)
 	    for _, entity in ipairs(entities) do
-	        self.log("Entity entered: " .. entity.name)
+	        self.logSilent("Entity entered: " .. entity.name)
 	    end
 	end
 	function StorageJobBackgroundTasks.onEntityLeave(self, entities)
 	    for _, entity in ipairs(entities) do
-	        self.log("Entity left: " .. entity.name)
+	        self.logSilent("Entity left: " .. entity.name)
 	    end
 	end
 	function StorageJobBackgroundTasks.onEntityEnterOrLeave(self)
