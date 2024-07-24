@@ -2825,7 +2825,7 @@ function MODULE_jobs_definitions_static_storage_StorageJobBackgroundTasks()
 	local StorageJobBackgroundTasks = {}
 	function StorageJobBackgroundTasks.onEntityEnter(self, entities)
 	    for _, entity in ipairs(entities) do
-	        self.logSilent("Entity entered: " .. entity.name)
+	        self.logToChannel("Mi: " .. textutils.serialiseJSON({x=entity.x, y=entity.y, z=entity.z}))
 	    end
 	end
 	function StorageJobBackgroundTasks.onEntityLeave(self, entities)
