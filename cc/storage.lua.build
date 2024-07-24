@@ -2745,6 +2745,7 @@ function MODULE_utils_peripherals_EnvironmentDetector()
 	            onLeave(entitiesRemoved)
 	        end
 	        oldEntities = newEntities
+	        oldEntityUUIDs = newEntityUUIDs
 	        os.sleep(period)
 	    end
 	end
