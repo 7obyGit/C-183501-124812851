@@ -2687,7 +2687,7 @@ function MODULE_utils_peripherals_EnvironmentDetector()
 	        end
 	    end
 	    print(EnvironmentDetector.detector.getOperationCooldown("scanEntities"))
-	    return EnvironmentDetector.detector.scanEntities(range)
+	    return EnvironmentDetector.detector.scanEntities()
 	end
 	return EnvironmentDetector
 end
