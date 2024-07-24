@@ -2643,7 +2643,7 @@ function MODULE_utils_peripherals_Peripherals()
 	local Peripherals = {}
 	function Peripherals.findAll(searchName)
 	    local peripherals = {}
-	    for _, name in ipairs(peripheral.getNames) do
+	    for _, name in ipairs(peripheral.getNames()) do
 	        if peripheral.getType(name) == searchName then
 	            table.insert(peripherals, peripheral.wrap(name))
 	        end
