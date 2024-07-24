@@ -29,6 +29,7 @@ function MODULE_jobs_Job()
 	Job.TREE_FARM = "TreeFarmJob"
 	Job.STORAGE = "StorageJob"
 	Job.TABLET_CONTROLLER = "TabletControllerJob"
+	Job.SCANNER = "ScannerJob"
 	return Job
 end
 local jobs_Job = MODULE_jobs_Job()

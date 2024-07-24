@@ -29,6 +29,7 @@ function MODULE_jobs_Job()
 	Job.TREE_FARM = "TreeFarmJob"
 	Job.STORAGE = "StorageJob"
 	Job.TABLET_CONTROLLER = "TabletControllerJob"
+	Job.SCANNER = "ScannerJob"
 	return Job
 end
 local jobs_Job = MODULE_jobs_Job()
@@ -2054,8 +2055,13 @@ local utils_movement_Direction = MODULE_utils_movement_Direction()
 
 
 function MODULE_utils_terminal_Terminal()
+	local LibOs = utils_libs_LibOs
 	local Terminal = {}
 	Terminal.__index = Terminal
+	function Terminal.waitForKey()
+	    local _, key = LibOs.pullEvent("key")
+	    return key
+	end
 	function Terminal.writeLineBreak()
 	    print("-------------------------")
 	end
@@ -2574,9 +2580,6 @@ function MODULE_utils_network_protocols_logging_LogProtocol()
 	    print(sourceName)
 	    print("            *Any Key Exit")
 	end
-	local function waitForKey(self)
-	    local _, key = LibOs.pullEvent("key")
-	end
 	local function viewLogs(self, commandSourceName)
 	    self.job.protocols.log.onLogFunc = function(updatedSourceName, ...)
 	        if commandSourceName == updatedSourceName then
@@ -2591,7 +2594,7 @@ function MODULE_utils_network_protocols_logging_LogProtocol()
 	function LogProtocol:view(sourceName)
 	    parallel.waitForAny(
 	        function() viewLogs(self, sourceName) end,
-	        function() waitForKey(self) end
+	        function() Terminal.waitForKey() end
 	    )
 	    self.job.protocols.log.onLogFunc = nil
 	end
@@ -3091,6 +3094,7 @@ function MODULE_utils_peripherals_GeoScanner()
 	local LibOs = utils_libs_LibOs
 	local GeoScanner = {}
 	GeoScanner.MAX_SCAN_RANGE = 16
+	GeoScanner.MIN_PERIOD = 2
 	GeoScanner.scanner = peripheral.find("geoScanner")
 	function GeoScanner.monitor(func, radius)
 	    while true do
@@ -3115,6 +3119,7 @@ function MODULE_utils_peripherals_GeoScanner()
 	end
 	function GeoScanner.scan(radius)
 	    if GeoScanner.scanner == nil then return nil end
+	    LibOs.sleep(GeoScanner.MIN_PERIOD)
 	    radius = radius or GeoScanner.MAX_SCAN_RANGE
 	    radius = math.min(radius, GeoScanner.MAX_SCAN_RANGE)
 	    return GeoScanner.scanner.scan(radius)
@@ -3197,16 +3202,6 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	    return self
 	end
 	function StorageJob:onStart()
-	    print(GeoScanner.getScanCooldown())
-	    for _ = 1, 5 do
-	        local blocks = GeoScanner.scan(2)
-	        print("Blocks: " .. #blocks)
-	        for _, block in pairs(blocks) do
-	            print("\t\t" .. block.y)
-	        end
-	        LibOs.sleep(2)
-	    end
-	    LibOs.sleep(5)
 	    self.config:set("alive", true)
 	    local storageConfig = self.config:get("storageConfig", nil)
 	    self.storage = Storage.new(storageConfig)

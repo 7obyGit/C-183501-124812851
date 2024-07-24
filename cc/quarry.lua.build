@@ -29,6 +29,7 @@ function MODULE_jobs_Job()
 	Job.TREE_FARM = "TreeFarmJob"
 	Job.STORAGE = "StorageJob"
 	Job.TABLET_CONTROLLER = "TabletControllerJob"
+	Job.SCANNER = "ScannerJob"
 	return Job
 end
 local jobs_Job = MODULE_jobs_Job()
@@ -1017,8 +1018,13 @@ local utils_movement_Direction = MODULE_utils_movement_Direction()
 
 
 function MODULE_utils_terminal_Terminal()
+	local LibOs = utils_libs_LibOs
 	local Terminal = {}
 	Terminal.__index = Terminal
+	function Terminal.waitForKey()
+	    local _, key = LibOs.pullEvent("key")
+	    return key
+	end
 	function Terminal.writeLineBreak()
 	    print("-------------------------")
 	end
@@ -3180,9 +3186,6 @@ function MODULE_utils_network_protocols_logging_LogProtocol()
 	    print(sourceName)
 	    print("            *Any Key Exit")
 	end
-	local function waitForKey(self)
-	    local _, key = LibOs.pullEvent("key")
-	end
 	local function viewLogs(self, commandSourceName)
 	    self.job.protocols.log.onLogFunc = function(updatedSourceName, ...)
 	        if commandSourceName == updatedSourceName then
@@ -3197,7 +3200,7 @@ function MODULE_utils_network_protocols_logging_LogProtocol()
 	function LogProtocol:view(sourceName)
 	    parallel.waitForAny(
 	        function() viewLogs(self, sourceName) end,
-	        function() waitForKey(self) end
+	        function() Terminal.waitForKey() end
 	    )
 	    self.job.protocols.log.onLogFunc = nil
 	end
