@@ -2924,11 +2924,9 @@ function MODULE_utils_storage_Container()
 	        return
 	    end
 	    local items = self:getItemList()
-	    local p = Parallel.new()
 	    for _, item in pairs(items) do
-	        p:addTask(function() self:_defragmentSingleItem(item) end)
+	        self:_defragmentSingleItem(item)
 	    end
-	    p:run()
 	end
 	function Container:_defragmentSingleItem(item)
 	    local slots = self:findItemSlots(item.name)

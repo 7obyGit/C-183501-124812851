@@ -1364,11 +1364,9 @@ function MODULE_utils_storage_Container()
 	        return
 	    end
 	    local items = self:getItemList()
-	    local p = Parallel.new()
 	    for _, item in pairs(items) do
-	        p:addTask(function() self:_defragmentSingleItem(item) end)
+	        self:_defragmentSingleItem(item)
 	    end
-	    p:run()
 	end
 	function Container:_defragmentSingleItem(item)
 	    local slots = self:findItemSlots(item.name)
@@ -1723,7 +1721,9 @@ function MODULE_utils_storage_Storage()
 	function Storage:defragment()
 	    local inventories = Table.copy(self.inventories)
 	    inventories["IO"] = self.io
-	    Parallel.map(inventories, function(name, container) print("Defragmenting container " .. name) container:defragment() print("Finished defragmenting container " .. name) end)
+	    print("Starting to defragment all containers")
+	    Parallel.map(inventories, function(name, container) container:defragment() end)
+	    print("Finished defragmenting all containers")
 	end
 	function Storage:hasItem(itemName)
 	    for _, container in pairs(self.inventories) do
