@@ -2831,10 +2831,15 @@ local utils_network_protocols_logging_LogChannels = MODULE_utils_network_protoco
 function MODULE_jobs_definitions_static_storage_StorageJobBackgroundTasks()
 	local EnvironmentDetector = utils_peripherals_EnvironmentDetector
 	local LogChannels = utils_network_protocols_logging_LogChannels
+	local Math = utils_math_Math
 	local StorageJobBackgroundTasks = {}
 	function StorageJobBackgroundTasks.onEntityEnter(self, entities)
 	    for _, entity in ipairs(entities) do
-	        self.logToChannel(LogChannels.ALERTS, "Mi: " .. textutils.serialiseJSON({x=entity.x, y=entity.y, z=entity.z}))
+	        self.logToChannel(LogChannels.ALERTS, "Mi: " .. textutils.serialiseJSON({
+	            x=Math.round(entity.x),
+	            y=Math.round(entity.y),
+	            z=Math.round(entity.z),
+	        }))
 	    end
 	end
 	function StorageJobBackgroundTasks.onEntityLeave(self, entities)
