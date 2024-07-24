@@ -2671,7 +2671,9 @@ local utils_peripherals_PlayerDetector = MODULE_utils_peripherals_PlayerDetector
 
 
 function MODULE_utils_peripherals_ChatBox()
+	local LibOs = utils_libs_LibOs
 	local ChatBox = {}
+	ChatBox.MESSAGE_DELAY = 1
 	ChatBox.internal = peripheral.find("chatBox")
 	function ChatBox.listen(func)
 	    while true do
@@ -2679,17 +2681,22 @@ function MODULE_utils_peripherals_ChatBox()
 	        func(event, username, message, uuid, isHidden)
 	    end
 	end
+	function ChatBox.sleep()
+	    LibOs.sleep(ChatBox.MESSAGE_DELAY)
+	end
 	function ChatBox.sendMessage(senderName, message)
 	    if ChatBox.internal == nil then return end
-	    ChatBox.internal.sendMessage(message, senderName)
-	    os.sleep(0.5)
+	    ChatBox.sleep()
+	    ChatBox.internal.sendMessage(message .. "\n" .. "test", senderName)
 	end
 	function ChatBox.sendMessageToPlayer(player, message)
 	    if ChatBox.internal == nil then return end
+	    ChatBox.sleep()
 	    ChatBox.internal.sendMessageToPlayer(player, message)
 	end
 	function ChatBox.sendToastToPlayer(player, title, message)
 	    if ChatBox.internal == nil then return end
+	    ChatBox.sleep()
 	    ChatBox.internal.sendToastToPlayer(message, title, player)
 	end
 	return ChatBox
