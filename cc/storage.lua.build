@@ -2855,6 +2855,14 @@ end
 local utils_other_Me = MODULE_utils_other_Me()
 
 
+function MODULE_utils_network_protocols_logging_LogChannels()
+	return {
+	    ALERTS = "ALERTS",
+	}
+end
+local utils_network_protocols_logging_LogChannels = MODULE_utils_network_protocols_logging_LogChannels()
+
+
 function MODULE_jobs_definitions_static_storage_StorageJob()
 	local Storage = utils_storage_Storage
 	local Blocks  = utils_blocks_Blocks
@@ -2872,6 +2880,7 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	local EnvironmentDetector = utils_peripherals_EnvironmentDetector
 	local StorageJobBackgroundTasks = jobs_definitions_static_storage_StorageJobBackgroundTasks
 	local Me = utils_other_Me
+	local LogChannels = utils_network_protocols_logging_LogChannels
 	local StorageJob = {}
 	StorageJob.__index = StorageJob
 	StorageJob.name = Job.STORAGE
@@ -2913,6 +2922,7 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	    self.storage:dump()
 	    self.storage:defragment()
 	    print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
+	    self.logToChannel(LogChannels.ALERTS, "Storage has started!")
 	end
 	function StorageJob:onResume()
 	    self:onStart()
