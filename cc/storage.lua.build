@@ -2682,7 +2682,7 @@ function MODULE_utils_peripherals_EnvironmentDetector()
 	end
 	function EnvironmentDetector.getEntities(range)
 	    for k, v in pairs(EnvironmentDetector.detector) do
-	        if Text.contains(k, "cooldown") then
+	        if Text.contains(k, "dur") then
 	            print(k, v)
 	        end
 	    end
