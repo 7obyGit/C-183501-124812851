@@ -2638,6 +2638,7 @@ function MODULE_utils_peripherals_EnvironmentDetector()
 	local Text = utils_text_Text
 	local EnvironmentDetector = {}
 	EnvironmentDetector.detector = peripheral.find("environmentDetector")
+	EnvironmentDetector.MAX_SCAN_RANGE = 32
 	function EnvironmentDetector.getBiome()
 	    return EnvironmentDetector.detector.getBiome()
 	end
@@ -2681,13 +2682,7 @@ function MODULE_utils_peripherals_EnvironmentDetector()
 	    return EnvironmentDetector.detector.listDimensions()
 	end
 	function EnvironmentDetector.getEntities(range)
-	    for k, v in pairs(EnvironmentDetector.detector) do
-	        if Text.contains(k, "ool") then
-	            print(k, v)
-	        end
-	    end
-	    print(EnvironmentDetector.detector.getOperationCooldown("scanEntities"))
-	    return EnvironmentDetector.detector.scanEntities(range)
+	    return EnvironmentDetector.detector.scanEntities(range or EnvironmentDetector.MAX_SCAN_RANGE)
 	end
 	return EnvironmentDetector
 end
@@ -2725,7 +2720,7 @@ function MODULE_jobs_definitions_static_StorageJob()
 	    local self = setmetatable({}, StorageJob)
 	    self.backgroundTasks = {}
 	    if PlayerDetector.detector ~= nil then table.insert(self.backgroundTasks, function() PlayerDetector.onPlayerMoved(function (username, oldPosition, newPosition) self.protocols.events:sendOnPlayerMoved(username, oldPosition, newPosition) end, Me.Username, 5) end) end
-	    if EnvironmentDetector.detector ~= nil then table.insert(self.backgroundTasks, function() print(textutils.serializeJSON(EnvironmentDetector.getEntities(10))) end) end
+	    if EnvironmentDetector.detector ~= nil then table.insert(self.backgroundTasks, function() print(textutils.serializeJSON(EnvironmentDetector.getEntities())) end) end
 	    self.backgroundTask = function() self:onBackgroundStep() end
 	    self.backgroundDelay = 5  -- This task should be infrequent
 	    self.storage = nil
