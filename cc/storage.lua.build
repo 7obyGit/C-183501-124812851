@@ -2684,10 +2684,15 @@ function MODULE_utils_peripherals_ChatBox()
 	function ChatBox.sleep()
 	    LibOs.sleep(ChatBox.MESSAGE_DELAY)
 	end
+	function ChatBox.sendMessages(senderName, messages)
+	    if ChatBox.internal == nil then return end
+	    local message = table.concat(messages, "\n")
+	    ChatBox.sendMessage(senderName, message)
+	end
 	function ChatBox.sendMessage(senderName, message)
 	    if ChatBox.internal == nil then return end
 	    ChatBox.sleep()
-	    ChatBox.internal.sendMessage(message .. "\n" .. "test", senderName)
+	    ChatBox.internal.sendMessage(message, senderName)
 	end
 	function ChatBox.sendMessageToPlayer(player, message)
 	    if ChatBox.internal == nil then return end
@@ -2908,14 +2913,16 @@ function MODULE_jobs_definitions_static_storage_StorageJobBackgroundTasks()
 	local ChatBox = utils_peripherals_ChatBox
 	local StorageJobBackgroundTasks = {}
 	function StorageJobBackgroundTasks.onEntityEnter(self, entities)
+	    local messages = {}
 	    for _, entity in ipairs(entities) do
 	        local message = "Mi: " .. Math.round(entity.x) .. " " .. Math.round(entity.y) .. " " .. Math.round(entity.z)
 	        self.logToChannel(
 	            LogChannels.ALERTS,
 	            message
 	        )
-	        ChatBox.sendMessage("Alert", message)
+	        table.insert(messages, message)
 	    end
+	    ChatBox.sendMessages("Alert", messages)
 	end
 	function StorageJobBackgroundTasks.onEntityLeave(self, entities)
 	    for _, entity in ipairs(entities) do
