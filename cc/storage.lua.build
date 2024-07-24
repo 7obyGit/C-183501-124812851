@@ -2835,11 +2835,10 @@ function MODULE_jobs_definitions_static_storage_StorageJobBackgroundTasks()
 	local StorageJobBackgroundTasks = {}
 	function StorageJobBackgroundTasks.onEntityEnter(self, entities)
 	    for _, entity in ipairs(entities) do
-	        self.logToChannel(LogChannels.ALERTS, "Mi: " .. textutils.serialiseJSON({
-	            x=Math.round(entity.x),
-	            y=Math.round(entity.y),
-	            z=Math.round(entity.z),
-	        }))
+	        self.logToChannel(
+	            LogChannels.ALERTS,
+	            "Mi: " .. Math.round(entity.x) .. " " .. Math.round(entity.y) .. " " .. Math.round(entity.z)
+	        )
 	    end
 	end
 	function StorageJobBackgroundTasks.onEntityLeave(self, entities)
