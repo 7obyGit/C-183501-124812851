@@ -2985,6 +2985,7 @@ function MODULE_utils_network_protocols_remoteperipherals_ChatProtocol()
 	function ChatProtocol:onMessage(args)
 	    local senderName = args.senderName
 	    local message = args.message
+	    print("MESSAGE RECEIVED", senderName, message)
 	    ChatBox.sendMessage(senderName, message)
 	end
 	function ChatProtocol:sendMessageToPlayer(player, message)
