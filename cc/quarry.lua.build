@@ -1110,6 +1110,22 @@ function MODULE_utils_data_Table()
 	    end
 	    return newObject
 	end
+	function Table.any(object, func)
+	    for _, value in ipairs(object) do
+	        if func(value) then
+	            return true
+	        end
+	    end
+	    return false
+	end
+	function Table.all(object, func)
+	    for _, value in ipairs(object) do
+	        if not func(value) then
+	            return false
+	        end
+	    end
+	    return true
+	end
 	function Table.contains(object, value)
 	    for _, v in ipairs(object) do
 	        if v == value then
