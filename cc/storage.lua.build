@@ -2906,7 +2906,7 @@ function MODULE_jobs_definitions_static_storage_StorageJobBackgroundTasks()
 	            LogChannels.ALERTS,
 	            message
 	        )
-	        self.protocols.chat:sendMessage("Alert", message)
+	        ChatBox.sendMessage("Alert", message)
 	    end
 	end
 	function StorageJobBackgroundTasks.onEntityLeave(self, entities)
