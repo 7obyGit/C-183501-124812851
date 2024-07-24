@@ -2694,15 +2694,15 @@ function MODULE_utils_peripherals_ChatBox()
 	    ChatBox.sleep()
 	    ChatBox.internal.sendMessage(message, senderName)
 	end
-	function ChatBox.sendMessagesToPlayer(player, messages)
+	function ChatBox.sendMessagesToPlayer(senderName, player, messages)
 	    if ChatBox.internal == nil then return end
 	    local message = table.concat(messages, "\n")
-	    ChatBox.sendMessageToPlayer(player, message)
+	    ChatBox.sendMessageToPlayer(senderName, player, message)
 	end
-	function ChatBox.sendMessageToPlayer(player, message)
+	function ChatBox.sendMessageToPlayer(senderName, player, message)
 	    if ChatBox.internal == nil then return end
 	    ChatBox.sleep()
-	    ChatBox.internal.sendMessageToPlayer(message, player, "TEST")
+	    ChatBox.internal.sendMessageToPlayer(message, player, senderName)
 	end
 	function ChatBox.sendToastsToPlayer(player, title, messages)
 	    if ChatBox.internal == nil then return end
@@ -2941,7 +2941,7 @@ function MODULE_jobs_definitions_static_storage_StorageJobBackgroundTasks()
 	        )
 	        table.insert(messages, message)
 	    end
-	    ChatBox.sendMessagesToPlayer(Me.username, messages)
+	    ChatBox.sendMessagesToPlayer("Alert", Me.username, messages)
 	end
 	function StorageJobBackgroundTasks.onEntityLeave(self, entities)
 	    for _, entity in ipairs(entities) do
@@ -3014,13 +3014,14 @@ function MODULE_utils_network_protocols_remoteperipherals_ChatProtocol()
 	    print("MESSAGE RECEIVED", senderName, message)
 	    ChatBox.sendMessage(senderName, message)
 	end
-	function ChatProtocol:sendMessageToPlayer(player, message)
-	    self:_send(self.commands.SEND_MESSAGE_TO_PLAYER, {player = player, message = message})
+	function ChatProtocol:sendMessageToPlayer(senderName, player, message)
+	    self:_send(self.commands.SEND_MESSAGE_TO_PLAYER, {senderName = senderName, player = player, message = message})
 	end
 	function ChatProtocol:onMessageToPlayer(args)
+	    local senderName = args.senderName
 	    local player = args.player
 	    local message = args.message
-	    ChatBox.sendMessageToPlayer(player, message)
+	    ChatBox.sendMessageToPlayer(senderName, player, message)
 	end
 	function ChatProtocol:sendToastToPlayer(player, title, message)
 	    self:_send(self.commands.SEND_TOAST_TO_PLAYER, {player = player, title = title, message = message})
