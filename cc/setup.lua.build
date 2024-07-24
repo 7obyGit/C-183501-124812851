@@ -1537,6 +1537,11 @@ function MODULE_utils_data_Table()
 	    end
 	    return newObject
 	end
+	function Table.addAll(object, other)
+	    for _, value in ipairs(other) do
+	        table.insert(object, value)
+	    end
+	end
 	return Table
 end
 local utils_data_Table = MODULE_utils_data_Table()

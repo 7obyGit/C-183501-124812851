@@ -857,6 +857,11 @@ function MODULE_utils_data_Table()
 	    end
 	    return newObject
 	end
+	function Table.addAll(object, other)
+	    for _, value in ipairs(other) do
+	        table.insert(object, value)
+	    end
+	end
 	return Table
 end
 local utils_data_Table = MODULE_utils_data_Table()
@@ -2634,11 +2639,31 @@ end
 local utils_network_protocols_events_EventsProtocol = MODULE_utils_network_protocols_events_EventsProtocol()
 
 
+function MODULE_utils_peripherals_Peripherals()
+	local Peripherals = {}
+	function Peripherals.findAll(searchName)
+	    local peripherals = {}
+	    for _, name in ipairs(peripheral.getNames) do
+	        if peripheral.getType(name) == searchName then
+	            table.insert(peripherals, peripheral.wrap(name))
+	        end
+	    end
+	    return peripherals
+	end
+	return Peripherals
+end
+local utils_peripherals_Peripherals = MODULE_utils_peripherals_Peripherals()
+
+
 function MODULE_utils_peripherals_EnvironmentDetector()
 	local Text = utils_text_Text
+	local Table = utils_data_Table
+	local Peripherals = utils_peripherals_Peripherals
+	local Parallel = utils_controlflow_Parallel
 	local EnvironmentDetector = {}
-	EnvironmentDetector.detector = peripheral.find("environmentDetector")
 	EnvironmentDetector.MAX_SCAN_RANGE = 16
+	EnvironmentDetector.detectors = Peripherals.findAll("environmentDetector")
+	EnvironmentDetector.detector = EnvironmentDetector.detectors[1]
 	function EnvironmentDetector.getBiome()
 	    return EnvironmentDetector.detector.getBiome()
 	end
@@ -2682,20 +2707,26 @@ function MODULE_utils_peripherals_EnvironmentDetector()
 	    return EnvironmentDetector.detector.listDimensions()
 	end
 	function EnvironmentDetector.getEntities(range, searchString)
-	    local entities = EnvironmentDetector.detector.scanEntities(range or EnvironmentDetector.MAX_SCAN_RANGE)
-	    if entities == nil then
+	    range = range or EnvironmentDetector.MAX_SCAN_RANGE
+	    local allEntities = {}
+	    Parallel.map(EnvironmentDetector.detectors, function(detector)
+	        print("CALLING DETECTOR")
+	        local entities = detector.scanEntities(range)
+	        Table.addAll(allEntities, entities)
+	    end)
+	    if allEntities == nil then
 	        return {}
 	    end
 	    if searchString ~= nil then
 	        local filteredEntities = {}
-	        for _, entity in ipairs(entities) do
+	        for _, entity in ipairs(allEntities) do
 	            if Text.contains(entity.name, searchString) then
 	                table.insert(filteredEntities, entity)
 	            end
 	        end
 	        return filteredEntities
 	    end
-	    return entities
+	    return allEntities
 	end
 	return EnvironmentDetector
 end
