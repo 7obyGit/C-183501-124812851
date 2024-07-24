@@ -2670,8 +2670,29 @@ end
 local utils_peripherals_PlayerDetector = MODULE_utils_peripherals_PlayerDetector()
 
 
+function MODULE_utils_other_Players()
+	local Players = {}
+	Players.names = {
+	    FuturePr0 = "FuturePr0",
+	    StealthyHarry = "StealthyHarry",
+	}
+	return Players
+end
+local utils_other_Players = MODULE_utils_other_Players()
+
+
+function MODULE_utils_other_Me()
+	return {
+	    username = "3p0",
+	}
+end
+local utils_other_Me = MODULE_utils_other_Me()
+
+
 function MODULE_utils_peripherals_ChatBox()
 	local LibOs = utils_libs_LibOs
+	local Players = utils_other_Players
+	local Me = utils_other_Me
 	local ChatBox = {}
 	ChatBox.MESSAGE_DELAY = 1
 	ChatBox.internal = peripheral.find("chatBox")
@@ -2713,6 +2734,14 @@ function MODULE_utils_peripherals_ChatBox()
 	    if ChatBox.internal == nil then return end
 	    ChatBox.sleep()
 	    ChatBox.internal.sendToastToPlayer(message, title, player)
+	end
+	function ChatBox.localAlert(message)
+	    if ChatBox.internal == nil then return end
+	    if type(message) == "table" then
+	        message = table.concat(message, "\n")
+	    end
+	    ChatBox.sendMessageToPlayer("Alert", Me.username, message)
+	    ChatBox.sendMessageToPlayer("Alert", Players.names.FuturePr0, message)
 	end
 	return ChatBox
 end
@@ -2916,14 +2945,6 @@ end
 local utils_network_protocols_logging_LogChannels = MODULE_utils_network_protocols_logging_LogChannels()
 
 
-function MODULE_utils_other_Me()
-	return {
-	    username = "3p0",
-	}
-end
-local utils_other_Me = MODULE_utils_other_Me()
-
-
 function MODULE_jobs_definitions_static_storage_StorageJobBackgroundTasks()
 	local EnvironmentDetector = utils_peripherals_EnvironmentDetector
 	local LogChannels = utils_network_protocols_logging_LogChannels
@@ -2941,7 +2962,7 @@ function MODULE_jobs_definitions_static_storage_StorageJobBackgroundTasks()
 	        )
 	        table.insert(messages, message)
 	    end
-	    ChatBox.sendMessagesToPlayer("Alert", Me.username, messages)
+	    ChatBox.localAlert(messages)
 	end
 	function StorageJobBackgroundTasks.onEntityLeave(self, entities)
 	    for _, entity in ipairs(entities) do
