@@ -864,6 +864,43 @@ function MODULE_utils_data_Table()
 	        table.insert(object, value)
 	    end
 	end
+	function Table.unique(object)
+	    local unique = {}
+	    for _, value in ipairs(object) do
+	        if not Table.contains(unique, value) then
+	            table.insert(unique, value)
+	        end
+	    end
+	    return unique
+	end
+	function Table.intersection(first, second)
+	    local intersection = {}
+	    first = Table.unique(first)
+	    second = Table.unique(second)
+	    for _, value in ipairs(first) do
+	        if Table.contains(second, value) then
+	            table.insert(intersection, value)
+	        end
+	    end
+	    return intersection
+	end
+	function Table.union(first, second)
+	    local union = Table.copy(first)
+	    Table.addAll(union, second)
+	    union = Table.unique(union)
+	    return union
+	end
+	function Table.difference(first, second)
+	    local difference = {}
+	    first = Table.unique(first)
+	    second = Table.unique(second)
+	    for _, value in ipairs(first) do
+	        if not Table.contains(second, value) then
+	            table.insert(difference, value)
+	        end
+	    end
+	    return difference
+	end
 	return Table
 end
 local utils_data_Table = MODULE_utils_data_Table()
@@ -2674,6 +2711,25 @@ function MODULE_utils_peripherals_EnvironmentDetector()
 	        os.sleep(period)
 	    end
 	end
+	function EnvironmentDetector.onEntityEnterOrLeave(onEnter, onLeave, range, searchString, period)
+	    period = period or 5
+	    local oldEntities = {}
+	    while true do
+	        local newEntities = EnvironmentDetector.getEntities(range, searchString)
+	        local entitiesAdded = {}
+	        local entitiesRemoved = {}
+	        entitiesAdded = Table.difference(newEntities, oldEntities)
+	        entitiesRemoved = Table.difference(oldEntities, newEntities)
+	        if #entitiesAdded > 0 then
+	            onEnter(entitiesAdded)
+	        end
+	        if #entitiesRemoved > 0 then
+	            onLeave(entitiesRemoved)
+	        end
+	        oldEntities = newEntities
+	        os.sleep(period)
+	    end
+	end
 	function EnvironmentDetector.getBiome()
 	    return EnvironmentDetector.detector.getBiome()
 	end
@@ -2742,13 +2798,31 @@ end
 local utils_peripherals_EnvironmentDetector = MODULE_utils_peripherals_EnvironmentDetector()
 
 
-function MODULE_utils_entities_Entities()
-	return {
-	    sheep = "Sheep",
-	    pig = "Pig",
-	}
+function MODULE_jobs_definitions_static_storage_StorageJobBackgroundTasks()
+	local EnvironmentDetector = utils_peripherals_EnvironmentDetector
+	local StorageJobBackgroundTasks = {}
+	function StorageJobBackgroundTasks:onEntityEnter(entities)
+	    for _, entity in ipairs(entities) do
+	        print("Entity entered: " .. entity)
+	    end
+	end
+	function StorageJobBackgroundTasks:onEntityLeave(entities)
+	    for _, entity in ipairs(entities) do
+	        print("Entity left: " .. entity)
+	    end
+	end
+	function StorageJobBackgroundTasks.onEntityEnterOrLeave(self)
+	    EnvironmentDetector.onEntityEnterOrLeave(
+	        function(entitiesAdded) self:onEntityEnter(entitiesAdded) end,
+	        function(entitiesRemoved) self:onEntityLeave(entitiesRemoved) end,
+	        EnvironmentDetector.MAX_SCAN_RANGE,
+	        "ig",
+	        1
+	    )
+	end
+	return StorageJobBackgroundTasks
 end
-local utils_entities_Entities = MODULE_utils_entities_Entities()
+local jobs_definitions_static_storage_StorageJobBackgroundTasks = MODULE_jobs_definitions_static_storage_StorageJobBackgroundTasks()
 
 
 function MODULE_utils_other_Me()
@@ -2759,7 +2833,7 @@ end
 local utils_other_Me = MODULE_utils_other_Me()
 
 
-function MODULE_jobs_definitions_static_StorageJob()
+function MODULE_jobs_definitions_static_storage_StorageJob()
 	local Storage = utils_storage_Storage
 	local Blocks  = utils_blocks_Blocks
 	local Block   = utils_blocks_Block
@@ -2774,7 +2848,7 @@ function MODULE_jobs_definitions_static_StorageJob()
 	local PlayerDetector = utils_peripherals_PlayerDetector
 	local EventsProtocol = utils_network_protocols_events_EventsProtocol
 	local EnvironmentDetector = utils_peripherals_EnvironmentDetector
-	local Entities = utils_entities_Entities
+	local StorageJobBackgroundTasks = jobs_definitions_static_storage_StorageJobBackgroundTasks
 	local Me = utils_other_Me
 	local StorageJob = {}
 	StorageJob.__index = StorageJob
@@ -2783,7 +2857,7 @@ function MODULE_jobs_definitions_static_StorageJob()
 	    local self = setmetatable({}, StorageJob)
 	    self.backgroundTasks = {}
 	    if PlayerDetector.detector ~= nil then table.insert(self.backgroundTasks, function() PlayerDetector.onPlayerMoved(function (username, oldPosition, newPosition) self.protocols.events:sendOnPlayerMoved(username, oldPosition, newPosition) end, Me.Username, 5) end) end
-	    if EnvironmentDetector.detector ~= nil then table.insert(self.backgroundTasks, function() EnvironmentDetector.onEntityDetected(function(entities) print("DETECTED") end, EnvironmentDetector.MAX_SCAN_RANGE, "ig", 1) end) end
+	    if EnvironmentDetector.detector ~= nil then table.insert(self.backgroundTasks, StorageJobBackgroundTasks.onEntityEnterOrLeave) end
 	    self.backgroundTask = function() self:onBackgroundStep() end
 	    self.backgroundDelay = 5  -- This task should be infrequent
 	    self.storage = nil
@@ -3102,12 +3176,12 @@ function MODULE_jobs_definitions_static_StorageJob()
 	end
 	return StorageJob
 end
-local jobs_definitions_static_StorageJob = MODULE_jobs_definitions_static_StorageJob()
+local jobs_definitions_static_storage_StorageJob = MODULE_jobs_definitions_static_storage_StorageJob()
 
 
 function MODULE_entrypoints_storage()
 	local JobManager = jobs_JobManager
-	local StorageJob = jobs_definitions_static_StorageJob
+	local StorageJob = jobs_definitions_static_storage_StorageJob
 	JobManager.run(StorageJob)
 end
 local entrypoints_storage = MODULE_entrypoints_storage()

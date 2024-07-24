@@ -1544,6 +1544,43 @@ function MODULE_utils_data_Table()
 	        table.insert(object, value)
 	    end
 	end
+	function Table.unique(object)
+	    local unique = {}
+	    for _, value in ipairs(object) do
+	        if not Table.contains(unique, value) then
+	            table.insert(unique, value)
+	        end
+	    end
+	    return unique
+	end
+	function Table.intersection(first, second)
+	    local intersection = {}
+	    first = Table.unique(first)
+	    second = Table.unique(second)
+	    for _, value in ipairs(first) do
+	        if Table.contains(second, value) then
+	            table.insert(intersection, value)
+	        end
+	    end
+	    return intersection
+	end
+	function Table.union(first, second)
+	    local union = Table.copy(first)
+	    Table.addAll(union, second)
+	    union = Table.unique(union)
+	    return union
+	end
+	function Table.difference(first, second)
+	    local difference = {}
+	    first = Table.unique(first)
+	    second = Table.unique(second)
+	    for _, value in ipairs(first) do
+	        if not Table.contains(second, value) then
+	            table.insert(difference, value)
+	        end
+	    end
+	    return difference
+	end
 	return Table
 end
 local utils_data_Table = MODULE_utils_data_Table()
