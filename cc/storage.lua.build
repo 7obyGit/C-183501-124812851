@@ -2934,7 +2934,7 @@ function MODULE_jobs_definitions_static_storage_StorageJobBackgroundTasks()
 	function StorageJobBackgroundTasks.onEntityEnter(self, entities)
 	    local messages = {}
 	    for _, entity in ipairs(entities) do
-	        local message = "Mi: " .. Math.round(entity.x) .. " " .. Math.round(entity.y) .. " " .. Math.round(entity.z)
+	        local message = entity.name .. " detected"
 	        self.logToChannel(
 	            LogChannels.ALERTS,
 	            message
