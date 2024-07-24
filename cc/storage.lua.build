@@ -3195,7 +3195,7 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	end
 	function StorageJob:onStart()
 	    print(GeoScanner.getScanCooldown())
-	    local blocks = GeoScanner.scan(32)
+	    local blocks = GeoScanner.scan(17)
 	    print("Blocks: " .. #blocks)
 	    LibOs.sleep(5)
 	    self.config:set("alive", true)
