@@ -2716,6 +2716,7 @@ function MODULE_utils_peripherals_EnvironmentDetector()
 	local Peripherals = utils_peripherals_Peripherals
 	local Parallel = utils_controlflow_Parallel
 	local EnvironmentDetector = {}
+	EnvironmentDetector.MIN_SCAN_PERIOD = 2
 	EnvironmentDetector.MAX_SCAN_RANGE = 16
 	EnvironmentDetector.detectors = Peripherals.findAll("environmentDetector")
 	EnvironmentDetector.detector = EnvironmentDetector.detectors[1]
@@ -2835,8 +2836,8 @@ function MODULE_jobs_definitions_static_storage_StorageJobBackgroundTasks()
 	        function(entitiesAdded) StorageJobBackgroundTasks.onEntityEnter(self, entitiesAdded) end,
 	        function(entitiesRemoved) StorageJobBackgroundTasks.onEntityLeave(self, entitiesRemoved) end,
 	        EnvironmentDetector.MAX_SCAN_RANGE,
-	        "ig",
-	        2
+	        nil,
+	        EnvironmentDetector.MIN_SCAN_PERIOD
 	    )
 	end
 	return StorageJobBackgroundTasks
