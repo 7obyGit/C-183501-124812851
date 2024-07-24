@@ -2801,20 +2801,20 @@ local utils_peripherals_EnvironmentDetector = MODULE_utils_peripherals_Environme
 function MODULE_jobs_definitions_static_storage_StorageJobBackgroundTasks()
 	local EnvironmentDetector = utils_peripherals_EnvironmentDetector
 	local StorageJobBackgroundTasks = {}
-	function StorageJobBackgroundTasks:onEntityEnter(entities)
+	function StorageJobBackgroundTasks.onEntityEnter(self, entities)
 	    for _, entity in ipairs(entities) do
 	        print("Entity entered: " .. entity)
 	    end
 	end
-	function StorageJobBackgroundTasks:onEntityLeave(entities)
+	function StorageJobBackgroundTasks.onEntityLeave(self, entities)
 	    for _, entity in ipairs(entities) do
 	        print("Entity left: " .. entity)
 	    end
 	end
 	function StorageJobBackgroundTasks.onEntityEnterOrLeave(self)
 	    EnvironmentDetector.onEntityEnterOrLeave(
-	        function(entitiesAdded) self:onEntityEnter(entitiesAdded) end,
-	        function(entitiesRemoved) self:onEntityLeave(entitiesRemoved) end,
+	        function(entitiesAdded) StorageJobBackgroundTasks.onEntityEnter(self, entitiesAdded) end,
+	        function(entitiesRemoved) StorageJobBackgroundTasks.onEntityLeave(self, entitiesRemoved) end,
 	        EnvironmentDetector.MAX_SCAN_RANGE,
 	        "ig",
 	        1
