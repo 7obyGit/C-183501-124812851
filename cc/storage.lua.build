@@ -2916,11 +2916,20 @@ end
 local utils_network_protocols_logging_LogChannels = MODULE_utils_network_protocols_logging_LogChannels()
 
 
+function MODULE_utils_other_Me()
+	return {
+	    username = "3p0",
+	}
+end
+local utils_other_Me = MODULE_utils_other_Me()
+
+
 function MODULE_jobs_definitions_static_storage_StorageJobBackgroundTasks()
 	local EnvironmentDetector = utils_peripherals_EnvironmentDetector
 	local LogChannels = utils_network_protocols_logging_LogChannels
 	local Math = utils_math_Math
 	local ChatBox = utils_peripherals_ChatBox
+	local Me = utils_other_Me
 	local StorageJobBackgroundTasks = {}
 	function StorageJobBackgroundTasks.onEntityEnter(self, entities)
 	    local messages = {}
@@ -2932,7 +2941,7 @@ function MODULE_jobs_definitions_static_storage_StorageJobBackgroundTasks()
 	        )
 	        table.insert(messages, message)
 	    end
-	    ChatBox.sendMessagesToPlayer("Alert", messages)
+	    ChatBox.sendMessageToPlayer(Me.username, messages)
 	end
 	function StorageJobBackgroundTasks.onEntityLeave(self, entities)
 	    for _, entity in ipairs(entities) do
@@ -2956,14 +2965,6 @@ function MODULE_jobs_definitions_static_storage_StorageJobBackgroundTasks()
 	return StorageJobBackgroundTasks
 end
 local jobs_definitions_static_storage_StorageJobBackgroundTasks = MODULE_jobs_definitions_static_storage_StorageJobBackgroundTasks()
-
-
-function MODULE_utils_other_Me()
-	return {
-	    Username = "3p0",
-	}
-end
-local utils_other_Me = MODULE_utils_other_Me()
 
 
 function MODULE_utils_network_protocols_remoteperipherals_ChatProtocol()
@@ -3061,7 +3062,7 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	function StorageJob.new(config)
 	    local self = setmetatable({}, StorageJob)
 	    self.backgroundTasks = {}
-	    if PlayerDetector.detector ~= nil then table.insert(self.backgroundTasks, function() PlayerDetector.onPlayerMoved(function (username, oldPosition, newPosition) self.protocols.events:sendOnPlayerMoved(username, oldPosition, newPosition) end, Me.Username, 5) end) end
+	    if PlayerDetector.detector ~= nil then table.insert(self.backgroundTasks, function() PlayerDetector.onPlayerMoved(function (username, oldPosition, newPosition) self.protocols.events:sendOnPlayerMoved(username, oldPosition, newPosition) end, Me.username, 5) end) end
 	    if EnvironmentDetector.detector ~= nil then table.insert(self.backgroundTasks, StorageJobBackgroundTasks.onEntityEnterOrLeave) end
 	    if ChatBox.internal ~= nil then table.insert(self.backgroundTasks, StorageJobBackgroundTasks.onChatMessage) end
 	    self.backgroundTask = function() self:onBackgroundStep() end
