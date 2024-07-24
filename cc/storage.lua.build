@@ -2716,10 +2716,9 @@ function MODULE_jobs_definitions_static_StorageJob()
 	StorageJob.name = Job.STORAGE
 	function StorageJob.new(config)
 	    local self = setmetatable({}, StorageJob)
-	    self.backgroundTasks = {
-	        function() if PlayerDetector.detector ~= nil then PlayerDetector.onPlayerMoved(function (username, oldPosition, newPosition) self.protocols.events:sendOnPlayerMoved(username, oldPosition, newPosition) end, Me.Username, 5) end end,
-	        function() if EnvironmentDetector.detector ~= nil then print(textutils.serializeJson(EnvironmentDetector.getEntities(10))) end end,
-	    }
+	    self.backgroundTasks = {}
+	    if PlayerDetector.detector ~= nil then table.insert(self.backgroundTasks, function() PlayerDetector.onPlayerMoved(function (username, oldPosition, newPosition) self.protocols.events:sendOnPlayerMoved(username, oldPosition, newPosition) end, Me.Username, 5) end) end
+	    if EnvironmentDetector.detector ~= nil then table.insert(self.backgroundTasks, function() print(textutils.serializeJson(EnvironmentDetector.getEntities(10))) end) end
 	    self.backgroundTask = function() self:onBackgroundStep() end
 	    self.backgroundDelay = 5  -- This task should be infrequent
 	    self.storage = nil
