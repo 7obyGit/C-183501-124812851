@@ -2710,7 +2710,6 @@ function MODULE_utils_peripherals_EnvironmentDetector()
 	    range = range or EnvironmentDetector.MAX_SCAN_RANGE
 	    local allEntities = {}
 	    Parallel.map(EnvironmentDetector.detectors, function(detector)
-	        print("CALLING DETECTOR")
 	        local entities = detector.scanEntities(range)
 	        Table.addAll(allEntities, entities)
 	    end)
@@ -2719,8 +2718,10 @@ function MODULE_utils_peripherals_EnvironmentDetector()
 	    end
 	    if searchString ~= nil then
 	        local filteredEntities = {}
+	        print("Filtering")
 	        for _, entity in ipairs(allEntities) do
 	            if Text.contains(entity.name, searchString) then
+	                print("Found entity: " .. entity.name)
 	                table.insert(filteredEntities, entity)
 	            end
 	        end
@@ -2731,6 +2732,15 @@ function MODULE_utils_peripherals_EnvironmentDetector()
 	return EnvironmentDetector
 end
 local utils_peripherals_EnvironmentDetector = MODULE_utils_peripherals_EnvironmentDetector()
+
+
+function MODULE_utils_entities_Entities()
+	return {
+	    sheep = "Sheep",
+	    pig = "Pig",
+	}
+end
+local utils_entities_Entities = MODULE_utils_entities_Entities()
 
 
 function MODULE_utils_other_Me()
@@ -2756,6 +2766,7 @@ function MODULE_jobs_definitions_static_StorageJob()
 	local PlayerDetector = utils_peripherals_PlayerDetector
 	local EventsProtocol = utils_network_protocols_events_EventsProtocol
 	local EnvironmentDetector = utils_peripherals_EnvironmentDetector
+	local Entities = utils_entities_Entities
 	local Me = utils_other_Me
 	local StorageJob = {}
 	StorageJob.__index = StorageJob
@@ -2764,7 +2775,7 @@ function MODULE_jobs_definitions_static_StorageJob()
 	    local self = setmetatable({}, StorageJob)
 	    self.backgroundTasks = {}
 	    if PlayerDetector.detector ~= nil then table.insert(self.backgroundTasks, function() PlayerDetector.onPlayerMoved(function (username, oldPosition, newPosition) self.protocols.events:sendOnPlayerMoved(username, oldPosition, newPosition) end, Me.Username, 5) end) end
-	    if EnvironmentDetector.detector ~= nil then table.insert(self.backgroundTasks, function() print(textutils.serializeJSON(EnvironmentDetector.getEntities())) end) end
+	    if EnvironmentDetector.detector ~= nil then table.insert(self.backgroundTasks, function() EnvironmentDetector.getEntities(EnvironmentDetector.MAX_SCAN_RANGE, Entities.sheep) end) end
 	    self.backgroundTask = function() self:onBackgroundStep() end
 	    self.backgroundDelay = 5  -- This task should be infrequent
 	    self.storage = nil
