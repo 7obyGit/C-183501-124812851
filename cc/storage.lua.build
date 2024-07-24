@@ -1570,6 +1570,19 @@ function MODULE_utils_text_Text()
 	    end
 	    return bestMatch, bestScore
 	end
+	function Text.getClosestMatchingGroup(input, identifierGroups)
+	    local bestMatch = nil
+	    local bestScore = math.huge
+	    for id, group in pairs(identifierGroups) do
+	        local simplifiedId = Text.simplifyIdentifier(id)
+	        local score = Text.levenshtein(input, simplifiedId)
+	        if score < bestScore then
+	            bestScore = score
+	            bestMatch = group
+	        end
+	    end
+	    return bestMatch, bestScore
+	end
 	return Text
 end
 local utils_text_Text = MODULE_utils_text_Text()
@@ -2225,6 +2238,7 @@ local utils_math_Vector3 = MODULE_utils_math_Vector3()
 
 function MODULE_utils_blocks_Block()
 	local Blocks = utils_blocks_Blocks
+	local Table = utils_data_Table
 	local Vector3= utils_math_Vector3
 	local Text = utils_text_Text
 	local blockLookupTable = {}
@@ -2364,8 +2378,32 @@ function MODULE_utils_blocks_Block()
 	    )
 	end
 	function Block.getClosestMatch(name, customBlocksList)
-	    local closestMatch, score = Text.getClosestMatch(name, customBlocksList or Blocks)
-	    return {name = name, closestMatch = closestMatch, score = score}
+	    customBlocksList = customBlocksList or Blocks
+	    local closestMatch, score = Text.getClosestMatch(name, customBlocksList)
+	    local groups = {
+	        wood = {Blocks.oak_wood, Blocks.spruce_wood, Blocks.birch_wood, Blocks.jungle_wood, Blocks.acacia_wood, Blocks.dark_oak_wood, Blocks.mangrove_wood},
+	        log = {Blocks.oak_log, Blocks.spruce_log, Blocks.birch_log, Blocks.jungle_log, Blocks.acacia_log, Blocks.dark_oak_log, Blocks.mangrove_log},
+	        leaves = {Blocks.oak_leaves, Blocks.spruce_leaves, Blocks.birch_leaves, Blocks.jungle_leaves, Blocks.acacia_leaves, Blocks.dark_oak_leaves, Blocks.mangrove_leaves},
+	        sapling = {Blocks.oak_sapling, Blocks.spruce_sapling, Blocks.birch_sapling, Blocks.jungle_sapling, Blocks.acacia_sapling, Blocks.dark_oak_sapling, Blocks.mangrove_sapling},
+	        planks = {Blocks.oak_planks, Blocks.spruce_planks, Blocks.birch_planks, Blocks.jungle_planks, Blocks.acacia_planks, Blocks.dark_oak_planks, Blocks.mangrove_planks},
+	        slab = {Blocks.oak_slab, Blocks.spruce_slab, Blocks.birch_slab, Blocks.jungle_slab, Blocks.acacia_slab, Blocks.dark_oak_slab, Blocks.mangrove_slab},
+	        stairs = {Blocks.oak_stairs, Blocks.spruce_stairs, Blocks.birch_stairs, Blocks.jungle_stairs, Blocks.acacia_stairs, Blocks.dark_oak_stairs, Blocks.mangrove_stairs},
+	        fence = {Blocks.oak_fence, Blocks.spruce_fence, Blocks.birch_fence, Blocks.jungle_fence, Blocks.acacia_fence, Blocks.dark_oak_fence, Blocks.mangrove_fence},
+	        fenceGate = {Blocks.oak_fence_gate, Blocks.spruce_fence_gate, Blocks.birch_fence_gate, Blocks.jungle_fence_gate, Blocks.acacia_fence_gate, Blocks.dark_oak_fence_gate, Blocks.mangrove_fence_gate},
+	        door = {Blocks.oak_door, Blocks.spruce_door, Blocks.birch_door, Blocks.jungle_door, Blocks.acacia_door, Blocks.dark_oak_door, Blocks.mangrove_door},
+	        trapdoor = {Blocks.oak_trapdoor, Blocks.spruce_trapdoor, Blocks.birch_trapdoor, Blocks.jungle_trapdoor, Blocks.acacia_trapdoor, Blocks.dark_oak_trapdoor, Blocks.mangrove_trapdoor},
+	        button = {Blocks.oak_button, Blocks.spruce_button, Blocks.birch_button, Blocks.jungle_button, Blocks.acacia_button, Blocks.dark_oak_button, Blocks.mangrove_button},
+	        pressurePlate = {Blocks.oak_pressure_plate, Blocks.spruce_pressure_plate, Blocks.birch_pressure_plate, Blocks.jungle_pressure_plate, Blocks.acacia_pressure_plate, Blocks.dark_oak_pressure_plate, Blocks.mangrove_pressure_plate},
+	        sign = {Blocks.oak_sign, Blocks.spruce_sign, Blocks.birch_sign, Blocks.jungle_sign, Blocks.acacia_sign, Blocks.dark_oak_sign, Blocks.mangrove_sign},
+	        boat = {Blocks.oak_boat, Blocks.spruce_boat, Blocks.birch_boat, Blocks.jungle_boat, Blocks.acacia_boat, Blocks.dark_oak_boat, Blocks.mangrove_boat},
+	    }
+	    local closestMatchGroup, groupScore = Text.getClosestMatchingGroup(name, groups)
+	    if groupScore <= score then
+	        closestMatchGroup = Table.intersection(customBlocksList, closestMatchGroup)
+	        return {name = name, closestMatch = closestMatchGroup, score = groupScore}
+	    else
+	        return {name = name, closestMatch = closestMatch, score = score}
+	    end
 	end
 	return Block
 end
@@ -3276,6 +3314,14 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	        print("Type 'help get' for more information")
 	        return
 	    end
+	    if type(itemName) == "table" then
+	        if #itemName == 0 then
+	            print("Could not find the item")
+	            return
+	        else
+	            itemName = itemName[1]
+	        end
+	    end
 	    print("Getting " .. quantity .. " " .. itemName)
 	    self.storage:moveToIo(itemName, quantity)
 	end
@@ -3311,6 +3357,18 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	            return
 	        end
 	        itemName = matchDetails.closestMatch
+	        if itemName == nil then
+	            print("Could not find item")
+	            return
+	        end
+	        if type(itemName) == "table" then
+	            if #itemName == 0 then
+	                print("Could not find the item")
+	                return
+	            else
+	                itemName = itemName[1]
+	            end
+	        end
 	        local count = self.storage:getItemCount(itemName)
 	        print("Listing Single Item")
 	        print("\t\t" .. Text.getDisplayName(itemName) .. " x" .. count)
@@ -3391,6 +3449,14 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	    if itemName == nil then
 	        print("Could not find item")
 	        return
+	    end
+	    if type(itemName) == "table" then
+	        if #itemName == 0 then
+	            print("Could not find the item")
+	            return
+	        else
+	            itemName = itemName[1]
+	        end
 	    end
 	    print("Adding smelting job for " .. itemCount .. " " .. itemName)
 	    local smeltQueue = self.config:get("smeltQueue", {})
