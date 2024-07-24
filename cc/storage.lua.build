@@ -1556,7 +1556,9 @@ function MODULE_utils_text_Text()
 	    return matrix[len1][len2]
 	end
 	function Text.simplifyIdentifier(id)
-	    return id:match(":(.*)"):gsub("_", " ")
+	    id = id:match(":(.*)") or id
+	    id = id:gsub("_", " ") or id
+	    return id
 	end
 	function Text.getClosestMatch(input, identifiers)
 	    local bestMatch = nil
