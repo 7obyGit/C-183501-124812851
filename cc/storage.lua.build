@@ -2923,7 +2923,7 @@ function MODULE_jobs_definitions_static_storage_StorageJobBackgroundTasks()
 	end
 	function StorageJobBackgroundTasks.onChatMessage(self)
 	    ChatBox.listen(function(event, username, message, uuid, isHidden)
-	        self.protocols.events.sendOnChatMessage(event, username, message, uuid, isHidden)
+	        self.protocols.events:sendOnChatMessage(event, username, message, uuid, isHidden)
 	    end)
 	end
 	return StorageJobBackgroundTasks
