@@ -2680,6 +2680,9 @@ function MODULE_utils_peripherals_EnvironmentDetector()
 	    return EnvironmentDetector.detector.listDimensions()
 	end
 	function EnvironmentDetector.getEntities(range)
+	    for k, v in pairs(EnvironmentDetector.detector) do
+	        print(k, v)
+	    end
 	    return EnvironmentDetector.detector.getEntities(range)
 	end
 	return EnvironmentDetector
