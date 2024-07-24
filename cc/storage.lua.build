@@ -2941,7 +2941,7 @@ function MODULE_jobs_definitions_static_storage_StorageJobBackgroundTasks()
 	        )
 	        table.insert(messages, message)
 	    end
-	    ChatBox.sendMessageToPlayer(Me.username, messages)
+	    ChatBox.sendMessagesToPlayer(Me.username, messages)
 	end
 	function StorageJobBackgroundTasks.onEntityLeave(self, entities)
 	    for _, entity in ipairs(entities) do
