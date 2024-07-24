@@ -3185,7 +3185,15 @@ function MODULE_utils_peripherals_GeoScanner()
 	    LibOs.sleep(GeoScanner.MIN_PERIOD)
 	    radius = radius or GeoScanner.MAX_SCAN_RANGE
 	    radius = math.min(radius, GeoScanner.MAX_SCAN_RANGE)
-	    return GeoScanner.scanner.scan(radius)
+	    local success, result = pcall(function()
+	        return GeoScanner.scanner.scan(radius)
+	    end)
+	    if success then
+	        return result
+	    else
+	        print("Error during scan: " .. tostring(result))
+	        return nil
+	    end
 	end
 	function GeoScanner.safeScan(radius)
 	    if GeoScanner.scanner == nil then return nil end
