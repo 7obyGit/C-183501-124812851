@@ -287,6 +287,8 @@ function MODULE_jobs_JobManager()
 	    config.job = jobClass.name
 	    config:save()
 	    local job = jobClass.new(config)
+	    print("Job: " .. jobClass.name)
+	    print("Computer ID: " .. LibOs.getComputerID())
 	    job.name = jobClass.name .. ":" .. LibOs.getComputerID()
 	    job.log = function(...) print(...) job.logSilent(...) end
 	    job.logSilent = function(...) if job.protocols ~= nil then job.protocols.log:sendLog(...) end end
