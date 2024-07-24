@@ -2635,6 +2635,7 @@ local utils_network_protocols_events_EventsProtocol = MODULE_utils_network_proto
 
 
 function MODULE_utils_peripherals_EnvironmentDetector()
+	local Text = utils_text_Text
 	local EnvironmentDetector = {}
 	EnvironmentDetector.detector = peripheral.find("environmentDetector")
 	function EnvironmentDetector.getBiome()
@@ -2680,6 +2681,11 @@ function MODULE_utils_peripherals_EnvironmentDetector()
 	    return EnvironmentDetector.detector.listDimensions()
 	end
 	function EnvironmentDetector.getEntities(range)
+	    for k, v in pairs(EnvironmentDetector.detector) do
+	        if Text.contains(k, "cooldown") then
+	            print(k, v)
+	        end
+	    end
 	    return EnvironmentDetector.detector.scanEntities(range)
 	end
 	return EnvironmentDetector
