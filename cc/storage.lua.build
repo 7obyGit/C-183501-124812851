@@ -2985,7 +2985,6 @@ function MODULE_utils_network_protocols_remoteperipherals_ChatProtocol()
 	function ChatProtocol:onMessage(args)
 	    local senderName = args.senderName
 	    local message = args.message
-	    if self.onMessageFunc == nil then return end
 	    ChatBox.sendMessage(senderName, message)
 	end
 	function ChatProtocol:sendMessageToPlayer(player, message)
@@ -2994,7 +2993,6 @@ function MODULE_utils_network_protocols_remoteperipherals_ChatProtocol()
 	function ChatProtocol:onMessageToPlayer(args)
 	    local player = args.player
 	    local message = args.message
-	    if self.onMessageToPlayerFunc == nil then return end
 	    ChatBox.sendMessageToPlayer(player, message)
 	end
 	function ChatProtocol:sendToastToPlayer(player, title, message)
@@ -3004,7 +3002,6 @@ function MODULE_utils_network_protocols_remoteperipherals_ChatProtocol()
 	    local player = args.player
 	    local title = args.title
 	    local message = args.message
-	    if self.onToastToPlayerFunc == nil then return end
 	    ChatBox.sendToastToPlayer(player, title, message)
 	end
 	return ChatProtocol
