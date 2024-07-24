@@ -3176,7 +3176,7 @@ function MODULE_utils_peripherals_GeoScanner()
 	end
 	function GeoScanner.getScanCooldown()
 	    if GeoScanner.scanner == nil then return 0 end
-	    return GeoScanner.scanner.getScanCooldown()
+	    return GeoScanner.scanner.getOperationCooldown()
 	end
 	function GeoScanner.chunkAnalyze()
 	    if GeoScanner.scanner == nil then return nil end
