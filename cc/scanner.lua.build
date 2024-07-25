@@ -1822,15 +1822,28 @@ function MODULE_turtle_Inventory()
 	    turtle.turnLeft()
 	    p = peripheral.wrap(Side.FRONT)
 	    print("Left: " .. (p or "None"))
-	    if p == Blocks.barrel or p == Blocks.chest then turtle.turnRight() return Side.LEFT end
+	    if p == Blocks.barrel or p == Blocks.chest then
+	        print("Returning from left")
+	        turtle.turnRight()
+	        return Side.LEFT
+	    end
 	    turtle.turnLeft()
 	    p = peripheral.wrap(Side.FRONT)
 	    print("Back: " .. (p or "None"))
-	    if p == Blocks.barrel or p == Blocks.chest then turtle.turnRight() turtle.turnRight() return Side.BACK end
+	    if p == Blocks.barrel or p == Blocks.chest then
+	        print("Returning from back")
+	        turtle.turnRight()
+	        turtle.turnRight()
+	        return Side.BACK
+	    end
 	    turtle.turnLeft()
 	    p = peripheral.wrap(Side.FRONT)
 	    print("Right: " .. (p or "None"))
-	    if p == Blocks.barrel or p == Blocks.chest then turtle.turnLeft() return Side.RIGHT end
+	    if p == Blocks.barrel or p == Blocks.chest then
+	        print("Returning from right")
+	        turtle.turnLeft()
+	        return Side.RIGHT
+	    end
 	end
 	function Inventory.pullFromContainer()
 	    local side = Inventory.findContainerSide()
