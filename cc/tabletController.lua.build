@@ -1811,6 +1811,7 @@ function MODULE_turtle_Inventory()
 	end
 	function Inventory.findContainerSide()
 	    for _, side in pairs(Side) do
+	        print("Searching side: " .. side)
 	        local peripheralType = peripheral.getType(side)
 	        if peripheralType == Blocks.barrel or peripheralType == Blocks.chest then
 	            return side
