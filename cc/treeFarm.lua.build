@@ -1799,26 +1799,26 @@ function MODULE_turtle_Inventory()
 	end
 	function Inventory.findContainerSide()
 	    print("STARTING CONTAINER SIDE SEARCH")
-	    local p = peripheral.wrap(Side.FRONT)
-	    print("Front: " .. (tostring(p ~= nil) or "None"))
+	    local p = peripheral.getType(Side.FRONT)
+	    print("Front: " .. (p or "None"))
 	    if p == Blocks.barrel or p == Blocks.chest then return Side.FRONT end
-	    p = peripheral.wrap(Side.TOP)
-	    print("Top: " .. (tostring(p ~= nil) or "None"))
+	    p = peripheral.getType(Side.TOP)
+	    print("Top: " .. (p or "None"))
 	    if p == Blocks.barrel or p == Blocks.chest then return Side.TOP end
-	    p = peripheral.wrap(Side.BOTTOM)
-	    print("Bottom: " .. (tostring(p ~= nil) or "None"))
+	    p = peripheral.getType(Side.BOTTOM)
+	    print("Bottom: " .. (p or "None"))
 	    if p == Blocks.barrel or p == Blocks.chest then return Side.BOTTOM end
 	    turtle.turnLeft()
-	    p = peripheral.wrap(Side.FRONT)
-	    print("Left: " .. (tostring(p ~= nil) or "None"))
+	    p = peripheral.getType(Side.FRONT)
+	    print("Left: " .. (p or "None"))
 	    if p == Blocks.barrel or p == Blocks.chest then
 	        print("Returning from left")
 	        turtle.turnRight()
 	        return Side.LEFT
 	    end
 	    turtle.turnLeft()
-	    p = peripheral.wrap(Side.FRONT)
-	    print("Back: " .. (tostring(p ~= nil) or "None"))
+	    p = peripheral.getType(Side.FRONT)
+	    print("Back: " .. (p or "None"))
 	    if p == Blocks.barrel or p == Blocks.chest then
 	        print("Returning from back")
 	        turtle.turnRight()
@@ -1826,8 +1826,8 @@ function MODULE_turtle_Inventory()
 	        return Side.BACK
 	    end
 	    turtle.turnLeft()
-	    p = peripheral.wrap(Side.FRONT)
-	    print("Right: " .. (tostring(p ~= nil) or "None"))
+	    p = peripheral.getType(Side.FRONT)
+	    print("Right: " .. (p or "None"))
 	    if p == Blocks.barrel or p == Blocks.chest then
 	        print("Returning from right")
 	        turtle.turnLeft()
