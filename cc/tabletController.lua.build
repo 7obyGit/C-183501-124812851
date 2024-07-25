@@ -1996,7 +1996,9 @@ function MODULE_turtle_Turtle()
 	    while Turtle.getFuelLevel() < targetFuelLevel and slot ~= nil do
 	        print("*Fuel Level: " .. Turtle.getFuelLevel())
 	        if side == nil then
+	            print("FINDING SIDE")
 	            side = Inventory.findContainerSide()
+	            print("Found side: " .. side)
 	            if side == nil then
 	                os.sleep(1)
 	            end
