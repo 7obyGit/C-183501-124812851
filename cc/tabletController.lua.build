@@ -1810,14 +1810,21 @@ function MODULE_turtle_Inventory()
 	        + Inventory.getItemCount(Blocks.mangrove_sapling)
 	end
 	function Inventory.findContainerSide()
-	    for _, side in pairs(Side) do
-	        print("Searching side: " .. side)
-	        local peripheralType = peripheral.getType(side)
-	        print("peripheralType: " .. (peripheralType or "None"))
-	        if peripheralType == Blocks.barrel or peripheralType == Blocks.chest then
-	            return side
-	        end
-	    end
+	    local p = peripheral.wrap(Side.FRONT)
+	    if p == Blocks.barrel or p == Blocks.chest then return Side.FRONT end
+	    p = peripheral.wrap(Side.TOP)
+	    if p == Blocks.barrel or p == Blocks.chest then return Side.TOP end
+	    p = peripheral.wrap(Side.BOTTOM)
+	    if p == Blocks.barrel or p == Blocks.chest then return Side.BOTTOM end
+	    turtle.turnLeft()
+	    p = peripheral.wrap(Side.FRONT)
+	    if p == Blocks.barrel or p == Blocks.chest then turtle.turnRight() return Side.LEFT end
+	    turtle.turnLeft()
+	    p = peripheral.wrap(Side.FRONT)
+	    if p == Blocks.barrel or p == Blocks.chest then turtle.turnRight() turtle.turnRight() return Side.BACK end
+	    turtle.turnLeft()
+	    p = peripheral.wrap(Side.FRONT)
+	    if p == Blocks.barrel or p == Blocks.chest then turtle.turnLeft() return Side.RIGHT end
 	end
 	function Inventory.pullFromContainer()
 	    local side = Inventory.findContainerSide()
