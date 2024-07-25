@@ -2349,7 +2349,7 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	    if not moved then
 	        local success = Turtle.safeDig(direction)
 	        if not success then
-	            self.log("Cannot move to the home position - turtle is stuck")
+	            self.log("Cannot move to the column position - turtle is stuck")
 	            self.log("Please move the turtle manually")
 	            self.config:set("state", self.states.COMMAND_PROMPT)
 	        end
@@ -2407,7 +2407,7 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	        print("Failed to move to fuel position")
 	        local success = Turtle.safeDig(direction)
 	        if not success then
-	            self.log("Cannot move to the home position - turtle is stuck")
+	            self.log("Cannot move to the fuel position - turtle is stuck")
 	            self.log("Please move the turtle manually")
 	            self.config:set("state", self.states.COMMAND_PROMPT)
 	        end
@@ -2432,7 +2432,7 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	    if not moved then
 	        local success = Turtle.safeDig(direction)
 	        if not success then
-	            self.log("Cannot move to the home position - turtle is stuck")
+	            self.log("Cannot move to the dump position - turtle is stuck")
 	            self.log("Please move the turtle manually")
 	            self.config:set("state", self.states.COMMAND_PROMPT)
 	        end
