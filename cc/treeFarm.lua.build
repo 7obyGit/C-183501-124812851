@@ -1844,6 +1844,9 @@ function MODULE_turtle_Inventory()
 	    end
 	    return emptySlots
 	end
+	function Inventory.getSize()
+	    return 16
+	end
 	return Inventory
 end
 local turtle_Inventory = MODULE_turtle_Inventory()

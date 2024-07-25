@@ -1733,6 +1733,9 @@ function MODULE_turtle_Inventory()
 	    end
 	    return emptySlots
 	end
+	function Inventory.getSize()
+	    return 16
+	end
 	return Inventory
 end
 local turtle_Inventory = MODULE_turtle_Inventory()
@@ -3346,9 +3349,13 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryJob()
 	function QuarryJob:onStep()
 	    local state = self.config:get("state", self.states.COMMAND_PROMPT)
 	    if Text.startsWith(state, "QUARRY_") then
-	        if Inventory.getEmptySlots() < self.config:get("minEmptyInventorySlots", 4)
-	                or Turtle.getFuelLevel() < self.config:get("minFuelLevel", 256) then
+	        local needsToDump = Inventory.getEmptySlots() < self.config:get("minEmptyInventorySlots", 4)
+	        local needsToRefuel = Turtle.getFuelLevel() < self.config:get("minFuelLevel", 256)
+	        local inventoryIsEmpty = Inventory.isEmpty()
+	        if needsToDump or (needsToRefuel and not inventoryIsEmpty) then
 	            self.config:set("state", self.states.QUARRY_DUMP)
+	        elseif needsToRefuel and inventoryIsEmpty then
+	            self.config:set("state", self.states.QUARRY_REFUEL)
 	        end
 	        local stateAction = self.stateActions[state]
 	        if stateAction == nil then
