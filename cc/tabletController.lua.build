@@ -1810,38 +1810,28 @@ function MODULE_turtle_Inventory()
 	        + Inventory.getItemCount(Blocks.mangrove_sapling)
 	end
 	function Inventory.findContainerSide()
-	    print("STARTING CONTAINER SIDE SEARCH")
 	    local p = peripheral.getType(Side.FRONT)
-	    print("Front: " .. (p or "None"))
 	    if p == Blocks.barrel or p == Blocks.chest then return Side.FRONT end
 	    p = peripheral.getType(Side.TOP)
-	    print("Top: " .. (p or "None"))
 	    if p == Blocks.barrel or p == Blocks.chest then return Side.TOP end
 	    p = peripheral.getType(Side.BOTTOM)
-	    print("Bottom: " .. (p or "None"))
 	    if p == Blocks.barrel or p == Blocks.chest then return Side.BOTTOM end
 	    turtle.turnLeft()
 	    p = peripheral.getType(Side.FRONT)
-	    print("Left: " .. (p or "None"))
 	    if p == Blocks.barrel or p == Blocks.chest then
-	        print("Returning from left")
 	        turtle.turnRight()
 	        return Side.LEFT
 	    end
 	    turtle.turnLeft()
 	    p = peripheral.getType(Side.FRONT)
-	    print("Back: " .. (p or "None"))
 	    if p == Blocks.barrel or p == Blocks.chest then
-	        print("Returning from back")
 	        turtle.turnRight()
 	        turtle.turnRight()
 	        return Side.BACK
 	    end
 	    turtle.turnLeft()
 	    p = peripheral.getType(Side.FRONT)
-	    print("Right: " .. (p or "None"))
 	    if p == Blocks.barrel or p == Blocks.chest then
-	        print("Returning from right")
 	        turtle.turnLeft()
 	        return Side.RIGHT
 	    end
@@ -2025,9 +2015,7 @@ function MODULE_turtle_Turtle()
 	    while Turtle.getFuelLevel() < targetFuelLevel and slot ~= nil do
 	        print("*Fuel Level: " .. Turtle.getFuelLevel())
 	        if side == nil then
-	            print("FINDING SIDE")
 	            side = Inventory.findContainerSide()
-	            print("Found side: " .. side)
 	            if side == nil then
 	                os.sleep(1)
 	            end
