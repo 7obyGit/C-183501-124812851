@@ -2311,6 +2311,7 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	    self.config:init("minZ", Turtle.CURRENT_POSITION.z)
 	    self.config:init("maxZ", Turtle.CURRENT_POSITION.z)
 	    self.config:init("homePosition", Turtle.CURRENT_POSITION:toTable())
+	    self.config:init("homeDirection", Turtle.CURRENT_DIRECTION)
 	    self.config:init("fuelPosition", Turtle.CURRENT_POSITION:toTable())  -- Could be located during setup
 	    self.config:init("dumpPosition", Turtle.CURRENT_POSITION:toTable())  -- Could be located during setup
 	    self.config:init("minFuelLevel", 256)
@@ -2461,6 +2462,8 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	    local currentPosition = Turtle.CURRENT_POSITION
 	    local homePosition = Vector3.new(self.config:get("homePosition", currentPosition))
 	    if currentPosition:equals(homePosition) then
+	        local homeDirection = self.config:get("homeDirection", Turtle.CURRENT_DIRECTION)
+	        Turtle.turnTo(homeDirection)
 	        self.log("Quarry terminating")
 	        self.config:set("state", self.states.COMMAND_PROMPT)
 	        return
