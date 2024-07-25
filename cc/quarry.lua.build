@@ -2385,16 +2385,18 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	    local currentPosition = Turtle.CURRENT_POSITION
 	    local fuelPosition = Vector3.new(self.config:get("fuelPosition", currentPosition))
 	    if currentPosition:equals(fuelPosition) then
+	        print("At fuel position")
 	        local fuelTarget = self.config:get("targetFuelLevel", 1024)
 	        if Turtle.getFuelLevel() >= fuelTarget then
+	            print("Fuel level is sufficient - moving column")
 	            self.config:set("state", self.states.QUARRY_MOVING_COLUMN)
 	            return
 	        end
 	        Turtle.refuelUsingAdjacentContainer(fuelTarget)
-	        self.config:set("state", self.states.QUARRY_MOVING_COLUMN)
 	        return
 	    end
 	    if currentPosition.y ~= fuelPosition.y then
+	        print("Moving to correct vertical position")
 	        local direction = currentPosition:verticalDirectionTo(fuelPosition)
 	        Turtle.move(direction)
 	        return
@@ -2402,6 +2404,7 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	    local direction = currentPosition:directionTo(fuelPosition)
 	    local moved = Turtle.move(direction)
 	    if not moved then
+	        print("Failed to move to fuel position")
 	        local success = Turtle.safeDig(direction)
 	        if not success then
 	            self.log("Cannot move to the home position - turtle is stuck")
