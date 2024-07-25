@@ -1799,19 +1799,25 @@ function MODULE_turtle_Inventory()
 	end
 	function Inventory.findContainerSide()
 	    local p = peripheral.wrap(Side.FRONT)
+	    print("Front: " .. p)
 	    if p == Blocks.barrel or p == Blocks.chest then return Side.FRONT end
 	    p = peripheral.wrap(Side.TOP)
+	    print("Top: " .. p)
 	    if p == Blocks.barrel or p == Blocks.chest then return Side.TOP end
 	    p = peripheral.wrap(Side.BOTTOM)
+	    print("Bottom: " .. p)
 	    if p == Blocks.barrel or p == Blocks.chest then return Side.BOTTOM end
 	    turtle.turnLeft()
 	    p = peripheral.wrap(Side.FRONT)
+	    print("Left: " .. p)
 	    if p == Blocks.barrel or p == Blocks.chest then turtle.turnRight() return Side.LEFT end
 	    turtle.turnLeft()
 	    p = peripheral.wrap(Side.FRONT)
+	    print("Back: " .. p)
 	    if p == Blocks.barrel or p == Blocks.chest then turtle.turnRight() turtle.turnRight() return Side.BACK end
 	    turtle.turnLeft()
 	    p = peripheral.wrap(Side.FRONT)
+	    print("Right: " .. p)
 	    if p == Blocks.barrel or p == Blocks.chest then turtle.turnLeft() return Side.RIGHT end
 	end
 	function Inventory.pullFromContainer()
