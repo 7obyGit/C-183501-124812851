@@ -1690,6 +1690,7 @@ function MODULE_turtle_Inventory()
 	    for _, side in pairs(Side) do
 	        print("Searching side: " .. side)
 	        local peripheralType = peripheral.getType(side)
+	        print("peripheralType: " .. (peripheralType or "None"))
 	        if peripheralType == Blocks.barrel or peripheralType == Blocks.chest then
 	            return side
 	        end
