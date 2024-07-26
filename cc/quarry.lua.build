@@ -1528,7 +1528,11 @@ function MODULE_utils_blocks_Block()
 	    local closestMatchGroup, groupScore = Text.getClosestMatchingGroup(name, groups)
 	    if groupScore <= score then
 	        closestMatchGroup = Table.intersection(customBlocksList, closestMatchGroup)
-	        return {name = name, closestMatch = closestMatchGroup, score = groupScore}
+	        if closestMatchGroup == nil or #closestMatchGroup == 0 then
+	            return {name = name, closestMatch = closestMatch, closestMatchGroup = closestMatchGroup, score = groupScore}
+	        else
+	            return {name = name, closestMatch = closestMatchGroup[1], closestMatchGroup = closestMatchGroup, score = groupScore}
+	        end
 	    else
 	        return {name = name, closestMatch = closestMatch, score = score}
 	    end
@@ -2248,6 +2252,7 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryCommands()
 	    self.config:set("fuelPosition", Vector3.fromTerminal("Enter the fuel position: "))
 	    self.config:set("dumpPosition", Vector3.fromTerminal("Enter the dump position: "))
 	    self.config:set("homePosition", Turtle.CURRENT_POSITION:toTable())
+	    self.config:set("homeDirection", Turtle.CURRENT_DIRECTION)
 	    print("The first corner position has been set to the current position of the turtle")
 	    local position1 = Turtle.CURRENT_POSITION
 	    local position2 = Vector3.fromTerminal("Enter the other corner position: ")

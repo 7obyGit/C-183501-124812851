@@ -2474,7 +2474,11 @@ function MODULE_utils_blocks_Block()
 	    local closestMatchGroup, groupScore = Text.getClosestMatchingGroup(name, groups)
 	    if groupScore <= score then
 	        closestMatchGroup = Table.intersection(customBlocksList, closestMatchGroup)
-	        return {name = name, closestMatch = closestMatchGroup, score = groupScore}
+	        if closestMatchGroup == nil or #closestMatchGroup == 0 then
+	            return {name = name, closestMatch = closestMatch, closestMatchGroup = closestMatchGroup, score = groupScore}
+	        else
+	            return {name = name, closestMatch = closestMatchGroup[1], closestMatchGroup = closestMatchGroup, score = groupScore}
+	        end
 	    else
 	        return {name = name, closestMatch = closestMatch, score = score}
 	    end
@@ -3462,14 +3466,6 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	        print("Type 'help get' for more information")
 	        return
 	    end
-	    if type(itemName) == "table" then
-	        if #itemName == 0 then
-	            print("Could not find the item")
-	            return
-	        else
-	            itemName = itemName[1]
-	        end
-	    end
 	    print("Getting " .. quantity .. " " .. itemName)
 	    self.storage:moveToIo(itemName, quantity)
 	end
@@ -3508,14 +3504,6 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	        if itemName == nil then
 	            print("Could not find item")
 	            return
-	        end
-	        if type(itemName) == "table" then
-	            if #itemName == 0 then
-	                print("Could not find the item")
-	                return
-	            else
-	                itemName = itemName[1]
-	            end
 	        end
 	        local count = self.storage:getItemCount(itemName)
 	        print("Listing Single Item")
@@ -3597,14 +3585,6 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	    if itemName == nil then
 	        print("Could not find item")
 	        return
-	    end
-	    if type(itemName) == "table" then
-	        if #itemName == 0 then
-	            print("Could not find the item")
-	            return
-	        else
-	            itemName = itemName[1]
-	        end
 	    end
 	    print("Adding smelting job for " .. itemCount .. " " .. itemName)
 	    local smeltQueue = self.config:get("smeltQueue", {})
