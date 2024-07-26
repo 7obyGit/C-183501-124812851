@@ -2950,8 +2950,18 @@ function MODULE_utils_storage_Container()
 	        return
 	    end
 	    local items = self:getItemList()
-	    for _, item in pairs(items) do
-	        self:_defragmentSingleItem(item)
+	    local status, err = pcall(
+	        function()
+	            Parallel.map(items, function(item)
+	                self:_defragmentSingleItem(item)
+	            end)
+	        end
+	    )
+	    if not status then
+	        print("Error in defragment: " .. err)
+	        for _, item in pairs(items) do
+	            self:_defragmentSingleItem(item)
+	        end
 	    end
 	end
 	function Container:_defragmentSingleItem(item)

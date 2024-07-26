@@ -1364,8 +1364,18 @@ function MODULE_utils_storage_Container()
 	        return
 	    end
 	    local items = self:getItemList()
-	    for _, item in pairs(items) do
-	        self:_defragmentSingleItem(item)
+	    local status, err = pcall(
+	        function()
+	            Parallel.map(items, function(item)
+	                self:_defragmentSingleItem(item)
+	            end)
+	        end
+	    )
+	    if not status then
+	        print("Error in defragment: " .. err)
+	        for _, item in pairs(items) do
+	            self:_defragmentSingleItem(item)
+	        end
 	    end
 	end
 	function Container:_defragmentSingleItem(item)
@@ -1757,7 +1767,9 @@ function MODULE_utils_storage_Storage()
 	        end
 	        remainingCount = container:sendItems(destinationContainer, itemName, remainingCount)
 	    end
-	    destinationContainer:defragment()
+	    if destinationContainer == self.io then
+	        destinationContainer:defragment()
+	    end
 	    return remainingCount
 	end
 	function Storage:moveFromIo(itemName, count, sourceContainer)
@@ -1771,10 +1783,12 @@ function MODULE_utils_storage_Storage()
 	        remainingCount = sourceContainer:sendItems(destinationContainer, itemName, remainingCount)
 	        table.insert(destinations, destinationContainer)
 	    end
-	    Parallel.map(
-	        destinations,
-	        function(destionation) destionation:defragment() end
-	    )
+	    if math.random(1, 10) == 1 then
+	        Parallel.map(
+	            destinations,
+	            function(destination) destination:defragment() end
+	        )
+	    end
 	    return remainingCount
 	end
 	function Storage:dump(sourceContainer)
