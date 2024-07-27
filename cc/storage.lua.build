@@ -164,6 +164,16 @@ function MODULE_utils_controlflow_Parallel()
 	        return Parallel.mapList(obj, func)
 	    end
 	end
+	function Parallel.mapWithTimeout(obj, func, timeoutSeconds)
+	    timeoutSeconds = timeoutSeconds or 1
+	    local funcWithTimeout = function()
+	        Parallel.new()
+	            :addTask(func)
+	            :addTimeout(timeoutSeconds)
+	            :waitForAny()
+	    end
+	    return Parallel.map(obj, funcWithTimeout)
+	end
 	function Parallel.mapList(list, func)
 	    local parallel = Parallel.new()
 	    for _, item in ipairs(list) do
@@ -2011,13 +2021,15 @@ function MODULE_utils_storage_Storage()
 	end
 	function Storage:refuelFurnaces()
 	    local fuelItem = Blocks.charcoal
-	    for _, furnace in pairs(self.furnaces) do
+	    Parallel.mapWithTimeout(self.barrels, function(furnace)
+	        print("Refueling")
 	        local requiredFuelCount = furnace:getRequiredFuelCount()
 	        if requiredFuelCount > 0 then
 	            self:moveToIo(fuelItem, requiredFuelCount)
 	            furnace:addFuel(self.io, fuelItem, requiredFuelCount)
 	        end
-	    end
+	        print("Completed Refueling")
+	    end)
 	end
 	function Storage:dumpFurnaces()
 	    local containers = {}

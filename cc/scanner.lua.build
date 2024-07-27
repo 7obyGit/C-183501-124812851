@@ -164,6 +164,16 @@ function MODULE_utils_controlflow_Parallel()
 	        return Parallel.mapList(obj, func)
 	    end
 	end
+	function Parallel.mapWithTimeout(obj, func, timeoutSeconds)
+	    timeoutSeconds = timeoutSeconds or 1
+	    local funcWithTimeout = function()
+	        Parallel.new()
+	            :addTask(func)
+	            :addTimeout(timeoutSeconds)
+	            :waitForAny()
+	    end
+	    return Parallel.map(obj, funcWithTimeout)
+	end
 	function Parallel.mapList(list, func)
 	    local parallel = Parallel.new()
 	    for _, item in ipairs(list) do
