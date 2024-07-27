@@ -165,40 +165,54 @@ function MODULE_utils_controlflow_Parallel()
 	    end
 	end
 	function Parallel.mapList(list, func)
+	    local output = {}
 	    local parallel = Parallel.new()
-	    for _, item in ipairs(list) do
+	    for index, item in ipairs(list) do
 	        if item ~= nil then
-	            parallel:addTask(function() func(item) end)
+	            parallel:addTask(function()
+	                local elementResult = func(item)
+	                output[index] = elementResult
+	            end)
 	        end
 	    end
 	    parallel:run()
+	    return output
 	end
 	function Parallel.mapTable(table_, func)
+	    local output = {}
 	    local parallel = Parallel.new()
 	    for key, item in pairs(table_) do
 	        if item ~= nil then
-	            parallel:addTask(function() func(key, item) end)
+	            parallel:addTask(function()
+	                local elementResult = func(key, item)
+	                output[key] = elementResult
+	            end)
 	        end
 	    end
 	    parallel:run()
+	    return output
 	end
 	function Parallel.mapListWithTimeout(obj, func, timeoutSeconds)
 	    timeoutSeconds = timeoutSeconds or 1
 	    local funcWithTimeout = function(value)
+	        local result = nil
 	        Parallel.new()
-	            :addTask(function() func(value) end)
+	            :addTask(function() result = func(value) end)
 	            :addTimeout(timeoutSeconds)
 	            :waitForAny()
+	        return result
 	    end
 	    return Parallel.map(obj, funcWithTimeout)
 	end
 	function Parallel.mapTableWithTimeout(obj, func, timeoutSeconds)
 	    timeoutSeconds = timeoutSeconds or 1
 	    local funcWithTimeout = function(key, value)
+	        local result = nil
 	        Parallel.new()
-	            :addTask(function() func(key, value) end)
+	            :addTask(function() result = func(key, value) end)
 	            :addTimeout(timeoutSeconds)
 	            :waitForAny()
+	        return result
 	    end
 	    return Parallel.map(obj, funcWithTimeout)
 	end
@@ -2008,9 +2022,29 @@ function MODULE_utils_storage_Storage()
 	            table.insert(acceptingFurnaces, furnace)
 	        end
 	    end
+	    acceptingFurnaces = 
 	    return acceptingFurnaces
 	end
 	function Storage:smelt(itemName, itemCount)
+	    local remainingCount = itemCount
+	    local batchSize = 8  -- Spread items across furnaces but do not go below 8 so as to avoid wasting coal
+	    local totalItemCount = self:getItemCount(itemName)
+	    if totalItemCount < itemCount then
+	        return nil  -- Not enough items to smelt
+	    end
+	    local locations = self:findItemLocations(itemName)
+	    local acceptingFurnaces = self:getAcceptingFurnaces(itemName)
+	    while remainingCount > 0 and #locations > 0 and #acceptingFurnaces > 0 do
+	        local location = table.remove(locations, 1)
+	        local container = self.inventories[location.containerName]
+	        local furnace = table.remove(acceptingFurnaces, 1)
+	        local itemsToAssign = math.min(remainingCount, batchSize)
+	        local itemsNotSmelted = furnace:smelt(container, itemName, itemsToAssign)
+	        remainingCount = remainingCount - (itemsToAssign - itemsNotSmelted)
+	    end
+	    return remainingCount
+	end
+	function Storage:smeltFast(itemName, itemCount)
 	    local remainingCount = itemCount
 	    local batchSize = 8  -- Spread items across furnaces but do not go below 8 so as to avoid wasting coal
 	    local totalItemCount = self:getItemCount(itemName)
