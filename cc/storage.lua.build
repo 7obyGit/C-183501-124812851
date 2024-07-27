@@ -2031,7 +2031,7 @@ function MODULE_utils_storage_Storage()
 	end
 	function Storage:refuelFurnaces()
 	    local fuelItem = Blocks.charcoal
-	    Parallel.mapListWithTimeout(self.furnaces, function(_, furnace)
+	    Parallel.mapTableWithTimeout(self.furnaces, function(_, furnace)
 	        print("Refueling")
 	        print(furnace)
 	        local requiredFuelCount = furnace:getRequiredFuelCount()
