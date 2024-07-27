@@ -353,7 +353,9 @@ function MODULE_jobs_JobManager()
 	            p:addTask(function() backgroundTask(job, config) end)
 	        end
 	    end
-	    p:addTask(function() JobManager.runBackgroundTask(job, config) end)
+	    if job.backgroundTask ~= nil then
+	        p:addTask(function() JobManager.runBackgroundTask(job, config) end)
+	    end
 	    p:waitForAny()
 	    job:onComplete()
 	    print("Completed Job: " .. jobClass.name)
