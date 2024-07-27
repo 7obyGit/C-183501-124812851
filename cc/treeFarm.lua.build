@@ -166,12 +166,12 @@ function MODULE_utils_controlflow_Parallel()
 	end
 	function Parallel.mapWithTimeout(obj, func, timeoutSeconds)
 	    timeoutSeconds = timeoutSeconds or 1
-	    local funcWithTimeout = function(key, value)
+	    local funcWithTimeout = function(...)
+	        local args = ...
 	        print("PRE FUNC")
-	        print(key)
-	        print(value)
+	        print(args)
 	        Parallel.new()
-	            :addTask(function() func(table.unpack(key)) end)
+	            :addTask(function() func(table.unpack(args)) end)
 	            :addTimeout(timeoutSeconds)
 	            :waitForAny()
 	    end
