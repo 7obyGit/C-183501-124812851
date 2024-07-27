@@ -2022,7 +2022,6 @@ function MODULE_utils_storage_Storage()
 	            table.insert(acceptingFurnaces, furnace)
 	        end
 	    end
-	    acceptingFurnaces = 
 	    return acceptingFurnaces
 	end
 	function Storage:smelt(itemName, itemCount)
