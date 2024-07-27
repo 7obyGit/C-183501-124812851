@@ -2212,7 +2212,7 @@ function MODULE_utils_storage_Storage()
 	            self:moveToIo(fuelItem, requiredFuelCount)
 	            furnace:addFuel(self.io, fuelItem, requiredFuelCount)
 	        end
-	    end)
+	    end, 5)
 	end
 	function Storage:dumpFurnaces()
 	    local containers = {}
