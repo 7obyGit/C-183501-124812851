@@ -2155,25 +2155,6 @@ function MODULE_utils_storage_Storage()
 	    acceptingFurnaces = Stream.getValues(acceptingFurnaces)
 	    return acceptingFurnaces
 	end
-	function Storage:smeltOld(itemName, itemCount)
-	    local remainingCount = itemCount
-	    local batchSize = 8  -- Spread items across furnaces but do not go below 8 so as to avoid wasting coal
-	    local totalItemCount = self:getItemCount(itemName)
-	    if totalItemCount < itemCount then
-	        return nil  -- Not enough items to smelt
-	    end
-	    local locations = self:findItemLocations(itemName)
-	    local acceptingFurnaces = self:getAcceptingFurnaces(itemName)
-	    while remainingCount > 0 and #locations > 0 and #acceptingFurnaces > 0 do
-	        local location = table.remove(locations, 1)
-	        local container = self.inventories[location.containerName]
-	        local furnace = table.remove(acceptingFurnaces, 1)
-	        local itemsToAssign = math.min(remainingCount, batchSize)
-	        local itemsNotSmelted = furnace:smelt(container, itemName, itemsToAssign)
-	        remainingCount = remainingCount - (itemsToAssign - itemsNotSmelted)
-	    end
-	    return remainingCount
-	end
 	function Storage:smelt(itemName, itemCount)
 	    local remainingCount = itemCount
 	    local batchSize = 8  -- Spread items across furnaces but do not go below 8 so as to avoid wasting coal
