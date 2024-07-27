@@ -2842,25 +2842,59 @@ end
 local utils_network_protocols_logging_LogChannels = MODULE_utils_network_protocols_logging_LogChannels()
 
 
-function MODULE_utils_math_Math()
-	local Math = {}
-	function Math.round(num, numDecimalPlaces)
-	    numDecimalPlaces = numDecimalPlaces or 0
-	    local mult = 10^numDecimalPlaces
-	    return math.floor(num * mult + 0.5) / mult
+function MODULE_utils_controlflow_BackgroundTask()
+	local BackgroundTask = {}
+	function BackgroundTask.new()
+	    local self = setmetatable({}, {__index = BackgroundTask})
+	    self.name = "Background Task"
+	    self.period = 1
+	    self.callback = function() print("Callback not set for task '" .. self.name .. "'") end
+	    self.whenCallback = function() return true end
+	    self.running = false
+	    return self
 	end
-	return Math
+	function BackgroundTask:setName(name)
+	    self.name = name
+	    return self
+	end
+	function BackgroundTask:setPeriod(period)
+	    self.period = period
+	    return self
+	end
+	function BackgroundTask:setCallback(callback)
+	    self.callback = callback
+	    return self
+	end
+	function BackgroundTask:when(whenCallback)
+	    self.whenCallback = whenCallback
+	    return self
+	end
+	function BackgroundTask:start()
+	    self.running = true
+	    while self.running do
+	        while not self.whenCallback() do
+	            os.sleep(1)
+	        end
+	        local status, error = pcall(self.callback)
+	        if not status then
+	            print("Error in task '" .. self.name .. "': " .. error)
+	        end
+	        os.sleep(self.period)
+	    end
+	end
+	return BackgroundTask
 end
-local utils_math_Math = MODULE_utils_math_Math()
+local utils_controlflow_BackgroundTask = MODULE_utils_controlflow_BackgroundTask()
 
 
 function MODULE_jobs_definitions_static_storage_StorageBackgroundTasks()
 	local EnvironmentDetector = utils_peripherals_EnvironmentDetector
 	local LogChannels = utils_network_protocols_logging_LogChannels
-	local Math = utils_math_Math
 	local ChatBox = utils_peripherals_ChatBox
 	local Me = utils_other_Me
 	local Players = utils_other_Players
+	local BackgroundTask = utils_controlflow_BackgroundTask
+	local Blocks = utils_blocks_Blocks
 	local StorageBackgroundTasks = {}
 	function StorageBackgroundTasks.onEntityEnter(self, entities)
 	    local messages = {}
@@ -2884,7 +2918,7 @@ function MODULE_jobs_definitions_static_storage_StorageBackgroundTasks()
 	        function(entitiesAdded) StorageBackgroundTasks.onEntityEnter(self, entitiesAdded) end,
 	        function(entitiesRemoved) StorageBackgroundTasks.onEntityLeave(self, entitiesRemoved) end,
 	        EnvironmentDetector.MAX_SCAN_RANGE,
-	        {"mialliance:", Players.names.FuturePr0, Players.names.StealthyHarry, Players.names.Anethie, Players.names.Anethi, Players.names["0li"]},
+	        {"mialliance:", Me.username, Players.names.FuturePr0, Players.names.StealthyHarry, Players.names.Anethie, Players.names.Anethi, Players.names["0li"]},
 	        5
 	    )
 	end
@@ -2892,6 +2926,80 @@ function MODULE_jobs_definitions_static_storage_StorageBackgroundTasks()
 	    ChatBox.listen(function(event, username, message, uuid, isHidden)
 	        self.protocols.events:sendOnChatMessage(event, username, message, uuid, isHidden)
 	    end)
+	end
+	function StorageBackgroundTasks.refuelFurnaces(self)
+	    BackgroundTask.new()
+	        :setName("Refuel Furnaces")
+	        :setPeriod(16)
+	        :setCallback(function()
+	            self.storage:refuelFurnaces()
+	        end)
+	        :when(function() return self.config:get("state", nil) == self.states.COMMAND_PROMPT end)
+	        :start()
+	end
+	function StorageBackgroundTasks.dumpFurnaces(self)
+	    BackgroundTask.new()
+	        :setName("Dump Furnaces")
+	        :setPeriod(8)
+	        :setCallback(function()
+	            self.storage:dumpFurnaces()
+	        end)
+	        :when(function() return self.config:get("state", nil) == self.states.COMMAND_PROMPT end)
+	        :start()
+	end
+	function StorageBackgroundTasks.dumpAllInputs(self)
+	    BackgroundTask.new()
+	        :setName("Dump All Inputs")
+	        :setPeriod(8)
+	        :setCallback(function()
+	            self.storage:dumpAllInputs()
+	        end)
+	        :when(function() return self.config:get("state", nil) == self.states.COMMAND_PROMPT end)
+	        :start()
+	end
+	function StorageBackgroundTasks.populateKeepFilledBarrels(self)
+	    BackgroundTask.new()
+	        :setName("Populate Keep Filled Barrels")
+	        :setPeriod(8)
+	        :setCallback(function()
+	            self.storage:populateKeepFilledBarrels()
+	        end)
+	        :when(function() return self.config:get("state", nil) == self.states.COMMAND_PROMPT end)
+	        :start()
+	end
+	function StorageBackgroundTasks.updateSmeltQueue(self)
+	    BackgroundTask.new()
+	        :setName("Update Smelt Queue")
+	        :setPeriod(1)
+	        :setCallback(function()
+	            local charcoalCount = self.storage:getItemCount(Blocks.charcoal)
+	            local spruceLogCount = self.storage:getItemCount(Blocks.spruce_log)
+	            local smeltQueue = self.config:get("smeltQueue", {})
+	            local noCharcoalSmeltTask = true
+	            for _, item in pairs(smeltQueue) do
+	                if item.name == Blocks.spruce_log then
+	                    noCharcoalSmeltTask = false
+	                    break
+	                end
+	            end
+	            if spruceLogCount > 1024 and charcoalCount < 1024 and noCharcoalSmeltTask then
+	                table.insert(smeltQueue, {name = Blocks.spruce_log, count = 512})
+	            end
+	            local removedJobNumbers = {}
+	            for smeltJobNumber, item in pairs(smeltQueue) do
+	                local remainingCount = self.storage:smelt(item.name, item.count)
+	                item.count = remainingCount
+	                if remainingCount == 0 then
+	                    table.insert(removedJobNumbers, smeltJobNumber)
+	                end
+	            end
+	            for _, jobNumber in pairs(removedJobNumbers) do
+	                table.remove(smeltQueue, jobNumber)
+	            end
+	            self.config:set("smeltQueue", smeltQueue)
+	        end)
+	        :when(function() return self.config:get("state", nil) == self.states.COMMAND_PROMPT end)
+	        :start()
 	end
 	return StorageBackgroundTasks
 end
@@ -3297,6 +3405,18 @@ end
 local utils_blocks_Block = MODULE_utils_blocks_Block()
 
 
+function MODULE_utils_math_Math()
+	local Math = {}
+	function Math.round(num, numDecimalPlaces)
+	    numDecimalPlaces = numDecimalPlaces or 0
+	    local mult = 10^numDecimalPlaces
+	    return math.floor(num * mult + 0.5) / mult
+	end
+	return Math
+end
+local utils_math_Math = MODULE_utils_math_Math()
+
+
 function MODULE_jobs_definitions_static_storage_StorageCommands()
 	local Block = utils_blocks_Block
 	local Command = utils_terminal_commands_Command
@@ -3612,13 +3732,16 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	function StorageJob.new(config)
 	    local self = setmetatable({}, StorageJob)
 	    print("Adding background tasks")
-	    self.backgroundTasks = {}
+	    self.backgroundTasks = {
+	        StorageBackgroundTasks.refuelFurnaces,
+	        StorageBackgroundTasks.dumpFurnaces,
+	        StorageBackgroundTasks.dumpAllInputs,
+	        StorageBackgroundTasks.populateKeepFilledBarrels,
+	        StorageBackgroundTasks.updateSmeltQueue,
+	    }
 	    if PlayerDetector.detector ~= nil then table.insert(self.backgroundTasks, function() PlayerDetector.onPlayerMoved(function (username, oldPosition, newPosition) self.protocols.events:sendOnPlayerMoved(username, oldPosition, newPosition) end, Me.username, 5) end) end
 	    if EnvironmentDetector.detector ~= nil then table.insert(self.backgroundTasks, StorageBackgroundTasks.onEntityEnterOrLeave) end
 	    if ChatBox.internal ~= nil then table.insert(self.backgroundTasks, StorageBackgroundTasks.onChatMessage) end
-	    print("Adding 'the' background task")
-	    self.backgroundTask = function() self:onBackgroundStep() end
-	    self.backgroundDelay = 5  -- This task should be infrequent
 	    print("Defining the commands")
 	    self.storage = nil
 	    self.commands = Commands.new()
