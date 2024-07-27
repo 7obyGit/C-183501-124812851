@@ -3122,6 +3122,7 @@ local jobs_definitions_static_storage_StorageBackgroundTasks = MODULE_jobs_defin
 
 
 function MODULE_jobs_definitions_static_storage_StorageCommands()
+	local Block = utils_blocks_Block
 	local Command = utils_terminal_commands_Command
 	local StorageCommands = {}
 	function StorageCommands.getCommandExit(self)
