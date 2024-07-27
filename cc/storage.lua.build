@@ -1588,11 +1588,26 @@ function MODULE_utils_storage_machines_Furnace()
 	    local outputSlotCount = outputSlot.count
 	    return outputSlotCount
 	end
+	function Furnace:getInputCount()
+	    self.container:updateIndex()
+	    local inputSlot = self.container:getSlot(Furnace.INPUT_SLOT_INDEX)
+	    if inputSlot == nil then
+	        return 0
+	    end
+	    local inputSlotCount = inputSlot.count
+	    return inputSlotCount
+	end
 	function Furnace:clearOutputs(destContainer)
+	    return self:clearSlot(destContainer, Furnace.OUTPUT_SLOT_INDEX)
+	end
+	function Furnace:clearInputs(destContainer)
+	    return self:clearSlot(destContainer, Furnace.INPUT_SLOT_INDEX)
+	end
+	function Furnace:clearSlot(destContainer, slotToClear)
 	    self.container:updateIndex()
 	    local sourceContainer = self.container
 	    local remainingCount = 0
-	    local sourceSlot = Furnace.OUTPUT_SLOT_INDEX
+	    local sourceSlot = slotToClear
 	    local sourceSlotTable = sourceContainer:getSlot(sourceSlot)
 	    if sourceSlotTable == nil then
 	        return 0
@@ -1604,7 +1619,7 @@ function MODULE_utils_storage_machines_Furnace()
 	        if destSlot == nil then
 	            return remainingCount
 	        end
-	        local moved = sourceContainer.internal.pushItems(destContainer.name, Furnace.OUTPUT_SLOT_INDEX, remainingCount, destSlot)
+	        local moved = sourceContainer.internal.pushItems(destContainer.name, sourceSlot, remainingCount, destSlot)
 	        remainingCount = remainingCount - moved
 	        local sourceSlotTable = sourceContainer.index:getSlot(sourceSlot) or {count = 0}
 	        local sourceSlotCount = sourceSlotTable.count - moved
@@ -2211,6 +2226,26 @@ function MODULE_utils_storage_Storage()
 	                container = table.remove(containers, 1)
 	            end
 	            remainingCount = furnace:clearOutputs(container)
+	        end
+	        if remainingCount > 0 then
+	            print("Warning: Failed to clear all outputs from " .. furnace.name)
+	        end
+	    end
+	end
+	function Storage:dumpFurnaceInputs()
+	    local containers = {}
+	    for _, container in pairs(self.inventories) do
+	        table.insert(containers, container)
+	    end
+	    local container = nil
+	    local remainingCount = 0
+	    for _, furnace in pairs(self.furnaces) do
+	        remainingCount = furnace:getInputCount()
+	        while #containers > 0 and remainingCount > 0 do
+	            if container == nil or container:getEmptySlot() == nil then
+	                container = table.remove(containers, 1)
+	            end
+	            remainingCount = furnace:clearInputs(container)
 	        end
 	        if remainingCount > 0 then
 	            print("Warning: Failed to clear all outputs from " .. furnace.name)
@@ -3583,7 +3618,7 @@ function MODULE_jobs_definitions_static_storage_StorageCommands()
 	function StorageCommands.getCommandSmelt(self)
 	    return Command.new(
 	        "smelt",
-	        "Smelts an item in the furnace\nExample 1: smelt <quantity> <item>\nExample 2: smelt <item>\nExample 3: smelt list\n*Default quantity is 64",
+	        "Smelts an item in the furnace\nExample 1: smelt <quantity> <item>\nExample 2: smelt <item>\nExample 3: smelt list\nExample 4: smelt clear\n*Default quantity is 64",
 	        function(...)
 	            local args = {...}
 	            local itemCount = 64
@@ -3615,6 +3650,13 @@ function MODULE_jobs_definitions_static_storage_StorageCommands()
 	                for i, item in pairs(smeltQueue) do
 	                    print("\t\t" .. i .. ": " .. item.name .. " " .. item.count)
 	                end
+	                return
+	            end
+	            if itemName == "clear" then
+	                print("Clearing smelt queue and furnaces")
+	                self.config:set("smeltQueue", {})
+	                self.storage:dumpFurnaceInputs()
+	                self.storage:dumpFurnaces()
 	                return
 	            end
 	            if itemName == nil then
