@@ -3653,6 +3653,7 @@ function MODULE_jobs_definitions_static_storage_StorageCommands()
 	                return
 	            end
 	            if itemName == "clear" then
+	                print("Clearing furnaces...")
 	                print(" * Clearing smelt queue")
 	                self.config:set("smeltQueue", {})
 	                print(" * Dumping furnace inputs")
