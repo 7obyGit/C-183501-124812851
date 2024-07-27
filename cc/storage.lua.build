@@ -2198,7 +2198,7 @@ function MODULE_utils_storage_Storage()
 	        local container = self.inventories[location.containerName]
 	        local itemsToAssign = itemsToAllocate[furnace.name]
 	        local itemsNotSmelted = furnace:smelt(container, itemName, itemsToAssign)
-	        return itemsToAllocate - itemsNotSmelted
+	        return itemsToAssign - itemsNotSmelted
 	    end)
 	    local totalItemsSmelted = Stream.sumList(smeltedItemCounts)
 	    remainingCount = remainingCount - totalItemsSmelted
