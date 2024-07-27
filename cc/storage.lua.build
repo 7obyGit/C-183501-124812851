@@ -168,6 +168,7 @@ function MODULE_utils_controlflow_Parallel()
 	    timeoutSeconds = timeoutSeconds or 1
 	    local funcWithTimeout = function(...)
 	        local args = ...
+	        print("PRE FUNC")
 	        print(args)
 	        Parallel.new()
 	            :addTask(function() func(table.unpack(args)) end)
@@ -2025,6 +2026,7 @@ function MODULE_utils_storage_Storage()
 	    local fuelItem = Blocks.charcoal
 	    Parallel.mapWithTimeout(self.barrels, function(furnace)
 	        print("Refueling")
+	        print(furnace)
 	        local requiredFuelCount = furnace:getRequiredFuelCount()
 	        if requiredFuelCount > 0 then
 	            self:moveToIo(fuelItem, requiredFuelCount)

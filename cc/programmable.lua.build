@@ -168,6 +168,7 @@ function MODULE_utils_controlflow_Parallel()
 	    timeoutSeconds = timeoutSeconds or 1
 	    local funcWithTimeout = function(...)
 	        local args = ...
+	        print("PRE FUNC")
 	        print(args)
 	        Parallel.new()
 	            :addTask(function() func(table.unpack(args)) end)
