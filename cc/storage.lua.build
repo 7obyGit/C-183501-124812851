@@ -2190,7 +2190,7 @@ function MODULE_utils_storage_Storage()
 	        itemsToAllocate[furnace.name] = itemsToAssign
 	        currentCount = currentCount - itemsToAssign
 	    end
-	    local smeltedItemCounts = Parallel.mapTableWithTimeout(acceptingFurnaces, function(index, furnace)
+	    local smeltedItemCounts = Parallel.mapTable(acceptingFurnaces, function(index, furnace)
 	        local location = locations[index]
 	        if location == nil then
 	            return 0
