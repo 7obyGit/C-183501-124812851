@@ -2214,7 +2214,7 @@ function MODULE_utils_storage_Storage()
 	        else
 	            print("No fuel required for " .. furnace.name)
 	        end
-	    end, 32)
+	    end, 8)
 	    print("Refueled " .. count .. " furnaces")
 	end
 	function Storage:dumpFurnaces()
