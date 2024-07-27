@@ -3124,13 +3124,52 @@ local jobs_definitions_static_storage_StorageBackgroundTasks = MODULE_jobs_defin
 function MODULE_jobs_definitions_static_storage_StorageCommands()
 	local Command = utils_terminal_commands_Command
 	local StorageCommands = {}
-	function StorageCommands.getCommandTest(self)
+	function StorageCommands.getCommandExit(self)
 	    return Command.new(
 	        "exit",
 	        "Terminates the storage program",
 	        function(...)
-	            print("HELLO")
 	            self.config:set("alive", false)
+	        end
+	    )
+	end
+	function StorageCommands.getCommandGet(self)
+	    return Command.new(
+	        "get",
+	        "Gets an item from storage\nExample 1: get <quantity> <item>\nExample 2: get <item>\n*Default quantity is 64",
+	        function(...)
+	            local args = {...}
+	            local quantity = 64
+	            local itemName = nil
+	            if #args == 0 then
+	                print("No arguments provided")
+	                print("Expected: get <quantity> <item>")
+	                print("Type 'help get' for more information")
+	                return
+	            elseif #args == 1 then
+	                quantity = 64
+	                itemName = args[1]
+	            else
+	                quantity = tonumber(args[1])
+	                itemName = args[2]
+	                for i = 3, #args do
+	                    itemName = itemName .. " " .. args[i]
+	                end
+	            end
+	            local matchDetails = Block.getClosestMatch(itemName, self.storage:getPresentItemNames())
+	            if matchDetails.score > 3 then
+	                print("Could not find item: " .. itemName)
+	                print("Did you mean: " .. matchDetails.closestMatch)
+	                return
+	            end
+	            itemName = matchDetails.closestMatch
+	            if quantity == nil or itemName == nil then
+	                print("Invalid arguments for quantity or itemName")
+	                print("Type 'help get' for more information")
+	                return
+	            end
+	            print("Getting " .. quantity .. " " .. itemName)
+	            self.storage:moveToIo(itemName, quantity)
 	        end
 	    )
 	end
@@ -3311,8 +3350,8 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	    print("Defining the commands")
 	    self.storage = nil
 	    self.commands = Commands.new()
-	    self.commands:add("exit", StorageCommands.getCommandTest(self))
-	    self.commands:add("get", Command.new("get", "Gets an item from storage\nExample 1: get <quantity> <item>\nExample 2: get <item>\n*Default quantity is 64", function(...) self:commandGet(...) end))
+	    self.commands:add("exit", StorageCommands.getCommandExit(self))
+	    self.commands:add("get", StorageCommands.getCommandGet(self))
 	    self.commands:add("dump", Command.new("dump", "Dumps the storage", function(...) self:commandDump(...) end))
 	    self.commands:add("dumpInputs", Command.new("dumpinputs", "Dumps the input barrels", function(...) self:commandDumpInputs(...) end))
 	    self.commands:add("list", Command.new("list", "Lists the storage\nExample 1: list\nExample 2: list <itemName>", function(...) self:commandList(...) end))
@@ -3479,43 +3518,6 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	    self.commands:run(userInput)
 	end
 	function StorageJob:onComplete()
-	end
-	function StorageJob:commandExit()
-	    self.config:set("alive", false)
-	end
-	function StorageJob:commandGet(...)
-	    local args = {...}
-	    local quantity = 64
-	    local itemName = nil
-	    if #args == 0 then
-	        print("No arguments provided")
-	        print("Expected: get <quantity> <item>")
-	        print("Type 'help get' for more information")
-	        return
-	    elseif #args == 1 then
-	        quantity = 64
-	        itemName = args[1]
-	    else
-	        quantity = tonumber(args[1])
-	        itemName = args[2]
-	        for i = 3, #args do
-	            itemName = itemName .. " " .. args[i]
-	        end
-	    end
-	    local matchDetails = Block.getClosestMatch(itemName, self.storage:getPresentItemNames())
-	    if matchDetails.score > 3 then
-	        print("Could not find item: " .. itemName)
-	        print("Did you mean: " .. matchDetails.closestMatch)
-	        return
-	    end
-	    itemName = matchDetails.closestMatch
-	    if quantity == nil or itemName == nil then
-	        print("Invalid arguments for quantity or itemName")
-	        print("Type 'help get' for more information")
-	        return
-	    end
-	    print("Getting " .. quantity .. " " .. itemName)
-	    self.storage:moveToIo(itemName, quantity)
 	end
 	function StorageJob:commandDump()
 	    print("Dumping Storage")
