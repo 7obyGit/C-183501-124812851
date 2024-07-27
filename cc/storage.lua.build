@@ -1708,6 +1708,77 @@ end
 local utils_text_Text = MODULE_utils_text_Text()
 
 
+function MODULE_utils_controlflow_Stream()
+	local Stream = {}
+	function Stream.mapList(obj, func)
+	    local output = {}
+	    for _, item in ipairs(obj) do
+	        if item ~= nil then
+	            table.insert(output, func(item))
+	        end
+	    end
+	    return output
+	end
+	function Stream.mapTable(obj, func)
+	    local output = {}
+	    for key, item in pairs(obj) do
+	        if item ~= nil then
+	            local newKey, newItem = func(key, item)
+	            output[newKey] = newItem
+	        end
+	    end
+	    return output
+	end
+	function Stream.filterList(obj, func)
+	    local output = {}
+	    for _, item in ipairs(obj) do
+	        if item ~= nil and func(item) then
+	            table.insert(output, item)
+	        end
+	    end
+	    return output
+	end
+	function Stream.filterTable(obj, func)
+	    local output = {}
+	    for key, item in pairs(obj) do
+	        if item ~= nil and func(key, item) then
+	            output[key] = item
+	        end
+	    end
+	    return output
+	end
+	function Stream.nonNilList(obj)
+	    return Stream.filterList(obj, function(item) return item ~= nil end)
+	end
+	function Stream.nonNilTable(obj)
+	    return Stream.filterTable(obj, function(key, item) return item ~= nil end)
+	end
+	function Stream.getValues(obj)
+	    local output = {}
+	    for _, item in pairs(obj) do
+	        table.insert(output, item)
+	    end
+	    return output
+	end
+	function Stream.getKeys(obj)
+	    local output = {}
+	    for key, _ in pairs(obj) do
+	        table.insert(output, key)
+	    end
+	    return output
+	end
+	function Stream.getEntryPairs(obj)
+	    local output = {}
+	    for key, item in pairs(obj) do
+	        table.insert(output, {key = key, value = item})
+	    end
+	    return output
+	end
+	return Stream
+end
+local utils_controlflow_Stream = MODULE_utils_controlflow_Stream()
+
+
 function MODULE_utils_storage_Storage()
 	local Blocks = utils_blocks_Blocks
 	local BlockIndicators = utils_blocks_BlockIndicators
@@ -1715,6 +1786,7 @@ function MODULE_utils_storage_Storage()
 	local Furnace = utils_storage_machines_Furnace
 	local Text      = utils_text_Text
 	local Parallel = utils_controlflow_Parallel
+	local Stream = utils_controlflow_Stream
 	local Table = utils_data_Table
 	local Storage = {}
 	Storage.__index = Storage
@@ -2022,6 +2094,17 @@ function MODULE_utils_storage_Storage()
 	            table.insert(acceptingFurnaces, furnace)
 	        end
 	    end
+	    print("L1: " .. #acceptingFurnaces)
+	    local acceptingFurnaces = Parallel.mapTable(self.furnaces, function(name, furnace)
+	        if furnace:canAcceptItem(itemName) then
+	            return furnace
+	        else
+	            return nil
+	        end
+	    end)
+	    acceptingFurnaces = Stream.nonNilTable(acceptingFurnaces)
+	    acceptingFurnaces = Stream.getValues(acceptingFurnaces)
+	    print("L2: " .. #acceptingFurnaces)
 	    return acceptingFurnaces
 	end
 	function Storage:smelt(itemName, itemCount)
