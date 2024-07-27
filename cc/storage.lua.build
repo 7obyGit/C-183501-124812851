@@ -2155,7 +2155,7 @@ function MODULE_utils_storage_Storage()
 	    acceptingFurnaces = Stream.getValues(acceptingFurnaces)
 	    return acceptingFurnaces
 	end
-	function Storage:smelt(itemName, itemCount)
+	function Storage:smeltOld(itemName, itemCount)
 	    local remainingCount = itemCount
 	    local batchSize = 8  -- Spread items across furnaces but do not go below 8 so as to avoid wasting coal
 	    local totalItemCount = self:getItemCount(itemName)
@@ -2174,7 +2174,7 @@ function MODULE_utils_storage_Storage()
 	    end
 	    return remainingCount
 	end
-	function Storage:smeltFast(itemName, itemCount)
+	function Storage:smelt(itemName, itemCount)
 	    local remainingCount = itemCount
 	    local batchSize = 8  -- Spread items across furnaces but do not go below 8 so as to avoid wasting coal
 	    local totalItemCount = self:getItemCount(itemName)
