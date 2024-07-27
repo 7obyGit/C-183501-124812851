@@ -2209,6 +2209,9 @@ function MODULE_utils_storage_Storage()
 	        if requiredFuelCount > 0 then
 	            self:moveToIo(fuelItem, requiredFuelCount)
 	            furnace:addFuel(self.io, fuelItem, requiredFuelCount)
+	            print("Added " .. requiredFuelCount .. " fuel to " .. furnace.name)
+	        else
+	            print("No fuel required for " .. furnace.name)
 	        end
 	    end, 32)
 	end
@@ -2971,6 +2974,7 @@ function MODULE_jobs_definitions_static_storage_StorageBackgroundTasks()
 	        :setCallback(function()
 	            print("Refueling furnaces")
 	            self.storage:refuelFurnaces()
+	            print("Completed refueling")
 	        end)
 	        :when(function() return self.config:get("state", nil) == self.states.COMMAND_PROMPT end)
 	        :start()
