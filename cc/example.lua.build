@@ -138,7 +138,7 @@ function MODULE_utils_controlflow_Parallel()
 	    return self
 	end
 	function Parallel:addTimeout(timeoutSeconds)
-	    table.insert(self.tasks, function() os.sleep(timeoutSeconds) print("Defragmentation Breaking") end)
+	    table.insert(self.tasks, function() os.sleep(timeoutSeconds) end)
 	    return self
 	end
 	function Parallel:run()
