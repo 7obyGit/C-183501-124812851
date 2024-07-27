@@ -2908,7 +2908,7 @@ function MODULE_jobs_definitions_static_storage_StorageBackgroundTasks()
 	        )
 	        table.insert(messages, message)
 	    end
-	    ChatBox.localAlert("Mi Detected", messages)
+	    ChatBox.localAlert("Perimeter Alert", messages)
 	end
 	function StorageBackgroundTasks.onEntityLeave(self, entities)
 	    for _, entity in ipairs(entities) do
