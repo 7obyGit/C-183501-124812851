@@ -2932,7 +2932,7 @@ function MODULE_jobs_definitions_static_storage_StorageBackgroundTasks()
 	function StorageBackgroundTasks.refuelFurnaces(self)
 	    BackgroundTask.new()
 	        :setName("Refuel Furnaces")
-	        :setPeriod(16)
+	        :setPeriod(32)
 	        :setCallback(function()
 	            self.storage:refuelFurnaces()
 	        end)
@@ -3590,14 +3590,20 @@ function MODULE_jobs_definitions_static_storage_StorageCommands()
 	            local itemName = nil
 	            if #args == 0 then
 	                print("No arguments provided")
-	                print("Expected: get <quantity> <item>")
-	                print("Type 'help get' for more information")
+	                print("Expected: smelt <quantity> <item>")
+	                print("Type 'help smelt' for more information")
 	                return
 	            elseif #args == 1 then
 	                itemCount = 64
 	                itemName = args[1]
 	            else
 	                itemCount = tonumber(args[1])
+	                if itemCount == nil then
+	                    print("Invalid quantity")
+	                    print("Expected: smelt <quantity> <item>")
+	                    print("Type 'help smelt' for more information")
+	                    return
+	                end
 	                itemName = args[2]
 	                for i = 3, #args do
 	                    itemName = itemName .. " " .. args[i]
@@ -3803,39 +3809,6 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	    else
 	        print("Invalid state: " .. state)
 	        self.config:set("state", self.states.COMMAND_PROMPT)
-	    end
-	end
-	function StorageJob:onBackgroundStep()
-	    if self.config:get("state", nil) == self.states.COMMAND_PROMPT then
-	        self.storage:dumpAllInputs()
-	        self.storage:populateKeepFilledBarrels()
-	        self.storage:dumpFurnaces()
-	        self.storage:refuelFurnaces()
-	        local charcoalCount = self.storage:getItemCount(Blocks.charcoal)
-	        local spruceLogCount = self.storage:getItemCount(Blocks.spruce_log)
-	        local smeltQueue = self.config:get("smeltQueue", {})
-	        local noCharcoalSmeltTask = true
-	        for _, item in pairs(smeltQueue) do
-	            if item.name == Blocks.spruce_log then
-	                noCharcoalSmeltTask = false
-	                break
-	            end
-	        end
-	        if spruceLogCount > 1024 and charcoalCount < 1024 and noCharcoalSmeltTask then
-	            table.insert(smeltQueue, {name = Blocks.spruce_log, count = 512})
-	        end
-	        local removedJobNumbers = {}
-	        for smeltJobNumber, item in pairs(smeltQueue) do
-	            local remainingCount = self.storage:smelt(item.name, item.count)
-	            item.count = remainingCount
-	            if remainingCount == 0 then
-	                table.insert(removedJobNumbers, smeltJobNumber)
-	            end
-	        end
-	        for _, jobNumber in pairs(removedJobNumbers) do
-	            table.remove(smeltQueue, jobNumber)
-	        end
-	        self.config:set("smeltQueue", smeltQueue)
 	    end
 	end
 	function StorageJob:stateSetup()
