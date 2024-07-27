@@ -2204,16 +2204,18 @@ function MODULE_utils_storage_Storage()
 	end
 	function Storage:refuelFurnaces()
 	    local fuelItem = Blocks.charcoal
+	    local count = 0
 	    Parallel.mapTableWithTimeout(self.furnaces, function(_, furnace)
 	        local requiredFuelCount = furnace:getRequiredFuelCount()
 	        if requiredFuelCount > 0 then
 	            self:moveToIo(fuelItem, requiredFuelCount)
 	            furnace:addFuel(self.io, fuelItem, requiredFuelCount)
-	            print("Added " .. requiredFuelCount .. " fuel to " .. furnace.name)
+	            count = count + 1
 	        else
 	            print("No fuel required for " .. furnace.name)
 	        end
 	    end, 32)
+	    print("Refueled " .. count .. " furnaces")
 	end
 	function Storage:dumpFurnaces()
 	    local containers = {}
