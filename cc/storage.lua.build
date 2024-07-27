@@ -2044,106 +2044,6 @@ end
 local utils_storage_Storage = MODULE_utils_storage_Storage()
 
 
-function MODULE_utils_movement_Rotations()
-	Rotations = {}
-	Rotations.NONE = "None"
-	Rotations.UP = "Up"
-	Rotations.DOWN = "Down"
-	Rotations.LEFT = "Left"
-	Rotations.RIGHT = "Right"
-	function Rotations.opposite(direction)
-	    if direction == Rotations.UP then
-	        return Rotations.DOWN
-	    elseif direction == Rotations.DOWN then
-	        return Rotations.UP
-	    elseif direction == Rotations.LEFT then
-	        return Rotations.RIGHT
-	    elseif direction == Rotations.RIGHT then
-	        return Rotations.LEFT
-	    end
-	end
-	return Rotations
-end
-local utils_movement_Rotations = MODULE_utils_movement_Rotations()
-
-
-function MODULE_utils_movement_Direction()
-	local Rotations = utils_movement_Rotations
-	local Direction = {}
-	Direction.__index = Direction
-	Direction.NORTH = "North"  -- -z
-	Direction.EAST = "East"  -- +x
-	Direction.SOUTH = "South"  -- +z
-	Direction.WEST = "West"  -- -x
-	Direction.UP = "Up"  -- +y
-	Direction.DOWN = "Down"  -- -y
-	Direction.DIRECTIONS = {
-	    Direction.NORTH,
-	    Direction.EAST,
-	    Direction.SOUTH,
-	    Direction.WEST,
-	    Direction.UP,
-	    Direction.DOWN,
-	}
-	Direction.HORIZONTAL_DIRECTIONS = {
-	    Direction.NORTH,
-	    Direction.EAST,
-	    Direction.SOUTH,
-	    Direction.WEST,
-	}
-	function Direction.opposite(direction)
-	    if direction == Direction.NORTH then
-	        return Direction.SOUTH
-	    elseif direction == Direction.SOUTH then
-	        return Direction.NORTH
-	    elseif direction == Direction.EAST then
-	        return Direction.WEST
-	    elseif direction == Direction.WEST then
-	        return Direction.EAST
-	    elseif direction == Direction.UP then
-	        return Direction.DOWN
-	    elseif direction == Direction.DOWN then
-	        return Direction.UP
-	    end
-	end
-	function Direction.nextLeft(direction)
-	    if direction == Direction.NORTH then
-	        return Direction.WEST
-	    elseif direction == Direction.WEST then
-	        return Direction.SOUTH
-	    elseif direction == Direction.SOUTH then
-	        return Direction.EAST
-	    elseif direction == Direction.EAST then
-	        return Direction.NORTH
-	    end
-	end
-	function Direction.nextRight(direction)
-	    if direction == Direction.NORTH then
-	        return Direction.EAST
-	    elseif direction == Direction.EAST then
-	        return Direction.SOUTH
-	    elseif direction == Direction.SOUTH then
-	        return Direction.WEST
-	    elseif direction == Direction.WEST then
-	        return Direction.NORTH
-	    end
-	end
-	function Direction.getBestDirectionToTurn(currentDirection, targetDirection)
-	    if currentDirection == targetDirection then
-	        return Rotations.NONE
-	    elseif Direction.nextLeft(currentDirection) == targetDirection then
-	        return Rotations.LEFT
-	    elseif Direction.nextRight(currentDirection) == targetDirection then
-	        return Rotations.RIGHT
-	    else
-	        return Rotations.LEFT  -- Both are acceptable, pick a default
-	    end
-	end
-	return Direction
-end
-local utils_movement_Direction = MODULE_utils_movement_Direction()
-
-
 function MODULE_utils_terminal_Terminal()
 	local LibOs = utils_libs_LibOs
 	local Terminal = {}
@@ -2212,305 +2112,6 @@ function MODULE_utils_terminal_Terminal()
 	return Terminal
 end
 local utils_terminal_Terminal = MODULE_utils_terminal_Terminal()
-
-
-function MODULE_utils_math_Vector3()
-	local Direction = utils_movement_Direction
-	local Terminal = utils_terminal_Terminal
-	local Vector3 = {}
-	Vector3.__index = Vector3
-	function Vector3.new(x, y, z)
-	    if type(x) == "table" then
-	        x, y, z = x.x, x.y, x.z
-	    end
-	    return setmetatable({x = x or 0, y = y or 0, z = z or 0}, Vector3)
-	end
-	function Vector3.fromTerminal(prompt)
-	    prompt = prompt or "Enter a Vector3: "
-	    local table = Terminal.readTable(prompt, Vector3.new(0, 0, 0):toTable())
-	    return Vector3.new(table.x, table.y, table.z)
-	end
-	function Vector3.fromTable(tbl)
-	    return Vector3.new(tbl.x, tbl.y, tbl.z)
-	end
-	function Vector3:toTable()
-	    return {x = self.x, y = self.y, z = self.z}
-	end
-	function Vector3:equals(other)
-	    return self.x == other.x and self.y == other.y and self.z == other.z
-	end
-	function Vector3:copy()
-	    return Vector3.new(self.x, self.y, self.z)
-	end
-	function Vector3:add(other)
-	    return Vector3.new(self.x + other.x, self.y + other.y, self.z + other.z)
-	end
-	function Vector3:addInDirection(direction, distance)
-	    distance = distance or 1
-	    local result = self:copy()
-	    if direction == Direction.NORTH then
-	        result.z = result.z - distance
-	    elseif direction == Direction.SOUTH then
-	        result.z = result.z + distance
-	    elseif direction == Direction.EAST then
-	        result.x = result.x + distance
-	    elseif direction == Direction.WEST then
-	        result.x = result.x - distance
-	    elseif direction == Direction.UP then
-	        result.y = result.y + distance
-	    elseif direction == Direction.DOWN then
-	        result.y = result.y - distance
-	    end
-	    return result
-	end
-	function Vector3:sub(other)
-	    return Vector3.new(self.x - other.x, self.y - other.y, self.z - other.z)
-	end
-	function Vector3:mul(scalar)
-	    return Vector3.new(self.x * scalar, self.y * scalar, self.z * scalar)
-	end
-	function Vector3:dot(other)
-	    return self.x * other.x + self.y * other.y + self.z * other.z
-	end
-	function Vector3:cross(other)
-	    return Vector3.new(
-	        self.y * other.z - self.z * other.y,
-	        self.z * other.x - self.x * other.z,
-	        self.x * other.y - self.y * other.x
-	    )
-	end
-	function Vector3:magnitude()
-	    return math.sqrt(self.x^2 + self.y^2 + self.z^2)
-	end
-	function Vector3:normalize()
-	    local mag = self:magnitude()
-	    if mag > 0 then
-	        return Vector3.new(self.x / mag, self.y / mag, self.z / mag)
-	    else
-	        return Vector3.new(0, 0, 0)
-	    end
-	end
-	function Vector3:serialize()
-	    return string.format("%.6f,%.6f,%.6f", self.x, self.y, self.z)
-	end
-	function Vector3.deserialize(str)
-	    local x, y, z = str:match("([^,]+),([^,]+),([^,]+)")
-	    return Vector3.new(tonumber(x), tonumber(y), tonumber(z))
-	end
-	function Vector3:directionTo(other)
-	    local diff = other:sub(self)
-	    if diff:equals(Vector3.new(0, 0, 0)) then
-	        return nil
-	    end
-	    if diff.x > 0 then
-	        return Direction.EAST
-	    elseif diff.x < 0 then
-	        return Direction.WEST
-	    elseif diff.z > 0 then
-	        return Direction.SOUTH
-	    elseif diff.z < 0 then
-	        return Direction.NORTH
-	    elseif diff.y > 0 then
-	        return Direction.UP
-	    elseif diff.y < 0 then
-	        return Direction.DOWN
-	    end
-	end
-	function Vector3:verticalDirectionTo(other)
-	    local diff = other:sub(self)
-	    if diff:equals(Vector3.new(0, 0, 0)) then
-	        return nil
-	    end
-	    if diff.y > 0 then
-	        return Direction.UP
-	    elseif diff.y < 0 then
-	        return Direction.DOWN
-	    end
-	end
-	function Vector3:__tostring()
-	    return string.format("Vector3(%.2f, %.2f, %.2f)", self.x, self.y, self.z)
-	end
-	return Vector3
-end
-local utils_math_Vector3 = MODULE_utils_math_Vector3()
-
-
-function MODULE_utils_blocks_Block()
-	local Blocks = utils_blocks_Blocks
-	local Table = utils_data_Table
-	local Vector3= utils_math_Vector3
-	local Text = utils_text_Text
-	local blockLookupTable = {}
-	for blocksKey, blockName in pairs(Blocks) do
-	    blockLookupTable[blockName] = blocksKey
-	end
-	local protectedBlocks = {
-	    Blocks.barrel,
-	    Blocks.chest,
-	    Blocks.enderChest,
-	    Blocks.shulkerBox,
-	    Blocks.trappedChest,
-	    Blocks.hopper,
-	    Blocks.dispenser,
-	    Blocks.dropper,
-	    Blocks.furnace,
-	    Blocks.blastFurnace,
-	    Blocks.smoker,
-	    Blocks.brewingStand,
-	    Blocks.enchantingTable,
-	    Blocks.craftingTable,
-	    Blocks.anvil,
-	    Blocks.grindstone,
-	    Blocks.smithingTable,
-	    Blocks.loom,
-	    Blocks.cartographyTable,
-	    Blocks.stonecutter,
-	    Blocks.beehive,
-	    Blocks.beeNest,
-	    Blocks.computercraft_cable,
-	    Blocks.computercraft_computer,
-	    Blocks.computercraft_computer_advanced,
-	    Blocks.computercraft_computer_command,
-	    Blocks.computercraft_wireless_modem_advanced,
-	    Blocks.computercraft_wired_modem_full,
-	    Blocks.computercraft_wired_modem,
-	    Blocks.computercraft_turtle,
-	}
-	local liquidBlocks = {
-	    Blocks.water,
-	    Blocks.lava,
-	}
-	local treeBlocks = {
-	    Blocks.acacia_leaves,
-	    Blocks.acacia_log,
-	    Blocks.spruce_leaves,
-	    Blocks.spruce_log,
-	    Blocks.birch_leaves,
-	    Blocks.birch_log,
-	    Blocks.dark_oak_leaves,
-	    Blocks.dark_oak_log,
-	    Blocks.jungle_leaves,
-	    Blocks.jungle_log,
-	    Blocks.oak_leaves,
-	    Blocks.oak_log,
-	    Blocks.mangrove_leaves,
-	    Blocks.mangrove_log,
-	}
-	local groups = {
-	    wood = {Blocks.oak_wood, Blocks.spruce_wood, Blocks.birch_wood, Blocks.jungle_wood, Blocks.acacia_wood, Blocks.dark_oak_wood, Blocks.mangrove_wood},
-	    log = {Blocks.oak_log, Blocks.spruce_log, Blocks.birch_log, Blocks.jungle_log, Blocks.acacia_log, Blocks.dark_oak_log, Blocks.mangrove_log},
-	    leaves = {Blocks.oak_leaves, Blocks.spruce_leaves, Blocks.birch_leaves, Blocks.jungle_leaves, Blocks.acacia_leaves, Blocks.dark_oak_leaves, Blocks.mangrove_leaves},
-	    sapling = {Blocks.oak_sapling, Blocks.spruce_sapling, Blocks.birch_sapling, Blocks.jungle_sapling, Blocks.acacia_sapling, Blocks.dark_oak_sapling, Blocks.mangrove_sapling},
-	    planks = {Blocks.oak_planks, Blocks.spruce_planks, Blocks.birch_planks, Blocks.jungle_planks, Blocks.acacia_planks, Blocks.dark_oak_planks, Blocks.mangrove_planks},
-	    slab = {Blocks.oak_slab, Blocks.spruce_slab, Blocks.birch_slab, Blocks.jungle_slab, Blocks.acacia_slab, Blocks.dark_oak_slab, Blocks.mangrove_slab},
-	    stairs = {Blocks.oak_stairs, Blocks.spruce_stairs, Blocks.birch_stairs, Blocks.jungle_stairs, Blocks.acacia_stairs, Blocks.dark_oak_stairs, Blocks.mangrove_stairs},
-	    fence = {Blocks.oak_fence, Blocks.spruce_fence, Blocks.birch_fence, Blocks.jungle_fence, Blocks.acacia_fence, Blocks.dark_oak_fence, Blocks.mangrove_fence},
-	    fenceGate = {Blocks.oak_fence_gate, Blocks.spruce_fence_gate, Blocks.birch_fence_gate, Blocks.jungle_fence_gate, Blocks.acacia_fence_gate, Blocks.dark_oak_fence_gate, Blocks.mangrove_fence_gate},
-	    door = {Blocks.oak_door, Blocks.spruce_door, Blocks.birch_door, Blocks.jungle_door, Blocks.acacia_door, Blocks.dark_oak_door, Blocks.mangrove_door},
-	    trapdoor = {Blocks.oak_trapdoor, Blocks.spruce_trapdoor, Blocks.birch_trapdoor, Blocks.jungle_trapdoor, Blocks.acacia_trapdoor, Blocks.dark_oak_trapdoor, Blocks.mangrove_trapdoor},
-	    button = {Blocks.oak_button, Blocks.spruce_button, Blocks.birch_button, Blocks.jungle_button, Blocks.acacia_button, Blocks.dark_oak_button, Blocks.mangrove_button},
-	    pressurePlate = {Blocks.oak_pressure_plate, Blocks.spruce_pressure_plate, Blocks.birch_pressure_plate, Blocks.jungle_pressure_plate, Blocks.acacia_pressure_plate, Blocks.dark_oak_pressure_plate, Blocks.mangrove_pressure_plate},
-	    sign = {Blocks.oak_sign, Blocks.spruce_sign, Blocks.birch_sign, Blocks.jungle_sign, Blocks.acacia_sign, Blocks.dark_oak_sign, Blocks.mangrove_sign},
-	    boat = {Blocks.oak_boat, Blocks.spruce_boat, Blocks.birch_boat, Blocks.jungle_boat, Blocks.acacia_boat, Blocks.dark_oak_boat, Blocks.mangrove_boat},
-	}
-	local Block = {}
-	Block.__index = Block
-	function Block.new(name, position, state, tags)
-	    if Block.exists(name) == false then
-	        print("Block with name " .. name .. " does not exist")
-	    end
-	    return setmetatable({
-	        name = name,
-	        position = position or Vector3.new(0, 0, 0),
-	        state = state or {},
-	        tags = tags or {},
-	    }, Block)
-	end
-	function Block.isAllowedToBreak(name)
-	    for _, protectedBlockName in ipairs(protectedBlocks) do
-	        if name == protectedBlockName then
-	            return false
-	        end
-	    end
-	    return true
-	end
-	function Block.isLiquid(name)
-	    for _, liquidBlockName in ipairs(liquidBlocks) do
-	        if name == liquidBlockName then
-	            return true
-	        end
-	    end
-	    return false
-	end
-	function Block.isTree(name)
-	    for _, treeBlockName in ipairs(treeBlocks) do
-	        if name == treeBlockName then
-	            return true
-	        end
-	    end
-	    return false
-	end
-	function Block.isLog(name)
-	    return name == Blocks.acacia_log
-	        or name == Blocks.spruce_log
-	        or name == Blocks.birch_log
-	        or name == Blocks.dark_oak_log
-	        or name == Blocks.jungle_log
-	        or name == Blocks.oak_log
-	        or name == Blocks.mangrove_log
-	end
-	function Block.isSapling(name)
-	    return name == Blocks.acacia_sapling
-	        or name == Blocks.spruce_sapling
-	        or name == Blocks.birch_sapling
-	        or name == Blocks.dark_oak_sapling
-	        or name == Blocks.jungle_sapling
-	        or name == Blocks.oak_sapling
-	        or name == Blocks.mangrove_sapling
-	end
-	function Block.isLeaf(name)
-	    return name == Blocks.acacia_leaves
-	        or name == Blocks.spruce_leaves
-	        or name == Blocks.birch_leaves
-	        or name == Blocks.dark_oak_leaves
-	        or name == Blocks.jungle_leaves
-	        or name == Blocks.oak_leaves
-	        or name == Blocks.mangrove_leaves
-	end
-	function Block.isFuel(name)
-	    return name == Blocks.charcoal
-	    or name == Blocks.charcoal_block
-	    or name == Blocks.coal
-	    or name == Blocks.coal_block
-	end
-	function Block.exists(name)
-	    return blockLookupTable[name] ~= nil
-	end
-	function Block:__tostring()
-	    return string.format(
-	        "Block(%s, %s)",
-	        self.name,
-	        self.position
-	    )
-	end
-	function Block.getClosestMatch(name, customBlocksList)
-	    customBlocksList = customBlocksList or Blocks
-	    local closestMatch, score = Text.getClosestMatch(name, customBlocksList)
-	    local closestMatchGroup, groupScore = Text.getClosestMatchingGroup(name, groups)
-	    if groupScore <= score then
-	        closestMatchGroup = Table.intersection(customBlocksList, closestMatchGroup)
-	        if closestMatchGroup == nil or #closestMatchGroup == 0 then
-	            return {name = name, closestMatch = closestMatch, closestMatchGroup = closestMatchGroup, score = groupScore}
-	        else
-	            return {name = name, closestMatch = closestMatchGroup[1], closestMatchGroup = closestMatchGroup, score = groupScore}
-	        end
-	    else
-	        return {name = name, closestMatch = closestMatch, score = score}
-	    end
-	end
-	return Block
-end
-local utils_blocks_Block = MODULE_utils_blocks_Block()
 
 
 function MODULE_utils_terminal_commands_Command()
@@ -2597,18 +2198,6 @@ function MODULE_utils_terminal_commands_Commands()
 	return Commands
 end
 local utils_terminal_commands_Commands = MODULE_utils_terminal_commands_Commands()
-
-
-function MODULE_utils_math_Math()
-	local Math = {}
-	function Math.round(num, numDecimalPlaces)
-	    numDecimalPlaces = numDecimalPlaces or 0
-	    local mult = 10^numDecimalPlaces
-	    return math.floor(num * mult + 0.5) / mult
-	end
-	return Math
-end
-local utils_math_Math = MODULE_utils_math_Math()
 
 
 function MODULE_utils_network_protocols_logging_LogProtocol()
@@ -3077,6 +2666,18 @@ end
 local utils_network_protocols_logging_LogChannels = MODULE_utils_network_protocols_logging_LogChannels()
 
 
+function MODULE_utils_math_Math()
+	local Math = {}
+	function Math.round(num, numDecimalPlaces)
+	    numDecimalPlaces = numDecimalPlaces or 0
+	    local mult = 10^numDecimalPlaces
+	    return math.floor(num * mult + 0.5) / mult
+	end
+	return Math
+end
+local utils_math_Math = MODULE_utils_math_Math()
+
+
 function MODULE_jobs_definitions_static_storage_StorageBackgroundTasks()
 	local EnvironmentDetector = utils_peripherals_EnvironmentDetector
 	local LogChannels = utils_network_protocols_logging_LogChannels
@@ -3121,9 +2722,410 @@ end
 local jobs_definitions_static_storage_StorageBackgroundTasks = MODULE_jobs_definitions_static_storage_StorageBackgroundTasks()
 
 
+function MODULE_utils_movement_Rotations()
+	Rotations = {}
+	Rotations.NONE = "None"
+	Rotations.UP = "Up"
+	Rotations.DOWN = "Down"
+	Rotations.LEFT = "Left"
+	Rotations.RIGHT = "Right"
+	function Rotations.opposite(direction)
+	    if direction == Rotations.UP then
+	        return Rotations.DOWN
+	    elseif direction == Rotations.DOWN then
+	        return Rotations.UP
+	    elseif direction == Rotations.LEFT then
+	        return Rotations.RIGHT
+	    elseif direction == Rotations.RIGHT then
+	        return Rotations.LEFT
+	    end
+	end
+	return Rotations
+end
+local utils_movement_Rotations = MODULE_utils_movement_Rotations()
+
+
+function MODULE_utils_movement_Direction()
+	local Rotations = utils_movement_Rotations
+	local Direction = {}
+	Direction.__index = Direction
+	Direction.NORTH = "North"  -- -z
+	Direction.EAST = "East"  -- +x
+	Direction.SOUTH = "South"  -- +z
+	Direction.WEST = "West"  -- -x
+	Direction.UP = "Up"  -- +y
+	Direction.DOWN = "Down"  -- -y
+	Direction.DIRECTIONS = {
+	    Direction.NORTH,
+	    Direction.EAST,
+	    Direction.SOUTH,
+	    Direction.WEST,
+	    Direction.UP,
+	    Direction.DOWN,
+	}
+	Direction.HORIZONTAL_DIRECTIONS = {
+	    Direction.NORTH,
+	    Direction.EAST,
+	    Direction.SOUTH,
+	    Direction.WEST,
+	}
+	function Direction.opposite(direction)
+	    if direction == Direction.NORTH then
+	        return Direction.SOUTH
+	    elseif direction == Direction.SOUTH then
+	        return Direction.NORTH
+	    elseif direction == Direction.EAST then
+	        return Direction.WEST
+	    elseif direction == Direction.WEST then
+	        return Direction.EAST
+	    elseif direction == Direction.UP then
+	        return Direction.DOWN
+	    elseif direction == Direction.DOWN then
+	        return Direction.UP
+	    end
+	end
+	function Direction.nextLeft(direction)
+	    if direction == Direction.NORTH then
+	        return Direction.WEST
+	    elseif direction == Direction.WEST then
+	        return Direction.SOUTH
+	    elseif direction == Direction.SOUTH then
+	        return Direction.EAST
+	    elseif direction == Direction.EAST then
+	        return Direction.NORTH
+	    end
+	end
+	function Direction.nextRight(direction)
+	    if direction == Direction.NORTH then
+	        return Direction.EAST
+	    elseif direction == Direction.EAST then
+	        return Direction.SOUTH
+	    elseif direction == Direction.SOUTH then
+	        return Direction.WEST
+	    elseif direction == Direction.WEST then
+	        return Direction.NORTH
+	    end
+	end
+	function Direction.getBestDirectionToTurn(currentDirection, targetDirection)
+	    if currentDirection == targetDirection then
+	        return Rotations.NONE
+	    elseif Direction.nextLeft(currentDirection) == targetDirection then
+	        return Rotations.LEFT
+	    elseif Direction.nextRight(currentDirection) == targetDirection then
+	        return Rotations.RIGHT
+	    else
+	        return Rotations.LEFT  -- Both are acceptable, pick a default
+	    end
+	end
+	return Direction
+end
+local utils_movement_Direction = MODULE_utils_movement_Direction()
+
+
+function MODULE_utils_math_Vector3()
+	local Direction = utils_movement_Direction
+	local Terminal = utils_terminal_Terminal
+	local Vector3 = {}
+	Vector3.__index = Vector3
+	function Vector3.new(x, y, z)
+	    if type(x) == "table" then
+	        x, y, z = x.x, x.y, x.z
+	    end
+	    return setmetatable({x = x or 0, y = y or 0, z = z or 0}, Vector3)
+	end
+	function Vector3.fromTerminal(prompt)
+	    prompt = prompt or "Enter a Vector3: "
+	    local table = Terminal.readTable(prompt, Vector3.new(0, 0, 0):toTable())
+	    return Vector3.new(table.x, table.y, table.z)
+	end
+	function Vector3.fromTable(tbl)
+	    return Vector3.new(tbl.x, tbl.y, tbl.z)
+	end
+	function Vector3:toTable()
+	    return {x = self.x, y = self.y, z = self.z}
+	end
+	function Vector3:equals(other)
+	    return self.x == other.x and self.y == other.y and self.z == other.z
+	end
+	function Vector3:copy()
+	    return Vector3.new(self.x, self.y, self.z)
+	end
+	function Vector3:add(other)
+	    return Vector3.new(self.x + other.x, self.y + other.y, self.z + other.z)
+	end
+	function Vector3:addInDirection(direction, distance)
+	    distance = distance or 1
+	    local result = self:copy()
+	    if direction == Direction.NORTH then
+	        result.z = result.z - distance
+	    elseif direction == Direction.SOUTH then
+	        result.z = result.z + distance
+	    elseif direction == Direction.EAST then
+	        result.x = result.x + distance
+	    elseif direction == Direction.WEST then
+	        result.x = result.x - distance
+	    elseif direction == Direction.UP then
+	        result.y = result.y + distance
+	    elseif direction == Direction.DOWN then
+	        result.y = result.y - distance
+	    end
+	    return result
+	end
+	function Vector3:sub(other)
+	    return Vector3.new(self.x - other.x, self.y - other.y, self.z - other.z)
+	end
+	function Vector3:mul(scalar)
+	    return Vector3.new(self.x * scalar, self.y * scalar, self.z * scalar)
+	end
+	function Vector3:dot(other)
+	    return self.x * other.x + self.y * other.y + self.z * other.z
+	end
+	function Vector3:cross(other)
+	    return Vector3.new(
+	        self.y * other.z - self.z * other.y,
+	        self.z * other.x - self.x * other.z,
+	        self.x * other.y - self.y * other.x
+	    )
+	end
+	function Vector3:magnitude()
+	    return math.sqrt(self.x^2 + self.y^2 + self.z^2)
+	end
+	function Vector3:normalize()
+	    local mag = self:magnitude()
+	    if mag > 0 then
+	        return Vector3.new(self.x / mag, self.y / mag, self.z / mag)
+	    else
+	        return Vector3.new(0, 0, 0)
+	    end
+	end
+	function Vector3:serialize()
+	    return string.format("%.6f,%.6f,%.6f", self.x, self.y, self.z)
+	end
+	function Vector3.deserialize(str)
+	    local x, y, z = str:match("([^,]+),([^,]+),([^,]+)")
+	    return Vector3.new(tonumber(x), tonumber(y), tonumber(z))
+	end
+	function Vector3:directionTo(other)
+	    local diff = other:sub(self)
+	    if diff:equals(Vector3.new(0, 0, 0)) then
+	        return nil
+	    end
+	    if diff.x > 0 then
+	        return Direction.EAST
+	    elseif diff.x < 0 then
+	        return Direction.WEST
+	    elseif diff.z > 0 then
+	        return Direction.SOUTH
+	    elseif diff.z < 0 then
+	        return Direction.NORTH
+	    elseif diff.y > 0 then
+	        return Direction.UP
+	    elseif diff.y < 0 then
+	        return Direction.DOWN
+	    end
+	end
+	function Vector3:verticalDirectionTo(other)
+	    local diff = other:sub(self)
+	    if diff:equals(Vector3.new(0, 0, 0)) then
+	        return nil
+	    end
+	    if diff.y > 0 then
+	        return Direction.UP
+	    elseif diff.y < 0 then
+	        return Direction.DOWN
+	    end
+	end
+	function Vector3:__tostring()
+	    return string.format("Vector3(%.2f, %.2f, %.2f)", self.x, self.y, self.z)
+	end
+	return Vector3
+end
+local utils_math_Vector3 = MODULE_utils_math_Vector3()
+
+
+function MODULE_utils_blocks_Block()
+	local Blocks = utils_blocks_Blocks
+	local Table = utils_data_Table
+	local Vector3= utils_math_Vector3
+	local Text = utils_text_Text
+	local blockLookupTable = {}
+	for blocksKey, blockName in pairs(Blocks) do
+	    blockLookupTable[blockName] = blocksKey
+	end
+	local protectedBlocks = {
+	    Blocks.barrel,
+	    Blocks.chest,
+	    Blocks.enderChest,
+	    Blocks.shulkerBox,
+	    Blocks.trappedChest,
+	    Blocks.hopper,
+	    Blocks.dispenser,
+	    Blocks.dropper,
+	    Blocks.furnace,
+	    Blocks.blastFurnace,
+	    Blocks.smoker,
+	    Blocks.brewingStand,
+	    Blocks.enchantingTable,
+	    Blocks.craftingTable,
+	    Blocks.anvil,
+	    Blocks.grindstone,
+	    Blocks.smithingTable,
+	    Blocks.loom,
+	    Blocks.cartographyTable,
+	    Blocks.stonecutter,
+	    Blocks.beehive,
+	    Blocks.beeNest,
+	    Blocks.computercraft_cable,
+	    Blocks.computercraft_computer,
+	    Blocks.computercraft_computer_advanced,
+	    Blocks.computercraft_computer_command,
+	    Blocks.computercraft_wireless_modem_advanced,
+	    Blocks.computercraft_wired_modem_full,
+	    Blocks.computercraft_wired_modem,
+	    Blocks.computercraft_turtle,
+	}
+	local liquidBlocks = {
+	    Blocks.water,
+	    Blocks.lava,
+	}
+	local treeBlocks = {
+	    Blocks.acacia_leaves,
+	    Blocks.acacia_log,
+	    Blocks.spruce_leaves,
+	    Blocks.spruce_log,
+	    Blocks.birch_leaves,
+	    Blocks.birch_log,
+	    Blocks.dark_oak_leaves,
+	    Blocks.dark_oak_log,
+	    Blocks.jungle_leaves,
+	    Blocks.jungle_log,
+	    Blocks.oak_leaves,
+	    Blocks.oak_log,
+	    Blocks.mangrove_leaves,
+	    Blocks.mangrove_log,
+	}
+	local groups = {
+	    wood = {Blocks.oak_wood, Blocks.spruce_wood, Blocks.birch_wood, Blocks.jungle_wood, Blocks.acacia_wood, Blocks.dark_oak_wood, Blocks.mangrove_wood},
+	    log = {Blocks.oak_log, Blocks.spruce_log, Blocks.birch_log, Blocks.jungle_log, Blocks.acacia_log, Blocks.dark_oak_log, Blocks.mangrove_log},
+	    leaves = {Blocks.oak_leaves, Blocks.spruce_leaves, Blocks.birch_leaves, Blocks.jungle_leaves, Blocks.acacia_leaves, Blocks.dark_oak_leaves, Blocks.mangrove_leaves},
+	    sapling = {Blocks.oak_sapling, Blocks.spruce_sapling, Blocks.birch_sapling, Blocks.jungle_sapling, Blocks.acacia_sapling, Blocks.dark_oak_sapling, Blocks.mangrove_sapling},
+	    planks = {Blocks.oak_planks, Blocks.spruce_planks, Blocks.birch_planks, Blocks.jungle_planks, Blocks.acacia_planks, Blocks.dark_oak_planks, Blocks.mangrove_planks},
+	    slab = {Blocks.oak_slab, Blocks.spruce_slab, Blocks.birch_slab, Blocks.jungle_slab, Blocks.acacia_slab, Blocks.dark_oak_slab, Blocks.mangrove_slab},
+	    stairs = {Blocks.oak_stairs, Blocks.spruce_stairs, Blocks.birch_stairs, Blocks.jungle_stairs, Blocks.acacia_stairs, Blocks.dark_oak_stairs, Blocks.mangrove_stairs},
+	    fence = {Blocks.oak_fence, Blocks.spruce_fence, Blocks.birch_fence, Blocks.jungle_fence, Blocks.acacia_fence, Blocks.dark_oak_fence, Blocks.mangrove_fence},
+	    fenceGate = {Blocks.oak_fence_gate, Blocks.spruce_fence_gate, Blocks.birch_fence_gate, Blocks.jungle_fence_gate, Blocks.acacia_fence_gate, Blocks.dark_oak_fence_gate, Blocks.mangrove_fence_gate},
+	    door = {Blocks.oak_door, Blocks.spruce_door, Blocks.birch_door, Blocks.jungle_door, Blocks.acacia_door, Blocks.dark_oak_door, Blocks.mangrove_door},
+	    trapdoor = {Blocks.oak_trapdoor, Blocks.spruce_trapdoor, Blocks.birch_trapdoor, Blocks.jungle_trapdoor, Blocks.acacia_trapdoor, Blocks.dark_oak_trapdoor, Blocks.mangrove_trapdoor},
+	    button = {Blocks.oak_button, Blocks.spruce_button, Blocks.birch_button, Blocks.jungle_button, Blocks.acacia_button, Blocks.dark_oak_button, Blocks.mangrove_button},
+	    pressurePlate = {Blocks.oak_pressure_plate, Blocks.spruce_pressure_plate, Blocks.birch_pressure_plate, Blocks.jungle_pressure_plate, Blocks.acacia_pressure_plate, Blocks.dark_oak_pressure_plate, Blocks.mangrove_pressure_plate},
+	    sign = {Blocks.oak_sign, Blocks.spruce_sign, Blocks.birch_sign, Blocks.jungle_sign, Blocks.acacia_sign, Blocks.dark_oak_sign, Blocks.mangrove_sign},
+	    boat = {Blocks.oak_boat, Blocks.spruce_boat, Blocks.birch_boat, Blocks.jungle_boat, Blocks.acacia_boat, Blocks.dark_oak_boat, Blocks.mangrove_boat},
+	}
+	local Block = {}
+	Block.__index = Block
+	function Block.new(name, position, state, tags)
+	    if Block.exists(name) == false then
+	        print("Block with name " .. name .. " does not exist")
+	    end
+	    return setmetatable({
+	        name = name,
+	        position = position or Vector3.new(0, 0, 0),
+	        state = state or {},
+	        tags = tags or {},
+	    }, Block)
+	end
+	function Block.isAllowedToBreak(name)
+	    for _, protectedBlockName in ipairs(protectedBlocks) do
+	        if name == protectedBlockName then
+	            return false
+	        end
+	    end
+	    return true
+	end
+	function Block.isLiquid(name)
+	    for _, liquidBlockName in ipairs(liquidBlocks) do
+	        if name == liquidBlockName then
+	            return true
+	        end
+	    end
+	    return false
+	end
+	function Block.isTree(name)
+	    for _, treeBlockName in ipairs(treeBlocks) do
+	        if name == treeBlockName then
+	            return true
+	        end
+	    end
+	    return false
+	end
+	function Block.isLog(name)
+	    return name == Blocks.acacia_log
+	        or name == Blocks.spruce_log
+	        or name == Blocks.birch_log
+	        or name == Blocks.dark_oak_log
+	        or name == Blocks.jungle_log
+	        or name == Blocks.oak_log
+	        or name == Blocks.mangrove_log
+	end
+	function Block.isSapling(name)
+	    return name == Blocks.acacia_sapling
+	        or name == Blocks.spruce_sapling
+	        or name == Blocks.birch_sapling
+	        or name == Blocks.dark_oak_sapling
+	        or name == Blocks.jungle_sapling
+	        or name == Blocks.oak_sapling
+	        or name == Blocks.mangrove_sapling
+	end
+	function Block.isLeaf(name)
+	    return name == Blocks.acacia_leaves
+	        or name == Blocks.spruce_leaves
+	        or name == Blocks.birch_leaves
+	        or name == Blocks.dark_oak_leaves
+	        or name == Blocks.jungle_leaves
+	        or name == Blocks.oak_leaves
+	        or name == Blocks.mangrove_leaves
+	end
+	function Block.isFuel(name)
+	    return name == Blocks.charcoal
+	    or name == Blocks.charcoal_block
+	    or name == Blocks.coal
+	    or name == Blocks.coal_block
+	end
+	function Block.exists(name)
+	    return blockLookupTable[name] ~= nil
+	end
+	function Block:__tostring()
+	    return string.format(
+	        "Block(%s, %s)",
+	        self.name,
+	        self.position
+	    )
+	end
+	function Block.getClosestMatch(name, customBlocksList)
+	    customBlocksList = customBlocksList or Blocks
+	    local closestMatch, score = Text.getClosestMatch(name, customBlocksList)
+	    local closestMatchGroup, groupScore = Text.getClosestMatchingGroup(name, groups)
+	    if groupScore <= score then
+	        closestMatchGroup = Table.intersection(customBlocksList, closestMatchGroup)
+	        if closestMatchGroup == nil or #closestMatchGroup == 0 then
+	            return {name = name, closestMatch = closestMatch, closestMatchGroup = closestMatchGroup, score = groupScore}
+	        else
+	            return {name = name, closestMatch = closestMatchGroup[1], closestMatchGroup = closestMatchGroup, score = groupScore}
+	        end
+	    else
+	        return {name = name, closestMatch = closestMatch, score = score}
+	    end
+	end
+	return Block
+end
+local utils_blocks_Block = MODULE_utils_blocks_Block()
+
+
 function MODULE_jobs_definitions_static_storage_StorageCommands()
 	local Block = utils_blocks_Block
 	local Command = utils_terminal_commands_Command
+	local Text = utils_text_Text
+	local Math = utils_math_Math
 	local StorageCommands = {}
 	function StorageCommands.getCommandExit(self)
 	    return Command.new(
@@ -3171,6 +3173,166 @@ function MODULE_jobs_definitions_static_storage_StorageCommands()
 	            end
 	            print("Getting " .. quantity .. " " .. itemName)
 	            self.storage:moveToIo(itemName, quantity)
+	        end
+	    )
+	end
+	function StorageCommands.getCommandDump(self)
+	    return Command.new(
+	        "dump",
+	        "Dumps the storage",
+	        function(...)
+	            print("Dumping Storage")
+	            local items = self.storage.io:getItemList()
+	            for _, item in pairs(items) do
+	                local displayName = Text.getDisplayName(item.name)
+	                print("\t\t" .. displayName .. " x" .. item.count)
+	            end
+	            self.storage:dump()
+	        end
+	    )
+	end
+	function StorageCommands.getCommandList(self)
+	    return Command.new(
+	        "list",
+	        "Lists the storage\nExample 1: list\nExample 2: list <itemName>",
+	        function(...)
+	            local args = {...}
+	            local itemName = nil
+	            if #args == 1 then
+	                itemName = args[1]
+	            elseif #args > 1 then
+	                itemName = args[1]
+	                for i = 2, #args do
+	                    itemName = itemName .. " " .. args[i]
+	                end
+	            end
+	            if itemName ~= nil then
+	                local matchDetails = Block.getClosestMatch(itemName, self.storage:getPresentItemNames())
+	                if matchDetails.score > 3 then
+	                    print("Could not find item: " .. itemName)
+	                    print("Did you mean: " .. matchDetails.closestMatch)
+	                    return
+	                end
+	                itemName = matchDetails.closestMatch
+	                if itemName == nil then
+	                    print("Could not find item")
+	                    return
+	                end
+	                local count = self.storage:getItemCount(itemName)
+	                print("Listing Single Item")
+	                print("\t\t" .. Text.getDisplayName(itemName) .. " x" .. count)
+	                return
+	            end
+	            print("Listing Storage")
+	            local items = self.storage:getItemList()
+	            local totalItems = 0
+	            local uniqueItems = 0
+	            for name, count in pairs(items) do
+	                local displayName = Text.getDisplayName(name)
+	                print("\t\t" .. displayName .. " x" .. count)
+	                totalItems = totalItems + count
+	                uniqueItems = uniqueItems + 1
+	            end
+	            print("*Found " .. totalItems .. " total items and " .. uniqueItems .. " unique items")
+	        end
+	    )
+	end
+	function StorageCommands.getCommandStats(self)
+	    return Command.new(
+	        "stats",
+	        "Prints the storage stats",
+	        function(...)
+	            print("Storage Stats")
+	            print("\t\tContainer Count: " .. self.storage:getContainerCount())
+	            print("\t\tFurnace Count: " .. self.storage:getFurnaceCount())
+	            print("\t\tUsed Capacity: " .. Math.round(self.storage:getUsedCapacity() * 100, 2) .. "%")
+	            print("\t\tUsed Slots: " .. self.storage:getUsedSlotCount())
+	            print("\t\tEmpty Slots: " .. self.storage:getEmptySlotCount())
+	        end
+	    )
+	end
+	function StorageCommands.getCommandSetup(self)
+	    return Command.new(
+	        "setup",
+	        "Puts the storage into setup mode",
+	        function(...)
+	            self.config:set("state", self.states.SETUP)
+	        end
+	    )
+	end
+	function StorageCommands.getCommandDefragment(self)
+	    return Command.new(
+	        "defragment",
+	        "Compacts item stacks in the storage so that stacks of e.g. 1 are combined into fewer bigger stacks",
+	        function(...)
+	            print("Defragmenting Storage...")
+	            self.storage:defragment()
+	            print("Defragmentation Complete!")
+	        end
+	    )
+	end
+	function StorageCommands.getCommandUpdateIndex(self)
+	    return Command.new(
+	        "updateindex",
+	        "Updates the index of the storage",
+	        function(...)
+	            print("Updating Index...")
+	            self.storage:updateIndex()
+	            print("Index Updated!")
+	        end
+	    )
+	end
+	function StorageCommands.getCommandSmelt(self)
+	    return Command.new(
+	        "smelt",
+	        "Smelts an item in the furnace\nExample 1: smelt <quantity> <item>\nExample 2: smelt <item>\nExample 3: smelt list\n*Default quantity is 64",
+	        function(...)
+	            local args = {...}
+	            local itemCount = 64
+	            local itemName = nil
+	            if #args == 0 then
+	                print("No arguments provided")
+	                print("Expected: get <quantity> <item>")
+	                print("Type 'help get' for more information")
+	                return
+	            elseif #args == 1 then
+	                itemCount = 64
+	                itemName = args[1]
+	            else
+	                itemCount = tonumber(args[1])
+	                itemName = args[2]
+	                for i = 3, #args do
+	                    itemName = itemName .. " " .. args[i]
+	                end
+	            end
+	            if itemName == "list" then
+	                print("Smelt Queue")
+	                local smeltQueue = self.config:get("smeltQueue", {})
+	                for i, item in pairs(smeltQueue) do
+	                    print("\t\t" .. i .. ": " .. item.name .. " " .. item.count)
+	                end
+	                return
+	            end
+	            if itemName == nil then
+	                print("No item provided")
+	                print("Expected: smelt <quantity> <item>")
+	                return
+	            end
+	            local matchDetails = Block.getClosestMatch(itemName, self.storage:getPresentItemNames())
+	            if matchDetails.score > 3 then
+	                print("Could not find item: " .. itemName)
+	                print("Did you mean: " .. matchDetails.closestMatch)
+	                return
+	            end
+	            itemName = matchDetails.closestMatch
+	            if itemName == nil then
+	                print("Could not find item")
+	                return
+	            end
+	            print("Adding smelting job for " .. itemCount .. " " .. itemName)
+	            local smeltQueue = self.config:get("smeltQueue", {})
+	            table.insert(smeltQueue, {name = itemName, count = itemCount})
+	            self.config:set("smeltQueue", smeltQueue)
 	        end
 	    )
 	end
@@ -3250,78 +3412,12 @@ end
 local utils_network_protocols_remoteperipherals_ChatProtocol = MODULE_utils_network_protocols_remoteperipherals_ChatProtocol()
 
 
-function MODULE_utils_peripherals_GeoScanner()
-	local LibOs = utils_libs_LibOs
-	local GeoScanner = {}
-	GeoScanner.MAX_SCAN_RANGE = 16
-	GeoScanner.MIN_PERIOD = 2
-	GeoScanner.scanner = peripheral.find("geoScanner")
-	function GeoScanner.monitor(func, radius)
-	    while true do
-	        local blocks = GeoScanner.scan(radius)
-	        func(blocks)
-	        local timeRemaining = GeoScanner.getScanCooldown() + 1  -- Ensure that the peripheral does not attempt to scan early
-	        print("Waiting for " .. timeRemaining .. " seconds before next scan")
-	        LibOs.sleep(timeRemaining)
-	    end
-	end
-	function GeoScanner.getFuelLevel()
-	    if GeoScanner.scanner == nil then return 0 end
-	    return GeoScanner.scanner.getFuelLevel()
-	end
-	function GeoScanner.getMaxFuelLevel()
-	    if GeoScanner.scanner == nil then return 0 end
-	    return GeoScanner.scanner.getMaxFuelLevel()
-	end
-	function GeoScanner.getCostOfRadius(radius)
-	    if GeoScanner.scanner == nil then return 0 end
-	    return GeoScanner.scanner.cost(radius)
-	end
-	function GeoScanner.scan(radius)
-	    if GeoScanner.scanner == nil then return nil end
-	    LibOs.sleep(GeoScanner.MIN_PERIOD)
-	    radius = radius or GeoScanner.MAX_SCAN_RANGE
-	    radius = math.min(radius, GeoScanner.MAX_SCAN_RANGE)
-	    local success, result = pcall(function()
-	        return GeoScanner.scanner.scan(radius)
-	    end)
-	    if success then
-	        return result
-	    else
-	        print("Error during scan: " .. tostring(result))
-	        return nil
-	    end
-	end
-	function GeoScanner.safeScan(radius)
-	    if GeoScanner.scanner == nil then return nil end
-	    local timeRemaining = GeoScanner.getScanCooldown() + 1
-	    print("Waiting for " .. timeRemaining .. " seconds before scanning")
-	    LibOs.sleep(timeRemaining)
-	    return GeoScanner.scan(radius)
-	end
-	function GeoScanner.getScanCooldown()
-	    if GeoScanner.scanner == nil then return 0 end
-	    return GeoScanner.scanner.getOperationCooldown("scan")
-	end
-	function GeoScanner.chunkAnalyze()
-	    if GeoScanner.scanner == nil then return nil end
-	    return GeoScanner.scanner.chunkAnalyze()
-	end
-	return GeoScanner
-end
-local utils_peripherals_GeoScanner = MODULE_utils_peripherals_GeoScanner()
-
-
 function MODULE_jobs_definitions_static_storage_StorageJob()
 	local Storage = utils_storage_Storage
 	local Blocks  = utils_blocks_Blocks
-	local Block   = utils_blocks_Block
 	local BlockIndicators = utils_blocks_BlockIndicators
 	local Terminal = utils_terminal_Terminal
 	local Commands = utils_terminal_commands_Commands
-	local Command = utils_terminal_commands_Command
-	local Text = utils_text_Text
-	local Math = utils_math_Math
 	local Job = jobs_Job
 	local LogProtocol = utils_network_protocols_logging_LogProtocol
 	local PlayerDetector = utils_peripherals_PlayerDetector
@@ -3333,7 +3429,6 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	local LogChannels = utils_network_protocols_logging_LogChannels
 	local ChatBox = utils_peripherals_ChatBox
 	local ChatProtocol = utils_network_protocols_remoteperipherals_ChatProtocol
-	local GeoScanner = utils_peripherals_GeoScanner
 	local LibOs = utils_libs_LibOs
 	local StorageJob = {}
 	StorageJob.__index = StorageJob
@@ -3353,14 +3448,13 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	    self.commands = Commands.new()
 	    self.commands:add("exit", StorageCommands.getCommandExit(self))
 	    self.commands:add("get", StorageCommands.getCommandGet(self))
-	    self.commands:add("dump", Command.new("dump", "Dumps the storage", function(...) self:commandDump(...) end))
-	    self.commands:add("dumpInputs", Command.new("dumpinputs", "Dumps the input barrels", function(...) self:commandDumpInputs(...) end))
-	    self.commands:add("list", Command.new("list", "Lists the storage\nExample 1: list\nExample 2: list <itemName>", function(...) self:commandList(...) end))
-	    self.commands:add("stats", Command.new("stats", "Prints the storage stats", function(...) self:commandStats(...) end))
-	    self.commands:add("setup", Command.new("setup", "Puts the storage into setup mode", function(...) self:commandSetup(...) end))
-	    self.commands:add("defragment", Command.new("defragment", "Compacts item stacks in the storage so that stacks of e.g. 1 are combined into fewer bigger stacks", function(...) self:commandDefragment(...) end))
-	    self.commands:add("updateIndex", Command.new("updateindex", "Updates the index of the storage", function(...) self:commandUpdateIndex(...) end))
-	    self.commands:add("smelt", Command.new("smelt", "Smelts an item in the furnace\nExample 1: smelt <quantity> <item>\nExample 2: smelt <item>\nExample 3: smelt list\n*Default quantity is 64", function(...) self:commandSmelt(...) end))
+	    self.commands:add("dump", StorageCommands.getCommandDump(self))
+	    self.commands:add("list", StorageCommands.getCommandList(self))
+	    self.commands:add("stats", StorageCommands.getCommandStats(self))
+	    self.commands:add("setup", StorageCommands.getCommandSetup(self))
+	    self.commands:add("defragment", StorageCommands.getCommandDefragment(self))
+	    self.commands:add("updateIndex", StorageCommands.getCommandUpdateIndex(self))
+	    self.commands:add("smelt", StorageCommands.getCommandSmelt(self))
 	    print("Setting states and config")
 	    self.config = config
 	    self.states = {
@@ -3519,128 +3613,6 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	    self.commands:run(userInput)
 	end
 	function StorageJob:onComplete()
-	end
-	function StorageJob:commandDump()
-	    print("Dumping Storage")
-	    local items = self.storage.io:getItemList()
-	    for _, item in pairs(items) do
-	        local displayName = Text.getDisplayName(item.name)
-	        print("\t\t" .. displayName .. " x" .. item.count)
-	    end
-	    self.storage:dump()
-	end
-	function StorageJob:commandDumpInputs()
-	    print("Dumping Inputs")
-	    self.storage:dumpAllInputs()
-	end
-	function StorageJob:commandList(...)
-	    local args = {...}
-	    local itemName = nil
-	    if #args == 1 then
-	        itemName = args[1]
-	    elseif #args > 1 then
-	        itemName = args[1]
-	        for i = 2, #args do
-	            itemName = itemName .. " " .. args[i]
-	        end
-	    end
-	    if itemName ~= nil then
-	        local matchDetails = Block.getClosestMatch(itemName, self.storage:getPresentItemNames())
-	        if matchDetails.score > 3 then
-	            print("Could not find item: " .. itemName)
-	            print("Did you mean: " .. matchDetails.closestMatch)
-	            return
-	        end
-	        itemName = matchDetails.closestMatch
-	        if itemName == nil then
-	            print("Could not find item")
-	            return
-	        end
-	        local count = self.storage:getItemCount(itemName)
-	        print("Listing Single Item")
-	        print("\t\t" .. Text.getDisplayName(itemName) .. " x" .. count)
-	        return
-	    end
-	    print("Listing Storage")
-	    local items = self.storage:getItemList()
-	    local totalItems = 0
-	    local uniqueItems = 0
-	    for name, count in pairs(items) do
-	        local displayName = Text.getDisplayName(name)
-	        print("\t\t" .. displayName .. " x" .. count)
-	        totalItems = totalItems + count
-	        uniqueItems = uniqueItems + 1
-	    end
-	    print("*Found " .. totalItems .. " total items and " .. uniqueItems .. " unique items")
-	end
-	function StorageJob:commandStats()
-	    print("Storage Stats")
-	    print("\t\tContainer Count: " .. self.storage:getContainerCount())
-	    print("\t\tFurnace Count: " .. self.storage:getFurnaceCount())
-	    print("\t\tUsed Capacity: " .. Math.round(self.storage:getUsedCapacity() * 100, 2) .. "%")
-	    print("\t\tUsed Slots: " .. self.storage:getUsedSlotCount())
-	    print("\t\tEmpty Slots: " .. self.storage:getEmptySlotCount())
-	end
-	function StorageJob:commandSetup()
-	    self.config:set("state", self.states.SETUP)
-	end
-	function StorageJob:commandDefragment()
-	    print("Defragmenting Storage...")
-	    self.storage:defragment()
-	    print("Defragmentation Complete!")
-	end
-	function StorageJob:commandUpdateIndex()
-	    print("Updating Index...")
-	    self.storage:updateIndex()
-	    print("Index Updated!")
-	end
-	function StorageJob:commandSmelt(...)
-	    local args = {...}
-	    local itemCount = 64
-	    local itemName = nil
-	    if #args == 0 then
-	        print("No arguments provided")
-	        print("Expected: get <quantity> <item>")
-	        print("Type 'help get' for more information")
-	        return
-	    elseif #args == 1 then
-	        itemCount = 64
-	        itemName = args[1]
-	    else
-	        itemCount = tonumber(args[1])
-	        itemName = args[2]
-	        for i = 3, #args do
-	            itemName = itemName .. " " .. args[i]
-	        end
-	    end
-	    if itemName == "list" then
-	        print("Smelt Queue")
-	        local smeltQueue = self.config:get("smeltQueue", {})
-	        for i, item in pairs(smeltQueue) do
-	            print("\t\t" .. i .. ": " .. item.name .. " " .. item.count)
-	        end
-	        return
-	    end
-	    if itemName == nil then
-	        print("No item provided")
-	        print("Expected: smelt <quantity> <item>")
-	        return
-	    end
-	    local matchDetails = Block.getClosestMatch(itemName, self.storage:getPresentItemNames())
-	    if matchDetails.score > 3 then
-	        print("Could not find item: " .. itemName)
-	        print("Did you mean: " .. matchDetails.closestMatch)
-	        return
-	    end
-	    itemName = matchDetails.closestMatch
-	    if itemName == nil then
-	        print("Could not find item")
-	        return
-	    end
-	    print("Adding smelting job for " .. itemCount .. " " .. itemName)
-	    local smeltQueue = self.config:get("smeltQueue", {})
-	    table.insert(smeltQueue, {name = itemName, count = itemCount})
-	    self.config:set("smeltQueue", smeltQueue)
 	end
 	return StorageJob
 end
