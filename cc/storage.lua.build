@@ -164,19 +164,6 @@ function MODULE_utils_controlflow_Parallel()
 	        return Parallel.mapList(obj, func)
 	    end
 	end
-	function Parallel.mapWithTimeout(obj, func, timeoutSeconds)
-	    timeoutSeconds = timeoutSeconds or 1
-	    local funcWithTimeout = function(...)
-	        local args = ...
-	        print("PRE FUNC")
-	        print(args)
-	        Parallel.new()
-	            :addTask(function() func(table.unpack(args)) end)
-	            :addTimeout(timeoutSeconds)
-	            :waitForAny()
-	    end
-	    return Parallel.map(obj, funcWithTimeout)
-	end
 	function Parallel.mapList(list, func)
 	    local parallel = Parallel.new()
 	    for _, item in ipairs(list) do
@@ -194,6 +181,26 @@ function MODULE_utils_controlflow_Parallel()
 	        end
 	    end
 	    parallel:run()
+	end
+	function Parallel.mapListWithTimeout(obj, func, timeoutSeconds)
+	    timeoutSeconds = timeoutSeconds or 1
+	    local funcWithTimeout = function(value)
+	        Parallel.new()
+	            :addTask(function() func(value) end)
+	            :addTimeout(timeoutSeconds)
+	            :waitForAny()
+	    end
+	    return Parallel.map(obj, funcWithTimeout)
+	end
+	function Parallel.mapTableWithTimeout(obj, func, timeoutSeconds)
+	    timeoutSeconds = timeoutSeconds or 1
+	    local funcWithTimeout = function(key, value)
+	        Parallel.new()
+	            :addTask(function() func(key, value) end)
+	            :addTimeout(timeoutSeconds)
+	            :waitForAny()
+	    end
+	    return Parallel.map(obj, funcWithTimeout)
 	end
 	return Parallel
 end
@@ -2024,7 +2031,7 @@ function MODULE_utils_storage_Storage()
 	end
 	function Storage:refuelFurnaces()
 	    local fuelItem = Blocks.charcoal
-	    Parallel.mapWithTimeout(self.furnaces, function(_, furnace)
+	    Parallel.mapListWithTimeout(self.furnaces, function(_, furnace)
 	        print("Refueling")
 	        print(furnace)
 	        local requiredFuelCount = furnace:getRequiredFuelCount()
