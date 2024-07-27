@@ -3129,6 +3129,7 @@ function MODULE_jobs_definitions_static_storage_StorageCommands()
 	        "exit",
 	        "Terminates the storage program",
 	        function(...)
+	            print("HELLO")
 	            self.config:set("alive", false)
 	        end
 	    )
