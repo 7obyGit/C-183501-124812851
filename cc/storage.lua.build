@@ -3077,15 +3077,15 @@ end
 local utils_network_protocols_logging_LogChannels = MODULE_utils_network_protocols_logging_LogChannels()
 
 
-function MODULE_jobs_definitions_static_storage_StorageJobBackgroundTasks()
+function MODULE_jobs_definitions_static_storage_StorageBackgroundTasks()
 	local EnvironmentDetector = utils_peripherals_EnvironmentDetector
 	local LogChannels = utils_network_protocols_logging_LogChannels
 	local Math = utils_math_Math
 	local ChatBox = utils_peripherals_ChatBox
 	local Me = utils_other_Me
 	local Players = utils_other_Players
-	local StorageJobBackgroundTasks = {}
-	function StorageJobBackgroundTasks.onEntityEnter(self, entities)
+	local StorageBackgroundTasks = {}
+	function StorageBackgroundTasks.onEntityEnter(self, entities)
 	    local messages = {}
 	    for _, entity in ipairs(entities) do
 	        local message = entity.name .. " detected"
@@ -3097,28 +3097,45 @@ function MODULE_jobs_definitions_static_storage_StorageJobBackgroundTasks()
 	    end
 	    ChatBox.localAlert("Mi Detected", messages)
 	end
-	function StorageJobBackgroundTasks.onEntityLeave(self, entities)
+	function StorageBackgroundTasks.onEntityLeave(self, entities)
 	    for _, entity in ipairs(entities) do
 	        self.logSilent("Entity left: " .. entity.name)
 	    end
 	end
-	function StorageJobBackgroundTasks.onEntityEnterOrLeave(self)
+	function StorageBackgroundTasks.onEntityEnterOrLeave(self)
 	    EnvironmentDetector.onEntityEnterOrLeave(
-	        function(entitiesAdded) StorageJobBackgroundTasks.onEntityEnter(self, entitiesAdded) end,
-	        function(entitiesRemoved) StorageJobBackgroundTasks.onEntityLeave(self, entitiesRemoved) end,
+	        function(entitiesAdded) StorageBackgroundTasks.onEntityEnter(self, entitiesAdded) end,
+	        function(entitiesRemoved) StorageBackgroundTasks.onEntityLeave(self, entitiesRemoved) end,
 	        EnvironmentDetector.MAX_SCAN_RANGE,
 	        {"mialliance:", Players.names.FuturePr0, Players.names.StealthyHarry, Players.names.Anethie, Players.names.Anethi, Players.names["0li"]},
 	        5
 	    )
 	end
-	function StorageJobBackgroundTasks.onChatMessage(self)
+	function StorageBackgroundTasks.onChatMessage(self)
 	    ChatBox.listen(function(event, username, message, uuid, isHidden)
 	        self.protocols.events:sendOnChatMessage(event, username, message, uuid, isHidden)
 	    end)
 	end
-	return StorageJobBackgroundTasks
+	return StorageBackgroundTasks
 end
-local jobs_definitions_static_storage_StorageJobBackgroundTasks = MODULE_jobs_definitions_static_storage_StorageJobBackgroundTasks()
+local jobs_definitions_static_storage_StorageBackgroundTasks = MODULE_jobs_definitions_static_storage_StorageBackgroundTasks()
+
+
+function MODULE_jobs_definitions_static_storage_StorageCommands()
+	local Command = utils_terminal_commands_Command
+	local StorageCommands = {}
+	function StorageCommands.getCommandTest(self)
+	    return Command.new(
+	        "exit",
+	        "Terminates the storage program",
+	        function(...)
+	            self.config:set("alive", false)
+	        end
+	    )
+	end
+	return StorageCommands
+end
+local jobs_definitions_static_storage_StorageCommands = MODULE_jobs_definitions_static_storage_StorageCommands()
 
 
 function MODULE_utils_network_protocols_remoteperipherals_ChatProtocol()
@@ -3269,7 +3286,8 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	local PlayerDetector = utils_peripherals_PlayerDetector
 	local EventsProtocol = utils_network_protocols_events_EventsProtocol
 	local EnvironmentDetector = utils_peripherals_EnvironmentDetector
-	local StorageJobBackgroundTasks = jobs_definitions_static_storage_StorageJobBackgroundTasks
+	local StorageBackgroundTasks = jobs_definitions_static_storage_StorageBackgroundTasks
+	local StorageCommands = jobs_definitions_static_storage_StorageCommands
 	local Me = utils_other_Me
 	local LogChannels = utils_network_protocols_logging_LogChannels
 	local ChatBox = utils_peripherals_ChatBox
@@ -3284,15 +3302,15 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	    print("Adding background tasks")
 	    self.backgroundTasks = {}
 	    if PlayerDetector.detector ~= nil then table.insert(self.backgroundTasks, function() PlayerDetector.onPlayerMoved(function (username, oldPosition, newPosition) self.protocols.events:sendOnPlayerMoved(username, oldPosition, newPosition) end, Me.username, 5) end) end
-	    if EnvironmentDetector.detector ~= nil then table.insert(self.backgroundTasks, StorageJobBackgroundTasks.onEntityEnterOrLeave) end
-	    if ChatBox.internal ~= nil then table.insert(self.backgroundTasks, StorageJobBackgroundTasks.onChatMessage) end
+	    if EnvironmentDetector.detector ~= nil then table.insert(self.backgroundTasks, StorageBackgroundTasks.onEntityEnterOrLeave) end
+	    if ChatBox.internal ~= nil then table.insert(self.backgroundTasks, StorageBackgroundTasks.onChatMessage) end
 	    print("Adding 'the' background task")
 	    self.backgroundTask = function() self:onBackgroundStep() end
 	    self.backgroundDelay = 5  -- This task should be infrequent
 	    print("Defining the commands")
 	    self.storage = nil
 	    self.commands = Commands.new()
-	    self.commands:add("exit", Command.new("exit", "Terminates the storage program", function(...) self:commandExit(...) end))
+	    self.commands:add("exit", StorageCommands.getCommandTest(self))
 	    self.commands:add("get", Command.new("get", "Gets an item from storage\nExample 1: get <quantity> <item>\nExample 2: get <item>\n*Default quantity is 64", function(...) self:commandGet(...) end))
 	    self.commands:add("dump", Command.new("dump", "Dumps the storage", function(...) self:commandDump(...) end))
 	    self.commands:add("dumpInputs", Command.new("dumpinputs", "Dumps the input barrels", function(...) self:commandDumpInputs(...) end))
