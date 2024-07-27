@@ -135,15 +135,23 @@ function MODULE_utils_controlflow_Parallel()
 	end
 	function Parallel:addTask(task)
 	    table.insert(self.tasks, task)
+	    return self
+	end
+	function Parallel:addTimeout(timeoutSeconds)
+	    table.insert(self.tasks, function() os.sleep(timeoutSeconds) end)
+	    return self
 	end
 	function Parallel:run()
 	    parallel.waitForAll(table.unpack(self.tasks))
+	    return self
 	end
 	function Parallel:waitForAny()
 	    parallel.waitForAny(table.unpack(self.tasks))
+	    return self
 	end
 	function Parallel:waitForAll()
 	    parallel.waitForAll(table.unpack(self.tasks))
+	    return self
 	end
 	function Parallel.map(obj, func)
 	    if type(obj) == "table" then
@@ -2700,7 +2708,10 @@ function MODULE_utils_storage_Container()
 	    local status, err = pcall(
 	        function()
 	            Parallel.map(items, function(item)
-	                self:_defragmentSingleItem(item)
+	                Parallel.new()
+	                    :addTask(function() self:_defragmentSingleItem(item) end)
+	                    :addTimeout(0.01)
+	                    :waitForAny()
 	            end)
 	        end
 	    )
