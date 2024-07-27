@@ -2470,6 +2470,9 @@ function MODULE_utils_other_Players()
 	Players.names = {
 	    FuturePr0 = "FuturePr0",
 	    StealthyHarry = "StealthyHarry",
+	    Anethie = "Anethie",
+	    Anethi = "Anethi",
+	    ["0li"] = "0li"
 	}
 	return Players
 end

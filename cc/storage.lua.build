@@ -2813,6 +2813,9 @@ function MODULE_utils_other_Players()
 	Players.names = {
 	    FuturePr0 = "FuturePr0",
 	    StealthyHarry = "StealthyHarry",
+	    Anethie = "Anethie",
+	    Anethi = "Anethi",
+	    ["0li"] = "0li"
 	}
 	return Players
 end
@@ -3080,6 +3083,7 @@ function MODULE_jobs_definitions_static_storage_StorageJobBackgroundTasks()
 	local Math = utils_math_Math
 	local ChatBox = utils_peripherals_ChatBox
 	local Me = utils_other_Me
+	local Players = utils_other_Players
 	local StorageJobBackgroundTasks = {}
 	function StorageJobBackgroundTasks.onEntityEnter(self, entities)
 	    local messages = {}
@@ -3103,7 +3107,7 @@ function MODULE_jobs_definitions_static_storage_StorageJobBackgroundTasks()
 	        function(entitiesAdded) StorageJobBackgroundTasks.onEntityEnter(self, entitiesAdded) end,
 	        function(entitiesRemoved) StorageJobBackgroundTasks.onEntityLeave(self, entitiesRemoved) end,
 	        EnvironmentDetector.MAX_SCAN_RANGE,
-	        {"ig", "eep"},
+	        {"mialliance:", Players.names.FuturePr0, Players.names.StealthyHarry, Players.names.Anethie, Players.names.Anethi, Players.names["0li"]},
 	        5
 	    )
 	end
