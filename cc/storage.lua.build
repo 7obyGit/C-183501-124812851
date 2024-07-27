@@ -1774,6 +1774,62 @@ function MODULE_utils_controlflow_Stream()
 	    end
 	    return output
 	end
+	function Stream.sumList(obj)
+	    local sum = 0
+	    for _, item in ipairs(obj) do
+	        sum = sum + item
+	    end
+	    return sum
+	end
+	function Stream.sumTable(obj)
+	    local sum = 0
+	    for _, item in pairs(obj) do
+	        sum = sum + item
+	    end
+	    return sum
+	end
+	function Stream.countList(obj)
+	    return #obj
+	end
+	function Stream.countTable(obj)
+	    local count = 0
+	    for _, _ in pairs(obj) do
+	        count = count + 1
+	    end
+	    return count
+	end
+	function Stream.anyList(obj, func)
+	    for _, item in ipairs(obj) do
+	        if func(item) then
+	            return true
+	        end
+	    end
+	    return false
+	end
+	function Stream.anyTable(obj, func)
+	    for key, item in pairs(obj) do
+	        if func(key, item) then
+	            return true
+	        end
+	    end
+	    return false
+	end
+	function Stream.allList(obj, func)
+	    for _, item in ipairs(obj) do
+	        if not func(item) then
+	            return false
+	        end
+	    end
+	    return true
+	end
+	function Stream.allTable(obj, func)
+	    for key, item in pairs(obj) do
+	        if not func(key, item) then
+	            return false
+	        end
+	    end
+	    return true
+	end
 	return Stream
 end
 local utils_controlflow_Stream = MODULE_utils_controlflow_Stream()
@@ -2127,14 +2183,24 @@ function MODULE_utils_storage_Storage()
 	    end
 	    local locations = self:findItemLocations(itemName)
 	    local acceptingFurnaces = self:getAcceptingFurnaces(itemName)
-	    while remainingCount > 0 and #locations > 0 and #acceptingFurnaces > 0 do
-	        local location = table.remove(locations, 1)
-	        local container = self.inventories[location.containerName]
-	        local furnace = table.remove(acceptingFurnaces, 1)
-	        local itemsToAssign = math.min(remainingCount, batchSize)
-	        local itemsNotSmelted = furnace:smelt(container, itemName, itemsToAssign)
-	        remainingCount = remainingCount - (itemsToAssign - itemsNotSmelted)
+	    local itemsToAllocate = {}
+	    local currentCount = remainingCount
+	    for _, furnace in pairs(acceptingFurnaces) do
+	        local itemsToAssign = math.min(currentCount, batchSize)
+	        itemsToAllocate[furnace.name] = itemsToAssign
+	        currentCount = currentCount - itemsToAssign
 	    end
+	    local smeltedItemCounts = Parallel.mapTable(acceptingFurnaces, function(index, furnace)
+	        local location = locations[index]
+	        if location == nil then
+	            return 0
+	        end
+	        local itemsToAssign = itemsToAllocate[furnace.name]
+	        local itemsNotSmelted = furnace:smelt(self, itemName, itemsToAssign)
+	        return itemsToAllocate - itemsNotSmelted
+	    end)
+	    local totalItemsSmelted = Stream.sumList(smeltedItemCounts)
+	    remainingCount = remainingCount - totalItemsSmelted
 	    return remainingCount
 	end
 	function Storage:refuelFurnaces()
