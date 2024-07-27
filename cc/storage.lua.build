@@ -2210,7 +2210,7 @@ function MODULE_utils_storage_Storage()
 	            self:moveToIo(fuelItem, requiredFuelCount)
 	            furnace:addFuel(self.io, fuelItem, requiredFuelCount)
 	        end
-	    end, 5)
+	    end, 32)
 	end
 	function Storage:dumpFurnaces()
 	    local containers = {}
@@ -2967,7 +2967,7 @@ function MODULE_jobs_definitions_static_storage_StorageBackgroundTasks()
 	function StorageBackgroundTasks.refuelFurnaces(self)
 	    BackgroundTask.new()
 	        :setName("Refuel Furnaces")
-	        :setPeriod(16)
+	        :setPeriod(8)
 	        :setCallback(function()
 	            self.storage:refuelFurnaces()
 	        end)
