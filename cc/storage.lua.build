@@ -2462,7 +2462,19 @@ function MODULE_utils_storage_Storage()
 	function Storage:defragment()
 	    local inventories = Table.copy(self.inventories)
 	    inventories["IO"] = self.io
-	    Parallel.map(inventories, function(name, container) container:defragment() end)
+	    local status, err = pcall(
+	        function()
+	            Parallel.map(inventories, function(name, container)
+	                Parallel.new()
+	                    :addTask(function() container:defragment() end)
+	                    :addTimeout(2)
+	                    :waitForAny()
+	            end)
+	        end
+	    )
+	    if not status then
+	        print("Error: " .. err)
+	    end
 	end
 	function Storage:getClosestIO(username)
 	    if username == nil or PlayerDetector.detector == nil then
