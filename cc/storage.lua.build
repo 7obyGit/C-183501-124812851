@@ -3866,11 +3866,14 @@ function MODULE_jobs_definitions_static_storage_StorageCommands()
 	    return Command.new(
 	        "iopos",
 	        "Sets the position of a secondary IO barrel\nExample 1: iopos <barrelName> <position>\nExample 2: iopos minecraft:barrel_3 {x=1, y=2, z=-3}",
-	        function(blockName, positionString)
+	        function(blockName, positionString, ...)
 	            if blockName == nil then print("No block name provided") return end
 	            if positionString == nil then print("No position provided") return end
+	            for _, arg in pairs({...}) do
+	                positionString = positionString .. " " .. arg
+	            end
 	            print("Setting the position of " .. blockName .. " to " .. positionString)
-	            local positionTable = textutils.deserializeJSON(positionString)
+	            local positionTable = textutils.unserializeJSON(positionString)
 	            if positionTable == nil then print("The position should be in the form:\n{x=0, y=0, z=0}\nDid you use the correct format?") return end
 	            local position = Vector3.new(positionTable)
 	            if position == nil then print("The position should be in the form:\n{x=0, y=0, z=0}\nDid you provide x, y, and z?") return end
