@@ -2611,7 +2611,7 @@ function MODULE_utils_storage_Storage()
 	            if self.config.otherIOs == nil then
 	                self.config.otherIOs = {}
 	            end
-	            self.confg.otherIOs[container.name] = {name = container.name, pos = nil}
+	            self.config.otherIOs[container.name] = {name = container.name, pos = nil}
 	        elseif blockIndicator == nil then
 	            print("WARNING: No block indicator found")
 	        else
