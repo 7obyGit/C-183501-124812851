@@ -2607,11 +2607,13 @@ function MODULE_utils_storage_Storage()
 	            self.io = container
 	            self.config.io = container.name
 	        elseif blockIndicator == BlockIndicators.SECONDARY_IO then
+	            print("Adding secondary IO: " .. container.name)
 	            self.otherIOs[container.name] = {io = container, pos = nil, name = container.name}
 	            if self.config.otherIOs == nil then
 	                self.config.otherIOs = {}
 	            end
 	            self.config.otherIOs[container.name] = {name = container.name, pos = nil}
+	            print("Added secondary IO: " .. container.name)
 	        elseif blockIndicator == nil then
 	            print("WARNING: No block indicator found")
 	        else
