@@ -2758,6 +2758,7 @@ function MODULE_utils_blocks_BlockIndicators()
 	BlockIndicators.INPUT = Blocks.green_wool
 	BlockIndicators.OUTPUT = Blocks.red_wool
 	BlockIndicators.KEEP_FILLED = Blocks.pink_wool
+	BlockIndicators.SECONDARY_IO = Blocks.yellow_wool
 	BlockIndicators.DIRECTION = Blocks.white_wool
 	BlockIndicators.ACTION_STOP = Blocks.red_wool
 	BlockIndicators.ACTION_HOME = Blocks.cyan_wool

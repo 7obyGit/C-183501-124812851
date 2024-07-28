@@ -926,6 +926,7 @@ function MODULE_utils_blocks_BlockIndicators()
 	BlockIndicators.INPUT = Blocks.green_wool
 	BlockIndicators.OUTPUT = Blocks.red_wool
 	BlockIndicators.KEEP_FILLED = Blocks.pink_wool
+	BlockIndicators.SECONDARY_IO = Blocks.yellow_wool
 	BlockIndicators.DIRECTION = Blocks.white_wool
 	BlockIndicators.ACTION_STOP = Blocks.red_wool
 	BlockIndicators.ACTION_HOME = Blocks.cyan_wool
@@ -2461,6 +2462,9 @@ function MODULE_utils_storage_Storage()
 	    local player = PlayerDetector.getPlayer(username)
 	    local targetPosition = Vector3.new(player)
 	    local name, closestIO = Stream.minByTable(self.otherIOs, function(name, io)
+	        if io.pos == nil then
+	            return math.huge
+	        end
 	        return targetPosition:distanceTo(Vector3.new(io.pos))
 	    end)
 	    if closestIO == nil then
@@ -2602,6 +2606,12 @@ function MODULE_utils_storage_Storage()
 	        elseif blockIndicator == BlockIndicators.OUTPUT then
 	            self.io = container
 	            self.config.io = container.name
+	        elseif blockIndicator == BlockIndicators.SECONDARY_IO then
+	            self.otherIOs[container.name] = {io = container, pos = nil, name = container.name}
+	            if self.config.otherIOs == nil then
+	                self.config.otherIOs = {}
+	            end
+	            self.confg.otherIOs[container.name] = {name = container.name, pos = nil}
 	        elseif blockIndicator == nil then
 	            print("WARNING: No block indicator found")
 	        else
@@ -4032,6 +4042,13 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	            print("\t\t\t" .. self.storage.config.io)
 	            self.storage:placeBlockIndicator(self.storage.config.io, BlockIndicators.OUTPUT)
 	        end
+	        if self.storage.config.otherIOs ~= nil then
+	            print("\t\tFound " .. #self.storage.config.otherIOs .. " secondary IO barrels")
+	            for _, otherIO in pairs(self.storage.config.otherIOs) do
+	                print("\t\t\t" .. otherIO.name)
+	                self.storage:placeBlockIndicator(otherIO.name, BlockIndicators.SECONDARY_IO)
+	            end
+	        end
 	        if self.storage.config.inputs ~= nil then
 	            print("\t\tFound " .. #self.storage.config.inputs .. " input barrels")
 	            for _, containerName in pairs(self.storage.config.inputs) do
@@ -4067,6 +4084,7 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	    print("\t\tMain Interface - " .. BlockIndicators.OUTPUT)
 	    print("\t\tInput Only - " .. BlockIndicators.INPUT)
 	    print("\t\tKeep Filled - " .. BlockIndicators.KEEP_FILLED)
+	    print("\t\tSecondary IO - " .. BlockIndicators.SECONDARY_IO)
 	    print("*You can only have one Main Interface")
 	    print("*Input Only barrels take inserted items and store them in the storage system")
 	    print("*Chests are used for storage and are not configurable")
