@@ -2607,13 +2607,11 @@ function MODULE_utils_storage_Storage()
 	            self.io = container
 	            self.config.io = container.name
 	        elseif blockIndicator == BlockIndicators.SECONDARY_IO then
-	            print("Adding secondary IO: " .. container.name)
 	            self.otherIOs[container.name] = {io = container, pos = nil, name = container.name}
 	            if self.config.otherIOs == nil then
 	                self.config.otherIOs = {}
 	            end
 	            self.config.otherIOs[container.name] = {name = container.name, pos = nil}
-	            print("Added secondary IO: " .. container.name)
 	        elseif blockIndicator == nil then
 	            print("WARNING: No block indicator found")
 	        else
@@ -3636,6 +3634,7 @@ function MODULE_jobs_definitions_static_storage_StorageCommands()
 	local Command = utils_terminal_commands_Command
 	local Text = utils_text_Text
 	local Math = utils_math_Math
+	local Vector3 = utils_math_Vector3
 	local StorageCommands = {}
 	function StorageCommands.getCommandExit(self)
 	    return Command.new(
@@ -3863,6 +3862,29 @@ function MODULE_jobs_definitions_static_storage_StorageCommands()
 	        end
 	    )
 	end
+	function StorageCommands.getCommandIoPos(self)
+	    return Command.new(
+	        "iopos",
+	        "Sets the position of a secondary IO barrel\nExample 1: iopos <barrelName> <position>\nExample 2: iopos minecraft:barrel_3 {x=1, y=2, z=-3}",
+	        function(blockName, positionString)
+	            if blockName == nil then print("No block name provided") return end
+	            if positionString == nil then print("No position provided") return end
+	            local positionTable = textutils.deserializeJson(positionString)
+	            if positionTable == nil then print("The position should be in the form:\n{x=0, y=0, z=0}\nDid you use the correct format?") return end
+	            local position = Vector3.new(positionTable)
+	            if position == nil then print("The position should be in the form:\n{x=0, y=0, z=0}\nDid you provide x, y, and z?") return end
+	            local barrel = self.storage.barrels[blockName]
+	            if barrel == nil then print("Could not find barrel: " .. blockName) return end
+	            if self.storage.otherIOs == nil then self.storage.otherIOs = {} end
+	            local otherIO = self.storage.otherIOs[blockName]
+	            if otherIO == nil then print("Could not find a secondary IO with the name provided\nHave you configured it using the `setup` command?") return end
+	            otherIO.pos = position
+	            self.storage.config.otherIOs[blockName] = {otherIO.name, otherIO.pos}
+	            self.config:set("storageConfig", self.storage.config)
+	            print("Successfully set the position of " .. blockName .. " to " .. textutils.serialiseJSON(position:toTable()))
+	        end
+	    )
+	end
 	return StorageCommands
 end
 local jobs_definitions_static_storage_StorageCommands = MODULE_jobs_definitions_static_storage_StorageCommands()
@@ -3985,6 +4007,7 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	    self.commands:add("defragment", StorageCommands.getCommandDefragment(self))
 	    self.commands:add("updateIndex", StorageCommands.getCommandUpdateIndex(self))
 	    self.commands:add("smelt", StorageCommands.getCommandSmelt(self))
+	    self.commands:add("iopos", StorageCommands.getCommandIoPos(self))
 	    print("Setting states and config")
 	    self.config = config
 	    self.states = {
