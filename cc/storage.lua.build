@@ -3072,6 +3072,7 @@ function MODULE_jobs_definitions_static_storage_StorageBackgroundTasks()
 	local Players = utils_other_Players
 	local BackgroundTask = utils_controlflow_BackgroundTask
 	local Blocks = utils_blocks_Blocks
+	local PlayerDetector = utils_peripherals_PlayerDetector
 	local StorageBackgroundTasks = {}
 	function StorageBackgroundTasks.onEntityEnter(self, entities)
 	    local messages = {}
@@ -3149,6 +3150,8 @@ function MODULE_jobs_definitions_static_storage_StorageBackgroundTasks()
 	        :setName("Update Smelt Queue")
 	        :setPeriod(1)
 	        :setCallback(function()
+	            local me = PlayerDetector.getPlayer(Me.username)
+	            print(textutils.serialiseJSON(me))
 	            local charcoalCount = self.storage:getItemCount(Blocks.charcoal)
 	            local spruceLogCount = self.storage:getItemCount(Blocks.spruce_log)
 	            local smeltQueue = self.config:get("smeltQueue", {})
@@ -3800,7 +3803,7 @@ function MODULE_jobs_definitions_static_storage_StorageCommands()
 	                self.storage:dumpFurnaceInputs()
 	                print(" * Dumping furnace outputs")
 	                self.storage:dumpFurnaces()
-	                print("Compelte!")
+	                print("Complete!")
 	                return
 	            end
 	            if itemName == nil then
