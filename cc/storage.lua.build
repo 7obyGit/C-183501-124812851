@@ -4043,10 +4043,16 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	            self.storage:placeBlockIndicator(self.storage.config.io, BlockIndicators.OUTPUT)
 	        end
 	        if self.storage.config.otherIOs ~= nil then
-	            print("\t\tFound " .. #self.storage.config.otherIOs .. " secondary IO barrels")
+	            print("\t\tFound secondary IO barrels")
 	            for _, otherIO in pairs(self.storage.config.otherIOs) do
 	                print("\t\t\t" .. otherIO.name)
-	                self.storage:placeBlockIndicator(otherIO.name, BlockIndicators.SECONDARY_IO)
+	                local barrel = self.storage.barrels[otherIO.name]
+	                if barrel == nil then
+	                    print("Could not find secondary IO: " .. otherIO.name)
+	                    table.remove(self.storage.config.otherIOs, otherIO)
+	                else
+	                    self.storage:placeBlockIndicator(otherIO.name, BlockIndicators.SECONDARY_IO)
+	                end
 	            end
 	        end
 	        if self.storage.config.inputs ~= nil then
@@ -4063,7 +4069,7 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	            end
 	        end
 	        if self.storage.config.keepFilled ~= nil then
-	            print("\t\tFound " .. #self.storage.config.keepFilled .. " 'keep filled' barrels")
+	            print("\t\tFound 'keep filled' barrels")
 	            for key, keepFilledDetails in pairs(self.storage.config.keepFilled) do
 	                local barrel = self.storage.barrels[keepFilledDetails.name]
 	                if barrel == nil then
