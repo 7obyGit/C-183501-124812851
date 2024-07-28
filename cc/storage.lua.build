@@ -1725,7 +1725,60 @@ end
 local utils_text_Text = MODULE_utils_text_Text()
 
 
+function MODULE_utils_math_Random()
+	local Random = {}
+	math.randomseed(os.time())
+	function Random.int(min, max)
+	    return math.random(min, max)
+	end
+	function Random.float(min, max)
+	    return min + (max - min) * math.random()
+	end
+	function Random.choiceOfList(list)
+	    if #list == 0 then
+	        return nil
+	    end
+	    local index = math.random(1, #list)
+	    return list[index]
+	end
+	function Random.choiceOfTable(table)
+	    local keys = {}
+	    for key, _ in pairs(table) do
+	        table.insert(keys, key)
+	    end
+	    local key = Random.choiceOfList(keys)
+	    if key == nil then
+	        return nil
+	    end
+	    return table[key]
+	end
+	function Random.shuffleList(list)
+	    local shuffled = {table.unpack(list)}
+	    for i = #shuffled, 2, -1 do
+	        local j = math.random(1, i)
+	        shuffled[i], shuffled[j] = shuffled[j], shuffled[i]
+	    end
+	    return shuffled
+	end
+	function Random.shuffleTable(table)
+	    local keys = {}
+	    for key, _ in pairs(table) do
+	        table.insert(keys, key)
+	    end
+	    local shuffledKeys = Random.shuffleList(keys)
+	    local shuffled = {}
+	    for _, key in ipairs(shuffledKeys) do
+	        shuffled[key] = table[key]
+	    end
+	    return shuffled
+	end
+	return Random
+end
+local utils_math_Random = MODULE_utils_math_Random()
+
+
 function MODULE_utils_controlflow_Stream()
+	local Random = utils_math_Random
 	local Stream = {}
 	function Stream.mapList(obj, func)
 	    local output = {}
@@ -1853,6 +1906,71 @@ function MODULE_utils_controlflow_Stream()
 	        table.insert(output, {index = i, value = item})
 	    end
 	    return output
+	end
+	function Stream.zip(list1, list2)
+	    local output = {}
+	    for i = 1, math.min(#list1, #list2) do
+	        table.insert(output, {list1[i], list2[i]})
+	    end
+	    return output
+	end
+	function Stream.unzip(obj)
+	    local output1 = {}
+	    local output2 = {}
+	    for _, pair in ipairs(obj) do
+	        table.insert(output1, pair[1])
+	        table.insert(output2, pair[2])
+	    end
+	    return output1, output2
+	end
+	function Stream.concat(list1, list2)
+	    local output = {table.unpack(list1)}
+	    for _, item in ipairs(list2) do
+	        table.insert(output, item)
+	    end
+	    return output
+	end
+	function Stream.flatten(obj)
+	    local output = {}
+	    for _, item in ipairs(obj) do
+	        if type(item) == "table" then
+	            for _, subitem in ipairs(item) do
+	                table.insert(output, subitem)
+	            end
+	        else
+	            table.insert(output, item)
+	        end
+	    end
+	    return output
+	end
+	function Stream.reverse(obj)
+	    local output = {}
+	    for i = #obj, 1, -1 do
+	        table.insert(output, obj[i])
+	    end
+	    return output
+	end
+	function Stream.sort(obj, func)
+	    local output = {table.unpack(obj)}
+	    table.sort(output, func)
+	    return output
+	end
+	function Stream.groupBy(obj, func)
+	    local output = {}
+	    for _, item in ipairs(obj) do
+	        local key = func(item)
+	        if output[key] == nil then
+	            output[key] = {}
+	        end
+	        table.insert(output[key], item)
+	    end
+	    return output
+	end
+	function Stream.shuffleList(list)
+	    return Random.shuffleList(list)
+	end
+	function Stream.shuffleTable(table)
+	    return Random.shuffleTable(table)
 	end
 	return Stream
 end
@@ -2220,18 +2338,21 @@ function MODULE_utils_storage_Storage()
 	    end)
 	    containersWithFuel = Stream.nonNilTable(containersWithFuel)
 	    containersWithFuel = Stream.getValues(containersWithFuel)
+	    containersWithFuel = Stream.shuffleList(containersWithFuel)
 	    local furnaces = Stream.getValues(self.furnaces)
+	    furnaces = Stream.shuffleList(furnaces)
 	    furnaces = Stream.enumerate(furnaces)
 	    local count = 0
 	    Parallel.mapListWithTimeout(furnaces, function(pair)
 	        local index = pair.index
 	        local furnace = pair.value
-	        print("Index: " .. index)
-	        print("Furnace: " .. furnace.name)
+	        local container = containersWithFuel[index]
+	        if container == nil then
+	            return
+	        end
 	        local requiredFuelCount = furnace:getRequiredFuelCount()
 	        if requiredFuelCount > 0 then
-	            self:moveToIo(fuelItem, requiredFuelCount)
-	            furnace:addFuel(self.io, fuelItem, requiredFuelCount)
+	            furnace:addFuel(container, fuelItem, requiredFuelCount)
 	            count = count + 1
 	        else
 	            print("No fuel required for " .. furnace.name)
