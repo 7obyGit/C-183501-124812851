@@ -2215,7 +2215,7 @@ function MODULE_utils_storage_Storage()
 	    containersWithFuel = Stream.getValues(containersWithFuel)
 	    local count = 0
 	    Parallel.mapTableWithTimeout(Stream.getValues(self.furnaces), function(index, furnace)
-	        print("Index: " .. index)
+	        print("Index: " .. index.name)
 	        print("Furnace: " .. furnace.name)
 	        local requiredFuelCount = furnace:getRequiredFuelCount()
 	        if requiredFuelCount > 0 then
