@@ -318,18 +318,97 @@ end
 local utils_network_Network = MODULE_utils_network_Network()
 
 
+function MODULE_utils_terminal_Terminal()
+	local LibOs = utils_libs_LibOs
+	local Terminal = {}
+	Terminal.__index = Terminal
+	function Terminal.clear()
+	    term.clear()
+	    term.setCursorPos(1, 1)
+	end
+	function Terminal.waitForKey()
+	    local _, key = LibOs.pullEvent("key")
+	    return key
+	end
+	function Terminal.writeLineBreak()
+	    print("-------------------------")
+	end
+	function Terminal.write(text)
+	    print(text)
+	end
+	function Terminal.read(prompt)
+	    if prompt ~= nil then
+	        write(prompt)
+	    end
+	    return read()
+	end
+	function Terminal.readNumber(prompt)
+	    local value = nil
+	    while value == nil do
+	        local input = Terminal.read(prompt)
+	        value = tonumber(input)
+	    end
+	    return value
+	end
+	function Terminal.readBoolean(prompt)
+	    local value = nil
+	    while value == nil do
+	        local input = Terminal.read(prompt):lower()
+	        if input == "true" or input == "y" or input == "yes" then
+	            value = true
+	        elseif input == "false" or input == "n" or input == "no" then
+	            value = false
+	        end
+	    end
+	    return value
+	end
+	function Terminal.readTable(prompt, requiredFields)
+	    local value = nil
+	    local validationPassed = false
+	    while validationPassed == false do
+	        local input = Terminal.read(prompt)
+	        value = textutils.unserialize(input)
+	        if value ~= nil then
+	            validationPassed = true
+	            for key, _ in pairs(requiredFields) do
+	                if value[key] == nil then
+	                    validationPassed = false
+	                    Terminal.write("\t\tMissing field: '" .. key .. "'")
+	                end
+	            end
+	            if not validationPassed then
+	                Terminal.write("\t\tExpected format: " .. textutils.serialize(requiredFields))
+	            end
+	        end
+	    end
+	    return value or {}
+	end
+	return Terminal
+end
+local utils_terminal_Terminal = MODULE_utils_terminal_Terminal()
+
+
 function MODULE_jobs_JobManager()
 	local JobConfig = utils_config_JobConfig
 	local Network = utils_network_Network
 	local Parallel = utils_controlflow_Parallel
 	local LibOs = utils_libs_LibOs
+	local Job = jobs_Job
+	local Terminal = utils_terminal_Terminal
 	local JobManager = {}
 	function JobManager.run(jobClass)
 	    local config = JobConfig.load()
 	    config.job = jobClass.name
 	    config:save()
+	    if config.username == nil then
+	        config:set("username", Terminal.read("Enter your username: "))
+	    end
 	    local job = jobClass.new(config)
-	    job.name = jobClass.name .. ":" .. LibOs.getComputerID()
+	    if jobClass.name == Job.TABLET_CONTROLLER then
+	        job.name = config:get("username", "Unknown User")
+	    else
+	        job.name = jobClass.name .. ":" .. LibOs.getComputerID()
+	    end
 	    job.log = function(...) print(...) job.logSilent(...) end
 	    job.logSilent = function(...) if job.protocols ~= nil then job.protocols.log:sendLog(...) end end
 	    job.logToChannel = function(channel, ...) if job.protocols ~= nil then job.protocols.log:sendLogToChannel(channel, ...) end end
@@ -1326,76 +1405,6 @@ function MODULE_utils_movement_Direction()
 	return Direction
 end
 local utils_movement_Direction = MODULE_utils_movement_Direction()
-
-
-function MODULE_utils_terminal_Terminal()
-	local LibOs = utils_libs_LibOs
-	local Terminal = {}
-	Terminal.__index = Terminal
-	function Terminal.clear()
-	    term.clear()
-	    term.setCursorPos(1, 1)
-	end
-	function Terminal.waitForKey()
-	    local _, key = LibOs.pullEvent("key")
-	    return key
-	end
-	function Terminal.writeLineBreak()
-	    print("-------------------------")
-	end
-	function Terminal.write(text)
-	    print(text)
-	end
-	function Terminal.read(prompt)
-	    if prompt ~= nil then
-	        write(prompt)
-	    end
-	    return read()
-	end
-	function Terminal.readNumber(prompt)
-	    local value = nil
-	    while value == nil do
-	        local input = Terminal.read(prompt)
-	        value = tonumber(input)
-	    end
-	    return value
-	end
-	function Terminal.readBoolean(prompt)
-	    local value = nil
-	    while value == nil do
-	        local input = Terminal.read(prompt):lower()
-	        if input == "true" or input == "y" or input == "yes" then
-	            value = true
-	        elseif input == "false" or input == "n" or input == "no" then
-	            value = false
-	        end
-	    end
-	    return value
-	end
-	function Terminal.readTable(prompt, requiredFields)
-	    local value = nil
-	    local validationPassed = false
-	    while validationPassed == false do
-	        local input = Terminal.read(prompt)
-	        value = textutils.unserialize(input)
-	        if value ~= nil then
-	            validationPassed = true
-	            for key, _ in pairs(requiredFields) do
-	                if value[key] == nil then
-	                    validationPassed = false
-	                    Terminal.write("\t\tMissing field: '" .. key .. "'")
-	                end
-	            end
-	            if not validationPassed then
-	                Terminal.write("\t\tExpected format: " .. textutils.serialize(requiredFields))
-	            end
-	        end
-	    end
-	    return value or {}
-	end
-	return Terminal
-end
-local utils_terminal_Terminal = MODULE_utils_terminal_Terminal()
 
 
 function MODULE_utils_math_Vector3()
