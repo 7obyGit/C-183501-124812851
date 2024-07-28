@@ -1847,6 +1847,13 @@ function MODULE_utils_controlflow_Stream()
 	    end
 	    return true
 	end
+	function Stream.enumerate(obj)
+	    local output = {}
+	    for i, item in ipairs(obj) do
+	        table.insert(output, {index = i, value = item})
+	    end
+	    return output
+	end
 	return Stream
 end
 local utils_controlflow_Stream = MODULE_utils_controlflow_Stream()
@@ -2213,9 +2220,13 @@ function MODULE_utils_storage_Storage()
 	    end)
 	    containersWithFuel = Stream.nonNilTable(containersWithFuel)
 	    containersWithFuel = Stream.getValues(containersWithFuel)
+	    local furnaces = Stream.getValues(self.furnaces)
+	    furnaces = Stream.enumerate(furnaces)
 	    local count = 0
-	    Parallel.mapTableWithTimeout(Stream.getValues(self.furnaces), function(index, furnace)
-	        print("Index: " .. index.name)
+	    Parallel.mapListWithTimeout(furnaces, function(pair)
+	        local index = pair.index
+	        local furnace = pair.value
+	        print("Index: " .. index)
 	        print("Furnace: " .. furnace.name)
 	        local requiredFuelCount = furnace:getRequiredFuelCount()
 	        if requiredFuelCount > 0 then
