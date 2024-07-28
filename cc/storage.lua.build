@@ -3869,6 +3869,7 @@ function MODULE_jobs_definitions_static_storage_StorageCommands()
 	        function(blockName, positionString)
 	            if blockName == nil then print("No block name provided") return end
 	            if positionString == nil then print("No position provided") return end
+	            print("Setting the position of " .. blockName .. " to " .. positionString)
 	            local positionTable = textutils.deserializeJSON(positionString)
 	            if positionTable == nil then print("The position should be in the form:\n{x=0, y=0, z=0}\nDid you use the correct format?") return end
 	            local position = Vector3.new(positionTable)
