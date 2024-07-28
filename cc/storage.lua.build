@@ -1977,6 +1977,404 @@ end
 local utils_controlflow_Stream = MODULE_utils_controlflow_Stream()
 
 
+function MODULE_utils_peripherals_PlayerDetector()
+	local Table = utils_data_Table
+	local PlayerDetector = {}
+	PlayerDetector.detector = peripheral.find("playerDetector")
+	function PlayerDetector.onPlayerClick(func)
+	    while true do
+	        local event, username, device = os.pullEvent("playerClick")
+	        func(event, username, device)
+	    end
+	end
+	function PlayerDetector.onPlayerJoin(func)
+	    while true do
+	        local event, username, dimension = os.pullEvent("playerJoin")
+	        func(event, username, dimension)
+	    end
+	end
+	function PlayerDetector.onPlayerLeave(func)
+	    while true do
+	        local event, username, dimension = os.pullEvent("playerLeave")
+	        func(event, username, dimension)
+	    end
+	end
+	function PlayerDetector.onPlayerEnterRange(func, range, period)
+	    local oldPlayers = {}
+	    while true do
+	        os.sleep(period)
+	        local newPlayers = PlayerDetector.getPlayersInRange(range)
+	        local playersAdded = {}
+	        for _, player in ipairs(newPlayers) do
+	            if not Table.contains(oldPlayers, player) then
+	                table.insert(playersAdded, player)
+	            end
+	        end
+	        func(playersAdded)
+	    end
+	end
+	function PlayerDetector.onPlayerLeaveRange(func, range, period)
+	    local oldPlayers = {}
+	    while true do
+	        os.sleep(period)
+	        local newPlayers = PlayerDetector.getPlayersInRange(range)
+	        local playersRemoved = {}
+	        for _, player in ipairs(oldPlayers) do
+	            if not Table.contains(newPlayers, player) then
+	                table.insert(playersRemoved, player)
+	            end
+	        end
+	        func(playersRemoved)
+	    end
+	end
+	function PlayerDetector.onPlayerChangedDimension(func)
+	    while true do
+	        local event, username, fromDim, toDim = os.pullEvent("playerChangedDimension")
+	        func(event, username, fromDim, toDim)
+	    end
+	end
+	function PlayerDetector.onPlayerMoved(func, username, period)
+	    if username == nil then error("No username provided to PlayerDetector.onPlayerMoved") end
+	    if period == nil then period = 5 end  -- Default period of 5 seconds
+	    local oldPosition = PlayerDetector.getPlayer(username)
+	    while true do
+	        os.sleep(period)
+	        local newPosition = PlayerDetector.getPlayer(username)
+	        if oldPosition.x ~= newPosition.x or oldPosition.y ~= newPosition.y or oldPosition.z ~= newPosition.z then
+	            func(username, oldPosition, newPosition)
+	            oldPosition = newPosition
+	        end
+	    end
+	end
+	function PlayerDetector.getPlayer(username)
+	    return PlayerDetector.detector.getPlayer(username)
+	end
+	function PlayerDetector.getOnlinePlayers()
+	    return PlayerDetector.detector.getOnlinePlayers()
+	end
+	function PlayerDetector.getPlayersInRange(range)
+	    return PlayerDetector.detector.getPlayersInRange(range)
+	end
+	function PlayerDetector.getPlayersInCoords(firstPosition, secondPosition)
+	    return PlayerDetector.detector.getPlayersInCoords(firstPosition, secondPosition)
+	end
+	function PlayerDetector.getPlayersInCubic(width, height, depth)
+	    return PlayerDetector.detector.getPlayersInCubic(width, height, depth)
+	end
+	function PlayerDetector.isPlayerInRange(range, username)
+	    return PlayerDetector.detector.isPlayerInRange(range, username)
+	end
+	function PlayerDetector.isPlayerInCoords(firstPosition, secondPosition, username)
+	    return PlayerDetector.detector.isPlayerInCoords(firstPosition, secondPosition, username)
+	end
+	function PlayerDetector.isPlayerInCubic(width, height, depth, username)
+	    return PlayerDetector.detector.isPlayerInCubic(width, height, depth, username)
+	end
+	function PlayerDetector.isPlayersInRange(range)
+	    return PlayerDetector.detector.isPlayersInRange(range)
+	end
+	function PlayerDetector.isPlayersInCoords(firstPosition, secondPosition)
+	    return PlayerDetector.detector.isPlayerInCoords(firstPosition, secondPosition)
+	end
+	function PlayerDetector.isPlayersInCubic(width, height, depth)
+	    return PlayerDetector.detector.isPlayersInCubic(width, height, depth)
+	end
+	return PlayerDetector
+end
+local utils_peripherals_PlayerDetector = MODULE_utils_peripherals_PlayerDetector()
+
+
+function MODULE_utils_movement_Rotations()
+	Rotations = {}
+	Rotations.NONE = "None"
+	Rotations.UP = "Up"
+	Rotations.DOWN = "Down"
+	Rotations.LEFT = "Left"
+	Rotations.RIGHT = "Right"
+	function Rotations.opposite(direction)
+	    if direction == Rotations.UP then
+	        return Rotations.DOWN
+	    elseif direction == Rotations.DOWN then
+	        return Rotations.UP
+	    elseif direction == Rotations.LEFT then
+	        return Rotations.RIGHT
+	    elseif direction == Rotations.RIGHT then
+	        return Rotations.LEFT
+	    end
+	end
+	return Rotations
+end
+local utils_movement_Rotations = MODULE_utils_movement_Rotations()
+
+
+function MODULE_utils_movement_Direction()
+	local Rotations = utils_movement_Rotations
+	local Direction = {}
+	Direction.__index = Direction
+	Direction.NORTH = "North"  -- -z
+	Direction.EAST = "East"  -- +x
+	Direction.SOUTH = "South"  -- +z
+	Direction.WEST = "West"  -- -x
+	Direction.UP = "Up"  -- +y
+	Direction.DOWN = "Down"  -- -y
+	Direction.DIRECTIONS = {
+	    Direction.NORTH,
+	    Direction.EAST,
+	    Direction.SOUTH,
+	    Direction.WEST,
+	    Direction.UP,
+	    Direction.DOWN,
+	}
+	Direction.HORIZONTAL_DIRECTIONS = {
+	    Direction.NORTH,
+	    Direction.EAST,
+	    Direction.SOUTH,
+	    Direction.WEST,
+	}
+	function Direction.opposite(direction)
+	    if direction == Direction.NORTH then
+	        return Direction.SOUTH
+	    elseif direction == Direction.SOUTH then
+	        return Direction.NORTH
+	    elseif direction == Direction.EAST then
+	        return Direction.WEST
+	    elseif direction == Direction.WEST then
+	        return Direction.EAST
+	    elseif direction == Direction.UP then
+	        return Direction.DOWN
+	    elseif direction == Direction.DOWN then
+	        return Direction.UP
+	    end
+	end
+	function Direction.nextLeft(direction)
+	    if direction == Direction.NORTH then
+	        return Direction.WEST
+	    elseif direction == Direction.WEST then
+	        return Direction.SOUTH
+	    elseif direction == Direction.SOUTH then
+	        return Direction.EAST
+	    elseif direction == Direction.EAST then
+	        return Direction.NORTH
+	    end
+	end
+	function Direction.nextRight(direction)
+	    if direction == Direction.NORTH then
+	        return Direction.EAST
+	    elseif direction == Direction.EAST then
+	        return Direction.SOUTH
+	    elseif direction == Direction.SOUTH then
+	        return Direction.WEST
+	    elseif direction == Direction.WEST then
+	        return Direction.NORTH
+	    end
+	end
+	function Direction.getBestDirectionToTurn(currentDirection, targetDirection)
+	    if currentDirection == targetDirection then
+	        return Rotations.NONE
+	    elseif Direction.nextLeft(currentDirection) == targetDirection then
+	        return Rotations.LEFT
+	    elseif Direction.nextRight(currentDirection) == targetDirection then
+	        return Rotations.RIGHT
+	    else
+	        return Rotations.LEFT  -- Both are acceptable, pick a default
+	    end
+	end
+	return Direction
+end
+local utils_movement_Direction = MODULE_utils_movement_Direction()
+
+
+function MODULE_utils_terminal_Terminal()
+	local LibOs = utils_libs_LibOs
+	local Terminal = {}
+	Terminal.__index = Terminal
+	function Terminal.clear()
+	    term.clear()
+	    term.setCursorPos(1, 1)
+	end
+	function Terminal.waitForKey()
+	    local _, key = LibOs.pullEvent("key")
+	    return key
+	end
+	function Terminal.writeLineBreak()
+	    print("-------------------------")
+	end
+	function Terminal.write(text)
+	    print(text)
+	end
+	function Terminal.read(prompt)
+	    if prompt ~= nil then
+	        write(prompt)
+	    end
+	    return read()
+	end
+	function Terminal.readNumber(prompt)
+	    local value = nil
+	    while value == nil do
+	        local input = Terminal.read(prompt)
+	        value = tonumber(input)
+	    end
+	    return value
+	end
+	function Terminal.readBoolean(prompt)
+	    local value = nil
+	    while value == nil do
+	        local input = Terminal.read(prompt):lower()
+	        if input == "true" or input == "y" or input == "yes" then
+	            value = true
+	        elseif input == "false" or input == "n" or input == "no" then
+	            value = false
+	        end
+	    end
+	    return value
+	end
+	function Terminal.readTable(prompt, requiredFields)
+	    local value = nil
+	    local validationPassed = false
+	    while validationPassed == false do
+	        local input = Terminal.read(prompt)
+	        value = textutils.unserialize(input)
+	        if value ~= nil then
+	            validationPassed = true
+	            for key, _ in pairs(requiredFields) do
+	                if value[key] == nil then
+	                    validationPassed = false
+	                    Terminal.write("\t\tMissing field: '" .. key .. "'")
+	                end
+	            end
+	            if not validationPassed then
+	                Terminal.write("\t\tExpected format: " .. textutils.serialize(requiredFields))
+	            end
+	        end
+	    end
+	    return value or {}
+	end
+	return Terminal
+end
+local utils_terminal_Terminal = MODULE_utils_terminal_Terminal()
+
+
+function MODULE_utils_math_Vector3()
+	local Direction = utils_movement_Direction
+	local Terminal = utils_terminal_Terminal
+	local Vector3 = {}
+	Vector3.__index = Vector3
+	function Vector3.new(x, y, z)
+	    if type(x) == "table" then
+	        x, y, z = x.x, x.y, x.z
+	    end
+	    return setmetatable({x = x or 0, y = y or 0, z = z or 0}, Vector3)
+	end
+	function Vector3.fromTerminal(prompt)
+	    prompt = prompt or "Enter a Vector3: "
+	    local table = Terminal.readTable(prompt, Vector3.new(0, 0, 0):toTable())
+	    return Vector3.new(table.x, table.y, table.z)
+	end
+	function Vector3.fromTable(tbl)
+	    return Vector3.new(tbl.x, tbl.y, tbl.z)
+	end
+	function Vector3:toTable()
+	    return {x = self.x, y = self.y, z = self.z}
+	end
+	function Vector3:equals(other)
+	    return self.x == other.x and self.y == other.y and self.z == other.z
+	end
+	function Vector3:copy()
+	    return Vector3.new(self.x, self.y, self.z)
+	end
+	function Vector3:add(other)
+	    return Vector3.new(self.x + other.x, self.y + other.y, self.z + other.z)
+	end
+	function Vector3:addInDirection(direction, distance)
+	    distance = distance or 1
+	    local result = self:copy()
+	    if direction == Direction.NORTH then
+	        result.z = result.z - distance
+	    elseif direction == Direction.SOUTH then
+	        result.z = result.z + distance
+	    elseif direction == Direction.EAST then
+	        result.x = result.x + distance
+	    elseif direction == Direction.WEST then
+	        result.x = result.x - distance
+	    elseif direction == Direction.UP then
+	        result.y = result.y + distance
+	    elseif direction == Direction.DOWN then
+	        result.y = result.y - distance
+	    end
+	    return result
+	end
+	function Vector3:sub(other)
+	    return Vector3.new(self.x - other.x, self.y - other.y, self.z - other.z)
+	end
+	function Vector3:mul(scalar)
+	    return Vector3.new(self.x * scalar, self.y * scalar, self.z * scalar)
+	end
+	function Vector3:dot(other)
+	    return self.x * other.x + self.y * other.y + self.z * other.z
+	end
+	function Vector3:cross(other)
+	    return Vector3.new(
+	        self.y * other.z - self.z * other.y,
+	        self.z * other.x - self.x * other.z,
+	        self.x * other.y - self.y * other.x
+	    )
+	end
+	function Vector3:magnitude()
+	    return math.sqrt(self.x^2 + self.y^2 + self.z^2)
+	end
+	function Vector3:normalize()
+	    local mag = self:magnitude()
+	    if mag > 0 then
+	        return Vector3.new(self.x / mag, self.y / mag, self.z / mag)
+	    else
+	        return Vector3.new(0, 0, 0)
+	    end
+	end
+	function Vector3:serialize()
+	    return string.format("%.6f,%.6f,%.6f", self.x, self.y, self.z)
+	end
+	function Vector3.deserialize(str)
+	    local x, y, z = str:match("([^,]+),([^,]+),([^,]+)")
+	    return Vector3.new(tonumber(x), tonumber(y), tonumber(z))
+	end
+	function Vector3:directionTo(other)
+	    local diff = other:sub(self)
+	    if diff:equals(Vector3.new(0, 0, 0)) then
+	        return nil
+	    end
+	    if diff.x > 0 then
+	        return Direction.EAST
+	    elseif diff.x < 0 then
+	        return Direction.WEST
+	    elseif diff.z > 0 then
+	        return Direction.SOUTH
+	    elseif diff.z < 0 then
+	        return Direction.NORTH
+	    elseif diff.y > 0 then
+	        return Direction.UP
+	    elseif diff.y < 0 then
+	        return Direction.DOWN
+	    end
+	end
+	function Vector3:verticalDirectionTo(other)
+	    local diff = other:sub(self)
+	    if diff:equals(Vector3.new(0, 0, 0)) then
+	        return nil
+	    end
+	    if diff.y > 0 then
+	        return Direction.UP
+	    elseif diff.y < 0 then
+	        return Direction.DOWN
+	    end
+	end
+	function Vector3:__tostring()
+	    return string.format("Vector3(%.2f, %.2f, %.2f)", self.x, self.y, self.z)
+	end
+	return Vector3
+end
+local utils_math_Vector3 = MODULE_utils_math_Vector3()
+
+
 function MODULE_utils_storage_Storage()
 	local Blocks = utils_blocks_Blocks
 	local BlockIndicators = utils_blocks_BlockIndicators
@@ -1986,6 +2384,8 @@ function MODULE_utils_storage_Storage()
 	local Parallel = utils_controlflow_Parallel
 	local Stream = utils_controlflow_Stream
 	local Table = utils_data_Table
+	local PlayerDetector = utils_peripherals_PlayerDetector
+	local Vector3 = utils_math_Vector3
 	local Storage = {}
 	Storage.__index = Storage
 	function Storage.new(config)
@@ -1995,6 +2395,12 @@ function MODULE_utils_storage_Storage()
 	    self.inventories = Storage.connectToChests()
 	    self.furnaces = Storage.connectToFurnaces()
 	    self.io = self.barrels[self.config.io or Blocks.barrel .. "_0"]
+	    self.otherIOs = {}
+	    if self.config.otherIOs ~= nil then
+	        for _, otherIO in pairs(self.config.otherIOs) do
+	            self.otherIOs[otherIO.name] = {io = self.barrels[otherIO.name], pos = otherIO.pos, name = otherIO.name}
+	        end
+	    end
 	    self.inputs = {}
 	    if self.config.inputs ~= nil then
 	        for _, input in pairs(self.config.inputs) do
@@ -2047,6 +2453,23 @@ function MODULE_utils_storage_Storage()
 	    local inventories = Table.copy(self.inventories)
 	    inventories["IO"] = self.io
 	    Parallel.map(inventories, function(name, container) container:defragment() end)
+	end
+	function Storage:getClosestIO(username)
+	    if username == nil or PlayerDetector.detector == nil then
+	        return self.io
+	    end
+	    local player = PlayerDetector.getPlayer(username)
+	    local targetPosition = Vector3.new(player)
+	    local name, closestIO = Stream.minByTable(self.otherIOs, function(name, io)
+	        return targetPosition:distanceTo(Vector3.new(io.pos))
+	    end)
+	    if closestIO == nil then
+	        return self.io
+	    end
+	    print("Closest IO to " .. username .. " is " .. name)
+	    print("At position " .. closestIO.pos.x .. ", " .. closestIO.pos.y .. ", " .. closestIO.pos.z)
+	    print("Distance: " .. targetPosition:distanceTo(Vector3.new(closestIO.pos)))
+	    return closestIO.io
 	end
 	function Storage:hasItem(itemName)
 	    for _, container in pairs(self.inventories) do
@@ -2397,76 +2820,6 @@ end
 local utils_storage_Storage = MODULE_utils_storage_Storage()
 
 
-function MODULE_utils_terminal_Terminal()
-	local LibOs = utils_libs_LibOs
-	local Terminal = {}
-	Terminal.__index = Terminal
-	function Terminal.clear()
-	    term.clear()
-	    term.setCursorPos(1, 1)
-	end
-	function Terminal.waitForKey()
-	    local _, key = LibOs.pullEvent("key")
-	    return key
-	end
-	function Terminal.writeLineBreak()
-	    print("-------------------------")
-	end
-	function Terminal.write(text)
-	    print(text)
-	end
-	function Terminal.read(prompt)
-	    if prompt ~= nil then
-	        write(prompt)
-	    end
-	    return read()
-	end
-	function Terminal.readNumber(prompt)
-	    local value = nil
-	    while value == nil do
-	        local input = Terminal.read(prompt)
-	        value = tonumber(input)
-	    end
-	    return value
-	end
-	function Terminal.readBoolean(prompt)
-	    local value = nil
-	    while value == nil do
-	        local input = Terminal.read(prompt):lower()
-	        if input == "true" or input == "y" or input == "yes" then
-	            value = true
-	        elseif input == "false" or input == "n" or input == "no" then
-	            value = false
-	        end
-	    end
-	    return value
-	end
-	function Terminal.readTable(prompt, requiredFields)
-	    local value = nil
-	    local validationPassed = false
-	    while validationPassed == false do
-	        local input = Terminal.read(prompt)
-	        value = textutils.unserialize(input)
-	        if value ~= nil then
-	            validationPassed = true
-	            for key, _ in pairs(requiredFields) do
-	                if value[key] == nil then
-	                    validationPassed = false
-	                    Terminal.write("\t\tMissing field: '" .. key .. "'")
-	                end
-	            end
-	            if not validationPassed then
-	                Terminal.write("\t\tExpected format: " .. textutils.serialize(requiredFields))
-	            end
-	        end
-	    end
-	    return value or {}
-	end
-	return Terminal
-end
-local utils_terminal_Terminal = MODULE_utils_terminal_Terminal()
-
-
 function MODULE_utils_terminal_commands_Command()
 	local Command = {}
 	Command.__index = Command
@@ -2641,113 +2994,6 @@ function MODULE_utils_network_protocols_logging_LogProtocol()
 	return LogProtocol
 end
 local utils_network_protocols_logging_LogProtocol = MODULE_utils_network_protocols_logging_LogProtocol()
-
-
-function MODULE_utils_peripherals_PlayerDetector()
-	local Table = utils_data_Table
-	local PlayerDetector = {}
-	PlayerDetector.detector = peripheral.find("playerDetector")
-	function PlayerDetector.onPlayerClick(func)
-	    while true do
-	        local event, username, device = os.pullEvent("playerClick")
-	        func(event, username, device)
-	    end
-	end
-	function PlayerDetector.onPlayerJoin(func)
-	    while true do
-	        local event, username, dimension = os.pullEvent("playerJoin")
-	        func(event, username, dimension)
-	    end
-	end
-	function PlayerDetector.onPlayerLeave(func)
-	    while true do
-	        local event, username, dimension = os.pullEvent("playerLeave")
-	        func(event, username, dimension)
-	    end
-	end
-	function PlayerDetector.onPlayerEnterRange(func, range, period)
-	    local oldPlayers = {}
-	    while true do
-	        os.sleep(period)
-	        local newPlayers = PlayerDetector.getPlayersInRange(range)
-	        local playersAdded = {}
-	        for _, player in ipairs(newPlayers) do
-	            if not Table.contains(oldPlayers, player) then
-	                table.insert(playersAdded, player)
-	            end
-	        end
-	        func(playersAdded)
-	    end
-	end
-	function PlayerDetector.onPlayerLeaveRange(func, range, period)
-	    local oldPlayers = {}
-	    while true do
-	        os.sleep(period)
-	        local newPlayers = PlayerDetector.getPlayersInRange(range)
-	        local playersRemoved = {}
-	        for _, player in ipairs(oldPlayers) do
-	            if not Table.contains(newPlayers, player) then
-	                table.insert(playersRemoved, player)
-	            end
-	        end
-	        func(playersRemoved)
-	    end
-	end
-	function PlayerDetector.onPlayerChangedDimension(func)
-	    while true do
-	        local event, username, fromDim, toDim = os.pullEvent("playerChangedDimension")
-	        func(event, username, fromDim, toDim)
-	    end
-	end
-	function PlayerDetector.onPlayerMoved(func, username, period)
-	    if username == nil then error("No username provided to PlayerDetector.onPlayerMoved") end
-	    if period == nil then period = 5 end  -- Default period of 5 seconds
-	    local oldPosition = PlayerDetector.getPlayer(username)
-	    while true do
-	        os.sleep(period)
-	        local newPosition = PlayerDetector.getPlayer(username)
-	        if oldPosition.x ~= newPosition.x or oldPosition.y ~= newPosition.y or oldPosition.z ~= newPosition.z then
-	            func(username, oldPosition, newPosition)
-	            oldPosition = newPosition
-	        end
-	    end
-	end
-	function PlayerDetector.getPlayer(username)
-	    return PlayerDetector.detector.getPlayer(username)
-	end
-	function PlayerDetector.getOnlinePlayers()
-	    return PlayerDetector.detector.getOnlinePlayers()
-	end
-	function PlayerDetector.getPlayersInRange(range)
-	    return PlayerDetector.detector.getPlayersInRange(range)
-	end
-	function PlayerDetector.getPlayersInCoords(firstPosition, secondPosition)
-	    return PlayerDetector.detector.getPlayersInCoords(firstPosition, secondPosition)
-	end
-	function PlayerDetector.getPlayersInCubic(width, height, depth)
-	    return PlayerDetector.detector.getPlayersInCubic(width, height, depth)
-	end
-	function PlayerDetector.isPlayerInRange(range, username)
-	    return PlayerDetector.detector.isPlayerInRange(range, username)
-	end
-	function PlayerDetector.isPlayerInCoords(firstPosition, secondPosition, username)
-	    return PlayerDetector.detector.isPlayerInCoords(firstPosition, secondPosition, username)
-	end
-	function PlayerDetector.isPlayerInCubic(width, height, depth, username)
-	    return PlayerDetector.detector.isPlayerInCubic(width, height, depth, username)
-	end
-	function PlayerDetector.isPlayersInRange(range)
-	    return PlayerDetector.detector.isPlayersInRange(range)
-	end
-	function PlayerDetector.isPlayersInCoords(firstPosition, secondPosition)
-	    return PlayerDetector.detector.isPlayerInCoords(firstPosition, secondPosition)
-	end
-	function PlayerDetector.isPlayersInCubic(width, height, depth)
-	    return PlayerDetector.detector.isPlayersInCubic(width, height, depth)
-	end
-	return PlayerDetector
-end
-local utils_peripherals_PlayerDetector = MODULE_utils_peripherals_PlayerDetector()
 
 
 function MODULE_utils_other_Players()
@@ -3072,7 +3318,6 @@ function MODULE_jobs_definitions_static_storage_StorageBackgroundTasks()
 	local Players = utils_other_Players
 	local BackgroundTask = utils_controlflow_BackgroundTask
 	local Blocks = utils_blocks_Blocks
-	local PlayerDetector = utils_peripherals_PlayerDetector
 	local StorageBackgroundTasks = {}
 	function StorageBackgroundTasks.onEntityEnter(self, entities)
 	    local messages = {}
@@ -3150,8 +3395,6 @@ function MODULE_jobs_definitions_static_storage_StorageBackgroundTasks()
 	        :setName("Update Smelt Queue")
 	        :setPeriod(1)
 	        :setCallback(function()
-	            local me = PlayerDetector.getPlayer(Me.username)
-	            print(textutils.serialiseJSON(me))
 	            local charcoalCount = self.storage:getItemCount(Blocks.charcoal)
 	            local spruceLogCount = self.storage:getItemCount(Blocks.spruce_log)
 	            local smeltQueue = self.config:get("smeltQueue", {})
@@ -3184,227 +3427,6 @@ function MODULE_jobs_definitions_static_storage_StorageBackgroundTasks()
 	return StorageBackgroundTasks
 end
 local jobs_definitions_static_storage_StorageBackgroundTasks = MODULE_jobs_definitions_static_storage_StorageBackgroundTasks()
-
-
-function MODULE_utils_movement_Rotations()
-	Rotations = {}
-	Rotations.NONE = "None"
-	Rotations.UP = "Up"
-	Rotations.DOWN = "Down"
-	Rotations.LEFT = "Left"
-	Rotations.RIGHT = "Right"
-	function Rotations.opposite(direction)
-	    if direction == Rotations.UP then
-	        return Rotations.DOWN
-	    elseif direction == Rotations.DOWN then
-	        return Rotations.UP
-	    elseif direction == Rotations.LEFT then
-	        return Rotations.RIGHT
-	    elseif direction == Rotations.RIGHT then
-	        return Rotations.LEFT
-	    end
-	end
-	return Rotations
-end
-local utils_movement_Rotations = MODULE_utils_movement_Rotations()
-
-
-function MODULE_utils_movement_Direction()
-	local Rotations = utils_movement_Rotations
-	local Direction = {}
-	Direction.__index = Direction
-	Direction.NORTH = "North"  -- -z
-	Direction.EAST = "East"  -- +x
-	Direction.SOUTH = "South"  -- +z
-	Direction.WEST = "West"  -- -x
-	Direction.UP = "Up"  -- +y
-	Direction.DOWN = "Down"  -- -y
-	Direction.DIRECTIONS = {
-	    Direction.NORTH,
-	    Direction.EAST,
-	    Direction.SOUTH,
-	    Direction.WEST,
-	    Direction.UP,
-	    Direction.DOWN,
-	}
-	Direction.HORIZONTAL_DIRECTIONS = {
-	    Direction.NORTH,
-	    Direction.EAST,
-	    Direction.SOUTH,
-	    Direction.WEST,
-	}
-	function Direction.opposite(direction)
-	    if direction == Direction.NORTH then
-	        return Direction.SOUTH
-	    elseif direction == Direction.SOUTH then
-	        return Direction.NORTH
-	    elseif direction == Direction.EAST then
-	        return Direction.WEST
-	    elseif direction == Direction.WEST then
-	        return Direction.EAST
-	    elseif direction == Direction.UP then
-	        return Direction.DOWN
-	    elseif direction == Direction.DOWN then
-	        return Direction.UP
-	    end
-	end
-	function Direction.nextLeft(direction)
-	    if direction == Direction.NORTH then
-	        return Direction.WEST
-	    elseif direction == Direction.WEST then
-	        return Direction.SOUTH
-	    elseif direction == Direction.SOUTH then
-	        return Direction.EAST
-	    elseif direction == Direction.EAST then
-	        return Direction.NORTH
-	    end
-	end
-	function Direction.nextRight(direction)
-	    if direction == Direction.NORTH then
-	        return Direction.EAST
-	    elseif direction == Direction.EAST then
-	        return Direction.SOUTH
-	    elseif direction == Direction.SOUTH then
-	        return Direction.WEST
-	    elseif direction == Direction.WEST then
-	        return Direction.NORTH
-	    end
-	end
-	function Direction.getBestDirectionToTurn(currentDirection, targetDirection)
-	    if currentDirection == targetDirection then
-	        return Rotations.NONE
-	    elseif Direction.nextLeft(currentDirection) == targetDirection then
-	        return Rotations.LEFT
-	    elseif Direction.nextRight(currentDirection) == targetDirection then
-	        return Rotations.RIGHT
-	    else
-	        return Rotations.LEFT  -- Both are acceptable, pick a default
-	    end
-	end
-	return Direction
-end
-local utils_movement_Direction = MODULE_utils_movement_Direction()
-
-
-function MODULE_utils_math_Vector3()
-	local Direction = utils_movement_Direction
-	local Terminal = utils_terminal_Terminal
-	local Vector3 = {}
-	Vector3.__index = Vector3
-	function Vector3.new(x, y, z)
-	    if type(x) == "table" then
-	        x, y, z = x.x, x.y, x.z
-	    end
-	    return setmetatable({x = x or 0, y = y or 0, z = z or 0}, Vector3)
-	end
-	function Vector3.fromTerminal(prompt)
-	    prompt = prompt or "Enter a Vector3: "
-	    local table = Terminal.readTable(prompt, Vector3.new(0, 0, 0):toTable())
-	    return Vector3.new(table.x, table.y, table.z)
-	end
-	function Vector3.fromTable(tbl)
-	    return Vector3.new(tbl.x, tbl.y, tbl.z)
-	end
-	function Vector3:toTable()
-	    return {x = self.x, y = self.y, z = self.z}
-	end
-	function Vector3:equals(other)
-	    return self.x == other.x and self.y == other.y and self.z == other.z
-	end
-	function Vector3:copy()
-	    return Vector3.new(self.x, self.y, self.z)
-	end
-	function Vector3:add(other)
-	    return Vector3.new(self.x + other.x, self.y + other.y, self.z + other.z)
-	end
-	function Vector3:addInDirection(direction, distance)
-	    distance = distance or 1
-	    local result = self:copy()
-	    if direction == Direction.NORTH then
-	        result.z = result.z - distance
-	    elseif direction == Direction.SOUTH then
-	        result.z = result.z + distance
-	    elseif direction == Direction.EAST then
-	        result.x = result.x + distance
-	    elseif direction == Direction.WEST then
-	        result.x = result.x - distance
-	    elseif direction == Direction.UP then
-	        result.y = result.y + distance
-	    elseif direction == Direction.DOWN then
-	        result.y = result.y - distance
-	    end
-	    return result
-	end
-	function Vector3:sub(other)
-	    return Vector3.new(self.x - other.x, self.y - other.y, self.z - other.z)
-	end
-	function Vector3:mul(scalar)
-	    return Vector3.new(self.x * scalar, self.y * scalar, self.z * scalar)
-	end
-	function Vector3:dot(other)
-	    return self.x * other.x + self.y * other.y + self.z * other.z
-	end
-	function Vector3:cross(other)
-	    return Vector3.new(
-	        self.y * other.z - self.z * other.y,
-	        self.z * other.x - self.x * other.z,
-	        self.x * other.y - self.y * other.x
-	    )
-	end
-	function Vector3:magnitude()
-	    return math.sqrt(self.x^2 + self.y^2 + self.z^2)
-	end
-	function Vector3:normalize()
-	    local mag = self:magnitude()
-	    if mag > 0 then
-	        return Vector3.new(self.x / mag, self.y / mag, self.z / mag)
-	    else
-	        return Vector3.new(0, 0, 0)
-	    end
-	end
-	function Vector3:serialize()
-	    return string.format("%.6f,%.6f,%.6f", self.x, self.y, self.z)
-	end
-	function Vector3.deserialize(str)
-	    local x, y, z = str:match("([^,]+),([^,]+),([^,]+)")
-	    return Vector3.new(tonumber(x), tonumber(y), tonumber(z))
-	end
-	function Vector3:directionTo(other)
-	    local diff = other:sub(self)
-	    if diff:equals(Vector3.new(0, 0, 0)) then
-	        return nil
-	    end
-	    if diff.x > 0 then
-	        return Direction.EAST
-	    elseif diff.x < 0 then
-	        return Direction.WEST
-	    elseif diff.z > 0 then
-	        return Direction.SOUTH
-	    elseif diff.z < 0 then
-	        return Direction.NORTH
-	    elseif diff.y > 0 then
-	        return Direction.UP
-	    elseif diff.y < 0 then
-	        return Direction.DOWN
-	    end
-	end
-	function Vector3:verticalDirectionTo(other)
-	    local diff = other:sub(self)
-	    if diff:equals(Vector3.new(0, 0, 0)) then
-	        return nil
-	    end
-	    if diff.y > 0 then
-	        return Direction.UP
-	    elseif diff.y < 0 then
-	        return Direction.DOWN
-	    end
-	end
-	function Vector3:__tostring()
-	    return string.format("Vector3(%.2f, %.2f, %.2f)", self.x, self.y, self.z)
-	end
-	return Vector3
-end
-local utils_math_Vector3 = MODULE_utils_math_Vector3()
 
 
 function MODULE_utils_blocks_Block()
