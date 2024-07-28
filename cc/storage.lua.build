@@ -2204,6 +2204,15 @@ function MODULE_utils_storage_Storage()
 	end
 	function Storage:refuelFurnaces()
 	    local fuelItem = Blocks.charcoal
+	    local containersWithFuel = Parallel.mapTable(self.inventories, function(_, container)
+	        if container:hasItem(fuelItem) then
+	            return container
+	        else
+	            return nil
+	        end
+	    end)
+	    containersWithFuel = Stream.nonNilTable(containersWithFuel)
+	    containersWithFuel = Stream.getValues(containersWithFuel)
 	    local count = 0
 	    Parallel.mapTableWithTimeout(self.furnaces, function(_, furnace)
 	        local requiredFuelCount = furnace:getRequiredFuelCount()
@@ -2238,10 +2247,7 @@ function MODULE_utils_storage_Storage()
 	    end
 	end
 	function Storage:dumpFurnaceInputs()
-	    local containers = {}
-	    for _, container in pairs(self.inventories) do
-	        table.insert(containers, container)
-	    end
+	    local containers = Stream.getValues(self.inventories)
 	    local container = nil
 	    local remainingCount = 0
 	    for _, furnace in pairs(self.furnaces) do
