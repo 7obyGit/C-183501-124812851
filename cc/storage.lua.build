@@ -2545,7 +2545,9 @@ function MODULE_utils_storage_Storage()
 	end
 	function Storage:dumpAllOtherIOs()
 	    Parallel.mapTable(self.otherIOs, function(_, otherIO)
+	        print("DUMPING " .. otherIO.name)
 	        self:dump(otherIO.io)
+	        print("COMPLETE")
 	    end)
 	end
 	function Storage:dumpAllBarrels()
