@@ -2543,6 +2543,11 @@ function MODULE_utils_storage_Storage()
 	        self:moveFromIo(item.name, item.count, sourceContainer)
 	    end
 	end
+	function Storage:dumpAllOtherIOs()
+	    Parallel.mapTable(self.otherIOs, function(_, otherIO)
+	        self:dump(otherIO.io)
+	    end)
+	end
 	function Storage:dumpAllBarrels()
 	    for _, container in pairs(self.barrels) do
 	        self:dump(container)
@@ -3697,6 +3702,7 @@ function MODULE_jobs_definitions_static_storage_StorageCommands()
 	                print("\t\t" .. displayName .. " x" .. item.count)
 	            end
 	            self.storage:dump()
+	            self.storage:dumpAllOtherIOs()
 	        end
 	    )
 	end
@@ -3872,7 +3878,6 @@ function MODULE_jobs_definitions_static_storage_StorageCommands()
 	            for _, arg in pairs({...}) do
 	                positionString = positionString .. " " .. arg
 	            end
-	            print("Setting the position of " .. blockName .. " to " .. positionString)
 	            local positionTable = textutils.unserialise(positionString)
 	            if positionTable == nil then print("The position should be in the form:\n{x=0, y=0, z=0}\nDid you use the correct format?") return end
 	            local position = Vector3.new(positionTable)
