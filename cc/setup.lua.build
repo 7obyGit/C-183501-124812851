@@ -400,7 +400,7 @@ function MODULE_jobs_JobManager()
 	    local config = JobConfig.load()
 	    config.job = jobClass.name
 	    config:save()
-	    if config.username == nil then
+	    if config:get("username", nil) == nil then
 	        config:set("username", Terminal.read("Enter your username: "))
 	    end
 	    local job = jobClass.new(config)
