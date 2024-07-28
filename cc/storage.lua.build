@@ -2344,7 +2344,7 @@ function MODULE_utils_storage_Storage()
 	    furnaces = Stream.enumerate(furnaces)
 	    local count = 0
 	    Parallel.mapListWithTimeout(furnaces, function(pair)
-	        local index = pair.index
+	        local index = (pair.index % #containersWithFuel) + 1
 	        local furnace = pair.value
 	        local container = containersWithFuel[index]
 	        if container == nil then
@@ -2353,9 +2353,8 @@ function MODULE_utils_storage_Storage()
 	        local requiredFuelCount = furnace:getRequiredFuelCount()
 	        if requiredFuelCount > 0 then
 	            furnace:addFuel(container, fuelItem, requiredFuelCount)
+	            print("Added " .. requiredFuelCount .. " fuel to " .. furnace.name)
 	            count = count + 1
-	        else
-	            print("No fuel required for " .. furnace.name)
 	        end
 	    end, 8)
 	    print("Refueled " .. count .. " furnaces")
