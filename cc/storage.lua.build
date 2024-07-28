@@ -3888,7 +3888,7 @@ function MODULE_jobs_definitions_static_storage_StorageCommands()
 	            local otherIO = self.storage.otherIOs[blockName]
 	            if otherIO == nil then print("Could not find a secondary IO with the name provided\nHave you configured it using the `setup` command?") return end
 	            otherIO.pos = position
-	            self.storage.config.otherIOs[blockName] = {otherIO.name, otherIO.pos}
+	            self.storage.config.otherIOs[blockName] = {name = otherIO.name, pos = otherIO.pos}
 	            self.config:set("storageConfig", self.storage.config)
 	            print("Successfully set the position of " .. blockName .. " to " .. textutils.serialiseJSON(position:toTable()))
 	        end
