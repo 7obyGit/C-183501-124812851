@@ -2214,7 +2214,9 @@ function MODULE_utils_storage_Storage()
 	    containersWithFuel = Stream.nonNilTable(containersWithFuel)
 	    containersWithFuel = Stream.getValues(containersWithFuel)
 	    local count = 0
-	    Parallel.mapTableWithTimeout(self.furnaces, function(_, furnace)
+	    Parallel.mapTableWithTimeout(self.furnaces, function(index, furnace)
+	        print("Index: " .. index)
+	        print("Furnace: " .. furnace.name)
 	        local requiredFuelCount = furnace:getRequiredFuelCount()
 	        if requiredFuelCount > 0 then
 	            self:moveToIo(fuelItem, requiredFuelCount)
