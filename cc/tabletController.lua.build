@@ -302,6 +302,8 @@ function MODULE_utils_network_Network()
 	    if not Network.isOpen() then return print("Network is not open") end
 	    while true do
 	        local senderId, message = rednet.receive(protocol, timeout)
+	        print("Received message from " .. senderId)
+	        print(message)
 	        func(senderId, message)
 	    end
 	end
@@ -2486,7 +2488,6 @@ function MODULE_jobs_definitions_tablet_tabletController_TabletControllerBackgro
 	        :setName("Broadcast Location")
 	        :setPeriod(15)
 	        :setCallback(function()
-	            print("CALLED")
 	        end)
 	        :start()
 	end
