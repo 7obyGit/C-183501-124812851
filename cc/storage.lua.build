@@ -3137,9 +3137,7 @@ function MODULE_utils_network_protocols_events_EventsProtocol()
 	    local username = args.username
 	    local oldPosition = args.oldPosition
 	    local newPosition = args.newPosition
-	    print(self.onPlayerMovedFunc)
 	    if self.onPlayerMovedFunc == nil then return end
-	    print("Calling onPlayerMovedFunc")
 	    self.onPlayerMovedFunc(username, oldPosition, newPosition)
 	end
 	function EventsProtocol:sendOnChatMessage(event, username, message, uuid, isHidden)

@@ -2719,9 +2719,7 @@ function MODULE_utils_network_protocols_events_EventsProtocol()
 	    local username = args.username
 	    local oldPosition = args.oldPosition
 	    local newPosition = args.newPosition
-	    print(self.onPlayerMovedFunc)
 	    if self.onPlayerMovedFunc == nil then return end
-	    print("Calling onPlayerMovedFunc")
 	    self.onPlayerMovedFunc(username, oldPosition, newPosition)
 	end
 	function EventsProtocol:sendOnChatMessage(event, username, message, uuid, isHidden)
@@ -2840,8 +2838,8 @@ function MODULE_jobs_definitions_tablet_tabletController_TabletControllerJob()
 	        events = EventsProtocol.new(self),
 	        storage = StorageProtocol.new(self),
 	    }
-	    self.protocols.events.onPlayerMovedFunc = TabletControllerProtocolListeners.getOnPlayerMoved
-	    self.protocols.storage.onGetItemFunc = TabletControllerProtocolListeners.getOnGetItem
+	    self.protocols.events.onPlayerMovedFunc = TabletControllerProtocolListeners.getOnPlayerMoved(self)
+	    self.protocols.storage.onGetItemFunc = TabletControllerProtocolListeners.getOnGetItem(self)
 	    return self
 	end
 	function TabletControllerJob:onStart()
