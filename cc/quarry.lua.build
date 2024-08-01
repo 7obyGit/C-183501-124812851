@@ -302,8 +302,7 @@ function MODULE_utils_network_Network()
 	    if not Network.isOpen() then return print("Network is not open") end
 	    while true do
 	        local senderId, message = rednet.receive(protocol, timeout)
-	        print("Received message from " .. senderId)
-	        print(textutils.serialise(message))
+	        print(func)
 	        func(senderId, message)
 	    end
 	end
