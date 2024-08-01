@@ -2835,9 +2835,6 @@ function MODULE_jobs_definitions_tablet_tabletController_TabletControllerJob()
 	function TabletControllerJob:onStep()
 	    return CommonEventImplementations.onStepTablet(self)
 	end
-	function TabletControllerJob:onBackgroundStep()
-	    return CommonEventImplementations.onBackgroundStep(self)
-	end
 	function TabletControllerJob:onComplete()
 	    return CommonEventImplementations.onComplete(self)
 	end
