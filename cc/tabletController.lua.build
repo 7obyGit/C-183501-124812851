@@ -302,7 +302,6 @@ function MODULE_utils_network_Network()
 	    if not Network.isOpen() then return print("Network is not open") end
 	    while true do
 	        local senderId, message = rednet.receive(protocol, timeout)
-	        print(func)
 	        func(senderId, message)
 	    end
 	end
@@ -2763,11 +2762,15 @@ function MODULE_utils_network_protocols_remoteperipherals_StorageProtocol()
 	function StorageProtocol:listen()
 	    Network.host(self.protocolName)
 	    Network.listen(self.protocolName, nil, function(senderId, message)
+	        print("Received message from " .. senderId)
 	        if type(message) ~= "table" then return end
 	        local command = message.command
 	        local args = message.message
+	        print(command)
 	        local listener = self.listeners[command]
+	        print(listener)
 	        if listener == nil then return end
+	        print("CALLING LISTENER")
 	        listener(self, args)
 	    end)
 	end
