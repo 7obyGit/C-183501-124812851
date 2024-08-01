@@ -2400,6 +2400,7 @@ local utils_jobutils_CommonEventImplementations = MODULE_utils_jobutils_CommonEv
 
 
 function MODULE_jobs_definitions_tablet_tabletController_TabletControllerCommands()
+	local Command = utils_terminal_commands_Command
 	local TabletControllerCommands = {}
 	function TabletControllerCommands.commandLog(self, sourceName)
 	    if sourceName == nil then
@@ -2415,9 +2416,83 @@ function MODULE_jobs_definitions_tablet_tabletController_TabletControllerCommand
 	    end
 	    self.protocols.log:view(sourceName)
 	end
+	function TabletControllerCommands.getCommandGet(self)
+	    return Command.new(
+	        "get",
+	        "Get an item from the storage system\nE.g. get <item> <quantity>",
+	        function(quantity, item)
+	            if item == nil or quantity == nil then
+	                print("Usage: get <quantity> <item>")
+	                return
+	            end
+	            self.protocols.storage:sendGetItem(item, quantity)
+	        end)
+	end
 	return TabletControllerCommands
 end
 local jobs_definitions_tablet_tabletController_TabletControllerCommands = MODULE_jobs_definitions_tablet_tabletController_TabletControllerCommands()
+
+
+function MODULE_utils_controlflow_BackgroundTask()
+	local BackgroundTask = {}
+	function BackgroundTask.new()
+	    local self = setmetatable({}, {__index = BackgroundTask})
+	    self.name = "Background Task"
+	    self.period = 1
+	    self.callback = function() print("Callback not set for task '" .. self.name .. "'") end
+	    self.whenCallback = function() return true end
+	    self.running = false
+	    return self
+	end
+	function BackgroundTask:setName(name)
+	    self.name = name
+	    return self
+	end
+	function BackgroundTask:setPeriod(period)
+	    self.period = period
+	    return self
+	end
+	function BackgroundTask:setCallback(callback)
+	    self.callback = callback
+	    return self
+	end
+	function BackgroundTask:when(whenCallback)
+	    self.whenCallback = whenCallback
+	    return self
+	end
+	function BackgroundTask:start()
+	    self.running = true
+	    while self.running do
+	        while not self.whenCallback() do
+	            os.sleep(1)
+	        end
+	        local status, error = pcall(self.callback)
+	        if not status then
+	            print("Error in task '" .. self.name .. "': " .. error)
+	        end
+	        os.sleep(self.period)
+	    end
+	end
+	return BackgroundTask
+end
+local utils_controlflow_BackgroundTask = MODULE_utils_controlflow_BackgroundTask()
+
+
+function MODULE_jobs_definitions_tablet_tabletController_TabletControllerBackgroundTasks()
+	local BackgroundTask = utils_controlflow_BackgroundTask
+	local TabletControllerBackgroundTasks = {}
+	function TabletControllerBackgroundTasks.broadcastLocation(self)
+	    BackgroundTask.new()
+	        :setName("Broadcast Location")
+	        :setPeriod(15)
+	        :setCallback(function()
+	            print("CALLED")
+	        end)
+	        :start()
+	end
+	return TabletControllerBackgroundTasks
+end
+local jobs_definitions_tablet_tabletController_TabletControllerBackgroundTasks = MODULE_jobs_definitions_tablet_tabletController_TabletControllerBackgroundTasks()
 
 
 function MODULE_utils_network_protocols_logging_LogProtocol()
@@ -2647,6 +2722,68 @@ end
 local utils_network_protocols_events_EventsProtocol = MODULE_utils_network_protocols_events_EventsProtocol()
 
 
+function MODULE_utils_network_protocols_remoteperipherals_StorageProtocol()
+	local Network = utils_network_Network
+	local StorageProtocol = {}
+	StorageProtocol.__index = StorageProtocol
+	function StorageProtocol.new(job)
+	    local self = setmetatable({}, StorageProtocol)
+	    self.job = job  -- The job instance that is using this protocol
+	    self.protocolName = "protocol:storage"
+	    self.commands = {
+	        GET_ITEM = "GET_ITEM",
+	        GET_ITEM_RESPONSE = "GET_ITEM_RESPONSE",
+	    }
+	    self.listeners = {
+	        [self.commands.GET_ITEM] = self.onGetItem,
+	        [self.commands.GET_ITEM_RESPONSE] = self.onGetItemResponse,
+	    }
+	    self.onGetItemFunc = nil
+	    self.onGetItemResponseFunc = nil
+	    return self
+	end
+	function StorageProtocol:listen()
+	    Network.host(self.protocolName)
+	    Network.listen(self.protocolName, nil, function(senderId, message)
+	        if type(message) ~= "table" then return end
+	        local command = message.command
+	        local args = message.message
+	        local listener = self.listeners[command]
+	        if listener == nil then return end
+	        listener(self, args)
+	    end)
+	end
+	function StorageProtocol:_send(command, message)
+	    Network.broadcast({
+	        command = command,
+	        message = message,
+	    }, self.protocolName)
+	end
+	function StorageProtocol:sendGetItem(item, quantity)
+	    local username = self.job.config:get("username", "Unknown User")
+	    self:_send(self.commands.GET_ITEM, {username = username, item = item, quantity = quantity})
+	end
+	function StorageProtocol:onGetItem(args)
+	    local username = args.username
+	    local item = args.item
+	    local quantity = args.quantity
+	    if self.onGetItemFunc == nil then return end
+	    self.onGetItemFunc(username, item, quantity)
+	end
+	function StorageProtocol:sendGetItemResponse(isSuccess, message)
+	    self:_send(self.commands.GET_ITEM_RESPONSE, {isSuccess = isSuccess, message = message})
+	end
+	function StorageProtocol:onGetItemResponse(args)
+	    local isSuccess = args.isSuccess
+	    local message = args.message
+	    if self.onGetItemResponseFunc == nil then return end
+	    self.onGetItemResponseFunc(isSuccess, message)
+	end
+	return StorageProtocol
+end
+local utils_network_protocols_remoteperipherals_StorageProtocol = MODULE_utils_network_protocols_remoteperipherals_StorageProtocol()
+
+
 function MODULE_jobs_definitions_tablet_tabletController_TabletControllerJob()
 	local Commands = utils_terminal_commands_Commands
 	local Command = utils_terminal_commands_Command
@@ -2654,19 +2791,23 @@ function MODULE_jobs_definitions_tablet_tabletController_TabletControllerJob()
 	local CommonStates = utils_jobutils_CommonStates
 	local CommonEventImplementations = utils_jobutils_CommonEventImplementations
 	local TabletControllerCommands = jobs_definitions_tablet_tabletController_TabletControllerCommands
+	local TabletControllerBackgroundTasks = jobs_definitions_tablet_tabletController_TabletControllerBackgroundTasks
 	local LogProtocol = utils_network_protocols_logging_LogProtocol
 	local EventsProtocol = utils_network_protocols_events_EventsProtocol
+	local StorageProtocol = utils_network_protocols_remoteperipherals_StorageProtocol
 	local Job = jobs_Job
 	local TabletControllerJob = {}
 	TabletControllerJob.__index = TabletControllerJob
 	TabletControllerJob.name = Job.TABLET_CONTROLLER
 	function TabletControllerJob.new(config)
 	    local self = setmetatable({}, TabletControllerJob)
-	    self.backgroundTask = function() self:onBackgroundStep() end
-	    self.backgroundDelay = 5  -- This task should be infrequent
+	    self.backgroundTasks = {
+	        TabletControllerBackgroundTasks.broadcastLocation,
+	    }
 	    self.commands = Commands.new()
 	    self.commands:add(Command.new("exit", "Terminates the program", function(...) CommonCommands.commandExit(self, ...) end))
 	    self.commands:add(Command.new("log", "View logs\nE.g. log <sourceName>\nE.g. log list", function(...) TabletControllerCommands.commandLog(self, ...) end))
+	    self.commands:add("get", TabletControllerCommands.getCommandGet(self))
 	    self.config = config
 	    self.states = {
 	        COMMAND_PROMPT = "COMMAND_PROMPT",
@@ -2677,6 +2818,7 @@ function MODULE_jobs_definitions_tablet_tabletController_TabletControllerJob()
 	    self.protocols = {
 	        log = LogProtocol.new(self),
 	        events = EventsProtocol.new(self),
+	        storage = StorageProtocol.new(self),
 	    }
 	    self.protocols.events.onPlayerMovedFunc = function (username, oldPosition, newPosition) self.logSilent(username .. " moved to: " .. textutils.serialiseJSON({x = newPosition.x, y = newPosition.y, z = newPosition.z})) end
 	    return self
