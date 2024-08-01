@@ -3116,15 +3116,11 @@ function MODULE_utils_network_protocols_events_EventsProtocol()
 	function EventsProtocol:listen()
 	    Network.host(self.protocolName)
 	    Network.listen(self.protocolName, nil, function(senderId, message)
-	        print("Received message", message)
 	        if type(message) ~= "table" then return end
 	        local command = message.command
 	        local args = message.message
 	        local listener = self.listeners[command]
-	        print("Listener", listener)
-	        print(command)
 	        if listener == nil then return end
-	        print("Calling listener")
 	        listener(self, args)
 	    end)
 	end
@@ -3141,7 +3137,9 @@ function MODULE_utils_network_protocols_events_EventsProtocol()
 	    local username = args.username
 	    local oldPosition = args.oldPosition
 	    local newPosition = args.newPosition
+	    print(self.onPlayerMovedFunc)
 	    if self.onPlayerMovedFunc == nil then return end
+	    print("Calling onPlayerMovedFunc")
 	    self.onPlayerMovedFunc(username, oldPosition, newPosition)
 	end
 	function EventsProtocol:sendOnChatMessage(event, username, message, uuid, isHidden)
