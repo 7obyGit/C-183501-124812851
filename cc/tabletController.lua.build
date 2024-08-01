@@ -303,7 +303,7 @@ function MODULE_utils_network_Network()
 	    while true do
 	        local senderId, message = rednet.receive(protocol, timeout)
 	        print("Received message from " .. senderId)
-	        print(message)
+	        print(textutils.serialise(message))
 	        func(senderId, message)
 	    end
 	end
