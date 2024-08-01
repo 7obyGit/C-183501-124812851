@@ -2839,7 +2839,7 @@ function MODULE_jobs_definitions_tablet_tabletController_TabletControllerJob()
 	        storage = StorageProtocol.new(self),
 	    }
 	    self.protocols.events.onPlayerMovedFunc = TabletControllerProtocolListeners.getOnPlayerMoved(self)
-	    self.protocols.storage.onGetItemFunc = TabletControllerProtocolListeners.getOnGetItem(self)
+	    self.protocols.storage.onGetItemResponseFunc = TabletControllerProtocolListeners.getOnGetItemResponse(self)
 	    return self
 	end
 	function TabletControllerJob:onStart()
