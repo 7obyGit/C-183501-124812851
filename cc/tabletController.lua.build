@@ -2499,6 +2499,7 @@ function MODULE_jobs_definitions_tablet_tabletController_TabletControllerProtoco
 	local class = {}
 	function class.getOnPlayerMoved(self)
 	return function (username, oldPosition, newPosition)
+	    print("On Player Moved Response" .. newPosition.x)
 	    self.logSilent(username .. " moved to: " .. textutils.serialiseJSON({x = newPosition.x, y = newPosition.y, z = newPosition.z}))
 	end end
 	function class.getOnGetItemResponse(self)
