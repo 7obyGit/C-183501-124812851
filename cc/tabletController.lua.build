@@ -2495,6 +2495,23 @@ end
 local jobs_definitions_tablet_tabletController_TabletControllerBackgroundTasks = MODULE_jobs_definitions_tablet_tabletController_TabletControllerBackgroundTasks()
 
 
+function MODULE_jobs_definitions_tablet_tabletController_TabletControllerProtocolListeners()
+	local class = {}
+	function class.getOnPlayerMoved(self)
+	return function (username, oldPosition, newPosition)
+	    self.logSilent(username .. " moved to: " .. textutils.serialiseJSON({x = newPosition.x, y = newPosition.y, z = newPosition.z}))
+	end end
+	function class.getOnGetItemResponse(self)
+	return function(isSuccess, message)
+	    print("On Get Item Response")
+	    print("Is Success: " .. tostring(isSuccess))
+	    print("Message: " .. message)
+	end end
+	return class
+end
+local jobs_definitions_tablet_tabletController_TabletControllerProtocolListeners = MODULE_jobs_definitions_tablet_tabletController_TabletControllerProtocolListeners()
+
+
 function MODULE_utils_network_protocols_logging_LogProtocol()
 	local Terminal = utils_terminal_Terminal
 	local Network = utils_network_Network
@@ -2792,6 +2809,7 @@ function MODULE_jobs_definitions_tablet_tabletController_TabletControllerJob()
 	local CommonEventImplementations = utils_jobutils_CommonEventImplementations
 	local TabletControllerCommands = jobs_definitions_tablet_tabletController_TabletControllerCommands
 	local TabletControllerBackgroundTasks = jobs_definitions_tablet_tabletController_TabletControllerBackgroundTasks
+	local TabletControllerProtocolListeners = jobs_definitions_tablet_tabletController_TabletControllerProtocolListeners
 	local LogProtocol = utils_network_protocols_logging_LogProtocol
 	local EventsProtocol = utils_network_protocols_events_EventsProtocol
 	local StorageProtocol = utils_network_protocols_remoteperipherals_StorageProtocol
@@ -2820,7 +2838,8 @@ function MODULE_jobs_definitions_tablet_tabletController_TabletControllerJob()
 	        events = EventsProtocol.new(self),
 	        storage = StorageProtocol.new(self),
 	    }
-	    self.protocols.events.onPlayerMovedFunc = function (username, oldPosition, newPosition) self.logSilent(username .. " moved to: " .. textutils.serialiseJSON({x = newPosition.x, y = newPosition.y, z = newPosition.z})) end
+	    self.protocols.events.onPlayerMovedFunc = TabletControllerProtocolListeners.getOnPlayerMoved
+	    self.protocols.storage.onGetItemFunc = TabletControllerProtocolListeners.getOnGetItem
 	    return self
 	end
 	function TabletControllerJob:onStart()
