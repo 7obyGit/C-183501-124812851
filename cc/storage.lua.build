@@ -2327,6 +2327,9 @@ function MODULE_utils_math_Vector3()
 	        return Vector3.new(0, 0, 0)
 	    end
 	end
+	function Vector3:distanceTo(other)
+	    return (self:sub(other)):magnitude()
+	end
 	function Vector3:serialize()
 	    return string.format("%.6f,%.6f,%.6f", self.x, self.y, self.z)
 	end
@@ -4016,16 +4019,16 @@ function MODULE_utils_network_protocols_remoteperipherals_StorageProtocol()
 	        message = message,
 	    }, self.protocolName)
 	end
-	function StorageProtocol:sendGetItem(item, quantity)
+	function StorageProtocol:sendGetItem(quantity, item)
 	    local username = self.job.config:get("username", "Unknown User")
-	    self:_send(self.commands.GET_ITEM, {username = username, item = item, quantity = quantity})
+	    self:_send(self.commands.GET_ITEM, {username = username, quantity = quantity, item = item})
 	end
 	function StorageProtocol:onGetItem(args)
 	    local username = args.username
-	    local item = args.item
 	    local quantity = args.quantity
+	    local item = args.item
 	    if self.onGetItemFunc == nil then return end
-	    self.onGetItemFunc(username, item, quantity)
+	    self.onGetItemFunc(username, quantity, item)
 	end
 	function StorageProtocol:sendGetItemResponse(isSuccess, message)
 	    self:_send(self.commands.GET_ITEM_RESPONSE, {isSuccess = isSuccess, message = message})
@@ -4042,17 +4045,54 @@ local utils_network_protocols_remoteperipherals_StorageProtocol = MODULE_utils_n
 
 
 function MODULE_jobs_definitions_static_storage_StorageProtocolListeners()
+	local PlayerDetector = utils_peripherals_PlayerDetector
+	local Vector3 = utils_math_Vector3
 	local class = {}
 	function class.getOnGetItemFunc(self)
-	return function(username, item, quantity)
+	return function(username, quantity, item)
 	    print("On Get Item")
 	    print("Username: " .. username)
-	    print("Item: " .. item)
 	    print("Quantity: " .. quantity)
+	    print("Item: " .. item)
+	    local player = PlayerDetector.getPlayer(username)
+	    local playerPosition = Vector3.new(player)
+	    print(textutils.serialiseJSON(player))
+	    if player == nil then
+	        return self.protocols.storage:sendGetItemResponse(false, "Player not found: '" .. username .. "'")
+	    end
+	    local closestIoName = self.storage.io
+	    local closestDistance = math.huge
+	    for _, io in pairs(self.storage.config.otherIOs) do
+	        local ioName = io.name
+	        local ioPos = Vector3.new(io.pos)
+	        local distance = playerPosition:distanceTo(ioPos)
+	        if distance < closestDistance then
+	            closestIoName = ioName
+	            closestDistance = distance
+	        end
+	    end
+	    local closestIO = self.storage.barrels[closestIoName]
+	    if closestIO == nil then
+	        return self.protocols.storage:sendGetItemResponse(false, "No output location found")
+	    end
+	    self.modules.storage.get(closestIO, quantity, item)
 	end end
 	return class
 end
 local jobs_definitions_static_storage_StorageProtocolListeners = MODULE_jobs_definitions_static_storage_StorageProtocolListeners()
+
+
+function MODULE_jobs_definitions_static_storage_modules_ModuleStorage()
+	local class = {}
+	function class.get(io, quantity, item)
+	    print("Get Item Module Called")
+	    print("IO: " .. io.name)
+	    print("Quantity: " .. quantity)
+	    print("Item: " .. item)
+	end
+	return class
+end
+local jobs_definitions_static_storage_modules_ModuleStorage = MODULE_jobs_definitions_static_storage_modules_ModuleStorage()
 
 
 function MODULE_jobs_definitions_static_storage_StorageJob()
@@ -4074,12 +4114,14 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	local ChatProtocol = utils_network_protocols_remoteperipherals_ChatProtocol
 	local StorageProtocol = utils_network_protocols_remoteperipherals_StorageProtocol
 	local StorageProtocolListeners = jobs_definitions_static_storage_StorageProtocolListeners
+	local ModuleStorage = jobs_definitions_static_storage_modules_ModuleStorage
 	local LibOs = utils_libs_LibOs
 	local StorageJob = {}
 	StorageJob.__index = StorageJob
 	StorageJob.name = Job.STORAGE
 	function StorageJob.new(config)
 	    local self = setmetatable({}, StorageJob)
+	    self.modules.storage = ModuleStorage
 	    print("Adding background tasks")
 	    self.backgroundTasks = {
 	        StorageBackgroundTasks.refuelFurnaces,
