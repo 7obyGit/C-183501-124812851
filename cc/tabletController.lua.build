@@ -1508,6 +1508,9 @@ function MODULE_utils_math_Vector3()
 	        return Vector3.new(0, 0, 0)
 	    end
 	end
+	function Vector3:distanceTo(other)
+	    return (self:sub(other)):magnitude()
+	end
 	function Vector3:serialize()
 	    return string.format("%.6f,%.6f,%.6f", self.x, self.y, self.z)
 	end
@@ -2425,7 +2428,7 @@ function MODULE_jobs_definitions_tablet_tabletController_TabletControllerCommand
 	                print("Usage: get <quantity> <item>")
 	                return
 	            end
-	            self.protocols.storage:sendGetItem(item, quantity)
+	            self.protocols.storage:sendGetItem(quantity, item)
 	        end)
 	end
 	return TabletControllerCommands
@@ -2775,16 +2778,16 @@ function MODULE_utils_network_protocols_remoteperipherals_StorageProtocol()
 	        message = message,
 	    }, self.protocolName)
 	end
-	function StorageProtocol:sendGetItem(item, quantity)
+	function StorageProtocol:sendGetItem(quantity, item)
 	    local username = self.job.config:get("username", "Unknown User")
-	    self:_send(self.commands.GET_ITEM, {username = username, item = item, quantity = quantity})
+	    self:_send(self.commands.GET_ITEM, {username = username, quantity = quantity, item = item})
 	end
 	function StorageProtocol:onGetItem(args)
 	    local username = args.username
-	    local item = args.item
 	    local quantity = args.quantity
+	    local item = args.item
 	    if self.onGetItemFunc == nil then return end
-	    self.onGetItemFunc(username, item, quantity)
+	    self.onGetItemFunc(username, quantity, item)
 	end
 	function StorageProtocol:sendGetItemResponse(isSuccess, message)
 	    self:_send(self.commands.GET_ITEM_RESPONSE, {isSuccess = isSuccess, message = message})

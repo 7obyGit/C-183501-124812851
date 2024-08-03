@@ -1508,6 +1508,9 @@ function MODULE_utils_math_Vector3()
 	        return Vector3.new(0, 0, 0)
 	    end
 	end
+	function Vector3:distanceTo(other)
+	    return (self:sub(other)):magnitude()
+	end
 	function Vector3:serialize()
 	    return string.format("%.6f,%.6f,%.6f", self.x, self.y, self.z)
 	end
