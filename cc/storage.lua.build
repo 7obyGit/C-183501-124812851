@@ -4121,6 +4121,7 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	StorageJob.name = Job.STORAGE
 	function StorageJob.new(config)
 	    local self = setmetatable({}, StorageJob)
+	    self.modules = {}
 	    self.modules.storage = ModuleStorage
 	    print("Adding background tasks")
 	    self.backgroundTasks = {
