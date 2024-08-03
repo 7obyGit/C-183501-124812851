@@ -4050,13 +4050,8 @@ function MODULE_jobs_definitions_static_storage_StorageProtocolListeners()
 	local class = {}
 	function class.getOnGetItemFunc(self)
 	return function(username, quantity, item)
-	    print("On Get Item")
-	    print("Username: " .. username)
-	    print("Quantity: " .. quantity)
-	    print("Item: " .. item)
 	    local player = PlayerDetector.getPlayer(username)
 	    local playerPosition = Vector3.new(player)
-	    print(textutils.serialiseJSON(player))
 	    if player == nil then
 	        return self.protocols.storage:sendGetItemResponse(false, "Player not found: '" .. username .. "'")
 	    end
@@ -4083,12 +4078,29 @@ local jobs_definitions_static_storage_StorageProtocolListeners = MODULE_jobs_def
 
 
 function MODULE_jobs_definitions_static_storage_modules_ModuleStorage()
+	local Block = utils_blocks_Block
 	local class = {}
-	function class.get(io, quantity, item)
+	function class.new(job)
+	    local self = setmetatable({}, class)
+	    self.job = job
+	    return self
+	end
+	function class:get(io, quantity, itemName)
 	    print("Get Item Module Called")
-	    print("IO: " .. io.name)
-	    print("Quantity: " .. quantity)
-	    print("Item: " .. item)
+	    local matchDetails = Block.getClosestMatch(itemName, self.job.storage:getPresentItemNames())
+	    if matchDetails.score > 3 then
+	        print("Could not find item: " .. itemName)
+	        print("Did you mean: " .. matchDetails.closestMatch)
+	        return
+	    end
+	    itemName = matchDetails.closestMatch
+	    if quantity == nil or itemName == nil then
+	        print("Invalid arguments for quantity or itemName")
+	        print("Type 'help get' for more information")
+	        return
+	    end
+	    print("Getting " .. quantity .. " " .. itemName)
+	    self.job.storage:moveToIo(itemName, quantity, io)
 	end
 	return class
 end
