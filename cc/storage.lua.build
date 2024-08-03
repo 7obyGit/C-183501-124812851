@@ -3979,6 +3979,82 @@ end
 local utils_network_protocols_remoteperipherals_ChatProtocol = MODULE_utils_network_protocols_remoteperipherals_ChatProtocol()
 
 
+function MODULE_utils_network_protocols_remoteperipherals_StorageProtocol()
+	local Network = utils_network_Network
+	local StorageProtocol = {}
+	StorageProtocol.__index = StorageProtocol
+	function StorageProtocol.new(job)
+	    local self = setmetatable({}, StorageProtocol)
+	    self.job = job  -- The job instance that is using this protocol
+	    self.protocolName = "protocol:storage"
+	    self.commands = {
+	        GET_ITEM = "GET_ITEM",
+	        GET_ITEM_RESPONSE = "GET_ITEM_RESPONSE",
+	    }
+	    self.listeners = {
+	        [self.commands.GET_ITEM] = self.onGetItem,
+	        [self.commands.GET_ITEM_RESPONSE] = self.onGetItemResponse,
+	    }
+	    self.onGetItemFunc = nil
+	    self.onGetItemResponseFunc = nil
+	    return self
+	end
+	function StorageProtocol:listen()
+	    Network.host(self.protocolName)
+	    Network.listen(self.protocolName, nil, function(senderId, message)
+	        if type(message) ~= "table" then return end
+	        local command = message.command
+	        local args = message.message
+	        local listener = self.listeners[command]
+	        if listener == nil then return end
+	        listener(self, args)
+	    end)
+	end
+	function StorageProtocol:_send(command, message)
+	    Network.broadcast({
+	        command = command,
+	        message = message,
+	    }, self.protocolName)
+	end
+	function StorageProtocol:sendGetItem(item, quantity)
+	    local username = self.job.config:get("username", "Unknown User")
+	    self:_send(self.commands.GET_ITEM, {username = username, item = item, quantity = quantity})
+	end
+	function StorageProtocol:onGetItem(args)
+	    local username = args.username
+	    local item = args.item
+	    local quantity = args.quantity
+	    if self.onGetItemFunc == nil then return end
+	    self.onGetItemFunc(username, item, quantity)
+	end
+	function StorageProtocol:sendGetItemResponse(isSuccess, message)
+	    self:_send(self.commands.GET_ITEM_RESPONSE, {isSuccess = isSuccess, message = message})
+	end
+	function StorageProtocol:onGetItemResponse(args)
+	    local isSuccess = args.isSuccess
+	    local message = args.message
+	    if self.onGetItemResponseFunc == nil then return end
+	    self.onGetItemResponseFunc(isSuccess, message)
+	end
+	return StorageProtocol
+end
+local utils_network_protocols_remoteperipherals_StorageProtocol = MODULE_utils_network_protocols_remoteperipherals_StorageProtocol()
+
+
+function MODULE_jobs_definitions_static_storage_StorageProtocolListeners()
+	local class = {}
+	function class.getOnGetItemFunc(self)
+	return function(username, item, quantity)
+	    print("On Get Item")
+	    print("Username: " .. username)
+	    print("Item: " .. item)
+	    print("Quantity: " .. quantity)
+	end end
+	return class
+end
+local jobs_definitions_static_storage_StorageProtocolListeners = MODULE_jobs_definitions_static_storage_StorageProtocolListeners()
+
+
 function MODULE_jobs_definitions_static_storage_StorageJob()
 	local Storage = utils_storage_Storage
 	local Blocks  = utils_blocks_Blocks
@@ -3996,6 +4072,8 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	local LogChannels = utils_network_protocols_logging_LogChannels
 	local ChatBox = utils_peripherals_ChatBox
 	local ChatProtocol = utils_network_protocols_remoteperipherals_ChatProtocol
+	local StorageProtocol = utils_network_protocols_remoteperipherals_StorageProtocol
+	local StorageProtocolListeners = jobs_definitions_static_storage_StorageProtocolListeners
 	local LibOs = utils_libs_LibOs
 	local StorageJob = {}
 	StorageJob.__index = StorageJob
@@ -4037,7 +4115,9 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	        log = LogProtocol.new(self),
 	        events = EventsProtocol.new(self),
 	        chat = ChatProtocol.new(self),
+	        storage = StorageProtocol.new(self),
 	    }
+	    self.protocols.storage.onGetItemFunc = StorageProtocolListeners.getOnGetItemFunc(self)
 	    print("Ready to go!")
 	    return self
 	end
