@@ -4084,6 +4084,7 @@ local jobs_definitions_static_storage_StorageProtocolListeners = MODULE_jobs_def
 function MODULE_jobs_definitions_static_storage_modules_ModuleStorage()
 	local Block = utils_blocks_Block
 	local ModuleStorage = {}
+	ModuleStorage.__index = ModuleStorage
 	function ModuleStorage.new(job)
 	    local self = setmetatable({}, ModuleStorage)
 	    self.job = job
