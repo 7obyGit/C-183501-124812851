@@ -4083,13 +4083,13 @@ local jobs_definitions_static_storage_StorageProtocolListeners = MODULE_jobs_def
 
 function MODULE_jobs_definitions_static_storage_modules_ModuleStorage()
 	local Block = utils_blocks_Block
-	local class = {}
-	function class.new(job)
-	    local self = setmetatable({}, class)
+	local ModuleStorage = {}
+	function ModuleStorage.new(job)
+	    local self = setmetatable({}, ModuleStorage)
 	    self.job = job
 	    return self
 	end
-	function class:get(io, quantity, itemName)
+	function ModuleStorage:get(io, quantity, itemName)
 	    print("Get Item Module Called")
 	    local matchDetails = Block.getClosestMatch(itemName, self.job.storage:getPresentItemNames())
 	    if matchDetails.score > 3 then
@@ -4106,7 +4106,7 @@ function MODULE_jobs_definitions_static_storage_modules_ModuleStorage()
 	    print("Getting " .. quantity .. " " .. itemName)
 	    self.job.storage:moveToIo(itemName, quantity, io)
 	end
-	return class
+	return ModuleStorage
 end
 local jobs_definitions_static_storage_modules_ModuleStorage = MODULE_jobs_definitions_static_storage_modules_ModuleStorage()
 
