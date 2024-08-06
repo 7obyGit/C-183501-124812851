@@ -4070,11 +4070,8 @@ function MODULE_jobs_definitions_static_storage_StorageProtocolListeners()
 	    if closestIO == nil then
 	        return self.protocols.storage:sendGetItemResponse(false, "No output location found")
 	    end
-	    print(self.modules.storage)
-	    for name, value in pairs(self.modules.storage) do
-	        print(name, value)
-	    end
-	    self.modules.storage:get(closestIO, quantity, item)
+	    local message = self.modules.storage:get(closestIO, quantity, item)
+	    self.protocols.storage:sendGetItemResponse(true, message)
 	end end
 	return class
 end
@@ -4091,21 +4088,29 @@ function MODULE_jobs_definitions_static_storage_modules_ModuleStorage()
 	    return self
 	end
 	function ModuleStorage:get(io, quantity, itemName)
-	    print("Get Item Module Called")
+	    local message = ""
+	    message = message .. "\nGet Item Module Called"
 	    local matchDetails = Block.getClosestMatch(itemName, self.job.storage:getPresentItemNames())
 	    if matchDetails.score > 3 then
-	        print("Could not find item: " .. itemName)
-	        print("Did you mean: " .. matchDetails.closestMatch)
-	        return
+	        message = message .. "\nCould not find item: " .. itemName
+	        message = message .. "\nDid you mean: " .. matchDetails.closestMatch
+	        return message
 	    end
 	    itemName = matchDetails.closestMatch
 	    if quantity == nil or itemName == nil then
-	        print("Invalid arguments for quantity or itemName")
-	        print("Type 'help get' for more information")
-	        return
+	        message = message .. "\nInvalid arguments for quantity or itemName"
+	        message = message .. "\nType 'help get' for more information"
+	        return message
 	    end
-	    print("Getting " .. quantity .. " " .. itemName)
+	    quantity = tonumber(quantity)
+	    if quantity == nil then
+	        message = message .. "\nQuantity must be a number"
+	        message = message .. "\nType 'help get' for more information"
+	        return message
+	    end
+	    message = message .. "\nGetting " .. quantity .. " " .. itemName
 	    self.job.storage:moveToIo(itemName, quantity, io)
+	    return message
 	end
 	return ModuleStorage
 end
