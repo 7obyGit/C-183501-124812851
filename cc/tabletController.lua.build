@@ -2403,6 +2403,7 @@ local utils_jobutils_CommonEventImplementations = MODULE_utils_jobutils_CommonEv
 
 
 function MODULE_jobs_definitions_tablet_tabletController_TabletControllerCommands()
+	local LibOs = utils_libs_LibOs
 	local Command = utils_terminal_commands_Command
 	local TabletControllerCommands = {}
 	function TabletControllerCommands.commandLog(self, sourceName)
@@ -2429,6 +2430,7 @@ function MODULE_jobs_definitions_tablet_tabletController_TabletControllerCommand
 	                return
 	            end
 	            self.protocols.storage:sendGetItem(quantity, item)
+	            LibOs.sleep(1)
 	        end)
 	end
 	return TabletControllerCommands
@@ -2505,9 +2507,7 @@ function MODULE_jobs_definitions_tablet_tabletController_TabletControllerProtoco
 	end end
 	function class.getOnGetItemResponse(self)
 	return function(isSuccess, message)
-	    print("On Get Item Response")
-	    print("Is Success: " .. tostring(isSuccess))
-	    print("Message: " .. message)
+	    print(message)
 	end end
 	return class
 end
