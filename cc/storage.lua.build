@@ -4024,10 +4024,10 @@ function MODULE_utils_network_protocols_remoteperipherals_StorageProtocol()
 	function StorageProtocol:sendGetItem(quantity, item)
 	    local username = self.job.config:get("username", "Unknown User")
 	    self:_send(self.commands.GET_ITEM, {username = username, quantity = quantity, item = item})
-	    self.waitingForResponse[self.commands.GET_ITEM] = false
+	    self.responses[self.commands.GET_ITEM] = false
 	    local timeout = 5
 	    local sleepTime = 0.1
-	    while self.waitingForResponse[self.commands.GET_ITEM] == false do
+	    while self.responses[self.commands.GET_ITEM] == false do
 	        LibOs.sleep(sleepTime)
 	        timeout = timeout - sleepTime
 	        if timeout <= 0 then
