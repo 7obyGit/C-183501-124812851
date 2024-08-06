@@ -3983,6 +3983,7 @@ local utils_network_protocols_remoteperipherals_ChatProtocol = MODULE_utils_netw
 
 
 function MODULE_utils_network_protocols_remoteperipherals_StorageProtocol()
+	local LibOs = utils_libs_LibOs
 	local Network = utils_network_Network
 	local StorageProtocol = {}
 	StorageProtocol.__index = StorageProtocol
@@ -3998,6 +3999,7 @@ function MODULE_utils_network_protocols_remoteperipherals_StorageProtocol()
 	        [self.commands.GET_ITEM] = self.onGetItem,
 	        [self.commands.GET_ITEM_RESPONSE] = self.onGetItemResponse,
 	    }
+	    self.responses = {}
 	    self.onGetItemFunc = nil
 	    self.onGetItemResponseFunc = nil
 	    return self
@@ -4022,6 +4024,20 @@ function MODULE_utils_network_protocols_remoteperipherals_StorageProtocol()
 	function StorageProtocol:sendGetItem(quantity, item)
 	    local username = self.job.config:get("username", "Unknown User")
 	    self:_send(self.commands.GET_ITEM, {username = username, quantity = quantity, item = item})
+	    self.waitingForResponse[self.commands.GET_ITEM] = false
+	    local timeout = 5
+	    local sleepTime = 0.1
+	    while self.waitingForResponse[self.commands.GET_ITEM] == false do
+	        LibOs.sleep(sleepTime)
+	        timeout = timeout - sleepTime
+	        if timeout <= 0 then
+	            self.responses[self.commands.GET_ITEM] = {isSuccess = false, message = "Timeout"}
+	            break
+	        end
+	    end
+	    local response = self.responses[self.commands.GET_ITEM]
+	    self.responses[self.commands.GET_ITEM] = nil
+	    return response
 	end
 	function StorageProtocol:onGetItem(args)
 	    local username = args.username
@@ -4037,6 +4053,7 @@ function MODULE_utils_network_protocols_remoteperipherals_StorageProtocol()
 	    local isSuccess = args.isSuccess
 	    local message = args.message
 	    if self.onGetItemResponseFunc == nil then return end
+	    self.responses[self.commands.GET_ITEM] = args
 	    self.onGetItemResponseFunc(isSuccess, message)
 	end
 	return StorageProtocol
