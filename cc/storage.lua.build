@@ -4070,6 +4070,10 @@ function MODULE_jobs_definitions_static_storage_StorageProtocolListeners()
 	    if closestIO == nil then
 	        return self.protocols.storage:sendGetItemResponse(false, "No output location found")
 	    end
+	    print(self.modules.storage)
+	    for name, value in pairs(self.modules.storage) do
+	        print(name, value)
+	    end
 	    self.modules.storage:get(closestIO, quantity, item)
 	end end
 	return class
