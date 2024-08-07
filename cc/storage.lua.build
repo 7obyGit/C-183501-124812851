@@ -4021,6 +4021,8 @@ function MODULE_utils_network_protocols_remoteperipherals_StorageProtocol()
 	    self.responses = {}
 	    self.onGetItemFunc = nil
 	    self.onGetItemResponseFunc = nil
+	    self.onDumpFunc = nil
+	    self.onDumpResponseFunc = nil
 	    return self
 	end
 	function StorageProtocol:listen()
@@ -4043,7 +4045,6 @@ function MODULE_utils_network_protocols_remoteperipherals_StorageProtocol()
 	function StorageProtocol:sendGetItem(quantity, item)
 	    local username = self.job.config:get("username", "Unknown User")
 	    self:_send(self.commands.GET_ITEM, {username = username, quantity = quantity, item = item})
-	    self.responses[self.commands.GET_ITEM] = false
 	    return Network.waitForResponse(self, self.commands.GET_ITEM)
 	end
 	function StorageProtocol:onGetItem(args)
@@ -4066,6 +4067,7 @@ function MODULE_utils_network_protocols_remoteperipherals_StorageProtocol()
 	function StorageProtocol:sendDump()
 	    local username = self.job.config:get("username", "Unknown User")
 	    self:_send(self.commands.DUMP, {username = username})
+	    return Network.waitForResponse(self, self.commands.DUMP)
 	end
 	function StorageProtocol:onDump(args)
 	    if self.onDumpFunc == nil then return end
@@ -4151,6 +4153,7 @@ function MODULE_jobs_definitions_static_storage_modules_ModuleStorage()
 	    end
 	    message = message .. "Getting " .. quantity .. " " .. itemName
 	    self.job.storage:moveToIo(itemName, quantity, io)
+	    io:defragment()
 	    return message
 	end
 	return ModuleStorage
