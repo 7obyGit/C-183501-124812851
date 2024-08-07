@@ -1929,7 +1929,10 @@ function MODULE_turtle_Turtle()
 	    end
 	end
 	function Turtle.forward()
+	    print("Getting block")
 	    local block = Turtle.getBlockInFront()
+	    print("Got block")
+	    print(block)
 	    if block ~= nil and not Block.isLiquid(block.name) then
 	        return false
 	    end
@@ -1952,7 +1955,9 @@ function MODULE_turtle_Turtle()
 	    return true
 	end
 	function Turtle.back()
+	    print("BACK BLOCk")
 	    local block = Turtle.getBlockInFront()
+	    print("GOT BACK BLOCK")
 	    if block ~= nil and not Block.isLiquid(block.name) then return false end
 	    turtle.back()
 	    Turtle.CURRENT_POSITION = Turtle.CURRENT_POSITION:sub(Turtle.CURRENT_POSITION:directionTo(Turtle.CURRENT_POSITION))
