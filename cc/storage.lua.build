@@ -4313,10 +4313,12 @@ function MODULE_utils_network_protocols_remoteperipherals_PlayerProtocol()
 	    }, self.protocolName)
 	end
 	function PlayerProtocol:sendGetPlayer(username)
+	    print("Sending get player")
 	    self:_send(self.commands.GET_PLAYER, {username = username})
 	    return Network.waitForResponse(self, self.commands.GET_PLAYER)
 	end
 	function PlayerProtocol:onGetPlayer(args)
+	    print("On get player")
 	    local username = args.username
 	    if PlayerDetector.detector ~= nil then
 	        local player = PlayerDetector.getPlayer(username)
@@ -4324,9 +4326,11 @@ function MODULE_utils_network_protocols_remoteperipherals_PlayerProtocol()
 	    end
 	end
 	function PlayerProtocol:sendGetPlayerResponse(player)
+	    print("Sending get player response")
 	    self:_send(self.commands.GET_PLAYER_RESPONSE, {player = player})
 	end
 	function PlayerProtocol:onGetPlayerResponse(args)
+	    print("On get player response")
 	    local player = args.player
 	    Network.postResponse(self, self.commands.GET_PLAYER, player)
 	end
