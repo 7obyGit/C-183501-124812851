@@ -1465,6 +1465,12 @@ function MODULE_utils_math_Vector3()
 	    end
 	    return setmetatable({x = x or 0, y = y or 0, z = z or 0}, Vector3)
 	end
+	function Vector3.randint(min, max)
+	    return Vector3.new(math.random(min.x, max.x), math.random(min.y, max.y), math.random(min.z, max.z))
+	end
+	function Vector3.radomFloat(min, max)
+	    return Vector3.new(math.random() * (max.x - min.x) + min.x, math.random() * (max.y - min.y) + min.y, math.random() * (max.z - min.z) + min.z)
+	end
 	function Vector3.fromTerminal(prompt)
 	    prompt = prompt or "Enter a Vector3: "
 	    local table = Terminal.readTable(prompt, Vector3.new(0, 0, 0):toTable())
