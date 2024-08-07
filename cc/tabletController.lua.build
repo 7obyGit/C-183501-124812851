@@ -283,7 +283,6 @@ function MODULE_utils_network_Network()
 	    local timeout = 10
 	    local sleepTime = 0.05
 	    while protocol.responses[commandName] == false do
-	        print("Waiting for response " .. commandName .. timeout)
 	        LibOs.sleep(sleepTime)
 	        timeout = timeout - sleepTime
 	        if timeout <= 0 then
@@ -291,7 +290,6 @@ function MODULE_utils_network_Network()
 	            break
 	        end
 	    end
-	    print("Received response")
 	    local response = protocol.responses[commandName]
 	    protocol.responses[commandName] = nil
 	    return response
@@ -2826,8 +2824,8 @@ function MODULE_utils_network_protocols_remoteperipherals_StorageProtocol()
 	function StorageProtocol:onGetItemResponse(args)
 	    local isSuccess = args.isSuccess
 	    local message = args.message
-	    if self.onGetItemResponseFunc == nil then return end
 	    self.responses[self.commands.GET_ITEM] = args
+	    if self.onGetItemResponseFunc == nil then return end
 	    self.onGetItemResponseFunc(isSuccess, message)
 	end
 	function StorageProtocol:sendDump()
@@ -2846,8 +2844,8 @@ function MODULE_utils_network_protocols_remoteperipherals_StorageProtocol()
 	function StorageProtocol:onDumpResponse(args)
 	    local isSuccess = args.isSuccess
 	    local message = args.message
-	    if self.onDumpResponseFunc == nil then return end
 	    self.responses[self.commands.DUMP] = args
+	    if self.onDumpResponseFunc == nil then return end
 	    self.onDumpResponseFunc(isSuccess, message)
 	end
 	return StorageProtocol
