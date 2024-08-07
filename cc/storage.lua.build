@@ -4332,7 +4332,7 @@ function MODULE_utils_network_protocols_remoteperipherals_PlayerProtocol()
 	end
 	function PlayerProtocol:sendGetOnlinePlayers()
 	    self:_send(self.commands.GET_ONLINE_PLAYERS, {})
-	    return Network.waitForResponse(self.protocolName, self.commands.GET_ONLINE_PLAYERS)
+	    return Network.waitForResponse(self, self.commands.GET_ONLINE_PLAYERS)
 	end
 	function PlayerProtocol:onGetOnlinePlayers(args)
 	    local players = PlayerDetector.getOnlinePlayers()
@@ -4347,7 +4347,7 @@ function MODULE_utils_network_protocols_remoteperipherals_PlayerProtocol()
 	end
 	function PlayerProtocol:sendGetPlayersInCoords(coords)
 	    self:_send(self.commands.GET_PLAYERS_IN_COORDS, {coords = coords})
-	    return Network.waitForResponse(self.protocolName, self.commands.GET_PLAYERS_IN_COORDS)
+	    return Network.waitForResponse(self, self.commands.GET_PLAYERS_IN_COORDS)
 	end
 	function PlayerProtocol:onGetPlayersInCoords(args)
 	    local coords = args.coords
