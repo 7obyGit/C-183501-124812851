@@ -278,6 +278,22 @@ function MODULE_utils_network_Network()
 	local LibOs = utils_libs_LibOs
 	local Network = {}
 	peripheral.find("modem", rednet.open)
+	function Network.waitForResponse(protocol, commandName)
+	    protocol.responses[commandName] = false
+	    local timeout = 10
+	    local sleepTime = 0.01
+	    while protocol.responses[commandName] == false do
+	        LibOs.sleep(sleepTime)
+	        timeout = timeout - sleepTime
+	        if timeout <= 0 then
+	            protocol.responses[commandName] = {isSuccess = false, message = "Timeout"}
+	            break
+	        end
+	    end
+	    local response = protocol.responses[commandName]
+	    protocol.responses[commandName] = nil
+	    return response
+	end
 	function Network.isOpen()
 	    return rednet.isOpen()
 	end
@@ -3983,7 +3999,6 @@ local utils_network_protocols_remoteperipherals_ChatProtocol = MODULE_utils_netw
 
 
 function MODULE_utils_network_protocols_remoteperipherals_StorageProtocol()
-	local LibOs = utils_libs_LibOs
 	local Network = utils_network_Network
 	local StorageProtocol = {}
 	StorageProtocol.__index = StorageProtocol
@@ -3994,10 +4009,14 @@ function MODULE_utils_network_protocols_remoteperipherals_StorageProtocol()
 	    self.commands = {
 	        GET_ITEM = "GET_ITEM",
 	        GET_ITEM_RESPONSE = "GET_ITEM_RESPONSE",
+	        DUMP = "DUMP",
+	        DUMP_RESPONSE = "DUMP_RESPONSE",
 	    }
 	    self.listeners = {
 	        [self.commands.GET_ITEM] = self.onGetItem,
 	        [self.commands.GET_ITEM_RESPONSE] = self.onGetItemResponse,
+	        [self.commands.DUMP] = self.onDump,
+	        [self.commands.DUMP_RESPONSE] = self.onDumpResponse,
 	    }
 	    self.responses = {}
 	    self.onGetItemFunc = nil
@@ -4025,19 +4044,7 @@ function MODULE_utils_network_protocols_remoteperipherals_StorageProtocol()
 	    local username = self.job.config:get("username", "Unknown User")
 	    self:_send(self.commands.GET_ITEM, {username = username, quantity = quantity, item = item})
 	    self.responses[self.commands.GET_ITEM] = false
-	    local timeout = 5
-	    local sleepTime = 0.1
-	    while self.responses[self.commands.GET_ITEM] == false do
-	        LibOs.sleep(sleepTime)
-	        timeout = timeout - sleepTime
-	        if timeout <= 0 then
-	            self.responses[self.commands.GET_ITEM] = {isSuccess = false, message = "Timeout"}
-	            break
-	        end
-	    end
-	    local response = self.responses[self.commands.GET_ITEM]
-	    self.responses[self.commands.GET_ITEM] = nil
-	    return response
+	    return Network.waitForResponse(self, self.commands.GET_ITEM)
 	end
 	function StorageProtocol:onGetItem(args)
 	    local username = args.username
@@ -4055,6 +4062,24 @@ function MODULE_utils_network_protocols_remoteperipherals_StorageProtocol()
 	    if self.onGetItemResponseFunc == nil then return end
 	    self.responses[self.commands.GET_ITEM] = args
 	    self.onGetItemResponseFunc(isSuccess, message)
+	end
+	function StorageProtocol:sendDump()
+	    local username = self.job.config:get("username", "Unknown User")
+	    self:_send(self.commands.DUMP, {username = username})
+	end
+	function StorageProtocol:onDump(args)
+	    if self.onDumpFunc == nil then return end
+	    self.onDumpFunc()
+	end
+	function StorageProtocol:sendDumpResponse(isSuccess, message)
+	    self:_send(self.commands.DUMP_RESPONSE, {isSuccess = isSuccess, message = message})
+	end
+	function StorageProtocol:onDumpResponse(args)
+	    local isSuccess = args.isSuccess
+	    local message = args.message
+	    if self.onDumpResponseFunc == nil then return end
+	    self.responses[self.commands.DUMP] = args
+	    self.onDumpResponseFunc(isSuccess, message)
 	end
 	return StorageProtocol
 end
@@ -4106,26 +4131,25 @@ function MODULE_jobs_definitions_static_storage_modules_ModuleStorage()
 	end
 	function ModuleStorage:get(io, quantity, itemName)
 	    local message = ""
-	    message = message .. "\nGet Item Module Called"
 	    local matchDetails = Block.getClosestMatch(itemName, self.job.storage:getPresentItemNames())
 	    if matchDetails.score > 3 then
-	        message = message .. "\nCould not find item: " .. itemName
+	        message = message .. "Could not find item: " .. itemName
 	        message = message .. "\nDid you mean: " .. matchDetails.closestMatch
 	        return message
 	    end
 	    itemName = matchDetails.closestMatch
 	    if quantity == nil or itemName == nil then
-	        message = message .. "\nInvalid arguments for quantity or itemName"
+	        message = message .. "Invalid arguments for quantity or itemName"
 	        message = message .. "\nType 'help get' for more information"
 	        return message
 	    end
 	    quantity = tonumber(quantity)
 	    if quantity == nil then
-	        message = message .. "\nQuantity must be a number"
+	        message = message .. "Quantity must be a number"
 	        message = message .. "\nType 'help get' for more information"
 	        return message
 	    end
-	    message = message .. "\nGetting " .. quantity .. " " .. itemName
+	    message = message .. "Getting " .. quantity .. " " .. itemName
 	    self.job.storage:moveToIo(itemName, quantity, io)
 	    return message
 	end

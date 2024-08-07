@@ -278,6 +278,22 @@ function MODULE_utils_network_Network()
 	local LibOs = utils_libs_LibOs
 	local Network = {}
 	peripheral.find("modem", rednet.open)
+	function Network.waitForResponse(protocol, commandName)
+	    protocol.responses[commandName] = false
+	    local timeout = 10
+	    local sleepTime = 0.01
+	    while protocol.responses[commandName] == false do
+	        LibOs.sleep(sleepTime)
+	        timeout = timeout - sleepTime
+	        if timeout <= 0 then
+	            protocol.responses[commandName] = {isSuccess = false, message = "Timeout"}
+	            break
+	        end
+	    end
+	    local response = protocol.responses[commandName]
+	    protocol.responses[commandName] = nil
+	    return response
+	end
 	function Network.isOpen()
 	    return rednet.isOpen()
 	end
