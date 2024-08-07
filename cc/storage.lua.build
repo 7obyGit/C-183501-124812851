@@ -2461,6 +2461,54 @@ function MODULE_utils_storage_Storage()
 	    end)
 	    return barrels
 	end
+	function Storage:addPeripheral(name)
+	    if Text.contains(name, Blocks.barrel) then
+	        self.barrels[name] = Container.new(name)
+	    elseif Text.contains(name, Blocks.chest) then
+	        self.inventories[name] = Container.new(name)
+	    elseif Text.contains(name, Blocks.furnace) then
+	        self.furnaces[name] = Furnace.new(name)
+	    end
+	end
+	function Storage:removePeripheral(name)
+	    if Text.contains(name, Blocks.barrel) then
+	        self.barrels[name] = nil
+	    elseif Text.contains(name, Blocks.chest) then
+	        self.inventories[name] = nil
+	    elseif Text.contains(name, Blocks.furnace) then
+	        self.furnaces[name] = nil
+	    end
+	    if Text.contains(name, Blocks.barrel) then
+	        if self.config.io == name then
+	            self.config.io = nil
+	            self.io = nil
+	        end
+	        if self.config.inputs ~= nil then
+	            for index, input in pairs(self.config.inputs) do
+	                if input == name then
+	                    table.remove(self.config.inputs, index)
+	                    self.inputs[name] = nil
+	                end
+	            end
+	        end
+	        if self.config.keepFilled ~= nil then
+	            for index, keepFilled in pairs(self.config.keepFilled) do
+	                if keepFilled.name == name then
+	                    table.remove(self.config.keepFilled, index)
+	                    self.keepFilled[name] = nil
+	                end
+	            end
+	        end
+	        if self.config.otherIOs ~= nil then
+	            for index, otherIO in pairs(self.config.otherIOs) do
+	                if otherIO.name == name then
+	                    table.remove(self.config.otherIOs, index)
+	                    self.otherIOs[name] = nil
+	                end
+	            end
+	        end
+	    end
+	end
 	function Storage:updateIndex()
 	    Parallel.map(self.inventories, function(name, container) container:updateIndex() end)
 	    Parallel.map(self.barrels, function(name, container) container:updateIndex() end)
@@ -3479,6 +3527,7 @@ function MODULE_jobs_definitions_static_storage_StorageBackgroundTasks()
 	        :setCallback(function()
 	            local event, peripheralName = os.pullEvent("peripheral")
 	            print("Peripheral added: " .. peripheralName)
+	            self.storage:addPeripheral(peripheralName)
 	        end)
 	        :start()
 	end
@@ -3489,6 +3538,7 @@ function MODULE_jobs_definitions_static_storage_StorageBackgroundTasks()
 	        :setCallback(function()
 	            local event, peripheralName = os.pullEvent("peripheral_detach")
 	            print("Peripheral removed: " .. peripheralName)
+	            self.storage:removePeripheral(peripheralName)
 	        end)
 	        :start()
 	end
