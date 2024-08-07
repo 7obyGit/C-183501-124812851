@@ -1972,6 +1972,24 @@ function MODULE_turtle_Turtle()
 	    end
 	    return false
 	end
+	function Turtle.moveInRandomDirection()
+	    local direction = math.random(1, 6)
+	    if direction == 1 then
+	        return Turtle.forward()
+	    elseif direction == 2 then
+	        return Turtle.up()
+	    elseif direction == 3 then
+	        return Turtle.down()
+	    elseif direction == 4 then
+	        Turtle.turnLeft()
+	        return Turtle.forward()
+	    elseif direction == 5 then
+	        Turtle.turnRight()
+	        return Turtle.forward()
+	    else
+	        return Turtle.back()
+	    end
+	end
 	function Turtle.getFuelLevel()
 	    return turtle.getFuelLevel()
 	end
