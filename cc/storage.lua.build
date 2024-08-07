@@ -3472,6 +3472,20 @@ function MODULE_jobs_definitions_static_storage_StorageBackgroundTasks()
 	        :when(function() return self.config:get("state", nil) == self.states.COMMAND_PROMPT end)
 	        :start()
 	end
+	function StorageBackgroundTasks.detectPeripheralChanges(self)
+	    BackgroundTask.new()
+	        :setName("Detect Peripheral Changes")
+	        :setPeriod(0.1)
+	        :setCallback(function()
+	            local event, peripheralName = os.pullEvent("peripheral")
+	            if event == "peripheral" then
+	                print("New peripheral: " .. peripheralName)
+	            elseif event == "peripheral_detach" then
+	                print("Detached peripheral: " .. peripheralName)
+	            end
+	        end)
+	        :start()
+	end
 	return StorageBackgroundTasks
 end
 local jobs_definitions_static_storage_StorageBackgroundTasks = MODULE_jobs_definitions_static_storage_StorageBackgroundTasks()
@@ -4227,6 +4241,7 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	        StorageBackgroundTasks.dumpAllInputs,
 	        StorageBackgroundTasks.populateKeepFilledBarrels,
 	        StorageBackgroundTasks.updateSmeltQueue,
+	        StorageBackgroundTasks.detectPeripheralChanges,
 	    }
 	    if PlayerDetector.detector ~= nil then table.insert(self.backgroundTasks, function() PlayerDetector.onPlayerMoved(function (username, oldPosition, newPosition) self.protocols.events:sendOnPlayerMoved(username, oldPosition, newPosition) end, Me.username, 5) end) end
 	    if EnvironmentDetector.detector ~= nil then table.insert(self.backgroundTasks, StorageBackgroundTasks.onEntityEnterOrLeave) end
