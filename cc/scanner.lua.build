@@ -281,7 +281,7 @@ function MODULE_utils_network_Network()
 	function Network.waitForResponse(protocol, commandName)
 	    protocol.responses[commandName] = false
 	    local timeout = 10
-	    local sleepTime = 0.01
+	    local sleepTime = 0.05
 	    while protocol.responses[commandName] == false do
 	        LibOs.sleep(sleepTime)
 	        timeout = timeout - sleepTime
