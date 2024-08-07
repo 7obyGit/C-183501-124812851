@@ -3472,19 +3472,23 @@ function MODULE_jobs_definitions_static_storage_StorageBackgroundTasks()
 	        :when(function() return self.config:get("state", nil) == self.states.COMMAND_PROMPT end)
 	        :start()
 	end
-	function StorageBackgroundTasks.detectPeripheralChanges(self)
+	function StorageBackgroundTasks.detectAddedPeripherals(self)
 	    BackgroundTask.new()
 	        :setName("Detect Peripheral Changes")
 	        :setPeriod(0.1)
 	        :setCallback(function()
 	            local event, peripheralName = os.pullEvent("peripheral")
-	            if event == "peripheral" then
-	                print("New peripheral: " .. peripheralName)
-	            elseif event == "peripheral_detach" then
-	                print("Detached peripheral: " .. peripheralName)
-	            else
-	                print("Unknown peripheral event: " .. event)
-	            end
+	            print("Peripheral added: " .. peripheralName)
+	        end)
+	        :start()
+	end
+	function StorageBackgroundTasks.detectRemovedPeripherals(self)
+	    BackgroundTask.new()
+	        :setName("Detect Peripheral Changes")
+	        :setPeriod(0.1)
+	        :setCallback(function()
+	            local event, peripheralName = os.pullEvent("peripheral_detach")
+	            print("Peripheral removed: " .. peripheralName)
 	        end)
 	        :start()
 	end
@@ -4243,7 +4247,8 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	        StorageBackgroundTasks.dumpAllInputs,
 	        StorageBackgroundTasks.populateKeepFilledBarrels,
 	        StorageBackgroundTasks.updateSmeltQueue,
-	        StorageBackgroundTasks.detectPeripheralChanges,
+	        StorageBackgroundTasks.detectAddedPeripherals,
+	        StorageBackgroundTasks.detectRemovedPeripherals,
 	    }
 	    if PlayerDetector.detector ~= nil then table.insert(self.backgroundTasks, function() PlayerDetector.onPlayerMoved(function (username, oldPosition, newPosition) self.protocols.events:sendOnPlayerMoved(username, oldPosition, newPosition) end, Me.username, 5) end) end
 	    if EnvironmentDetector.detector ~= nil then table.insert(self.backgroundTasks, StorageBackgroundTasks.onEntityEnterOrLeave) end
