@@ -3453,11 +3453,14 @@ function MODULE_jobs_definitions_static_storage_StorageBackgroundTasks()
 	            end
 	            local removedJobNumbers = {}
 	            for smeltJobNumber, item in pairs(smeltQueue) do
-	                print(item.count)
-	                local remainingCount = self.storage:smelt(item.name, item.count)
-	                item.count = remainingCount
-	                if remainingCount == nil or remainingCount == 0 then
+	                if item.count == nil or item.count == 0 then
 	                    table.insert(removedJobNumbers, smeltJobNumber)
+	                else
+	                    local remainingCount = self.storage:smelt(item.name, item.count)
+	                    item.count = remainingCount
+	                    if remainingCount == nil or remainingCount == 0 then
+	                        table.insert(removedJobNumbers, smeltJobNumber)
+	                    end
 	                end
 	            end
 	            for _, jobNumber in pairs(removedJobNumbers) do
