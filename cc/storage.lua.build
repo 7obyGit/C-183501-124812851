@@ -4313,8 +4313,8 @@ function MODULE_utils_network_protocols_remoteperipherals_PlayerProtocol()
 	    }, self.protocolName)
 	end
 	function PlayerProtocol:sendGetPlayer(username)
-	    self:_send(self.commands.ON_PLAYER_MOVED, {username = username})
-	    return Network.waitForResponse(self, self.commands.ON_PLAYER_MOVED)
+	    self:_send(self.commands.GET_PLAYER, {username = username})
+	    return Network.waitForResponse(self, self.commands.GET_PLAYER)
 	end
 	function PlayerProtocol:onGetPlayer(args)
 	    local username = args.username
