@@ -2837,8 +2837,9 @@ function MODULE_utils_network_protocols_remoteperipherals_StorageProtocol()
 	    return Network.waitForResponse(self, self.commands.DUMP)
 	end
 	function StorageProtocol:onDump(args)
+	    local username = args.username
 	    if self.onDumpFunc == nil then return end
-	    self.onDumpFunc()
+	    self.onDumpFunc(username)
 	end
 	function StorageProtocol:sendDumpResponse(isSuccess, message)
 	    self:_send(self.commands.DUMP_RESPONSE, {isSuccess = isSuccess, message = message})
@@ -2880,6 +2881,7 @@ function MODULE_jobs_definitions_tablet_tabletController_TabletControllerJob()
 	    self.commands:add(Command.new("exit", "Terminates the program", function(...) CommonCommands.commandExit(self, ...) end))
 	    self.commands:add(Command.new("log", "View logs\nE.g. log <sourceName>\nE.g. log list", function(...) TabletControllerCommands.commandLog(self, ...) end))
 	    self.commands:add("get", TabletControllerCommands.getCommandGet(self))
+	    self.commands:add("dump", TabletControllerCommands.getCommandDump(self))
 	    self.config = config
 	    self.states = {
 	        COMMAND_PROMPT = "COMMAND_PROMPT",

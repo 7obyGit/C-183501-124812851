@@ -4070,8 +4070,9 @@ function MODULE_utils_network_protocols_remoteperipherals_StorageProtocol()
 	    return Network.waitForResponse(self, self.commands.DUMP)
 	end
 	function StorageProtocol:onDump(args)
+	    local username = args.username
 	    if self.onDumpFunc == nil then return end
-	    self.onDumpFunc()
+	    self.onDumpFunc(username)
 	end
 	function StorageProtocol:sendDumpResponse(isSuccess, message)
 	    self:_send(self.commands.DUMP_RESPONSE, {isSuccess = isSuccess, message = message})
@@ -4116,6 +4117,31 @@ function MODULE_jobs_definitions_static_storage_StorageProtocolListeners()
 	    end
 	    local message = self.modules.storage:get(closestIO, quantity, item)
 	    self.protocols.storage:sendGetItemResponse(true, message)
+	end end
+	function class.getOnDumpFunc(self)
+	return function(username)
+	    local player = PlayerDetector.getPlayer(username)
+	    local playerPosition = Vector3.new(player)
+	    if player == nil then
+	        return self.protocols.storage:sendDumpResponse(false, "Player not found: '" .. username .. "'")
+	    end
+	    local closestIoName = self.storage.io
+	    local closestDistance = math.huge
+	    for _, io in pairs(self.storage.config.otherIOs) do
+	        local ioName = io.name
+	        local ioPos = Vector3.new(io.pos)
+	        local distance = playerPosition:distanceTo(ioPos)
+	        if distance < closestDistance then
+	            closestIoName = ioName
+	            closestDistance = distance
+	        end
+	    end
+	    local closestIO = self.storage.barrels[closestIoName]
+	    if closestIO == nil then
+	        return self.protocols.storage:sendDumpResponse(false, "No dump location found")
+	    end
+	    self.storage:dump(closestIO)
+	    self.protocols.storage:sendDumpResponse(true, "The closest IO was dumped successfully")
 	end end
 	return class
 end
@@ -4227,6 +4253,7 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	        storage = StorageProtocol.new(self),
 	    }
 	    self.protocols.storage.onGetItemFunc = StorageProtocolListeners.getOnGetItemFunc(self)
+	    self.protocols.storage.onDumpFunc = StorageProtocolListeners.getOnDumpFunc(self)
 	    print("Ready to go!")
 	    return self
 	end
