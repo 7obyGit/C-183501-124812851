@@ -1996,10 +1996,12 @@ function MODULE_turtle_Turtle()
 	    local bestDirectionToTurn = Direction.getBestDirectionToTurn(Turtle.CURRENT_DIRECTION, direction)
 	    if bestDirectionToTurn == Rotations.LEFT then
 	        while Turtle.CURRENT_DIRECTION ~= direction do
+	            print(Turtle.CURRENT_DIRECTION, direction)
 	            Turtle.turnLeft()
 	        end
 	    elseif bestDirectionToTurn == Rotations.RIGHT then
 	        while Turtle.CURRENT_DIRECTION ~= direction do
+	            print(Turtle.CURRENT_DIRECTION, direction)
 	            Turtle.turnRight()
 	        end
 	    end
