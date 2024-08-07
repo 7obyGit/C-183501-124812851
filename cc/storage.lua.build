@@ -2396,14 +2396,18 @@ function MODULE_utils_math_Vector3()
 	    if diff:equals(Vector3.new(0, 0, 0)) then
 	        return nil
 	    end
-	    if diff.x > 0 then
-	        return Direction.EAST
-	    elseif diff.x < 0 then
-	        return Direction.WEST
-	    elseif diff.z > 0 then
-	        return Direction.SOUTH
-	    elseif diff.z < 0 then
-	        return Direction.NORTH
+	    if math.abs(diff.x) > math.abs(diff.z) then
+	        if diff.x > 0 then
+	            return Direction.EAST
+	        else
+	            return Direction.WEST
+	        end
+	    else
+	        if diff.z > 0 then
+	            return Direction.SOUTH
+	        else
+	            return Direction.NORTH
+	        end
 	    end
 	end
 	function Vector3:verticalDirectionTo(other)
