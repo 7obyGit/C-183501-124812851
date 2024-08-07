@@ -2530,9 +2530,6 @@ function MODULE_jobs_definitions_tablet_tabletController_TabletControllerProtoco
 	return function (username, oldPosition, newPosition)
 	    self.logSilent(username .. " moved to: " .. textutils.serialiseJSON({x = newPosition.x, y = newPosition.y, z = newPosition.z}))
 	end end
-	function class.getOnGetItemResponse(self)
-	return function(isSuccess, message)
-	end end
 	return class
 end
 local jobs_definitions_tablet_tabletController_TabletControllerProtocolListeners = MODULE_jobs_definitions_tablet_tabletController_TabletControllerProtocolListeners()
