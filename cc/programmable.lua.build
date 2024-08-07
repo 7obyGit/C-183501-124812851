@@ -2693,7 +2693,11 @@ function MODULE_utils_storage_Container()
 	    if self.internal == nil then
 	        return nil
 	    end
-	    self.size = self.internal.size()
+	    if self.internal.size ~= nil then
+	        self.size = self.internal.size()
+	    else
+	        self.size = 0
+	    end
 	    self.index = ContainerIndex.new(self.internal.size())
 	    self:updateIndex()
 	    return self
