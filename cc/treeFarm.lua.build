@@ -2939,26 +2939,37 @@ function MODULE_utils_storage_Container()
 	function Container.new(name)
 	    local self = setmetatable({}, Container)
 	    self.name = name
-	    print(self.name)
 	    self.internal = peripheral.wrap(name)
 	    if self.internal == nil then
 	        return nil
 	    end
-	    if self.internal.size ~= nil then
-	        self.size = self.internal.size()
-	    else
-	        self.size = 0
-	    end
+	    self.size = self:_getInternalSize()
 	    self.index = ContainerIndex.new(self.size)
 	    self:updateIndex()
 	    return self
+	end
+	function Container:_getInternalSize()
+	    if self.internal == nil then
+	        return 0
+	    elseif self.internal.size == nil then
+	        return 0
+	    end
+	    return self.internal.size()
+	end
+	function Container:_getInternalList()
+	    if self.internal == nil then
+	        return {}
+	    elseif self.internal.list == nil then
+	        return {}
+	    end
+	    return self.internal.list()
 	end
 	function Container:updateIndex()
 	    if self.internal == nil then
 	        return
 	    end
 	    self.index = ContainerIndex.new(self.size)
-	    for slot, item in pairs(self.internal.list()) do
+	    for slot, item in pairs(self:_getInternalList()) do
 	        self.index:addSlot(slot, item.name, item.count)
 	    end
 	end
