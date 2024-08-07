@@ -1396,16 +1396,14 @@ local utils_storage_patterns_ContainerDirections = MODULE_utils_storage_patterns
 function MODULE_utils_storage_Container()
 	local Table = utils_data_Table
 	local ContainerIndex = utils_storage_ContainerIndex
-	local Parallel = utils_controlflow_Parallel
 	local ContainerPatterns = utils_storage_patterns_ContainerPatterns
 	local ContainerDirections = utils_storage_patterns_ContainerDirections
-	local Blocks = utils_blocks_Blocks
-	local Side = turtle_Side
 	local Container = {}
 	Container.__index = Container
 	function Container.new(name)
 	    local self = setmetatable({}, Container)
 	    self.name = name
+	    print(self.name)
 	    self.internal = peripheral.wrap(name)
 	    if self.internal == nil then
 	        return nil
