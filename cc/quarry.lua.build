@@ -1945,6 +1945,13 @@ function MODULE_turtle_Turtle()
 	    end
 	    return true
 	end
+	function Turtle.back()
+	    local block = Turtle.getBlockInFront()
+	    if block ~= nil and not Block.isLiquid(block.name) then return false end
+	    turtle.back()
+	    Turtle.CURRENT_POSITION = Turtle.CURRENT_POSITION:sub(Turtle.CURRENT_POSITION:directionTo(Turtle.CURRENT_POSITION))
+	    return true
+	end
 	function Turtle.up()
 	    local block = Turtle.getBlockAbove()
 	    if block ~= nil and not Block.isLiquid(block.name) then return false end
