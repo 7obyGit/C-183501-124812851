@@ -27,6 +27,7 @@ function MODULE_jobs_Job()
 	Job.PROGRAMMABLE_JOB = "ProgrammableJob"
 	Job.QUARRY = "QuarryJob"
 	Job.TREE_FARM = "TreeFarmJob"
+	Job.FOLLOWER_JOB = "FollowerJob"
 	Job.STORAGE = "StorageJob"
 	Job.TABLET_CONTROLLER = "TabletControllerJob"
 	Job.SCANNER = "ScannerJob"
@@ -278,7 +279,12 @@ function MODULE_utils_network_Network()
 	local LibOs = utils_libs_LibOs
 	local Network = {}
 	peripheral.find("modem", rednet.open)
+	function Network.postResponse(protocol, commandName, response)
+	    protocol.responses = protocol.responses or {}
+	    protocol.responses[commandName] = response
+	end
 	function Network.waitForResponse(protocol, commandName)
+	    protocol.responses = protocol.responses or {}
 	    protocol.responses[commandName] = false
 	    local timeout = 10
 	    local sleepTime = 0.05
@@ -4262,6 +4268,104 @@ end
 local jobs_definitions_static_storage_modules_ModuleStorage = MODULE_jobs_definitions_static_storage_modules_ModuleStorage()
 
 
+function MODULE_utils_network_protocols_remoteperipherals_PlayerProtocol()
+	local Network = utils_network_Network
+	local PlayerDetector = utils_peripherals_PlayerDetector
+	local PlayerProtocol = {}
+	PlayerProtocol.__index = PlayerProtocol
+	function PlayerProtocol.new(job)
+	    local self = setmetatable({}, PlayerProtocol)
+	    self.job = job  -- The job instance that is using this protocol
+	    self.protocolName = "protocol:player"
+	    self.commands = {
+	        GET_PLAYER = "GET_PLAYER",
+	        GET_PLAYER_RESPONSE = "GET_PLAYER_RESPONSE",
+	        GET_ONLINE_PLAYERS = "GET_ONLINE_PLAYERS",
+	        GET_ONLINE_PLAYERS_RESPONSE = "GET_ONLINE_PLAYERS_RESPONSE",
+	        GET_PLAYERS_IN_COORDS = "GET_PLAYERS_IN_COORDS",
+	        GET_PLAYERS_IN_COORDS_RESPONSE = "GET_PLAYERS_IN_COORDS_RESPONSE",
+	    }
+	    self.listeners = {
+	        [self.commands.GET_PLAYER] = self.onGetPlayer,
+	        [self.commands.GET_PLAYER_RESPONSE] = self.onGetPlayerResponse,
+	        [self.commands.GET_ONLINE_PLAYERS] = self.onGetOnlinePlayers,
+	        [self.commands.GET_ONLINE_PLAYERS_RESPONSE] = self.onGetOnlinePlayersResponse,
+	        [self.commands.GET_PLAYERS_IN_COORDS] = self.onGetPlayersInCoords,
+	        [self.commands.GET_PLAYERS_IN_COORDS_RESPONSE] = self.onGetPlayersInCoordsResponse,
+	    }
+	    return self
+	end
+	function PlayerProtocol:listen()
+	    Network.host(self.protocolName)
+	    Network.listen(self.protocolName, nil, function(senderId, message)
+	        if type(message) ~= "table" then return end
+	        local command = message.command
+	        local args = message.message
+	        local listener = self.listeners[command]
+	        if listener == nil then return end
+	        listener(self, args)
+	    end)
+	end
+	function PlayerProtocol:_send(command, message)
+	    Network.broadcast({
+	        command = command,
+	        message = message,
+	    }, self.protocolName)
+	end
+	function PlayerProtocol:sendGetPlayer(username)
+	    self:_send(self.commands.ON_PLAYER_MOVED, {username = username})
+	    return Network.waitForResponse(self.protocolName, self.commands.ON_PLAYER_MOVED)
+	end
+	function PlayerProtocol:onGetPlayer(args)
+	    local username = args.username
+	    if PlayerDetector.detector ~= nil then
+	        local player = PlayerDetector.getPlayer(username)
+	        self:sendGetPlayerResponse(player)
+	    end
+	end
+	function PlayerProtocol:sendGetPlayerResponse(player)
+	    self:_send(self.commands.GET_PLAYER_RESPONSE, {player = player})
+	end
+	function PlayerProtocol:onGetPlayerResponse(args)
+	    local player = args.player
+	    Network.postResponse(self, self.commands.GET_PLAYER, player)
+	end
+	function PlayerProtocol:sendGetOnlinePlayers()
+	    self:_send(self.commands.GET_ONLINE_PLAYERS, {})
+	    return Network.waitForResponse(self.protocolName, self.commands.GET_ONLINE_PLAYERS)
+	end
+	function PlayerProtocol:onGetOnlinePlayers(args)
+	    local players = PlayerDetector.getOnlinePlayers()
+	    self:sendGetOnlinePlayersResponse(players)
+	end
+	function PlayerProtocol:sendGetOnlinePlayersResponse(players)
+	    self:_send(self.commands.GET_ONLINE_PLAYERS_RESPONSE, {players = players})
+	end
+	function PlayerProtocol:onGetOnlinePlayersResponse(args)
+	    local players = args.players
+	    Network.postResponse(self, self.commands.GET_ONLINE_PLAYERS, players)
+	end
+	function PlayerProtocol:sendGetPlayersInCoords(coords)
+	    self:_send(self.commands.GET_PLAYERS_IN_COORDS, {coords = coords})
+	    return Network.waitForResponse(self.protocolName, self.commands.GET_PLAYERS_IN_COORDS)
+	end
+	function PlayerProtocol:onGetPlayersInCoords(args)
+	    local coords = args.coords
+	    local players = PlayerDetector.getPlayersInCoords(coords)
+	    self:sendGetPlayersInCoordsResponse(players)
+	end
+	function PlayerProtocol:sendGetPlayersInCoordsResponse(players)
+	    self:_send(self.commands.GET_PLAYERS_IN_COORDS_RESPONSE, {players = players})
+	end
+	function PlayerProtocol:onGetPlayersInCoordsResponse(args)
+	    local players = args.players
+	    Network.postResponse(self, self.commands.GET_PLAYERS_IN_COORDS, players)
+	end
+	return PlayerProtocol
+end
+local utils_network_protocols_remoteperipherals_PlayerProtocol = MODULE_utils_network_protocols_remoteperipherals_PlayerProtocol()
+
+
 function MODULE_jobs_definitions_static_storage_StorageJob()
 	local Storage = utils_storage_Storage
 	local Blocks  = utils_blocks_Blocks
@@ -4282,6 +4386,7 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	local StorageProtocol = utils_network_protocols_remoteperipherals_StorageProtocol
 	local StorageProtocolListeners = jobs_definitions_static_storage_StorageProtocolListeners
 	local ModuleStorage = jobs_definitions_static_storage_modules_ModuleStorage
+	local PlayerProtocol = utils_network_protocols_remoteperipherals_PlayerProtocol
 	local LibOs = utils_libs_LibOs
 	local StorageJob = {}
 	StorageJob.__index = StorageJob
@@ -4328,6 +4433,7 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	        events = EventsProtocol.new(self),
 	        chat = ChatProtocol.new(self),
 	        storage = StorageProtocol.new(self),
+	        player = PlayerProtocol.new(self),
 	    }
 	    self.protocols.storage.onGetItemFunc = StorageProtocolListeners.getOnGetItemFunc(self)
 	    self.protocols.storage.onDumpFunc = StorageProtocolListeners.getOnDumpFunc(self)

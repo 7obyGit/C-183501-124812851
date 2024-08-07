@@ -27,6 +27,7 @@ function MODULE_jobs_Job()
 	Job.PROGRAMMABLE_JOB = "ProgrammableJob"
 	Job.QUARRY = "QuarryJob"
 	Job.TREE_FARM = "TreeFarmJob"
+	Job.FOLLOWER_JOB = "FollowerJob"
 	Job.STORAGE = "StorageJob"
 	Job.TABLET_CONTROLLER = "TabletControllerJob"
 	Job.SCANNER = "ScannerJob"
@@ -278,7 +279,12 @@ function MODULE_utils_network_Network()
 	local LibOs = utils_libs_LibOs
 	local Network = {}
 	peripheral.find("modem", rednet.open)
+	function Network.postResponse(protocol, commandName, response)
+	    protocol.responses = protocol.responses or {}
+	    protocol.responses[commandName] = response
+	end
 	function Network.waitForResponse(protocol, commandName)
+	    protocol.responses = protocol.responses or {}
 	    protocol.responses[commandName] = false
 	    local timeout = 10
 	    local sleepTime = 0.05
