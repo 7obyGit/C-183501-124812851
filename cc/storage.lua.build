@@ -2341,6 +2341,9 @@ function MODULE_utils_math_Vector3()
 	    end
 	    return result
 	end
+	function Vector3:addInOppositeDirection(direction, distance)
+	    return self:addInDirection(Direction.opposite(direction), distance)
+	end
 	function Vector3:sub(other)
 	    return Vector3.new(self.x - other.x, self.y - other.y, self.z - other.z)
 	end
