@@ -4181,9 +4181,7 @@ function MODULE_jobs_definitions_static_storage_modules_ModuleStorage()
 	    end
 	    message = message .. "Getting " .. quantity .. " " .. itemName
 	    self.job.storage:moveToIo(itemName, quantity, io)
-	    print("STARTING DEFRAGMENT")
 	    io:defragment()
-	    print("ENDING DEFRAGMENT")
 	    return message
 	end
 	return ModuleStorage
