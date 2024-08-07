@@ -283,6 +283,7 @@ function MODULE_utils_network_Network()
 	    local timeout = 10
 	    local sleepTime = 0.05
 	    while protocol.responses[commandName] == false do
+	        print("Waiting for response " .. commandName .. timeout)
 	        LibOs.sleep(sleepTime)
 	        timeout = timeout - sleepTime
 	        if timeout <= 0 then
@@ -290,6 +291,7 @@ function MODULE_utils_network_Network()
 	            break
 	        end
 	    end
+	    print("Received response")
 	    local response = protocol.responses[commandName]
 	    protocol.responses[commandName] = nil
 	    return response
