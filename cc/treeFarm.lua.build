@@ -2458,13 +2458,20 @@ function MODULE_jobs_definitions_mobile_treeFarm_TreeFarmStates()
 	        return
 	    end
 	    if Turtle.CURRENT_POSITION.y < homePosition.y then
+	        self.log("Moving up to home height")
+	        self.log("Current Y: " .. Turtle.CURRENT_POSITION.y)
+	        self.log("Home Y: " .. homePosition.y)
 	        Turtle.up()
 	        return
 	    end
 	    if Turtle.CURRENT_POSITION.y > homePosition.y then
+	        self.log("Moving down to home height")
+	        self.log("Current Y: " .. Turtle.CURRENT_POSITION.y)
+	        self.log("Home Y: " .. homePosition.y)
 	        Turtle.down()
 	        return
 	    end
+	    self.log("At home height - setting to move forward")
 	    self.config:set("state", self.states.TREE_FARM_MOVING_FORWARD)
 	end
 	function TreeFarmStates.onTreeFarmMiningUp(self)
