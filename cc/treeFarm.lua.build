@@ -3548,7 +3548,7 @@ function MODULE_jobs_definitions_mobile_treeFarm_TreeFarmJob()
 	    return CommonEventImplementations.inProgress(self)
 	end
 	function TreeFarmJob:onStep()
-	    print("Current State: " .. self.config:get("state", nil))
+	    print("Current State: " .. self.config:get("state", "NONE"))
 	    return CommonEventImplementations.onStepMobile(self)
 	end
 	function TreeFarmJob:onBackgroundStep()
