@@ -2422,12 +2422,12 @@ function MODULE_jobs_definitions_mobile_treeFarm_TreeFarmStates()
 	function TreeFarmStates.onTreeFarmMovingForward(self)
 	    local blockBelow = Turtle.getBlockBelow()
 	    local blockAbove = Turtle.getBlockAbove()
-	    if blockBelow ~= nil and blockAbove == nil and Block.isLog(blockBelow.name) then
+	    if blockBelow ~= nil and (blockAbove == nil or Block.isLeaf(blockAbove.name) or Block.isLog(blockAbove.name)) and Block.isLog(blockBelow.name) then
 	        self.log("Detected a tree that did not have its stump mined - finishing it off")
 	        self.config:set("state", self.states.TREE_FARM_MINING_DOWN)
 	        return
 	    end
-	    if (blockBelow == nil or Block.isSapling(blockBelow.name)) and blockAbove ~= nil and Block.isLog(blockAbove.name) then
+	    if (blockBelow == nil or Block.isSapling(blockBelow.name) or Block.isLeaf(blockBelow.name) or Block.isLog(blockBelow.name)) and blockAbove ~= nil and Block.isLog(blockAbove.name) then
 	        self.log("Detected a tree that was not mined to the top - finishing it off")
 	        self.config:set("state", self.states.TREE_FARM_MINING_UP)
 	        return
