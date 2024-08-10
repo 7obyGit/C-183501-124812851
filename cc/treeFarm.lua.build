@@ -2461,14 +2461,18 @@ function MODULE_jobs_definitions_mobile_treeFarm_TreeFarmStates()
 	        self.log("Moving up to home height")
 	        self.log("Current Y: " .. Turtle.CURRENT_POSITION.y)
 	        self.log("Home Y: " .. homePosition.y)
-	        Turtle.up()
+	        if not Turtle.up() then
+	            Turtle.CURRENT_POSITION = Turtle.getGpsPosition()
+	        end
 	        return
 	    end
 	    if Turtle.CURRENT_POSITION.y > homePosition.y then
 	        self.log("Moving down to home height")
 	        self.log("Current Y: " .. Turtle.CURRENT_POSITION.y)
 	        self.log("Home Y: " .. homePosition.y)
-	        Turtle.down()
+	        if not Turtle.down() then
+	            Turtle.CURRENT_POSITION = Turtle.getGpsPosition()
+	        end
 	        return
 	    end
 	    self.log("At home height - setting to move forward")
