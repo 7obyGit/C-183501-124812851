@@ -1,0 +1,4 @@
+function MODULE_entrypoints_scripts_move_up()
+	turtle.up()
+end
+local entrypoints_scripts_move_up = MODULE_entrypoints_scripts_move_up()

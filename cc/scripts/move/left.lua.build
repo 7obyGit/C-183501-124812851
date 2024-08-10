@@ -1,0 +1,4 @@
+function MODULE_entrypoints_scripts_move_left()
+	turtle.turnLeft()
+end
+local entrypoints_scripts_move_left = MODULE_entrypoints_scripts_move_left()

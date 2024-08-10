@@ -1,0 +1,4 @@
+function MODULE_entrypoints_scripts_move_down()
+	turtle.down()
+end
+local entrypoints_scripts_move_down = MODULE_entrypoints_scripts_move_down()
