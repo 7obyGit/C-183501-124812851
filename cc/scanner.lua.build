@@ -1348,6 +1348,7 @@ function MODULE_utils_blocks_Blocks()
 	    computercraft_wireless_modem_advanced = "computercraft:wireless_modem_advanced",
 	    computercraft_wired_modem_full = "computercraft:wired_modem_full",
 	    computercraft_wired_modem = "computercraft:wired_modem",
+	    computercraft_turtle_advanced = "computercraft:turtle_advanced",
 	    computercraft_turtle = "computercraft:turtle",
 	}
 	return Blocks
