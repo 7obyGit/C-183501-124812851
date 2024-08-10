@@ -3223,6 +3223,7 @@ function MODULE_jobs_definitions_mobile_treeFarm_TreeFarmCodedInventoryListeners
 	    while block ~= nil and Text.contains(block.name, "computercraft:turtle") do
 	        self.log("There is another turtle in the way - waiting")
 	        LibOs.sleep(1)
+	        block = Turtle.getBlockInFront()
 	    end
 	end
 	function TreeFarmCodedInventoryListeners.actionDrop(self, name, side, count)
