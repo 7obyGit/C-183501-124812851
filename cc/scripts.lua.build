@@ -1,15 +1,5 @@
 -- This Lua script downloads all .lua.build files and writes them to their respective locations 
 local function download(url, location) local r = http.get(url) local f = fs.open(location, "w") f.write(r.readAll()) f.close() r.close() end
-download("https://raw.githubusercontent.com/7obyGit/C-183501-124812851/main/cc/example.lua.build", "/example.lua")
-download("https://raw.githubusercontent.com/7obyGit/C-183501-124812851/main/cc/follower.lua.build", "/follower.lua")
-download("https://raw.githubusercontent.com/7obyGit/C-183501-124812851/main/cc/programmable.lua.build", "/programmable.lua")
-download("https://raw.githubusercontent.com/7obyGit/C-183501-124812851/main/cc/quarry.lua.build", "/quarry.lua")
-download("https://raw.githubusercontent.com/7obyGit/C-183501-124812851/main/cc/scanner.lua.build", "/scanner.lua")
-download("https://raw.githubusercontent.com/7obyGit/C-183501-124812851/main/cc/scripts.lua.build", "/scripts.lua")
-download("https://raw.githubusercontent.com/7obyGit/C-183501-124812851/main/cc/setup.lua.build", "/setup.lua")
-download("https://raw.githubusercontent.com/7obyGit/C-183501-124812851/main/cc/storage.lua.build", "/storage.lua")
-download("https://raw.githubusercontent.com/7obyGit/C-183501-124812851/main/cc/tabletController.lua.build", "/tabletController.lua")
-download("https://raw.githubusercontent.com/7obyGit/C-183501-124812851/main/cc/treeFarm.lua.build", "/treeFarm.lua")
 download("https://raw.githubusercontent.com/7obyGit/C-183501-124812851/main/cc/scripts/fuel/refuel.lua.build", "/scripts/fuel/refuel.lua")
 download("https://raw.githubusercontent.com/7obyGit/C-183501-124812851/main/cc/scripts/move/down.lua.build", "/scripts/move/down.lua")
 download("https://raw.githubusercontent.com/7obyGit/C-183501-124812851/main/cc/scripts/move/forward.lua.build", "/scripts/move/forward.lua")
