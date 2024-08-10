@@ -1,8 +1,10 @@
 -- This Lua script downloads all .lua.build files and writes them to their respective locations 
-local function download(url, location) local r = http.get(url) local f = fs.open(location, "w") f.write(r.readAll()) f.close() r.close() end
+local function download(url, location) print(" -> Downloading Script: " .. location) local r = http.get(url) local f = fs.open(location, "w") f.write(r.readAll()) f.close() r.close() end
+print("Downloading scripts...") 
 download("https://raw.githubusercontent.com/7obyGit/C-183501-124812851/main/cc/scripts/fuel/refuel.lua.build", "/scripts/fuel/refuel.lua")
 download("https://raw.githubusercontent.com/7obyGit/C-183501-124812851/main/cc/scripts/move/down.lua.build", "/scripts/move/down.lua")
 download("https://raw.githubusercontent.com/7obyGit/C-183501-124812851/main/cc/scripts/move/forward.lua.build", "/scripts/move/forward.lua")
 download("https://raw.githubusercontent.com/7obyGit/C-183501-124812851/main/cc/scripts/move/left.lua.build", "/scripts/move/left.lua")
 download("https://raw.githubusercontent.com/7obyGit/C-183501-124812851/main/cc/scripts/move/right.lua.build", "/scripts/move/right.lua")
 download("https://raw.githubusercontent.com/7obyGit/C-183501-124812851/main/cc/scripts/move/up.lua.build", "/scripts/move/up.lua")
+print("Downloaded all scripts") 
