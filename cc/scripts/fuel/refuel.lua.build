@@ -1961,5 +1961,6 @@ local turtle_Turtle = MODULE_turtle_Turtle()
 function MODULE_entrypoints_scripts_fuel_refuel()
 	local Turtle = turtle_Turtle
 	Turtle.refuel()
+	print("Fuel: " .. Turtle.getFuelLevel())
 end
 local entrypoints_scripts_fuel_refuel = MODULE_entrypoints_scripts_fuel_refuel()
