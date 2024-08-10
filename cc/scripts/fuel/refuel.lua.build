@@ -1688,6 +1688,7 @@ function MODULE_turtle_Turtle()
 	    slot = 0
 	    while Turtle.getFuelLevel() < Turtle.CONFIG.fuelTarget and slot ~= nil do
 	        slot = Inventory.getSlotWithFuel()
+	        if slot == nil then return end
 	        turtle.select(slot)
 	        turtle.refuel()
 	    end
