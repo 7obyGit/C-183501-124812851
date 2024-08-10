@@ -3312,6 +3312,8 @@ function MODULE_jobs_definitions_mobile_treeFarm_TreeFarmCodedInventoryListeners
 	local Turtle = turtle_Turtle
 	local Inventory = turtle_Inventory
 	local ContainerPatternNames = utils_storage_patterns_ContainerPatternNames
+	local Text = utils_text_Text
+	local LibOs = utils_libs_LibOs
 	local TreeFarmCodedInventoryListeners = {}
 	function TreeFarmCodedInventoryListeners.actionHome(self, name, side, count)
 	    self.log("Home Detected - Watiting")
@@ -3319,6 +3321,7 @@ function MODULE_jobs_definitions_mobile_treeFarm_TreeFarmCodedInventoryListeners
 	    os.sleep(waitSeconds)
 	end
 	function TreeFarmCodedInventoryListeners.actionMove(self, name, side, count)
+	    local originalDirection = Turtle.CURRENT_DIRECTION
 	    self.log("Turning to side: " .. side)
 	    if side == ContainerPatternNames.DIRECTION_FORWARD then
 	        self.config:set("state", self.states.TREE_FARM_MOVING_FORWARD)
@@ -3334,6 +3337,11 @@ function MODULE_jobs_definitions_mobile_treeFarm_TreeFarmCodedInventoryListeners
 	        self.config:set("state", self.states.TREE_FARM_MOVING_FORWARD)
 	    else
 	        self.log("Unexpected direction: " .. side)
+	    end
+	    local block = Turtle.getBlockInFront()
+	    while block ~= nil and Text.contains(block.name, "computercraft:turtle") do
+	        self.log("There is another turtle in the way - waiting")
+	        LibOs.sleep(1)
 	    end
 	end
 	function TreeFarmCodedInventoryListeners.actionDrop(self, name, side, count)
