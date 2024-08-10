@@ -923,6 +923,7 @@ function MODULE_utils_blocks_Blocks()
 	    end_portal_frame = "minecraft:end_portal_frame",
 	    end_portal = "minecraft:end_portal",
 	    end_gateway = "minecraft:end_gateway",
+	    stick = "minecraft:stick",
 	    oak_planks = "minecraft:oak_planks",
 	    spruce_planks = "minecraft:spruce_planks",
 	    birch_planks = "minecraft:birch_planks",
@@ -1753,6 +1754,12 @@ function MODULE_utils_blocks_Block()
 	    or name == Blocks.charcoal_block
 	    or name == Blocks.coal
 	    or name == Blocks.coal_block
+	    or name == Blocks.dried_kelp_block
+	    or name == Blocks.lava_bucket
+	    or name == Blocks.blaze_rod
+	    or name == Blocks.spruce_log
+	    or name == Blocks.spruce_planks
+	    or name == Blocks.stick
 	end
 	function Block.exists(name)
 	    return blockLookupTable[name] ~= nil
