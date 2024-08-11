@@ -1474,6 +1474,51 @@ function MODULE_utils_data_List()
 	    end
 	    return true
 	end
+	function List:zipWith(list, func)
+	    local size = math.min(self:size(), list:size())
+	    local zipped = List.new()
+	    for i = 1, size do
+	        zipped:add(func(self:get(i), list:get(i)))
+	    end
+	    return zipped
+	end
+	function List:unzip()
+	    local list1 = List.new()
+	    local list2 = List.new()
+	    for i, v in ipairs(self.data) do
+	        list1:add(v[1])
+	        list2:add(v[2])
+	    end
+	    return list1, list2
+	end
+	function List:concat(list)
+	    return self
+	        :copy()
+	        :addAll(list)
+	end
+	function List:flatten()
+	    local flattened = List.new()
+	    for i, v in ipairs(self.data) do
+	        if type(v) == "table" then
+	            if v.type ~= List.TYPE then v = List.new(v) end
+	            flattened:addAll(v)
+	        else
+	            flattened:add(v)
+	        end
+	    end
+	    return flattened
+	end
+	function List:groupBy(func)
+	    local groups = Dict.new()
+	    for i, v in ipairs(self.data) do
+	        local key = func(v)
+	        if not groups:containsKey(key) then
+	            groups:add(key, List.new())
+	        end
+	        groups:get(key):add(v)
+	    end
+	    return groups
+	end
 	function List:toString()
 	    return textutils.serialise(self.data)
 	end
