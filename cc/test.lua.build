@@ -958,6 +958,9 @@ function MODULE_jobs_definitions_misc_test_TestJob()
 	function FollowerJob:onStep()
 	    for moduleName, module in pairs(self.modules) do
 	        print("Running tests for module: " .. moduleName)
+	        for _, test in ipairs(module) do
+	            print(test)
+	        end
 	        for testName, test in pairs(module) do
 	            print(testName)
 	            if testName ~= "new" and testName ~= "job" then
