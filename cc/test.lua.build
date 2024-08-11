@@ -1611,11 +1611,11 @@ function MODULE_jobs_definitions_misc_test_TestJob()
 	local Job = jobs_Job
 	local LogProtocol = utils_network_protocols_logging_LogProtocol
 	local ModuleDataTest = jobs_definitions_misc_test_modules_data_ModuleDataTest
-	local FollowerJob = {}
-	FollowerJob.__index = FollowerJob
-	FollowerJob.name = Job.TEST_JOB
-	function FollowerJob.new(config)
-	    local self = setmetatable({}, FollowerJob)
+	local TestJob = {}
+	TestJob.__index = TestJob
+	TestJob.name = Job.TEST_JOB
+	function TestJob.new(config)
+	    local self = setmetatable({}, TestJob)
 	    self.modules = {}
 	    self.modules.data = ModuleDataTest.new(self)
 	    self.backgroundTasks = {}
@@ -1628,16 +1628,16 @@ function MODULE_jobs_definitions_misc_test_TestJob()
 	    }
 	    return self
 	end
-	function FollowerJob:onStart()
+	function TestJob:onStart()
 	    return CommonEventImplementations.onStart(self)
 	end
-	function FollowerJob:onResume()
+	function TestJob:onResume()
 	    return CommonEventImplementations.onResume(self)
 	end
-	function FollowerJob:inProgress()
+	function TestJob:inProgress()
 	    return CommonEventImplementations.inProgress(self)
 	end
-	function FollowerJob:onStep()
+	function TestJob:onStep()
 	    print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
 	    print("Running tests...")
 	    local totalPassed = 0
@@ -1671,10 +1671,10 @@ function MODULE_jobs_definitions_misc_test_TestJob()
 	    print("Tests complete: " .. totalPassed .. "/" .. total .. " passed")
 	    self.config:set("alive", false)
 	end
-	function FollowerJob:onComplete()
+	function TestJob:onComplete()
 	    return CommonEventImplementations.onComplete(self)
 	end
-	return FollowerJob
+	return TestJob
 end
 local jobs_definitions_misc_test_TestJob = MODULE_jobs_definitions_misc_test_TestJob()
 
