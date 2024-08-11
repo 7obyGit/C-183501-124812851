@@ -912,13 +912,21 @@ function MODULE_jobs_definitions_misc_test_modules_ModuleExampleTest()
 	    self.job = job
 	    return self
 	end
-	function class.exampleTest1()
+	function class.failExample()
 	    local x = 4
 	    local y = 0
-	    local z = x / y
-	    print(z)
+	    if y == 0 then
+	        error("Division by zero")
+	    end
+	    return x / y
 	end
-	function class:exampleTest2()
+	function class:passExample()
+	    local x = 5
+	    local y = 3
+	    if y == 0 then
+	        error("Division by zero")
+	    end
+	    return x / y
 	end
 	return class
 end
