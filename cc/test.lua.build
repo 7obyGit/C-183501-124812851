@@ -1,0 +1,984 @@
+function MODULE_utils_other_file()
+	return {
+	    readText = function (path)
+	        local file = fs.open(path, "r")
+	        if file == nil then
+	            return nil
+	        end
+	        local content = file.readAll()
+	        file.close()
+	        return content
+	    end,
+	    writeText = function (path, content)
+	        local file = fs.open(path, "w")
+	        file.write(content)
+	        file.close()
+	    end,
+	}
+end
+local utils_other_file = MODULE_utils_other_file()
+
+
+function MODULE_jobs_Job()
+	local Job = {}
+	Job.EXAMPLE = "ExampleJob"
+	Job.IDLE = "IdleJob"
+	Job.SETUP = "SetupJob"
+	Job.TEST_JOB = "TestJob"
+	Job.PROGRAMMABLE_JOB = "ProgrammableJob"
+	Job.QUARRY = "QuarryJob"
+	Job.TREE_FARM = "TreeFarmJob"
+	Job.FOLLOWER_JOB = "FollowerJob"
+	Job.STORAGE = "StorageJob"
+	Job.TABLET_CONTROLLER = "TabletControllerJob"
+	Job.SCANNER = "ScannerJob"
+	return Job
+end
+local jobs_Job = MODULE_jobs_Job()
+
+
+function MODULE_utils_config_JobConfig()
+	local file = utils_other_file
+	local Job       = jobs_Job
+	local JobConfig = {}
+	JobConfig.__index = JobConfig
+	function JobConfig.new()
+	    local self = setmetatable({
+	        name = "My Computer",
+	        job = Job.IDLE,
+	        state = {},  -- Data specific to a job that is saved between runs
+	    }, JobConfig)
+	    return self
+	end
+	function JobConfig.fromTable(table)
+	    local self = JobConfig.new()
+	    self.name = table.name or self.name
+	    self.job = table.job or self.job
+	    self.state = table.state or self.state
+	    return self
+	end
+	function JobConfig:toTable()
+	    return {
+	        name = self.name,
+	        job = self.job,
+	        state = self.state,
+	    }
+	end
+	function JobConfig:serializeJson()
+	    return textutils.serialize(self:toTable())
+	end
+	function JobConfig.deserializeJson(json)
+	    local success, configAttributes = pcall(textutils.unserialize, json)
+	    if not success or configAttributes == nil then
+	        configAttributes = textutils.unserializeJSON(json)
+	    end
+	    local config = JobConfig.fromTable(configAttributes)
+	    return config
+	end
+	function JobConfig:save()
+	    file.writeText("job.json", self:serializeJson())
+	end
+	function JobConfig.load()
+	    local config = nil
+	    local content = file.readText("job.json")
+	    if content == nil then
+	        config = JobConfig.new()
+	    else
+	        config = JobConfig.deserializeJson(content)
+	    end
+	    config:save()  -- Save any default values that were missing
+	    return config
+	end
+	function JobConfig:get(key, defaultValue)
+	    return self.state[key] or defaultValue
+	end
+	function JobConfig:set(key, value)
+	    self.state[key] = value
+	    self:save()
+	end
+	function JobConfig:init(key, defaultValue)
+	    if self:get(key, nil) == nil then
+	        self:set(key, defaultValue)
+	    end
+	end
+	function JobConfig:getNext(key, defaultValue)
+	    local list = self:get(key, {})
+	    if #list == 0 then
+	        return defaultValue
+	    end
+	    local value = table.remove(list, 1)
+	    if #list > 0 then
+	        self:set(key, list)
+	    else
+	        self:set(key, nil)
+	    end
+	    return value
+	end
+	function JobConfig:dequeue(key, defaultValue)
+	    return self:getNext(key, defaultValue)
+	end
+	function JobConfig:enqueue(key, value)
+	    local list = self:get(key, {})
+	    table.insert(list, value)
+	    self:set(key, list)
+	end
+	return JobConfig
+end
+local utils_config_JobConfig = MODULE_utils_config_JobConfig()
+
+
+function MODULE_utils_controlflow_Parallel()
+	local Parallel = {}
+	Parallel.__index = Parallel
+	function Parallel.new()
+	    local self = setmetatable({}, Parallel)
+	    self.tasks = {}
+	    return self
+	end
+	function Parallel:addTask(task)
+	    table.insert(self.tasks, task)
+	    return self
+	end
+	function Parallel:addTimeout(timeoutSeconds)
+	    table.insert(self.tasks, function() os.sleep(timeoutSeconds) end)
+	    return self
+	end
+	function Parallel:run()
+	    parallel.waitForAll(table.unpack(self.tasks))
+	    return self
+	end
+	function Parallel:waitForAny()
+	    parallel.waitForAny(table.unpack(self.tasks))
+	    return self
+	end
+	function Parallel:waitForAll()
+	    parallel.waitForAll(table.unpack(self.tasks))
+	    return self
+	end
+	function Parallel.map(obj, func)
+	    if type(obj) == "table" then
+	        if #obj > 0 then
+	            return Parallel.mapList(obj, func)
+	        else
+	            return Parallel.mapTable(obj, func)
+	        end
+	    else
+	        return Parallel.mapList(obj, func)
+	    end
+	end
+	function Parallel.mapList(list, func)
+	    local output = {}
+	    local parallel = Parallel.new()
+	    for index, item in ipairs(list) do
+	        if item ~= nil then
+	            parallel:addTask(function()
+	                local elementResult = func(item)
+	                output[index] = elementResult
+	            end)
+	        end
+	    end
+	    parallel:run()
+	    return output
+	end
+	function Parallel.mapTable(table_, func)
+	    local output = {}
+	    local parallel = Parallel.new()
+	    for key, item in pairs(table_) do
+	        if item ~= nil then
+	            parallel:addTask(function()
+	                local elementResult = func(key, item)
+	                output[key] = elementResult
+	            end)
+	        end
+	    end
+	    parallel:run()
+	    return output
+	end
+	function Parallel.mapListWithTimeout(obj, func, timeoutSeconds)
+	    timeoutSeconds = timeoutSeconds or 1
+	    local funcWithTimeout = function(value)
+	        local result = nil
+	        Parallel.new()
+	            :addTask(function() result = func(value) end)
+	            :addTimeout(timeoutSeconds)
+	            :waitForAny()
+	        return result
+	    end
+	    return Parallel.map(obj, funcWithTimeout)
+	end
+	function Parallel.mapTableWithTimeout(obj, func, timeoutSeconds)
+	    timeoutSeconds = timeoutSeconds or 1
+	    local funcWithTimeout = function(key, value)
+	        local result = nil
+	        Parallel.new()
+	            :addTask(function() result = func(key, value) end)
+	            :addTimeout(timeoutSeconds)
+	            :waitForAny()
+	        return result
+	    end
+	    return Parallel.map(obj, funcWithTimeout)
+	end
+	return Parallel
+end
+local utils_controlflow_Parallel = MODULE_utils_controlflow_Parallel()
+
+
+function MODULE_utils_libs_LibOs()
+	local LibOs = {}
+	function LibOs.getComputerID()
+	    return os.getComputerID()
+	end
+	function LibOs.getComputerLabel()
+	    return os.getComputerLabel()
+	end
+	function LibOs.setComputerLabel(label)
+	    return os.setComputerLabel(label)
+	end
+	function LibOs.sleep(time)
+	    os.sleep(time)
+	end
+	function LibOs.pullEvent(filter)
+	    return os.pullEvent(filter)
+	end
+	function LibOs.queueEvent(name, ...)
+	    return os.queueEvent(name, ...)
+	end
+	function LibOs.run(env, path, ...)
+	    return os.run(env, path, ...)
+	end
+	function LibOs.version()
+	    return os.version()
+	end
+	function LibOs.shutdown()
+	    return os.shutdown()
+	end
+	function LibOs.reboot()
+	    return os.reboot()
+	end
+	function LibOs.getSecondsSinceComputerStart()
+	    return os.clock()
+	end
+	function LibOs.time(locale)
+	    return os.time(locale)
+	end
+	function LibOs.date(format, time)
+	    return os.date(format, time)
+	end
+	function LibOs.day(...)
+	    return os.day(...)
+	end
+	function LibOs.epoch(...)
+	    return os.epoch(...)
+	end
+	return LibOs
+end
+local utils_libs_LibOs = MODULE_utils_libs_LibOs()
+
+
+function MODULE_utils_network_Network()
+	local Parallel = utils_controlflow_Parallel
+	local LibOs = utils_libs_LibOs
+	local Network = {}
+	peripheral.find("modem", rednet.open)
+	function Network.postResponse(protocol, commandName, response)
+	    protocol.responses = protocol.responses or {}
+	    protocol.responses[commandName] = response
+	end
+	function Network.waitForResponse(protocol, commandName)
+	    protocol.responses = protocol.responses or {}
+	    protocol.responses[commandName] = false
+	    local timeout = 10
+	    local sleepTime = 0.05
+	    while protocol.responses[commandName] == false do
+	        LibOs.sleep(sleepTime)
+	        timeout = timeout - sleepTime
+	        if timeout <= 0 then
+	            protocol.responses[commandName] = {isSuccess = false, message = "Timeout"}
+	            break
+	        end
+	    end
+	    local response = protocol.responses[commandName]
+	    protocol.responses[commandName] = nil
+	    return response
+	end
+	function Network.isOpen()
+	    return rednet.isOpen()
+	end
+	function Network.host(protocol, hostname)
+	    if not Network.isOpen() then return print("Network is not open") end
+	    hostname = hostname or ("computer:" .. LibOs.getComputerID())
+	    rednet.host(protocol, hostname)
+	end
+	function Network.lookup(protocol, hostname)
+	    if not Network.isOpen() then return print("Network is not open") end
+	    return rednet.lookup(protocol, hostname)
+	end
+	function Network.unhost(protocol)
+	    if not Network.isOpen() then return print("Network is not open") end
+	    rednet.unhost(protocol)
+	end
+	function Network.listenWithProtocols(protocols)
+	    if not Network.isOpen() then return print("Network is not open") end
+	    Parallel.map(protocols, function(key, protocol) protocol:listen() end)
+	end
+	function Network.listen(protocol, timeout, func)
+	    if not Network.isOpen() then return print("Network is not open") end
+	    while true do
+	        local senderId, message = rednet.receive(protocol, timeout)
+	        func(senderId, message)
+	    end
+	end
+	function Network.send(recipient, message, protocol)
+	    if not Network.isOpen() then return print("Network is not open") end
+	    rednet.send(recipient, message, protocol)
+	end
+	function Network.broadcast(message, protocol)
+	    if not Network.isOpen() then return print("Network is not open") end
+	    rednet.broadcast(message, protocol)
+	end
+	return Network
+end
+local utils_network_Network = MODULE_utils_network_Network()
+
+
+function MODULE_utils_terminal_Terminal()
+	local LibOs = utils_libs_LibOs
+	local Terminal = {}
+	Terminal.__index = Terminal
+	function Terminal.clear()
+	    term.clear()
+	    term.setCursorPos(1, 1)
+	end
+	function Terminal.waitForKey()
+	    local _, key = LibOs.pullEvent("key")
+	    return key
+	end
+	function Terminal.writeLineBreak()
+	    print("-------------------------")
+	end
+	function Terminal.write(text)
+	    print(text)
+	end
+	function Terminal.read(prompt)
+	    if prompt ~= nil then
+	        write(prompt)
+	    end
+	    return read()
+	end
+	function Terminal.readNumber(prompt)
+	    local value = nil
+	    while value == nil do
+	        local input = Terminal.read(prompt)
+	        value = tonumber(input)
+	    end
+	    return value
+	end
+	function Terminal.readBoolean(prompt)
+	    local value = nil
+	    while value == nil do
+	        local input = Terminal.read(prompt):lower()
+	        if input == "true" or input == "y" or input == "yes" then
+	            value = true
+	        elseif input == "false" or input == "n" or input == "no" then
+	            value = false
+	        end
+	    end
+	    return value
+	end
+	function Terminal.readTable(prompt, requiredFields)
+	    local value = nil
+	    local validationPassed = false
+	    while validationPassed == false do
+	        local input = Terminal.read(prompt)
+	        value = textutils.unserialize(input)
+	        if value ~= nil then
+	            validationPassed = true
+	            for key, _ in pairs(requiredFields) do
+	                if value[key] == nil then
+	                    validationPassed = false
+	                    Terminal.write("\t\tMissing field: '" .. key .. "'")
+	                end
+	            end
+	            if not validationPassed then
+	                Terminal.write("\t\tExpected format: " .. textutils.serialize(requiredFields))
+	            end
+	        end
+	    end
+	    return value or {}
+	end
+	return Terminal
+end
+local utils_terminal_Terminal = MODULE_utils_terminal_Terminal()
+
+
+function MODULE_jobs_JobManager()
+	local JobConfig = utils_config_JobConfig
+	local Network = utils_network_Network
+	local Parallel = utils_controlflow_Parallel
+	local LibOs = utils_libs_LibOs
+	local Job = jobs_Job
+	local Terminal = utils_terminal_Terminal
+	local JobManager = {}
+	function JobManager.run(jobClass)
+	    local config = JobConfig.load()
+	    config.job = jobClass.name
+	    config:save()
+	    if config:get("username", nil) == nil then
+	        config:set("username", Terminal.read("Enter your username: "))
+	    end
+	    local job = jobClass.new(config)
+	    if jobClass.name == Job.TABLET_CONTROLLER then
+	        job.name = config:get("username", "Unknown User")
+	    else
+	        job.name = jobClass.name .. ":" .. LibOs.getComputerID()
+	    end
+	    job.log = function(...) print(...) job.logSilent(...) end
+	    job.logSilent = function(...) if job.protocols ~= nil and job.protocols.log ~= nil then job.protocols.log:sendLog(...) end end
+	    job.logToChannel = function(channel, ...) if job.protocols ~= nil and job.protocols.log ~= nil then job.protocols.log:sendLogToChannel(channel, ...) end end
+	    if job == nil then
+	        print("Job not found: " .. jobClass.name)
+	        return
+	    end
+	    print("Starting Job: " .. jobClass.name)
+	    job:onStart()
+	    local p = Parallel.new()
+	    p:addTask(function() JobManager.runForegroundTask(job, config, jobClass.name) end)
+	    if job.protocols ~= nil then
+	        if Network.isOpen() then
+	            p:addTask(function() Network.listenWithProtocols(job.protocols) end)
+	        else
+	            print("Network is not open - cannot use protocols defined for job")
+	        end
+	    end
+	    if job.backgroundTasks ~= nil then
+	        for _, backgroundTask in ipairs(job.backgroundTasks) do
+	            p:addTask(function() backgroundTask(job, config) end)
+	        end
+	    end
+	    if job.backgroundTask ~= nil then
+	        p:addTask(function() JobManager.runBackgroundTask(job, config) end)
+	    end
+	    p:waitForAny()
+	    job:onComplete()
+	    print("Completed Job: " .. jobClass.name)
+	    config:save()
+	end
+	function JobManager.runForegroundTask(job, config, name)
+	    print("Running Job: " .. name)
+	    while job:inProgress() do
+	        job:onStep()
+	    end
+	end
+	function JobManager.runBackgroundTask(job, config)
+	    if job.backgroundTask == nil then
+	        return
+	    end
+	    if job.backgroundDelay == nil then
+	        error("Background task defined without a job.backgroundDelay")
+	    end
+	    while job:inProgress() do
+	        job.backgroundTask()
+	        if job.backgroundDelay > 0 then
+	            os.sleep(job.backgroundDelay)
+	        end
+	    end
+	end
+	return JobManager
+end
+local jobs_JobManager = MODULE_jobs_JobManager()
+
+
+function MODULE_utils_terminal_commands_Command()
+	local Command = {}
+	Command.__index = Command
+	function Command.new(name, helpText, func)
+	    local self = setmetatable({}, Command)
+	    self.name = name
+	    self.helpText = helpText
+	    self.func = func
+	    return self
+	end
+	function Command:help()
+	    print("Command: " .. self.name)
+	    print(self.helpText)
+	end
+	function Command:run(...)
+	    self.func(...)
+	end
+	return Command
+end
+local utils_terminal_commands_Command = MODULE_utils_terminal_commands_Command()
+
+
+function MODULE_utils_data_Table()
+	local Table = {}
+	function Table.map(object, func)
+	    local newObject = {}
+	    for key, value in pairs(object) do
+	        newObject[key] = func(value)
+	    end
+	    return newObject
+	end
+	function Table.filter(object, func)
+	    local newObject = {}
+	    for key, value in pairs(object) do
+	        if func(value) then
+	            table.insert(newObject, value)
+	        end
+	    end
+	    return newObject
+	end
+	function Table.any(object, func)
+	    for _, value in ipairs(object) do
+	        if func(value) then
+	            return true
+	        end
+	    end
+	    return false
+	end
+	function Table.all(object, func)
+	    for _, value in ipairs(object) do
+	        if not func(value) then
+	            return false
+	        end
+	    end
+	    return true
+	end
+	function Table.contains(object, value)
+	    for _, v in ipairs(object) do
+	        if v == value then
+	            return true
+	        end
+	    end
+	    return false
+	end
+	function Table.size(object)
+	    local count = 0
+	    for _ in pairs(object) do count = count + 1 end
+	    return count
+	end
+	function Table.isEmpty(object)
+	    return next(object) == nil
+	end
+	function Table.copy(object)
+	    local newObject = {}
+	    for key, value in pairs(object) do
+	        newObject[key] = value
+	    end
+	    return newObject
+	end
+	function Table.addAll(object, other)
+	    object = object or {}
+	    other = other or {}
+	    for _, value in ipairs(other) do
+	        table.insert(object, value)
+	    end
+	end
+	function Table.unique(object)
+	    local unique = {}
+	    for _, value in ipairs(object) do
+	        if not Table.contains(unique, value) then
+	            table.insert(unique, value)
+	        end
+	    end
+	    return unique
+	end
+	function Table.intersection(first, second)
+	    local intersection = {}
+	    first = Table.unique(first)
+	    second = Table.unique(second)
+	    for _, value in ipairs(first) do
+	        if Table.contains(second, value) then
+	            table.insert(intersection, value)
+	        end
+	    end
+	    return intersection
+	end
+	function Table.union(first, second)
+	    local union = Table.copy(first)
+	    Table.addAll(union, second)
+	    union = Table.unique(union)
+	    return union
+	end
+	function Table.difference(first, second)
+	    local difference = {}
+	    first = Table.unique(first)
+	    second = Table.unique(second)
+	    for _, value in ipairs(first) do
+	        if not Table.contains(second, value) then
+	            table.insert(difference, value)
+	        end
+	    end
+	    return difference
+	end
+	return Table
+end
+local utils_data_Table = MODULE_utils_data_Table()
+
+
+function MODULE_utils_text_Text()
+	local Table = utils_data_Table
+	local Text = {}
+	function Text.contains(text, pattern)
+	    if type(pattern) == "table" then
+	        return Table.any(pattern, function(subPattern)
+	            return Text.contains(text, subPattern)
+	        end)
+	    else
+	        return text:find(pattern) ~= nil
+	    end
+	end
+	function Text.startsWith(text, pattern)
+	    return text:sub(1, #pattern) == pattern
+	end
+	function Text.endsWith(text, pattern)
+	    return text:sub(-#pattern) == pattern
+	end
+	function Text.split(input, delimiter)
+	    local result = {}
+	    for match in (input .. delimiter):gmatch("(.-)" .. delimiter) do
+	        table.insert(result, match)
+	    end
+	    return result
+	end
+	function Text.getDisplayName(minecraftName)
+	    local displayName = minecraftName
+	    local parts = Text.split(displayName, ":")
+	    if #parts == 2 then
+	        displayName = parts[2]
+	    end
+	    displayName = displayName:gsub("_", " ")
+	    displayName = displayName:gsub("(%l)(%w*)", function(a,b) return string.upper(a)..b end)
+	    return displayName
+	end
+	function Text.levenshtein(str1, str2)
+	    local len1, len2 = #str1, #str2
+	    local matrix = {}
+	    for i = 0, len1 do
+	        matrix[i] = { [0] = i }
+	    end
+	    for j = 0, len2 do
+	        matrix[0][j] = j
+	    end
+	    for i = 1, len1 do
+	        for j = 1, len2 do
+	            local cost = (str1:sub(i, i) == str2:sub(j, j)) and 0 or 1
+	            matrix[i][j] = math.min(
+	                matrix[i - 1][j] + 1,    -- deletion
+	                matrix[i][j - 1] + 1,    -- insertion
+	                matrix[i - 1][j - 1] + cost -- substitution
+	            )
+	        end
+	    end
+	    return matrix[len1][len2]
+	end
+	function Text.simplifyIdentifier(id)
+	    id = id:match(":(.*)") or id
+	    id = id:gsub("_", " ") or id
+	    return id
+	end
+	function Text.getClosestMatch(input, identifiers)
+	    local bestMatch = nil
+	    local bestScore = math.huge
+	    for _, id in pairs(identifiers) do
+	        local simplifiedId = Text.simplifyIdentifier(id)
+	        local score = Text.levenshtein(input, simplifiedId)
+	        if score < bestScore then
+	            bestScore = score
+	            bestMatch = id
+	        end
+	    end
+	    return bestMatch, bestScore
+	end
+	function Text.getClosestMatchingGroup(input, identifierGroups)
+	    local bestMatch = nil
+	    local bestScore = math.huge
+	    for id, group in pairs(identifierGroups) do
+	        local score = Text.levenshtein(input, id)
+	        if score < bestScore then
+	            bestScore = score
+	            bestMatch = group
+	        end
+	    end
+	    return bestMatch, bestScore
+	end
+	return Text
+end
+local utils_text_Text = MODULE_utils_text_Text()
+
+
+function MODULE_utils_terminal_commands_Commands()
+	local Command = utils_terminal_commands_Command
+	local Text = utils_text_Text
+	local Commands = {}
+	Commands.__index = Commands
+	function Commands.new()
+	    local self = setmetatable({}, Commands)
+	    self.commands = {}
+	    self:add("help", Command.new("help", "Prints a list of commands", function(...) self:help(...) end))
+	    return self
+	end
+	function Commands:add(name, command)
+	    if name ~= nil and command ~= nil then
+	        self.commands[name] = command
+	    elseif name ~= nil and command == nil then
+	        command = name
+	        self.commands[command.name] = command
+	    elseif name == nil and command == nil then
+	        print("'Commands:add' provided both name and command = nil")
+	    else
+	        print("How did this happen?")
+	    end
+	end
+	function Commands:help(commandName)
+	    if commandName ~= nil then
+	        local command = self.commands[commandName]
+	        if command == nil then
+	            print("Command not found: " .. commandName)
+	            return
+	        end
+	        command:help()
+	        return
+	    end
+	    print("Commands:")
+	    for name, command in pairs(self.commands) do
+	        print("  " .. name)
+	    end
+	    print("*Type 'help <command>' for more information")
+	end
+	function Commands:run(message)
+	    if message == nil or message == "" then
+	        print("No command entered")
+	        print("Type 'help' for a list of commands")
+	        return
+	    end
+	    local parts = Text.split(message, " ")
+	    local name = parts[1]
+	    local command = self.commands[name]
+	    if command == nil then
+	        print("Command not found '" .. message .. "'")
+	        print("\ttype 'help' for a list of commands")
+	        return
+	    end
+	    local arguments = {}
+	    for i = 2, #parts do
+	        table.insert(arguments, parts[i])
+	    end
+	    command:run(table.unpack(arguments))
+	end
+	return Commands
+end
+local utils_terminal_commands_Commands = MODULE_utils_terminal_commands_Commands()
+
+
+function MODULE_utils_jobutils_CommonEventImplementations()
+	local Network = utils_network_Network
+	local CommonEventImplementations = {}
+	local function onStepBase(self)
+	    local state = self.config:get("state", self.states.COMMAND_PROMPT)
+	    local stateAction = self.stateActions[state]
+	    if stateAction == nil then
+	        print("Invalid state: " .. state)
+	        self.config:set("state", self.states.COMMAND_PROMPT)
+	        return
+	    end
+	    stateAction(self)
+	end
+	function CommonEventImplementations.onStart(self)
+	    return self.config:set("alive", true)
+	end
+	function CommonEventImplementations.onResume(self)
+	    return
+	end
+	function CommonEventImplementations.inProgress(self)
+	    return self.config:get("alive", false)
+	end
+	function CommonEventImplementations.onStepStatic(self)
+	    return onStepBase(self)
+	end
+	function CommonEventImplementations.onStepMobile(self)
+	    self.codedInventory:run(self)
+	    return onStepBase(self)
+	end
+	function CommonEventImplementations.onStepTablet(self)
+	    return onStepBase(self)
+	end
+	function CommonEventImplementations.onBackgroundStep(self)
+	    return
+	end
+	function CommonEventImplementations.onComplete(self)
+	    return
+	end
+	return CommonEventImplementations
+end
+local utils_jobutils_CommonEventImplementations = MODULE_utils_jobutils_CommonEventImplementations()
+
+
+function MODULE_utils_network_protocols_logging_LogProtocol()
+	local Terminal = utils_terminal_Terminal
+	local Network = utils_network_Network
+	local LibOs = utils_libs_LibOs
+	local LogProtocol = {}
+	LogProtocol.__index = LogProtocol
+	function LogProtocol.new(job, onLogFunc)
+	    local self = setmetatable({}, LogProtocol)
+	    self.job = job  -- The job instance that is using this protocol
+	    self.onLogFunc = onLogFunc
+	    self.protocolName = "protocol:log"
+	    self.commands = {
+	        LOG = "LOG",
+	    }
+	    self.listeners = {
+	        LOG = self.onLog,
+	    }
+	    self.histories = {}
+	    return self
+	end
+	function LogProtocol:listen()
+	    Network.host(self.protocolName)
+	    Network.listen(self.protocolName, nil, function(senderId, message)
+	        if type(message) ~= "table" then return end
+	        local command = message.command
+	        local args = message.message
+	        local listener = self.listeners[command]
+	        if listener == nil then return end
+	        listener(self, args)
+	    end)
+	end
+	function LogProtocol:_send(command, message)
+	    Network.broadcast({
+	        command = command,
+	        message = message,
+	    }, self.protocolName)
+	end
+	function LogProtocol:sendLog(...)
+	    self:_send(self.commands.LOG, {sourceName = self.job.name, printArgs = ...})
+	end
+	function LogProtocol:sendLogToChannel(channel, ...)
+	    self:_send(self.commands.LOG, {sourceName = channel, printArgs = ...})
+	end
+	function LogProtocol:onLog(args)
+	    local sourceName = args.sourceName
+	    local printArgs = args.printArgs
+	    self.histories[sourceName] = self.histories[sourceName] or {}
+	    table.insert(self.histories[sourceName], printArgs)
+	    while #self.histories[sourceName] > 20 do
+	        table.remove(self.histories[sourceName], 1)
+	    end
+	    if self.onLogFunc == nil then return end
+	    self.onLogFunc(sourceName, printArgs)
+	end
+	function LogProtocol:display(sourceName)
+	    for _ = 1, 20 do print() end
+	    local history = self.histories[sourceName] or {}
+	    for _, printArgs in ipairs(history) do
+	        if type(printArgs) == "table" then
+	            printArgs = table.concat(printArgs, " ")
+	        end
+	        print(printArgs)
+	    end
+	    Terminal.writeLineBreak()
+	    print(sourceName)
+	    print("            *Any Key Exit")
+	end
+	local function viewLogs(self, commandSourceName)
+	    self.job.protocols.log.onLogFunc = function(updatedSourceName, ...)
+	        if commandSourceName == updatedSourceName then
+	            self.job.protocols.log:display(commandSourceName)
+	        end
+	    end
+	    self.job.protocols.log.onLogFunc(commandSourceName)
+	    while true do
+	        LibOs.sleep(1)
+	    end
+	end
+	function LogProtocol:view(sourceName)
+	    parallel.waitForAny(
+	        function() viewLogs(self, sourceName) end,
+	        function() Terminal.waitForKey() end
+	    )
+	    self.job.protocols.log.onLogFunc = nil
+	end
+	return LogProtocol
+end
+local utils_network_protocols_logging_LogProtocol = MODULE_utils_network_protocols_logging_LogProtocol()
+
+
+function MODULE_jobs_definitions_misc_test_modules_ModuleExampleTest()
+	local class = {}
+	class.__index = class
+	function class.new(job)
+	    local self = setmetatable({}, class)
+	    self.job = job
+	    return self
+	end
+	function class.example()
+	    return "Hello world!"
+	end
+	return class
+end
+local jobs_definitions_misc_test_modules_ModuleExampleTest = MODULE_jobs_definitions_misc_test_modules_ModuleExampleTest()
+
+
+function MODULE_jobs_definitions_misc_test_TestJob()
+	local Commands = utils_terminal_commands_Commands
+	local CommonEventImplementations = utils_jobutils_CommonEventImplementations
+	local Job = jobs_Job
+	local LogProtocol = utils_network_protocols_logging_LogProtocol
+	local ModuleExampleTest = jobs_definitions_misc_test_modules_ModuleExampleTest
+	local FollowerJob = {}
+	FollowerJob.__index = FollowerJob
+	FollowerJob.name = Job.TEST_JOB
+	function FollowerJob.new(config)
+	    local self = setmetatable({}, FollowerJob)
+	    self.modules = {}
+	    self.modules.example = ModuleExampleTest.new(self)
+	    self.backgroundTasks = {}
+	    self.commands = Commands.new()
+	    self.config = config
+	    self.states = {}
+	    self.stateActions = {}
+	    self.protocols = {
+	        log = LogProtocol.new(self),
+	    }
+	    return self
+	end
+	function FollowerJob:onStart()
+	    return CommonEventImplementations.onStart(self)
+	end
+	function FollowerJob:onResume()
+	    return CommonEventImplementations.onResume(self)
+	end
+	function FollowerJob:inProgress()
+	    return CommonEventImplementations.inProgress(self)
+	end
+	function FollowerJob:onStep()
+	    for moduleName, module in pairs(self.modules) do
+	        print("Running tests for module: " .. moduleName)
+	        for testName, test in pairs(module) do
+	            if testName ~= "new" then
+	                local success, result = pcall(test)
+	                if not success then
+	                    print(testName .. " failed: " .. result)
+	                else
+	                    print(testName .. " passed")
+	                end
+	            end
+	        end
+	    end
+	    self.config:set("alive", false)
+	end
+	function FollowerJob:onComplete()
+	    return CommonEventImplementations.onComplete(self)
+	end
+	return FollowerJob
+end
+local jobs_definitions_misc_test_TestJob = MODULE_jobs_definitions_misc_test_TestJob()
+
+
+function MODULE_entrypoints_test()
+	local JobManager = jobs_JobManager
+	local TestJob = jobs_definitions_misc_test_TestJob
+	JobManager.run(TestJob)
+end
+local entrypoints_test = MODULE_entrypoints_test()
