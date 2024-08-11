@@ -912,7 +912,7 @@ function MODULE_jobs_definitions_misc_test_modules_ModuleExampleTest()
 	    self.job = job
 	    return self
 	end
-	function class.example()
+	function class:example()
 	    return "Hello world!"
 	end
 	return class
