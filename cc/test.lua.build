@@ -956,17 +956,24 @@ function MODULE_jobs_definitions_misc_test_TestJob()
 	    return CommonEventImplementations.inProgress(self)
 	end
 	function FollowerJob:onStep()
+	    print("Running tests...")
 	    for moduleName, module in pairs(self.modules) do
-	        print("Running tests for module: " .. moduleName)
+	        local failed = {}
+	        local passed = {}
 	        for testName, test in pairs(module.__index) do
 	            if testName ~= "new" and testName ~= "__index" then
 	                local success, result = pcall(test)
 	                if not success then
-	                    print(testName .. " failed: " .. result)
+	                    table.insert(failed, {name = testName, result = result})
 	                else
-	                    print(testName .. " passed")
+	                    table.insert(passed, {name = testName, result = result})
 	                end
 	            end
+	        end
+	        local total = #failed + #passed
+	        print(" -> Module: " .. moduleName .. " (" .. #passed .. "/" .. total .. ")")
+	        for _, test in ipairs(failed) do
+	            print("    - Failed: " .. test.name .. " - " .. test.result)
 	        end
 	    end
 	    self.config:set("alive", false)
