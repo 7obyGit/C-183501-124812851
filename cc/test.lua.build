@@ -956,6 +956,7 @@ function MODULE_jobs_definitions_misc_test_TestJob()
 	    return CommonEventImplementations.inProgress(self)
 	end
 	function FollowerJob:onStep()
+	    print("\n\n\n\n\n\n\n\n\n\n")
 	    print("Running tests...")
 	    local totalPassed = 0
 	    local totalFailed = 0
