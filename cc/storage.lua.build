@@ -3798,6 +3798,8 @@ function MODULE_jobs_definitions_static_storage_StorageCommands()
 	local Text = utils_text_Text
 	local Math = utils_math_Math
 	local Vector3 = utils_math_Vector3
+	local Table = utils_data_Table
+	local Blocks = utils_blocks_Blocks
 	local StorageCommands = {}
 	function StorageCommands.getCommandExit(self)
 	    return Command.new(
@@ -3907,6 +3909,43 @@ function MODULE_jobs_definitions_static_storage_StorageCommands()
 	                uniqueItems = uniqueItems + 1
 	            end
 	            print("*Found " .. totalItems .. " total items and " .. uniqueItems .. " unique items")
+	        end
+	    )
+	end
+	function StorageCommands.getCommandSearch(self)
+	    return Command.new(
+	        "search",
+	        "Searches the storage\nExample: search <text>",
+	        function(...)
+	            local args = {...}
+	            local text = nil
+	            if #args == 1 then
+	                text = args[1]
+	            elseif #args > 1 then
+	                text = args[1]
+	                for i = 2, #args do
+	                    text = text .. " " .. args[i]
+	                end
+	            end
+	            if text == nil then
+	                print("No search text provided")
+	                print("Expected: search <itemName>")
+	                return
+	            end
+	            local presentItemNames = self.storage:getPresentItemNames()
+	            local otherItemNames = Blocks
+	            local allItemNames = Table.union(presentItemNames, otherItemNames)
+	            local matches = Table.filter(
+	                allItemNames,
+	                function(name) return Text.contains(name, text) end)
+	            local results = {}
+	            for _, name in pairs(matches) do
+	                results[name] = self.storage:getItemCount(name)
+	            end
+	            print("Items Found:")
+	            for name, count in pairs(results) do
+	                print("\t\t" .. Text.getDisplayName(name) .. " x" .. count)
+	            end
 	        end
 	    )
 	end
@@ -4444,7 +4483,7 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	    local self = setmetatable({}, StorageJob)
 	    self.modules = {}
 	    self.modules.storage = ModuleStorage.new(self)
-	    print("Adding background tasks")
+	    self.log("Adding background tasks")
 	    self.backgroundTasks = {
 	        StorageBackgroundTasks.refuelFurnaces,
 	        StorageBackgroundTasks.dumpFurnaces,
@@ -4457,26 +4496,27 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	    if PlayerDetector.detector ~= nil then table.insert(self.backgroundTasks, function() PlayerDetector.onPlayerMoved(function (username, oldPosition, newPosition) self.protocols.events:sendOnPlayerMoved(username, oldPosition, newPosition) end, Me.username, 5) end) end
 	    if EnvironmentDetector.detector ~= nil then table.insert(self.backgroundTasks, StorageBackgroundTasks.onEntityEnterOrLeave) end
 	    if ChatBox.internal ~= nil then table.insert(self.backgroundTasks, StorageBackgroundTasks.onChatMessage) end
-	    print("Defining the commands")
+	    self.log("Defining the commands")
 	    self.storage = nil
 	    self.commands = Commands.new()
 	    self.commands:add("exit", StorageCommands.getCommandExit(self))
 	    self.commands:add("get", StorageCommands.getCommandGet(self))
 	    self.commands:add("dump", StorageCommands.getCommandDump(self))
 	    self.commands:add("list", StorageCommands.getCommandList(self))
+	    self.commands:add("search", StorageCommands.getCommandSearch(self))
 	    self.commands:add("stats", StorageCommands.getCommandStats(self))
 	    self.commands:add("setup", StorageCommands.getCommandSetup(self))
 	    self.commands:add("defragment", StorageCommands.getCommandDefragment(self))
 	    self.commands:add("updateIndex", StorageCommands.getCommandUpdateIndex(self))
 	    self.commands:add("smelt", StorageCommands.getCommandSmelt(self))
 	    self.commands:add("iopos", StorageCommands.getCommandIoPos(self))
-	    print("Setting states and config")
+	    self.log("Setting states and config")
 	    self.config = config
 	    self.states = {
 	        SETUP = "SETUP",
 	        COMMAND_PROMPT = "COMMAND_PROMPT",
 	    }
-	    print("Adding protocols")
+	    self.log("Adding protocols")
 	    self.protocols = {
 	        log = LogProtocol.new(self),
 	        events = EventsProtocol.new(self),
@@ -4486,24 +4526,24 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	    }
 	    self.protocols.storage.onGetItemFunc = StorageProtocolListeners.getOnGetItemFunc(self)
 	    self.protocols.storage.onDumpFunc = StorageProtocolListeners.getOnDumpFunc(self)
-	    print("Ready to go!")
+	    self.log("Ready to go!")
 	    return self
 	end
 	function StorageJob:onStart()
 	    self.config:set("alive", true)
-	    print("Loading stroage config...")
+	    self.log("Loading stroage config...")
 	    local storageConfig = self.config:get("storageConfig", nil)
-	    print("Creating the stroage...")
+	    self.log("Creating the stroage...")
 	    self.storage = Storage.new(storageConfig)
-	    print("Updating the index...")
+	    self.log("Updating the index...")
 	    self.storage:updateIndex()
-	    print("Dumping...")
+	    self.log("Dumping...")
 	    self.storage:dump()
-	    print("Defragmenting...")
+	    self.log("Defragmenting...")
 	    self.storage:defragment()
-	    print("Start complete!")
+	    self.log("Start complete!")
 	    LibOs.sleep(0.5)
-	    print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
+	    self.log("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
 	    self.logToChannel(LogChannels.ALERTS, "Storage has started!")
 	end
 	function StorageJob:onResume()
@@ -4519,27 +4559,27 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	    elseif state == self.states.COMMAND_PROMPT then
 	        self:stateCommandPrompt()
 	    else
-	        print("Invalid state: " .. state)
+	        self.log("Invalid state: " .. state)
 	        self.config:set("state", self.states.COMMAND_PROMPT)
 	    end
 	end
 	function StorageJob:stateSetup()
-	    print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
+	    self.log("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
 	    self.storage:dumpAllBarrels()
 	    if self.storage.config ~= nil then
-	        print("Found existing storage configuration")
+	        self.log("Found existing storage configuration")
 	        if self.storage.config.io ~= nil then
-	            print("\t\tFound main interface barrel")
-	            print("\t\t\t" .. self.storage.config.io)
+	            self.log("\t\tFound main interface barrel")
+	            self.log("\t\t\t" .. self.storage.config.io)
 	            self.storage:placeBlockIndicator(self.storage.config.io, BlockIndicators.OUTPUT)
 	        end
 	        if self.storage.config.otherIOs ~= nil then
-	            print("\t\tFound secondary IO barrels")
+	            self.log("\t\tFound secondary IO barrels")
 	            for _, otherIO in pairs(self.storage.config.otherIOs) do
-	                print("\t\t\t" .. otherIO.name)
+	                self.log("\t\t\t" .. otherIO.name)
 	                local barrel = self.storage.barrels[otherIO.name]
 	                if barrel == nil then
-	                    print("Could not find secondary IO: " .. otherIO.name)
+	                    self.log("Could not find secondary IO: " .. otherIO.name)
 	                    table.remove(self.storage.config.otherIOs, otherIO)
 	                else
 	                    self.storage:placeBlockIndicator(otherIO.name, BlockIndicators.SECONDARY_IO)
@@ -4547,12 +4587,12 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	            end
 	        end
 	        if self.storage.config.inputs ~= nil then
-	            print("\t\tFound " .. #self.storage.config.inputs .. " input barrels")
+	            self.log("\t\tFound " .. #self.storage.config.inputs .. " input barrels")
 	            for _, containerName in pairs(self.storage.config.inputs) do
-	                print("\t\t\t" .. containerName)
+	                self.log("\t\t\t" .. containerName)
 	                local barrel = self.storage.barrels[containerName]
 	                if barrel == nil then
-	                    print("Could not find input: " .. containerName)
+	                    self.log("Could not find input: " .. containerName)
 	                    table.remove(self.storage.config.inputs, containerName)
 	                else
 	                    self.storage:placeBlockIndicator(containerName, BlockIndicators.INPUT)
@@ -4560,54 +4600,54 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	            end
 	        end
 	        if self.storage.config.keepFilled ~= nil then
-	            print("\t\tFound 'keep filled' barrels")
+	            self.log("\t\tFound 'keep filled' barrels")
 	            for key, keepFilledDetails in pairs(self.storage.config.keepFilled) do
 	                local barrel = self.storage.barrels[keepFilledDetails.name]
 	                if barrel == nil then
-	                    print("Could not find 'keep filled': " .. keepFilledDetails.name)
+	                    self.log("Could not find 'keep filled': " .. keepFilledDetails.name)
 	                    table.remove(self.storage.config.keepFilled, key)
 	                else
-	                    print("\t\t\t" .. keepFilledDetails.name)
+	                    self.log("\t\t\t" .. keepFilledDetails.name)
 	                    self.storage:placeBlockIndicator(keepFilledDetails.name, BlockIndicators.KEEP_FILLED, keepFilledDetails.item)
 	                end
 	            end
 	        end
 	    else
-	        print("No pre-existing storage configuration found")
+	        self.log("No pre-existing storage configuration found")
 	        self.storage.config = {}
 	    end
-	    print("\n\nSetup Storage")
-	    print("Mark Barrels Using the Following Items")
-	    print("\t\tMain Interface - " .. BlockIndicators.OUTPUT)
-	    print("\t\tInput Only - " .. BlockIndicators.INPUT)
-	    print("\t\tKeep Filled - " .. BlockIndicators.KEEP_FILLED)
-	    print("\t\tSecondary IO - " .. BlockIndicators.SECONDARY_IO)
-	    print("*You can only have one Main Interface")
-	    print("*Input Only barrels take inserted items and store them in the storage system")
-	    print("*Chests are used for storage and are not configurable")
-	    print("*'Keep Filled' barrels keep a stack of the item in the second slot")
+	    self.log("\n\nSetup Storage")
+	    self.log("Mark Barrels Using the Following Items")
+	    self.log("\t\tMain Interface - " .. BlockIndicators.OUTPUT)
+	    self.log("\t\tInput Only - " .. BlockIndicators.INPUT)
+	    self.log("\t\tKeep Filled - " .. BlockIndicators.KEEP_FILLED)
+	    self.log("\t\tSecondary IO - " .. BlockIndicators.SECONDARY_IO)
+	    self.log("*You can only have one Main Interface")
+	    self.log("*Input Only barrels take inserted items and store them in the storage system")
+	    self.log("*Chests are used for storage and are not configurable")
+	    self.log("*'Keep Filled' barrels keep a stack of the item in the second slot")
 	    Terminal.read("\nPress Enter to Continue")
 	    self.storage:readBlockIndicators()
 	    self.config:set("storageConfig", self.storage.config)
 	    os.sleep(1)
 	    if self.storage.config.io == nil then
-	        print("\n\nNo main interface barrel found")
-	        print("Please add a main interface barrel by following the instructions above")
+	        self.log("\n\nNo main interface barrel found")
+	        self.log("Please add a main interface barrel by following the instructions above")
 	        os.sleep(2)
 	        return
 	    end
 	    self.config:set("state", self.states.COMMAND_PROMPT)
 	    self.storage:dumpAllBarrels()
-	    print("\n\nSetup Complete")
+	    self.log("\n\nSetup Complete")
 	    os.sleep(2)
 	end
 	function StorageJob:stateCommandPrompt()
 	    local userInput = Terminal.read("\nEnter Command: ")
-	    print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
+	    self.log("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
 	    self.storage.io:updateIndex()
 	    if userInput == nil or userInput == "" then
-	        print("No command entered")
-	        print("Type 'help' for a list of commands")
+	        self.log("No command entered")
+	        self.log("Type 'help' for a list of commands")
 	        return
 	    end
 	    self.commands:run(userInput)
