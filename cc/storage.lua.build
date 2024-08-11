@@ -4483,7 +4483,7 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	    local self = setmetatable({}, StorageJob)
 	    self.modules = {}
 	    self.modules.storage = ModuleStorage.new(self)
-	    self.log("Adding background tasks")
+	    print("Adding background tasks")
 	    self.backgroundTasks = {
 	        StorageBackgroundTasks.refuelFurnaces,
 	        StorageBackgroundTasks.dumpFurnaces,
@@ -4496,7 +4496,7 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	    if PlayerDetector.detector ~= nil then table.insert(self.backgroundTasks, function() PlayerDetector.onPlayerMoved(function (username, oldPosition, newPosition) self.protocols.events:sendOnPlayerMoved(username, oldPosition, newPosition) end, Me.username, 5) end) end
 	    if EnvironmentDetector.detector ~= nil then table.insert(self.backgroundTasks, StorageBackgroundTasks.onEntityEnterOrLeave) end
 	    if ChatBox.internal ~= nil then table.insert(self.backgroundTasks, StorageBackgroundTasks.onChatMessage) end
-	    self.log("Defining the commands")
+	    print("Defining the commands")
 	    self.storage = nil
 	    self.commands = Commands.new()
 	    self.commands:add("exit", StorageCommands.getCommandExit(self))
@@ -4510,13 +4510,13 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	    self.commands:add("updateIndex", StorageCommands.getCommandUpdateIndex(self))
 	    self.commands:add("smelt", StorageCommands.getCommandSmelt(self))
 	    self.commands:add("iopos", StorageCommands.getCommandIoPos(self))
-	    self.log("Setting states and config")
+	    print("Setting states and config")
 	    self.config = config
 	    self.states = {
 	        SETUP = "SETUP",
 	        COMMAND_PROMPT = "COMMAND_PROMPT",
 	    }
-	    self.log("Adding protocols")
+	    print("Adding protocols")
 	    self.protocols = {
 	        log = LogProtocol.new(self),
 	        events = EventsProtocol.new(self),
@@ -4526,7 +4526,7 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	    }
 	    self.protocols.storage.onGetItemFunc = StorageProtocolListeners.getOnGetItemFunc(self)
 	    self.protocols.storage.onDumpFunc = StorageProtocolListeners.getOnDumpFunc(self)
-	    self.log("Ready to go!")
+	    print("Ready to go!")
 	    return self
 	end
 	function StorageJob:onStart()
