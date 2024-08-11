@@ -980,11 +980,32 @@ end
 local utils_other_Test = MODULE_utils_other_Test()
 
 
+function MODULE_utils_data_ListUtils()
+	local ListUtils = {}
+	function ListUtils.toString(value)
+	    if type(value) == "table" then
+	        return textutils.serialise(value)
+	    else
+	        return tostring(value)
+	    end
+	end
+	function ListUtils.notNil(value)
+	    return value ~= nil
+	end
+	return ListUtils
+end
+local utils_data_ListUtils = MODULE_utils_data_ListUtils()
+
+
 function MODULE_utils_data_Dict()
 	local List = utils_data_List
+	    local List = utils_data_List
 	local Dict = {}
 	Dict.__index = Dict
 	Dict.TYPE = "Dict"
+	local function getList()
+	    return List
+	end
 	function Dict.new(data)
 	    local self = setmetatable({}, {__index = Dict})
 	    self.type = Dict.TYPE
@@ -1064,21 +1085,21 @@ function MODULE_utils_data_Dict()
 	    return nil
 	end
 	function Dict:keys()
-	    local keys = List.new()
+	    local keys = getList().new()
 	    for key, _ in pairs(self.data) do
 	        keys:add(key)
 	    end
 	    return keys
 	end
 	function Dict:values()
-	    local values = List.new()
+	    local values = getList().new()
 	    for _, value in pairs(self.data) do
 	        values:add(value)
 	    end
 	    return values
 	end
 	function Dict:items()
-	    local items = List.new()
+	    local items = getList().new()
 	    for key, value in pairs(self.data) do
 	        items:add({key = key, value = value})
 	    end
@@ -1202,31 +1223,16 @@ end
 local utils_data_Dict = MODULE_utils_data_Dict()
 
 
-function MODULE_utils_data_ListUtils()
-	local ListUtils = {}
-	function ListUtils.toString(value)
-	    if type(value) == "table" then
-	        return textutils.serialise(value)
-	    else
-	        return tostring(value)
-	    end
-	end
-	function ListUtils.notNil(value)
-	    return value ~= nil
-	end
-	return ListUtils
-end
-local utils_data_ListUtils = MODULE_utils_data_ListUtils()
-
-
 function MODULE_utils_data_List()
-	local Dict = utils_data_Dict
 	local ListUtils = utils_data_ListUtils
+	    local Dict = utils_data_Dict
 	local List = {}
 	List.__index = List
 	List.TYPE = "List"
+	local function getDict()
+	    return Dict
+	end
 	function List.new(data)
-	    print(Dict)
 	    local self = setmetatable({}, {__index = List})
 	    self.type = List.TYPE
 	    self.data = data or {}
@@ -1242,7 +1248,7 @@ function MODULE_utils_data_List()
 	    return self:copy()
 	end
 	function List:toDict()
-	    local dict = Dict.new()
+	    local dict = getDict().new()
 	    for i, v in ipairs(self.data) do
 	        dict:add(v, i)
 	    end
@@ -1407,7 +1413,7 @@ function MODULE_utils_data_List()
 	    end
 	end
 	function List:mode()
-	    local counts = Dict.new()
+	    local counts = getDict().new()
 	    for i, v in ipairs(self.data) do
 	        counts:add(v, (counts:get(v) or 0) + 1)
 	    end
@@ -1510,7 +1516,7 @@ function MODULE_utils_data_List()
 	    return flattened
 	end
 	function List:groupBy(func)
-	    local groups = Dict.new()
+	    local groups = getDict().new()
 	    for i, v in ipairs(self.data) do
 	        local key = func(v)
 	        if not groups:containsKey(key) then
