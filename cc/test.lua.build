@@ -904,35 +904,6 @@ end
 local utils_network_protocols_logging_LogProtocol = MODULE_utils_network_protocols_logging_LogProtocol()
 
 
-function MODULE_jobs_definitions_misc_test_modules_ModuleExampleTest()
-	local class = {}
-	class.__index = class
-	function class.new(job)
-	    local self = setmetatable({}, class)
-	    self.job = job
-	    return self
-	end
-	function class.failExample()
-	    local x = 4
-	    local y = 0
-	    if y == 0 then
-	        error("Division by zero")
-	    end
-	    return x / y
-	end
-	function class:passExample()
-	    local x = 5
-	    local y = 3
-	    if y == 0 then
-	        error("Division by zero")
-	    end
-	    return x / y
-	end
-	return class
-end
-local jobs_definitions_misc_test_modules_ModuleExampleTest = MODULE_jobs_definitions_misc_test_modules_ModuleExampleTest()
-
-
 function MODULE_utils_other_Test()
 	local Test = {}
 	function Test.assertEqual(a, b)
@@ -997,13 +968,225 @@ end
 local utils_data_ListUtils = MODULE_utils_data_ListUtils()
 
 
-function MODULE_utils_data_List()
+function MODULE_utils_data_Collections()
 	local ListUtils = utils_data_ListUtils
+	local Dict = {}
+	Dict.__index = Dict
+	Dict.TYPE = "Dict"
 	local List = {}
 	List.__index = List
 	List.TYPE = "List"
-	local function getDict()
-	    return utils_data_Dict
+	function Dict.new(data)
+	    local self = setmetatable({}, {__index = Dict})
+	    self.type = Dict.TYPE
+	    self.data = data or {}
+	    return self
+	end
+	function Dict.fromTable(data)
+	    return Dict.new(data)
+	end
+	function Dict:toTable()
+	    return self.data
+	end
+	function Dict:toList()
+	    return self:items()
+	end
+	function Dict:toDict()
+	    return self:copy()
+	end
+	function Dict.fromLists(keys, values)
+	    if keys.type ~= List.TYPE then
+	        error("Keys must be a List")
+	    end
+	    if values.type ~= List.TYPE then
+	        error("Values must be a List")
+	    end
+	    local size = math.min(keys:size(), values:size())
+	    local dict = Dict.new()
+	    for index = 1, size do
+	        dict:add(keys:get(index), values:get(index))
+	    end
+	    return dict
+	end
+	function Dict:copy()
+	    local copy = Dict.new()
+	    for key, value in pairs(self.data) do
+	        copy:add(key, value)
+	    end
+	    return copy
+	end
+	function Dict:add(key, value)
+	    self.data[key] = value
+	end
+	function Dict:addAll(dict)
+	    if dict.type ~= Dict.TYPE then
+	        dict = dict.data
+	    end
+	    for key, value in pairs(dict) do
+	        self:add(key, value)
+	    end
+	end
+	function Dict:remove(key)
+	    self.data[key] = nil
+	end
+	function Dict:contains(key)
+	    return self.data[key] ~= nil
+	end
+	function Dict:containsKey(key)
+	    return self:contains(key)
+	end
+	function Dict:containsValue(value)
+	    for _, v in pairs(self.data) do
+	        if v == value then
+	            return true
+	        end
+	    end
+	    return false
+	end
+	function Dict:get(key)
+	    return self.data[key]
+	end
+	function Dict:getKey(value)
+	    for k, v in pairs(self.data) do
+	        if v == value then
+	            return k
+	        end
+	    end
+	    return nil
+	end
+	function Dict:keys()
+	    local keys = List.new()
+	    for key, _ in pairs(self.data) do
+	        keys:add(key)
+	    end
+	    return keys
+	end
+	function Dict:values()
+	    local values = List.new()
+	    for _, value in pairs(self.data) do
+	        values:add(value)
+	    end
+	    return values
+	end
+	function Dict:items()
+	    local items = List.new()
+	    for key, value in pairs(self.data) do
+	        items:add({key = key, value = value})
+	    end
+	    return items
+	end
+	function Dict:clear()
+	    self.data = {}
+	end
+	function Dict:size()
+	    local count = 0
+	    for _, _ in pairs(self.data) do
+	        count = count + 1
+	    end
+	    return count
+	end
+	function Dict:isEmpty()
+	    return self:size() == 0
+	end
+	function Dict:map(keyFunc, valueFunc)
+	    if not valueFunc then
+	        valueFunc = keyFunc
+	        keyFunc = function(key, value) return key end
+	    end
+	    local results = Dict.new()
+	    for key, value in pairs(self.data) do
+	        results:add(keyFunc(key, value), valueFunc(key, value))
+	    end
+	    return results
+	end
+	function Dict:filter(func)
+	    local results = Dict.new()
+	    for key, value in pairs(self.data) do
+	        if func(key, value) then
+	            results:add(key, value)
+	        end
+	    end
+	    return results
+	end
+	function Dict:reduce(func, initialValue)
+	    local accumulator = initialValue
+	    for key, value in pairs(self.data) do
+	        accumulator = func(accumulator, key, value)
+	    end
+	    return accumulator
+	end
+	function Dict:forEach(func)
+	    for key, value in pairs(self.data) do
+	        func(key, value)
+	    end
+	end
+	function Dict:first(default)
+	    return self
+	        :items()
+	        :first(default)
+	end
+	function Dict:last(default)
+	    return self
+	        :items()
+	        :last(default)
+	end
+	function Dict:join(separator)
+	    return self
+	        :items()
+	        :join(separator)
+	end
+	function Dict:union(dict)
+	    return self
+	        :copy()
+	        :addAll(dict)
+	end
+	function Dict:intersection(dict)
+	    return self:filter(function(key, value) return dict:containsKey(key) and dict:get(key) == value end)
+	end
+	function Dict:sum()
+	    return self:values():sum()
+	end
+	function Dict:product()
+	    return self:values():product()
+	end
+	function Dict:min()
+	    return self:values():min()
+	end
+	function Dict:max()
+	    return self:values():max()
+	end
+	function Dict:average()
+	    return self:values():average()
+	end
+	function Dict:mean()
+	    return self:values():mean()
+	end
+	function Dict:median()
+	    return self:values():median()
+	end
+	function Dict:mode()
+	    return self:values():mode()
+	end
+	function Dict:sort()
+	    print("Warning: Sorting a dictionary is not possible. Returning a copy of the dictionary.")
+	    return self:copy()
+	end
+	function Dict:reverse()
+	    print("Warning: Reversing a dictionary is not possible. Returning a copy of the dictionary.")
+	    return self:copy()
+	end
+	function Dict:shuffle()
+	    print("Warning: Shuffling a dictionary is not possible. Returning a copy of the dictionary.")
+	    return self:copy()
+	end
+	function Dict:any(func)
+	    return self:values():any(func)
+	end
+	function Dict:all(func)
+	    return self:values():all(func)
+	end
+	function Dict:toString()
+	    return textutils.serialise(self.data)
 	end
 	function List.new(data)
 	    local self = setmetatable({}, {__index = List})
@@ -1021,8 +1204,7 @@ function MODULE_utils_data_List()
 	    return self:copy()
 	end
 	function List:toDict()
-	    print(getDict())
-	    local dict = getDict().new()
+	    local dict = Dict.new()
 	    for i, v in ipairs(self.data) do
 	        dict:add(v, i)
 	    end
@@ -1187,7 +1369,7 @@ function MODULE_utils_data_List()
 	    end
 	end
 	function List:mode()
-	    local counts = getDict().new()
+	    local counts = Dict.new()
 	    for i, v in ipairs(self.data) do
 	        counts:add(v, (counts:get(v) or 0) + 1)
 	    end
@@ -1290,7 +1472,7 @@ function MODULE_utils_data_List()
 	    return flattened
 	end
 	function List:groupBy(func)
-	    local groups = getDict().new()
+	    local groups = Dict.new()
 	    for i, v in ipairs(self.data) do
 	        local key = func(v)
 	        if not groups:containsKey(key) then
@@ -1303,241 +1485,17 @@ function MODULE_utils_data_List()
 	function List:toString()
 	    return textutils.serialise(self.data)
 	end
-	return List
+	return {Dict = Dict, List = List}
 end
-local utils_data_List = MODULE_utils_data_List()
-
-
-function MODULE_utils_data_Dict()
-	local List = utils_data_List
-	local Dict = {}
-	Dict.__index = Dict
-	Dict.TYPE = "Dict"
-	local function getList()
-	    return utils_data_List
-	end
-	function Dict.new(data)
-	    local self = setmetatable({}, {__index = Dict})
-	    self.type = Dict.TYPE
-	    self.data = data or {}
-	    return self
-	end
-	function Dict.fromTable(data)
-	    return Dict.new(data)
-	end
-	function Dict:toTable()
-	    return self.data
-	end
-	function Dict:toList()
-	    return self:items()
-	end
-	function Dict:toDict()
-	    return self:copy()
-	end
-	function Dict.fromLists(keys, values)
-	    if keys.type ~= List.TYPE then
-	        error("Keys must be a List")
-	    end
-	    if values.type ~= List.TYPE then
-	        error("Values must be a List")
-	    end
-	    local size = math.min(keys:size(), values:size())
-	    local dict = Dict.new()
-	    for index = 1, size do
-	        dict:add(keys:get(index), values:get(index))
-	    end
-	    return dict
-	end
-	function Dict:copy()
-	    local copy = Dict.new()
-	    for key, value in pairs(self.data) do
-	        copy:add(key, value)
-	    end
-	    return copy
-	end
-	function Dict:add(key, value)
-	    self.data[key] = value
-	end
-	function Dict:addAll(dict)
-	    if dict.type ~= Dict.TYPE then
-	        dict = dict.data
-	    end
-	    for key, value in pairs(dict) do
-	        self:add(key, value)
-	    end
-	end
-	function Dict:remove(key)
-	    self.data[key] = nil
-	end
-	function Dict:contains(key)
-	    return self.data[key] ~= nil
-	end
-	function Dict:containsKey(key)
-	    return self:contains(key)
-	end
-	function Dict:containsValue(value)
-	    for _, v in pairs(self.data) do
-	        if v == value then
-	            return true
-	        end
-	    end
-	    return false
-	end
-	function Dict:get(key)
-	    return self.data[key]
-	end
-	function Dict:getKey(value)
-	    for k, v in pairs(self.data) do
-	        if v == value then
-	            return k
-	        end
-	    end
-	    return nil
-	end
-	function Dict:keys()
-	    local keys = getList().new()
-	    for key, _ in pairs(self.data) do
-	        keys:add(key)
-	    end
-	    return keys
-	end
-	function Dict:values()
-	    local values = getList().new()
-	    for _, value in pairs(self.data) do
-	        values:add(value)
-	    end
-	    return values
-	end
-	function Dict:items()
-	    local items = getList().new()
-	    for key, value in pairs(self.data) do
-	        items:add({key = key, value = value})
-	    end
-	    return items
-	end
-	function Dict:clear()
-	    self.data = {}
-	end
-	function Dict:size()
-	    local count = 0
-	    for _, _ in pairs(self.data) do
-	        count = count + 1
-	    end
-	    return count
-	end
-	function Dict:isEmpty()
-	    return self:size() == 0
-	end
-	function Dict:map(keyFunc, valueFunc)
-	    if not valueFunc then
-	        valueFunc = keyFunc
-	        keyFunc = function(key, value) return key end
-	    end
-	    local results = Dict.new()
-	    for key, value in pairs(self.data) do
-	        results:add(keyFunc(key, value), valueFunc(key, value))
-	    end
-	    return results
-	end
-	function Dict:filter(func)
-	    local results = Dict.new()
-	    for key, value in pairs(self.data) do
-	        if func(key, value) then
-	            results:add(key, value)
-	        end
-	    end
-	    return results
-	end
-	function Dict:reduce(func, initialValue)
-	    local accumulator = initialValue
-	    for key, value in pairs(self.data) do
-	        accumulator = func(accumulator, key, value)
-	    end
-	    return accumulator
-	end
-	function Dict:forEach(func)
-	    for key, value in pairs(self.data) do
-	        func(key, value)
-	    end
-	end
-	function Dict:first(default)
-	    return self
-	        :items()
-	        :first(default)
-	end
-	function Dict:last(default)
-	    return self
-	        :items()
-	        :last(default)
-	end
-	function Dict:join(separator)
-	    return self
-	        :items()
-	        :join(separator)
-	end
-	function Dict:union(dict)
-	    return self
-	        :copy()
-	        :addAll(dict)
-	end
-	function Dict:intersection(dict)
-	    return self:filter(function(key, value) return dict:containsKey(key) and dict:get(key) == value end)
-	end
-	function Dict:sum()
-	    return self:values():sum()
-	end
-	function Dict:product()
-	    return self:values():product()
-	end
-	function Dict:min()
-	    return self:values():min()
-	end
-	function Dict:max()
-	    return self:values():max()
-	end
-	function Dict:average()
-	    return self:values():average()
-	end
-	function Dict:mean()
-	    return self:values():mean()
-	end
-	function Dict:median()
-	    return self:values():median()
-	end
-	function Dict:mode()
-	    return self:values():mode()
-	end
-	function Dict:sort()
-	    print("Warning: Sorting a dictionary is not possible. Returning a copy of the dictionary.")
-	    return self:copy()
-	end
-	function Dict:reverse()
-	    print("Warning: Reversing a dictionary is not possible. Returning a copy of the dictionary.")
-	    return self:copy()
-	end
-	function Dict:shuffle()
-	    print("Warning: Shuffling a dictionary is not possible. Returning a copy of the dictionary.")
-	    return self:copy()
-	end
-	function Dict:any(func)
-	    return self:values():any(func)
-	end
-	function Dict:all(func)
-	    return self:values():all(func)
-	end
-	function Dict:toString()
-	    return textutils.serialise(self.data)
-	end
-	return Dict
-end
-local utils_data_Dict = MODULE_utils_data_Dict()
+local utils_data_Collections = MODULE_utils_data_Collections()
 
 
 function MODULE_jobs_definitions_misc_test_modules_data_ModuleDataTest()
 	local Test = utils_other_Test
-	local List = utils_data_List
-	local Dict = utils_data_Dict
+	local Collections = utils_data_Collections
 	local ListUtils = utils_data_ListUtils
+	local Dict = Collections.Dict
+	local List = Collections.List
 	local class = {}
 	class.__index = class
 	function class.new(job)
@@ -1652,7 +1610,6 @@ function MODULE_jobs_definitions_misc_test_TestJob()
 	local CommonEventImplementations = utils_jobutils_CommonEventImplementations
 	local Job = jobs_Job
 	local LogProtocol = utils_network_protocols_logging_LogProtocol
-	local ModuleExampleTest = jobs_definitions_misc_test_modules_ModuleExampleTest
 	local ModuleDataTest = jobs_definitions_misc_test_modules_data_ModuleDataTest
 	local FollowerJob = {}
 	FollowerJob.__index = FollowerJob
