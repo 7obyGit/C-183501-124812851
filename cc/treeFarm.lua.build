@@ -24,6 +24,7 @@ function MODULE_jobs_Job()
 	Job.EXAMPLE = "ExampleJob"
 	Job.IDLE = "IdleJob"
 	Job.SETUP = "SetupJob"
+	Job.TEST_JOB = "TestJob"
 	Job.PROGRAMMABLE_JOB = "ProgrammableJob"
 	Job.QUARRY = "QuarryJob"
 	Job.TREE_FARM = "TreeFarmJob"
@@ -432,8 +433,8 @@ function MODULE_jobs_JobManager()
 	        job.name = jobClass.name .. ":" .. LibOs.getComputerID()
 	    end
 	    job.log = function(...) print(...) job.logSilent(...) end
-	    job.logSilent = function(...) if job.protocols ~= nil then job.protocols.log:sendLog(...) end end
-	    job.logToChannel = function(channel, ...) if job.protocols ~= nil then job.protocols.log:sendLogToChannel(channel, ...) end end
+	    job.logSilent = function(...) if job.protocols ~= nil and job.protocols.log ~= nil then job.protocols.log:sendLog(...) end end
+	    job.logToChannel = function(channel, ...) if job.protocols ~= nil and job.protocols.log ~= nil then job.protocols.log:sendLogToChannel(channel, ...) end end
 	    if job == nil then
 	        print("Job not found: " .. jobClass.name)
 	        return
