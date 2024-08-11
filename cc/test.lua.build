@@ -982,7 +982,6 @@ local utils_other_Test = MODULE_utils_other_Test()
 
 function MODULE_utils_data_Dict()
 	local List = utils_data_List
-	print(List)
 	local Dict = {}
 	Dict.__index = Dict
 	Dict.TYPE = "Dict"
@@ -1110,6 +1109,7 @@ function MODULE_utils_data_Dict()
 	    return results
 	end
 	function Dict:filter(func)
+	    print(List)
 	    local results = Dict.new()
 	    for key, value in pairs(self.data) do
 	        if func(key, value) then
