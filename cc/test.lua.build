@@ -1708,6 +1708,7 @@ function MODULE_jobs_definitions_misc_test_TestJob()
 	            print("    - Failed: " .. test.name .. " - " .. test.result)
 	        end
 	    end
+	    print()
 	    print("Tests complete: " .. totalPassed .. "/" .. total .. " passed, " .. totalFailed .. "/" .. total .. " failed")
 	    self.config:set("alive", false)
 	end
