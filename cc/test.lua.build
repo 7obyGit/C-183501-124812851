@@ -913,7 +913,10 @@ function MODULE_jobs_definitions_misc_test_modules_ModuleExampleTest()
 	    return self
 	end
 	function class.exampleTest1()
-	    return "Hello world!"
+	    return "Hello world 1!"
+	end
+	function class:exampleTest2()
+	    return "Hello world 2!"
 	end
 	return class
 end
