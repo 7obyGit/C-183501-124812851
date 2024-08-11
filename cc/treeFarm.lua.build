@@ -2533,6 +2533,10 @@ function MODULE_jobs_definitions_mobile_treeFarm_TreeFarmStates()
 	    end
 	    local isPlantable = block.name == Blocks.dirt or block.name == Blocks.grass_block
 	    if isPlantable then
+	        local blockAbove = Turtle.getBlockAbove()
+	        if blockAbove ~= nil and Block.isLeaf(blockAbove.name) then
+	            Turtle.digUp()
+	        end
 	        Turtle.up()
 	        return
 	    end
