@@ -933,12 +933,678 @@ end
 local jobs_definitions_misc_test_modules_ModuleExampleTest = MODULE_jobs_definitions_misc_test_modules_ModuleExampleTest()
 
 
+function MODULE_utils_other_Test()
+	local Test = {}
+	function Test.assertEqual(a, b)
+	    if a ~= b then
+	        error("Expected " .. tostring(b) .. ", got " .. tostring(a))
+	    end
+	end
+	function Test.assertNotEqual(a, b)
+	    if a == b then
+	        error("Expected " .. tostring(b) .. ", got " .. tostring(a))
+	    end
+	end
+	function Test.assertTrue(value)
+	    if not value then
+	        error("Expected true, got " .. tostring(value))
+	    end
+	end
+	function Test.assertFalse(value)
+	    if value then
+	        error("Expected false, got " .. tostring(value))
+	    end
+	end
+	function Test.assertNil(value)
+	    if value ~= nil then
+	        error("Expected nil, got " .. tostring(value))
+	    end
+	end
+	function Test.assertNotNil(value)
+	    if value == nil then
+	        error("Expected not nil, got " .. tostring(value))
+	    end
+	end
+	function Test.assertType(value, expectedType)
+	    if type(value) ~= expectedType then
+	        error("Expected type " .. expectedType .. ", got " .. type(value))
+	    end
+	end
+	function Test.assertNotType(value, unexpectedType)
+	    if type(value) == unexpectedType then
+	        error("Expected type other than " .. unexpectedType .. ", got " .. unexpectedType)
+	    end
+	end
+	return Test
+end
+local utils_other_Test = MODULE_utils_other_Test()
+
+
+function MODULE_utils_data_Dict()
+	local List = utils_data_List
+	local Dict = {}
+	Dict.__index = Dict
+	Dict.TYPE = "Dict"
+	function Dict.new(data)
+	    local self = setmetatable({}, {__index = Dict})
+	    self.type = Dict.TYPE
+	    self.data = data or {}
+	    return self
+	end
+	function Dict.fromTable(data)
+	    return Dict.new(data)
+	end
+	function Dict:toTable()
+	    return self.data
+	end
+	function Dict:toList()
+	    return self:items()
+	end
+	function Dict:toDict()
+	    return self:copy()
+	end
+	function Dict.fromLists(keys, values)
+	    if keys.type ~= List.TYPE then
+	        error("Keys must be a List")
+	    end
+	    if values.type ~= List.TYPE then
+	        error("Values must be a List")
+	    end
+	    local size = math.min(keys:size(), values:size())
+	    local dict = Dict.new()
+	    for index = 1, size do
+	        dict:add(keys:get(index), values:get(index))
+	    end
+	    return dict
+	end
+	function Dict:copy()
+	    local copy = Dict.new()
+	    for key, value in pairs(self.data) do
+	        copy:add(key, value)
+	    end
+	    return copy
+	end
+	function Dict:add(key, value)
+	    self.data[key] = value
+	end
+	function Dict:addAll(dict)
+	    if dict.type ~= Dict.TYPE then
+	        dict = dict.data
+	    end
+	    for key, value in pairs(dict) do
+	        self:add(key, value)
+	    end
+	end
+	function Dict:remove(key)
+	    self.data[key] = nil
+	end
+	function Dict:contains(key)
+	    return self.data[key] ~= nil
+	end
+	function Dict:containsKey(key)
+	    return self:contains(key)
+	end
+	function Dict:containsValue(value)
+	    for _, v in pairs(self.data) do
+	        if v == value then
+	            return true
+	        end
+	    end
+	    return false
+	end
+	function Dict:get(key)
+	    return self.data[key]
+	end
+	function Dict:getKey(value)
+	    for k, v in pairs(self.data) do
+	        if v == value then
+	            return k
+	        end
+	    end
+	    return nil
+	end
+	function Dict:keys()
+	    local keys = List.new()
+	    for key, _ in pairs(self.data) do
+	        keys:add(key)
+	    end
+	    return keys
+	end
+	function Dict:values()
+	    local values = List.new()
+	    for _, value in pairs(self.data) do
+	        values:add(value)
+	    end
+	    return values
+	end
+	function Dict:items()
+	    local items = List.new()
+	    for key, value in pairs(self.data) do
+	        items:add({key = key, value = value})
+	    end
+	    return items
+	end
+	function Dict:clear()
+	    self.data = {}
+	end
+	function Dict:size()
+	    local count = 0
+	    for _, _ in pairs(self.data) do
+	        count = count + 1
+	    end
+	    return count
+	end
+	function Dict:isEmpty()
+	    return self:size() == 0
+	end
+	function Dict:map(keyFunc, valueFunc)
+	    if not valueFunc then
+	        valueFunc = keyFunc
+	        keyFunc = function(key, value) return key end
+	    end
+	    local results = Dict.new()
+	    for key, value in pairs(self.data) do
+	        results:add(keyFunc(key, value), valueFunc(key, value))
+	    end
+	    return results
+	end
+	function Dict:filter(func)
+	    local results = Dict.new()
+	    for key, value in pairs(self.data) do
+	        if func(key, value) then
+	            results:add(key, value)
+	        end
+	    end
+	    return results
+	end
+	function Dict:reduce(func, initialValue)
+	    local accumulator = initialValue
+	    for key, value in pairs(self.data) do
+	        accumulator = func(accumulator, key, value)
+	    end
+	    return accumulator
+	end
+	function Dict:forEach(func)
+	    for key, value in pairs(self.data) do
+	        func(key, value)
+	    end
+	end
+	function Dict:first(default)
+	    return self
+	        :items()
+	        :first(default)
+	end
+	function Dict:last(default)
+	    return self
+	        :items()
+	        :last(default)
+	end
+	function Dict:join(separator)
+	    return self
+	        :items()
+	        :join(separator)
+	end
+	function Dict:union(dict)
+	    return self
+	        :copy()
+	        :addAll(dict)
+	end
+	function Dict:intersection(dict)
+	    return self:filter(function(key, value) return dict:containsKey(key) and dict:get(key) == value end)
+	end
+	function Dict:sum()
+	    return self:values():sum()
+	end
+	function Dict:product()
+	    return self:values():product()
+	end
+	function Dict:min()
+	    return self:values():min()
+	end
+	function Dict:max()
+	    return self:values():max()
+	end
+	function Dict:average()
+	    return self:values():average()
+	end
+	function Dict:mean()
+	    return self:values():mean()
+	end
+	function Dict:median()
+	    return self:values():median()
+	end
+	function Dict:mode()
+	    return self:values():mode()
+	end
+	function Dict:sort()
+	    print("Warning: Sorting a dictionary is not possible. Returning a copy of the dictionary.")
+	    return self:copy()
+	end
+	function Dict:reverse()
+	    print("Warning: Reversing a dictionary is not possible. Returning a copy of the dictionary.")
+	    return self:copy()
+	end
+	function Dict:shuffle()
+	    print("Warning: Shuffling a dictionary is not possible. Returning a copy of the dictionary.")
+	    return self:copy()
+	end
+	function Dict:any(func)
+	    return self:values():any(func)
+	end
+	function Dict:all(func)
+	    return self:values():all(func)
+	end
+	function Dict:toString()
+	    return textutils.serialise(self.data)
+	end
+	return Dict
+end
+local utils_data_Dict = MODULE_utils_data_Dict()
+
+
+function MODULE_utils_data_ListUtils()
+	local ListUtils = {}
+	function ListUtils.toString(value)
+	    if type(value) == "table" then
+	        return textutils.serialise(value)
+	    else
+	        return tostring(value)
+	    end
+	end
+	function ListUtils.notNil(value)
+	    return value ~= nil
+	end
+	return ListUtils
+end
+local utils_data_ListUtils = MODULE_utils_data_ListUtils()
+
+
+function MODULE_utils_data_List()
+	local Dict = utils_data_Dict
+	local ListUtils = utils_data_ListUtils
+	local List = {}
+	List.__index = List
+	List.TYPE = "List"
+	function List.new(data)
+	    local self = setmetatable({}, {__index = List})
+	    self.type = List.TYPE
+	    self.data = data or {}
+	    return self
+	end
+	function List.fromTable(data)
+	    return List.new(data)
+	end
+	function List:toTable()
+	    return self.data
+	end
+	function List:toList()
+	    return self:copy()
+	end
+	function List:toDict()
+	    local dict = Dict.new()
+	    for i, v in ipairs(self.data) do
+	        dict:add(v, i)
+	    end
+	    return dict
+	end
+	function List:copy()
+	    local copy = List.new()
+	    for i, v in ipairs(self.data) do
+	        copy:add(v)
+	    end
+	    return copy
+	end
+	function List:add(value)
+	    table.insert(self.data, value)
+	end
+	function List:addAll(list)
+	    if list.type ~= List.TYPE then
+	        list = list.data
+	    end
+	    for i, v in ipairs(list) do
+	        self:add(v)
+	    end
+	end
+	function List:insert(index, value)
+	    table.insert(self.data, index, value)
+	end
+	function List:remove(value)
+	    for i, v in ipairs(self.data) do
+	        if v == value then
+	            table.remove(self.data, i)
+	            return
+	        end
+	    end
+	end
+	function List:contains(value)
+	    for _, v in ipairs(self.data) do
+	        if v == value then
+	            return true
+	        end
+	    end
+	    return false
+	end
+	function List:containsKey(index)
+	    return self.data[index] ~= nil
+	end
+	function List:containsValue(value)
+	    return self:contains(value)
+	end
+	function List:get(index)
+	    return self.data[index]
+	end
+	function List:getKey(value)
+	    for i, v in ipairs(self.data) do
+	        if v == value then
+	            return i
+	        end
+	    end
+	    return nil
+	end
+	function List:keys()
+	    local keys = List.new()
+	    for i, _ in ipairs(self.data) do
+	        keys:insert(i)
+	    end
+	    return keys
+	end
+	function List:values()
+	    return self:copy()
+	end
+	function List:items()
+	    local items = List.new()
+	    for key, value in ipairs(self.data) do
+	        items:insert({key = key, value = value})
+	    end
+	    return items
+	end
+	function List:clear()
+	    self.data = {}
+	end
+	function List:size()
+	    return #self.data
+	end
+	function List:isEmpty()
+	    return #self.data == 0
+	end
+	function List:map(func)
+	    local results = List.new()
+	    for i, v in ipairs(self.data) do
+	        results:add(func(v))
+	    end
+	    return results
+	end
+	function List:filter(func)
+	    local results = List.new()
+	    for i, v in ipairs(self.data) do
+	        if func(v) then
+	            results:add(v)
+	        end
+	    end
+	    return results
+	end
+	function List:reduce(func, initialValue)
+	    local accumulator = initialValue
+	    for i, v in ipairs(self.data) do
+	        accumulator = func(accumulator, v)
+	    end
+	    return accumulator
+	end
+	function List:forEach(func)
+	    for i, v in ipairs(self.data) do
+	        func(v)
+	    end
+	end
+	function List:first(default)
+	    if self:isEmpty() then
+	        return default
+	    end
+	    return self.data[1]
+	end
+	function List:last(default)
+	    if self:isEmpty() then
+	        return default
+	    end
+	    return self.data[#self.data]
+	end
+	function List:join(separator)
+	    return table.concat(self:map(ListUtils.toString), separator)
+	end
+	function List:union(list)
+	    return self
+	        :copy()
+	        :addAll(list:filter(function(v) return not self:contains(v) end))
+	end
+	function List:intersection(list)
+	    return self:filter(function(v) return list:contains(v) end)
+	end
+	function List:sum()
+	    return self:reduce(function(a, b) return a + b end, 0)
+	end
+	function List:product()
+	    return self:reduce(function(a, b) return a * b end, 1)
+	end
+	function List:min()
+	    return self:reduce(function(a, b) return math.min(a, b) end, math.huge)
+	end
+	function List:max()
+	    return self:reduce(function(a, b) return math.max(a, b) end, -math.huge)
+	end
+	function List:average()
+	    return self:sum() / self:size()
+	end
+	function List:mean()
+	    return self:average()
+	end
+	function List:median()
+	    local sorted = self:copy():sort()
+	    local size = sorted:size()
+	    if size % 2 == 0 then
+	        return (sorted:get(size / 2) + sorted:get(size / 2 + 1)) / 2
+	    else
+	        return sorted:get(math.ceil(size / 2))
+	    end
+	end
+	function List:mode()
+	    local counts = Dict.new()
+	    for i, v in ipairs(self.data) do
+	        counts:add(v, (counts:get(v) or 0) + 1)
+	    end
+	    local maxCount = 0
+	    local modes = List.new()
+	    counts:forEach(function(k, v)
+	        if v > maxCount then
+	            modes:clear()
+	            modes:add(k)
+	            maxCount = v
+	        elseif v == maxCount then
+	            modes:add(k)
+	        end
+	    end)
+	    return modes
+	end
+	function List:sort(func)
+	    func = func or function(a, b) return a < b end
+	    local sorted = self:copy()
+	    table.sort(sorted.data, func)
+	    return sorted
+	end
+	function List:reverse()
+	    local reversed = List.new()
+	    for i = #self.data, 1, -1 do
+	        reversed:add(self.data[i])
+	    end
+	    return reversed
+	end
+	function List:shuffle()
+	    local shuffled = self:copy()
+	    for i = #shuffled.data, 1, -1 do
+	        local j = math.random(1, i)
+	        shuffled.data[i], shuffled.data[j] = shuffled.data[j], shuffled.data[i]
+	    end
+	    return shuffled
+	end
+	function List:any(func)
+	    if not func then
+	        for i, v in ipairs(self.data) do
+	            if v then
+	                return true
+	            end
+	        end
+	    end
+	    for i, v in ipairs(self.data) do
+	        if func(v) then
+	            return true
+	        end
+	    end
+	    return false
+	end
+	function List:all(func)
+	    if not func then
+	        for i, v in ipairs(self.data) do
+	            if not v then
+	                return false
+	            end
+	        end
+	    end
+	    for i, v in ipairs(self.data) do
+	        if not func(v) then
+	            return false
+	        end
+	    end
+	    return true
+	end
+	function List:toString()
+	    return textutils.serialise(self.data)
+	end
+	return List
+end
+local utils_data_List = MODULE_utils_data_List()
+
+
+function MODULE_jobs_definitions_misc_test_modules_data_ModuleDataTest()
+	local Test = utils_other_Test
+	local List = utils_data_List
+	local Dict = utils_data_Dict
+	local ListUtils = utils_data_ListUtils
+	local class = {}
+	class.__index = class
+	function class.new(job)
+	    local self = setmetatable({}, class)
+	    self.job = job
+	    return self
+	end
+	function class.createList()
+	    local list = List.new()
+	    local listString = list:toString()
+	    Test.assertEqual(listString, "{}")
+	    list:add(1)
+	    list:add(2)
+	    list:add(3)
+	    listString = list:toString()
+	    Test.assertEqual(listString, "{1, 2, 3}")
+	end
+	function class.createDict()
+	    local dict = Dict.new()
+	    local dictString = dict:toString()
+	    Test.assertEqual(dictString, "{}")
+	    dict:add("a", 1)
+	    dict:add("b", 2)
+	    dict:add("c", 3)
+	    dictString = dict:toString()
+	    Test.assertEqual(dictString, "{a=1, b=2, c=3}")
+	end
+	function class.listToDict()
+	    local list = List.new()
+	    list:add("a")
+	    list:add("b")
+	    list:add("c")
+	    local dict = list:toDict()
+	    local dictString = dict:toString()
+	    Test.assertEqual(dictString, "{a=1, b=2, c=3}")
+	end
+	function class.dictToList()
+	    local dict = Dict.new()
+	    dict:add("a", 1)
+	    dict:add("b", 2)
+	    dict:add("c", 3)
+	    local list = dict:toList()
+	    local listString = list:toString()
+	    Test.assertEqual(listString, "{{key=a, value=1}, {key=b, value=2}, {key=c, value=3}")
+	end
+	function class.listSum()
+	    local list = List.new()
+	    list:add(1)
+	    list:add(2)
+	    list:add(3)
+	    local sum = list:sum()
+	    Test.assertEqual(sum, 6)
+	end
+	function class.dictSum()
+	    local dict = Dict.new()
+	    dict:add("a", 1)
+	    dict:add("b", 2)
+	    dict:add("c", 3)
+	    local sum = dict:sum()
+	    Test.assertEqual(sum, 6)
+	end
+	function class.listMap()
+	    local list = List.new()
+	    list:add(1)
+	    list:add(2)
+	    list:add(3)
+	    local mappedList = list:map(function(value) return value * 2 end)
+	    local mappedListString = mappedList:toString()
+	    Test.assertEqual(mappedListString, "{2, 4, 6}")
+	end
+	function class.dictMap()
+	    local dict = Dict.new()
+	    dict:add("a", 1)
+	    dict:add("b", 2)
+	    dict:add("c", 3)
+	    local mappedDict = dict:map(function(value) return value * 2 end)
+	    local mappedDictString = mappedDict:toString()
+	    Test.assertEqual(mappedDictString, "{a=2, b=4, c=6}")
+	end
+	function class.listFilter()
+	    local list = List.new()
+	    list:add(1)
+	    list:add(2)
+	    list:add(3)
+	    local filteredList = list:filter(function(value) return value > 1 end)
+	    local filteredListString = filteredList:toString()
+	    Test.assertEqual(filteredListString, "{2, 3}")
+	end
+	function class.dictFilter()
+	    local dict = Dict.new()
+	    dict:add("a", 1)
+	    dict:add("b", 2)
+	    dict:add("c", 3)
+	    local filteredDict = dict:filter(function(value) return value > 1 end)
+	    local filteredDictString = filteredDict:toString()
+	    Test.assertEqual(filteredDictString, "{b=2, c=3}")
+	end
+	function class.listFilterNotNil()
+	    local list = List.new()
+	    list:add(1)
+	    list:add(nil)
+	    list:add(3)
+	    local filteredList = list:filter(ListUtils.notNil)
+	    local filteredListString = filteredList:toString()
+	    Test.assertEqual(filteredListString, "{1, 3}")
+	end
+	return class
+end
+local jobs_definitions_misc_test_modules_data_ModuleDataTest = MODULE_jobs_definitions_misc_test_modules_data_ModuleDataTest()
+
+
 function MODULE_jobs_definitions_misc_test_TestJob()
 	local Commands = utils_terminal_commands_Commands
 	local CommonEventImplementations = utils_jobutils_CommonEventImplementations
 	local Job = jobs_Job
 	local LogProtocol = utils_network_protocols_logging_LogProtocol
 	local ModuleExampleTest = jobs_definitions_misc_test_modules_ModuleExampleTest
+	local ModuleDataTest = jobs_definitions_misc_test_modules_data_ModuleDataTest
 	local FollowerJob = {}
 	FollowerJob.__index = FollowerJob
 	FollowerJob.name = Job.TEST_JOB
