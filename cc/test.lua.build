@@ -1705,7 +1705,7 @@ function MODULE_jobs_definitions_misc_test_TestJob()
 	        total = total + moduleTestCount
 	        print(" -> Module: '" .. moduleName .. "' (" .. #passed .. "/" .. moduleTestCount .. ")")
 	        for _, test in ipairs(failed) do
-	            print("    - Failed: " .. test.name .. " - " .. test.result)
+	            print("    " .. test.name .. " - " .. test.result)
 	        end
 	    end
 	    print()
