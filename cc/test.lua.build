@@ -1226,6 +1226,7 @@ function MODULE_utils_data_List()
 	List.__index = List
 	List.TYPE = "List"
 	function List.new(data)
+	    print(Dict)
 	    local self = setmetatable({}, {__index = List})
 	    self.type = List.TYPE
 	    self.data = data or {}
@@ -1535,7 +1536,6 @@ function MODULE_jobs_definitions_misc_test_modules_data_ModuleDataTest()
 	local class = {}
 	class.__index = class
 	function class.new(job)
-	    print(Dict)
 	    local self = setmetatable({}, class)
 	    self.job = job
 	    return self
