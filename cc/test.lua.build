@@ -913,10 +913,11 @@ function MODULE_jobs_definitions_misc_test_modules_ModuleExampleTest()
 	    return self
 	end
 	function class.exampleTest1()
-	    print("Example test 1")
+	    local x = 4
+	    local y = 0
+	    local z = x / y
 	end
 	function class:exampleTest2()
-	    print("Example test 2")
 	end
 	return class
 end
