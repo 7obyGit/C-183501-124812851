@@ -958,12 +958,7 @@ function MODULE_jobs_definitions_misc_test_TestJob()
 	function FollowerJob:onStep()
 	    for moduleName, module in pairs(self.modules) do
 	        print("Running tests for module: " .. moduleName)
-	        print("START")
-	        for _, test in ipairs(module) do
-	            print(test)
-	        end
-	        print("END")
-	        for testName, test in pairs(module) do
+	        for testName, test in pairs(module.__index) do
 	            print(testName)
 	            if testName ~= "new" and testName ~= "job" then
 	                local success, result = pcall(test)
