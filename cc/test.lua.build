@@ -1668,7 +1668,7 @@ function MODULE_jobs_definitions_misc_test_TestJob()
 	        end
 	    end
 	    print()
-	    print("Tests complete: " .. totalPassed .. "/" .. total .. " passed, " .. totalFailed .. "/" .. total .. " failed")
+	    print("Tests complete: " .. totalPassed .. "/" .. total .. " passed")
 	    self.config:set("alive", false)
 	end
 	function FollowerJob:onComplete()
