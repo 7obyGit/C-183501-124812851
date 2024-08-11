@@ -1021,6 +1021,7 @@ function MODULE_utils_data_List()
 	    return self:copy()
 	end
 	function List:toDict()
+	    print(getDict())
 	    local dict = getDict().new()
 	    for i, v in ipairs(self.data) do
 	        dict:add(v, i)
