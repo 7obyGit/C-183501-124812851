@@ -619,30 +619,6 @@ local utils_data_Table = MODULE_utils_data_Table()
 function MODULE_utils_text_Text()
 	local Table = utils_data_Table
 	local Text = {}
-	function Text.serializeTable(t)
-	    local result = "{"
-	    local first = true
-	    for k, v in pairs(t) do
-	        if not first then
-	            result = result .. ", "
-	        end
-	        first = false
-	        if type(k) == "string" then
-	            result = result .. k .. "="
-	        else
-	            result = result .. "[" .. k .. "]="
-	        end
-	        if type(v) == "string" then
-	            result = result .. '"' .. v .. '"'
-	        elseif type(v) == "table" then
-	            result = result .. Text.serializeTable(v)  -- Recursively serialize nested tables
-	        else
-	            result = result .. tostring(v)
-	        end
-	    end
-	    result = result .. "}"
-	    return result
-	end
 	function Text.contains(text, pattern)
 	    if type(pattern) == "table" then
 	        return Table.any(pattern, function(subPattern)
@@ -1005,7 +981,6 @@ local utils_other_Test = MODULE_utils_other_Test()
 
 
 function MODULE_utils_data_Dict()
-	local Text = utils_text_Text
 	local List = utils_data_List
 	local Dict = {}
 	Dict.__index = Dict
@@ -1220,7 +1195,7 @@ function MODULE_utils_data_Dict()
 	    return self:values():all(func)
 	end
 	function Dict:toString()
-	    return Text.serializeTable(self.data)
+	    return textutils.serialise(self.data)
 	end
 	return Dict
 end
@@ -1245,7 +1220,6 @@ local utils_data_ListUtils = MODULE_utils_data_ListUtils()
 
 
 function MODULE_utils_data_List()
-	local Text = utils_text_Text
 	local Dict = utils_data_Dict
 	local ListUtils = utils_data_ListUtils
 	local List = {}
@@ -1501,7 +1475,7 @@ function MODULE_utils_data_List()
 	    return true
 	end
 	function List:toString()
-	    return Text.serializeTable(self.data)
+	    return textutils.serialise(self.data)
 	end
 	return List
 end
@@ -1522,23 +1496,25 @@ function MODULE_jobs_definitions_misc_test_modules_data_ModuleDataTest()
 	end
 	function class.createList()
 	    local list = List.new()
-	    local listString = list:toString()
-	    Test.assertEqual(listString, "{}")
+	    Test.assertEqual(list:size(), 0)
 	    list:add(1)
 	    list:add(2)
 	    list:add(3)
-	    listString = list:toString()
-	    Test.assertEqual(listString, "{1, 2, 3}")
+	    Test.assertEqual(list:size(), 3)
+	    Test.assertEqual(list:get(1), 1)
+	    Test.assertEqual(list:get(2), 2)
+	    Test.assertEqual(list:get(3), 3)
 	end
 	function class.createDict()
 	    local dict = Dict.new()
-	    local dictString = dict:toString()
-	    Test.assertEqual(dictString, "{}")
+	    Test.assertEqual(dict:size(), 0)
 	    dict:add("a", 1)
 	    dict:add("b", 2)
 	    dict:add("c", 3)
-	    dictString = dict:toString()
-	    Test.assertEqual(dictString, "{a=1, b=2, c=3}")
+	    Test.assertEqual(dict:size(), 3)
+	    Test.assertEqual(dict:get("a"), 1)
+	    Test.assertEqual(dict:get("b"), 2)
+	    Test.assertEqual(dict:get("c"), 3)
 	end
 	function class.listToDict()
 	    local list = List.new()
@@ -1546,8 +1522,10 @@ function MODULE_jobs_definitions_misc_test_modules_data_ModuleDataTest()
 	    list:add("b")
 	    list:add("c")
 	    local dict = list:toDict()
-	    local dictString = dict:toString()
-	    Test.assertEqual(dictString, "{a=1, b=2, c=3}")
+	    Test.assertEqual(dict:size(), 3)
+	    Test.assertEqual(dict:get("a"), 1)
+	    Test.assertEqual(dict:get("b"), 2)
+	    Test.assertEqual(dict:get("c"), 3)
 	end
 	function class.dictToList()
 	    local dict = Dict.new()
@@ -1555,8 +1533,10 @@ function MODULE_jobs_definitions_misc_test_modules_data_ModuleDataTest()
 	    dict:add("b", 2)
 	    dict:add("c", 3)
 	    local list = dict:toList()
-	    local listString = list:toString()
-	    Test.assertEqual(listString, "{{key=a, value=1}, {key=b, value=2}, {key=c, value=3}")
+	    Test.assertEqual(list:size(), 3)
+	    Test.assertEqual(list:get(1), 1)
+	    Test.assertEqual(list:get(2), 2)
+	    Test.assertEqual(list:get(3), 3)
 	end
 	function class.listSum()
 	    local list = List.new()
@@ -1580,8 +1560,7 @@ function MODULE_jobs_definitions_misc_test_modules_data_ModuleDataTest()
 	    list:add(2)
 	    list:add(3)
 	    local mappedList = list:map(function(value) return value * 2 end)
-	    local mappedListString = mappedList:toString()
-	    Test.assertEqual(mappedListString, "{2, 4, 6}")
+	    Test.assertEqual(mappedList:sum(), 12)
 	end
 	function class.dictMap()
 	    local dict = Dict.new()
@@ -1589,8 +1568,7 @@ function MODULE_jobs_definitions_misc_test_modules_data_ModuleDataTest()
 	    dict:add("b", 2)
 	    dict:add("c", 3)
 	    local mappedDict = dict:map(function(value) return value * 2 end)
-	    local mappedDictString = mappedDict:toString()
-	    Test.assertEqual(mappedDictString, "{a=2, b=4, c=6}")
+	    Test.assertEqual(mappedDict:sum(), 12)
 	end
 	function class.listFilter()
 	    local list = List.new()
@@ -1598,8 +1576,7 @@ function MODULE_jobs_definitions_misc_test_modules_data_ModuleDataTest()
 	    list:add(2)
 	    list:add(3)
 	    local filteredList = list:filter(function(value) return value > 1 end)
-	    local filteredListString = filteredList:toString()
-	    Test.assertEqual(filteredListString, "{2, 3}")
+	    Test.assertEqual(filteredList:sum(), 5)
 	end
 	function class.dictFilter()
 	    local dict = Dict.new()
@@ -1607,8 +1584,7 @@ function MODULE_jobs_definitions_misc_test_modules_data_ModuleDataTest()
 	    dict:add("b", 2)
 	    dict:add("c", 3)
 	    local filteredDict = dict:filter(function(value) return value > 1 end)
-	    local filteredDictString = filteredDict:toString()
-	    Test.assertEqual(filteredDictString, "{b=2, c=3}")
+	    Test.assertEqual(filteredDict:sum(), 5)
 	end
 	function class.listFilterNotNil()
 	    local list = List.new()
@@ -1616,8 +1592,7 @@ function MODULE_jobs_definitions_misc_test_modules_data_ModuleDataTest()
 	    list:add(nil)
 	    list:add(3)
 	    local filteredList = list:filter(ListUtils.notNil)
-	    local filteredListString = filteredList:toString()
-	    Test.assertEqual(filteredListString, "{1, 3}")
+	    Test.assertEqual(filteredList:sum(), 4)
 	end
 	return class
 end

@@ -1742,30 +1742,6 @@ local utils_storage_machines_Furnace = MODULE_utils_storage_machines_Furnace()
 function MODULE_utils_text_Text()
 	local Table = utils_data_Table
 	local Text = {}
-	function Text.serializeTable(t)
-	    local result = "{"
-	    local first = true
-	    for k, v in pairs(t) do
-	        if not first then
-	            result = result .. ", "
-	        end
-	        first = false
-	        if type(k) == "string" then
-	            result = result .. k .. "="
-	        else
-	            result = result .. "[" .. k .. "]="
-	        end
-	        if type(v) == "string" then
-	            result = result .. '"' .. v .. '"'
-	        elseif type(v) == "table" then
-	            result = result .. Text.serializeTable(v)  -- Recursively serialize nested tables
-	        else
-	            result = result .. tostring(v)
-	        end
-	    end
-	    result = result .. "}"
-	    return result
-	end
 	function Text.contains(text, pattern)
 	    if type(pattern) == "table" then
 	        return Table.any(pattern, function(subPattern)
