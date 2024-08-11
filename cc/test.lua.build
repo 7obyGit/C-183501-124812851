@@ -1660,7 +1660,9 @@ function MODULE_jobs_definitions_misc_test_TestJob()
 	        totalPassed = totalPassed + #passed
 	        totalFailed = totalFailed + #failed
 	        total = total + moduleTestCount
-	        print(" -> Module: '" .. moduleName .. "' (" .. #passed .. "/" .. moduleTestCount .. ")")
+	        if #failed ~= 0 then
+	            print(" -> Module: '" .. moduleName .. "' (" .. #passed .. "/" .. moduleTestCount .. ")")
+	        end
 	        for _, test in ipairs(failed) do
 	            print("    '" .. test.name .. "' - " .. test.result)
 	        end
