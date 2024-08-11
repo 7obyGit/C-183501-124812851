@@ -916,6 +916,7 @@ function MODULE_jobs_definitions_misc_test_modules_ModuleExampleTest()
 	    local x = 4
 	    local y = 0
 	    local z = x / y
+	    print(z)
 	end
 	function class:exampleTest2()
 	end
