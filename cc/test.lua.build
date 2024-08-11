@@ -1615,7 +1615,7 @@ function MODULE_jobs_definitions_misc_test_modules_data_ModuleDataTest()
 	    dict:add("a", 1)
 	    dict:add("b", 2)
 	    dict:add("c", 3)
-	    local mappedDict = dict:map(function(value) return value * 2 end)
+	    local mappedDict = dict:map(function(key, value) return value * 2 end)
 	    Test.assertEqual(mappedDict:sum(), 12)
 	end
 	function class.listFilter()
