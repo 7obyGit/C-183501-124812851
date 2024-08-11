@@ -975,9 +975,9 @@ function MODULE_jobs_definitions_misc_test_TestJob()
 	            end
 	        end
 	        local moduleTestCount = #failed + #passed
-	        local totalPassed = totalPassed + #passed
-	        local totalFailed = totalFailed + #failed
-	        local total = total + moduleTestCount
+	        totalPassed = totalPassed + #passed
+	        totalFailed = totalFailed + #failed
+	        total = total + moduleTestCount
 	        print(" -> Module: " .. moduleName .. " (" .. #passed .. "/" .. moduleTestCount .. ")")
 	        for _, test in ipairs(failed) do
 	            print("    - Failed: " .. test.name .. " - " .. test.result)
