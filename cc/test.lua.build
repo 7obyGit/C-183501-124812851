@@ -1612,6 +1612,7 @@ function MODULE_jobs_definitions_misc_test_TestJob()
 	    local self = setmetatable({}, FollowerJob)
 	    self.modules = {}
 	    self.modules.example = ModuleExampleTest.new(self)
+	    self.modules.data = ModuleDataTest.new(self)
 	    self.backgroundTasks = {}
 	    self.commands = Commands.new()
 	    self.config = config
