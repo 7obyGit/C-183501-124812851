@@ -957,6 +957,9 @@ function MODULE_jobs_definitions_misc_test_TestJob()
 	end
 	function FollowerJob:onStep()
 	    print("Running tests...")
+	    local totalPassed = 0
+	    local totalFailed = 0
+	    local total = 0
 	    for moduleName, module in pairs(self.modules) do
 	        local failed = {}
 	        local passed = {}
@@ -970,12 +973,16 @@ function MODULE_jobs_definitions_misc_test_TestJob()
 	                end
 	            end
 	        end
-	        local total = #failed + #passed
-	        print(" -> Module: " .. moduleName .. " (" .. #passed .. "/" .. total .. ")")
+	        local moduleTestCount = #failed + #passed
+	        local totalPassed = totalPassed + #passed
+	        local totalFailed = totalFailed + #failed
+	        local total = total + moduleTestCount
+	        print(" -> Module: " .. moduleName .. " (" .. #passed .. "/" .. moduleTestCount .. ")")
 	        for _, test in ipairs(failed) do
 	            print("    - Failed: " .. test.name .. " - " .. test.result)
 	        end
 	    end
+	    print("Tests complete: " .. totalPassed .. "/" .. total .. " passed, " .. totalFailed .. "/" .. total .. " failed")
 	    self.config:set("alive", false)
 	end
 	function FollowerJob:onComplete()
