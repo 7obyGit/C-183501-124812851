@@ -2865,7 +2865,6 @@ function MODULE_utils_storage_Storage()
 	    local batchSize = 8  -- Spread items across furnaces but do not go below 8 so as to avoid wasting coal
 	    local totalItemCount = self:getItemCount(itemName)
 	    if totalItemCount < itemCount then
-	        print("Warning: Not enough items to smelt")
 	        return nil  -- Not enough items to smelt
 	    end
 	    local locations = self:findItemLocations(itemName)
@@ -2878,11 +2877,8 @@ function MODULE_utils_storage_Storage()
 	        currentCount = currentCount - itemsToAssign
 	    end
 	    local smeltedItemCounts = Parallel.mapTableWithTimeout(acceptingFurnaces, function(index, furnace)
-	        print(index, furnace)
-	        print("Smelting " .. itemName .. " in " .. furnace)
 	        local location = locations[index]
 	        if location == nil then
-	            print("Warning: No location found for " .. furnace)
 	            return 0
 	        end
 	        local container = self.inventories[location.containerName]
