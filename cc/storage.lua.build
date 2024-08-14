@@ -2929,6 +2929,7 @@ function MODULE_utils_storage_Storage()
 	    local container = nil
 	    local remainingCount = 0
 	    for _, furnace in pairs(self.furnaces) do
+	        print(furnace, #containers)
 	        remainingCount = furnace:getOutputCount()
 	        while #containers > 0 and remainingCount > 0 do
 	            if container == nil or container:getEmptySlot() == nil then
