@@ -1726,7 +1726,8 @@ function MODULE_utils_storage_machines_Furnace()
 	        if destSlot == nil then
 	            return remainingCount
 	        end
-	        print("Destslot" .. destSlot)
+	        print("Destslot " .. destSlot)
+	        print("Destslotitem " .. textutils.serialise(destContainer:getSlot(destSlot)))
 	        local moved = sourceContainer.internal.pushItems(destContainer.name, sourceSlot, remainingCount, destSlot)
 	        remainingCount = remainingCount - moved
 	        local sourceSlotTable = sourceContainer.index:getSlot(sourceSlot) or {count = 0}
