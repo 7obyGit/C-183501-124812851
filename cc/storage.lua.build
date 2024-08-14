@@ -2484,21 +2484,21 @@ function MODULE_utils_storage_Storage()
 	function Storage.connectToChests()
 	    local inventories = {}
 	    local allPeripheralNames =  peripheral.getNames()
-	    Parallel.map(allPeripheralNames, function(name)
+	    Parallel.mapListWithTimeout(allPeripheralNames, function(name)
 	        if Text.contains(name, Blocks.chest) then
 	            inventories[name] = Container.new(name)
 	        end
-	    end)
+	    end, 5)
 	    return inventories
 	end
 	function Storage.connectToFurnaces()
 	    local furnaces = {}
 	    local allPeripheralNames =  peripheral.getNames()
-	    Parallel.map(allPeripheralNames, function(name)
+	    Parallel.mapListWithTimeout(allPeripheralNames, function(name)
 	        if Text.contains(name, Blocks.furnace) then
 	            furnaces[name] = Furnace.new(name)
 	        end
-	    end)
+	    end, 5)
 	    return furnaces
 	end
 	function Storage.connectToBarrels()
@@ -2560,20 +2560,20 @@ function MODULE_utils_storage_Storage()
 	    end
 	end
 	function Storage:updateIndex()
-	    Parallel.map(self.inventories, function(name, container) container:updateIndex() end)
-	    Parallel.map(self.barrels, function(name, container) container:updateIndex() end)
+	    Parallel.mapTableWithTimeout(self.inventories, function(name, container) container:updateIndex() end, 5)
+	    Parallel.mapTableWithTimeout(self.barrels, function(name, container) container:updateIndex() end, 5)
 	end
 	function Storage:defragment()
 	    local inventories = Table.copy(self.inventories)
 	    inventories["IO"] = self.io
 	    local status, err = pcall(
 	        function()
-	            Parallel.map(inventories, function(name, container)
+	            Parallel.mapTableWithTimeout(inventories, function(name, container)
 	                Parallel.new()
 	                    :addTask(function() container:defragment() end)
 	                    :addTimeout(2)
 	                    :waitForAny()
-	            end)
+	            end, 5)
 	        end
 	    )
 	    if not status then
@@ -2640,7 +2640,6 @@ function MODULE_utils_storage_Storage()
 	    return remainingCount
 	end
 	function Storage:moveFromIo(itemName, count, sourceContainer)
-	    print("START OF MOVE FROM IO")
 	    sourceContainer = sourceContainer or self.io
 	    local destinations = {}
 	    local remainingCount = count
@@ -2652,15 +2651,12 @@ function MODULE_utils_storage_Storage()
 	        table.insert(destinations, destinationContainer)
 	    end
 	    if math.random(1, 10) == 1 then
-	        print("Defragmenting " .. #destinations .. " containers")
 	        Parallel.mapListWithTimeout(
 	            destinations,
 	            function(destination) destination:defragment() end,
 	            5
 	        )
-	        print("Defragmented " .. #destinations .. " containers")
 	    end
-	    print("END OF MOVE FROM IO")
 	    return remainingCount
 	end
 	function Storage:dump(sourceContainer)
@@ -2676,10 +2672,10 @@ function MODULE_utils_storage_Storage()
 	    end
 	end
 	function Storage:dumpAllOtherIOs()
-	    Parallel.mapTable(self.otherIOs, function(_, otherIO)
+	    Parallel.mapTableWithTimeout(self.otherIOs, function(_, otherIO)
 	        otherIO.io:updateIndex()
 	        self:dump(otherIO.io)
-	    end)
+	    end, 5)
 	end
 	function Storage:dumpAllBarrels()
 	    for _, container in pairs(self.barrels) do
@@ -2857,13 +2853,13 @@ function MODULE_utils_storage_Storage()
 	    return itemNames
 	end
 	function Storage:getAcceptingFurnaces(itemName)
-	    local acceptingFurnaces = Parallel.mapTable(self.furnaces, function(name, furnace)
+	    local acceptingFurnaces = Parallel.mapTableWithTimeout(self.furnaces, function(name, furnace)
 	        if furnace:canAcceptItem(itemName) then
 	            return furnace
 	        else
 	            return nil
 	        end
-	    end)
+	    end, 5)
 	    acceptingFurnaces = Stream.nonNilTable(acceptingFurnaces)
 	    acceptingFurnaces = Stream.getValues(acceptingFurnaces)
 	    acceptingFurnaces = Stream.shuffleList(acceptingFurnaces)
@@ -2885,7 +2881,7 @@ function MODULE_utils_storage_Storage()
 	        itemsToAllocate[furnace.name] = itemsToAssign
 	        currentCount = currentCount - itemsToAssign
 	    end
-	    local smeltedItemCounts = Parallel.mapTable(acceptingFurnaces, function(index, furnace)
+	    local smeltedItemCounts = Parallel.mapTableWithTimeout(acceptingFurnaces, function(index, furnace)
 	        local location = locations[index]
 	        if location == nil then
 	            return 0
@@ -2894,20 +2890,20 @@ function MODULE_utils_storage_Storage()
 	        local itemsToAssign = itemsToAllocate[furnace.name]
 	        local itemsNotSmelted = furnace:smelt(container, itemName, itemsToAssign)
 	        return itemsToAssign - itemsNotSmelted
-	    end)
+	    end, 5)
 	    local totalItemsSmelted = Stream.sumList(smeltedItemCounts)
 	    remainingCount = remainingCount - totalItemsSmelted
 	    return remainingCount
 	end
 	function Storage:refuelFurnaces()
 	    local fuelItem = Blocks.charcoal
-	    local containersWithFuel = Parallel.mapTable(self.inventories, function(_, container)
+	    local containersWithFuel = Parallel.mapTableWithTimeout(self.inventories, function(_, container)
 	        if container:hasItem(fuelItem) then
 	            return container
 	        else
 	            return nil
 	        end
-	    end)
+	    end, 5)
 	    containersWithFuel = Stream.nonNilTable(containersWithFuel)
 	    containersWithFuel = Stream.getValues(containersWithFuel)
 	    containersWithFuel = Stream.shuffleList(containersWithFuel)
