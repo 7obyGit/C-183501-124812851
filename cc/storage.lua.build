@@ -2640,6 +2640,7 @@ function MODULE_utils_storage_Storage()
 	    return remainingCount
 	end
 	function Storage:moveFromIo(itemName, count, sourceContainer)
+	    print("START OF MOVE FROM IO")
 	    sourceContainer = sourceContainer or self.io
 	    local destinations = {}
 	    local remainingCount = count
@@ -2651,11 +2652,15 @@ function MODULE_utils_storage_Storage()
 	        table.insert(destinations, destinationContainer)
 	    end
 	    if math.random(1, 10) == 1 then
-	        Parallel.map(
+	        print("Defragmenting " .. #destinations .. " containers")
+	        Parallel.mapListWithTimeout(
 	            destinations,
-	            function(destination) destination:defragment() end
+	            function(destination) destination:defragment() end,
+	            5
 	        )
+	        print("Defragmented " .. #destinations .. " containers")
 	    end
+	    print("END OF MOVE FROM IO")
 	    return remainingCount
 	end
 	function Storage:dump(sourceContainer)
@@ -2665,7 +2670,9 @@ function MODULE_utils_storage_Storage()
 	    end
 	    local items = sourceContainer:getItemList()
 	    for _, item in pairs(items) do
+	        print("Moving " .. item.count .. " " .. item.name .. " from " .. sourceContainer.name)
 	        self:moveFromIo(item.name, item.count, sourceContainer)
+	        print("Moved " .. item.count .. " " .. item.name .. " from " .. sourceContainer.name)
 	    end
 	end
 	function Storage:dumpAllOtherIOs()
