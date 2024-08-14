@@ -2877,7 +2877,6 @@ function MODULE_utils_storage_Storage()
 	        currentCount = currentCount - itemsToAssign
 	    end
 	    local smeltedItemCounts = Parallel.mapTableWithTimeout(acceptingFurnaces, function(index, furnace)
-	        print(index, furnace)
 	        if furnace == nil then
 	            return 0
 	        end
@@ -3557,9 +3556,7 @@ function MODULE_jobs_definitions_static_storage_StorageBackgroundTasks()
 	                if item.count == nil or item.count == 0 then
 	                    table.insert(removedJobNumbers, smeltJobNumber)
 	                else
-	                    print("Smelting " .. item.count .. " " .. item.name)
 	                    local remainingCount = self.storage:smelt(item.name, item.count)
-	                    print("Remaining: " .. (remainingCount or 0))
 	                    item.count = remainingCount
 	                    if remainingCount == nil or remainingCount == 0 then
 	                        table.insert(removedJobNumbers, smeltJobNumber)
