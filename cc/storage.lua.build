@@ -1722,11 +1722,11 @@ function MODULE_utils_storage_machines_Furnace()
 	    local remainingCount = sourceSlotTable.count
 	    while remainingCount > 0 do
 	        local destSlot = destContainer:getEmptySlot()
-	        print("destSlot: " .. (destSlot or "nil"))
 	        print("Container: " .. destContainer.name)
 	        if destSlot == nil then
 	            return remainingCount
 	        end
+	        print("Destslot" .. destSlot)
 	        local moved = sourceContainer.internal.pushItems(destContainer.name, sourceSlot, remainingCount, destSlot)
 	        remainingCount = remainingCount - moved
 	        local sourceSlotTable = sourceContainer.index:getSlot(sourceSlot) or {count = 0}
