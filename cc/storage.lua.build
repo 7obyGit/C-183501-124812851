@@ -1709,6 +1709,7 @@ function MODULE_utils_storage_machines_Furnace()
 	    return self:clearSlot(destContainer, Furnace.INPUT_SLOT_INDEX)
 	end
 	function Furnace:clearSlot(destContainer, slotToClear)
+	    print("Clearing slot: " .. slotToClear)
 	    self.container:updateIndex()
 	    local sourceContainer = self.container
 	    local remainingCount = 0
