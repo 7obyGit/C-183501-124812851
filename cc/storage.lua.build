@@ -1711,6 +1711,7 @@ function MODULE_utils_storage_machines_Furnace()
 	function Furnace:clearSlot(destContainer, slotToClear)
 	    print("Clearing slot: " .. slotToClear)
 	    self.container:updateIndex()
+	    destContainer:updateIndex()
 	    local sourceContainer = self.container
 	    local remainingCount = 0
 	    local sourceSlot = slotToClear
