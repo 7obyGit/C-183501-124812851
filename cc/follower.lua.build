@@ -169,13 +169,20 @@ function MODULE_utils_controlflow_Parallel()
 	function Parallel.mapList(list, func)
 	    local output = {}
 	    local parallel = Parallel.new()
-	    for index, item in ipairs(list) do
-	        if item ~= nil then
-	            parallel:addTask(function()
-	                local elementResult = func(item)
-	                output[index] = elementResult
-	            end)
+	    local chunkSize = 24
+	    for i = 1, #list, chunkSize do
+	        local chunk = {}
+	        for j = i, math.min(i + chunkSize - 1, #list) do
+	            table.insert(chunk, list[j])
 	        end
+	        parallel:addTask(function()
+	            for index, item in ipairs(chunk) do
+	                if item ~= nil then
+	                    local elementResult = func(item)
+	                    output[i + index - 1] = elementResult
+	                end
+	            end
+	        end)
 	    end
 	    parallel:run()
 	    return output
@@ -183,13 +190,24 @@ function MODULE_utils_controlflow_Parallel()
 	function Parallel.mapTable(table_, func)
 	    local output = {}
 	    local parallel = Parallel.new()
-	    for key, item in pairs(table_) do
-	        if item ~= nil then
-	            parallel:addTask(function()
-	                local elementResult = func(key, item)
-	                output[key] = elementResult
-	            end)
+	    local chunkSize = 24
+	    local keys = {}
+	    for key, _ in pairs(table_) do
+	        table.insert(keys, key)
+	    end
+	    for i = 1, #keys, chunkSize do
+	        local chunk = {}
+	        for j = i, math.min(i + chunkSize - 1, #keys) do
+	            chunk[keys[j]] = table_[keys[j]]
 	        end
+	        parallel:addTask(function()
+	            for key, item in pairs(chunk) do
+	                if item ~= nil then
+	                    local elementResult = func(key, item)
+	                    output[key] = elementResult
+	                end
+	            end
+	        end)
 	    end
 	    parallel:run()
 	    return output
