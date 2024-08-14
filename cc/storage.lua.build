@@ -1709,7 +1709,6 @@ function MODULE_utils_storage_machines_Furnace()
 	    return self:clearSlot(destContainer, Furnace.INPUT_SLOT_INDEX)
 	end
 	function Furnace:clearSlot(destContainer, slotToClear)
-	    print("Clearing slot: " .. slotToClear)
 	    self.container:updateIndex()
 	    destContainer:updateIndex()
 	    local sourceContainer = self.container
@@ -1723,12 +1722,9 @@ function MODULE_utils_storage_machines_Furnace()
 	    local remainingCount = sourceSlotTable.count
 	    while remainingCount > 0 do
 	        local destSlot = destContainer:getEmptySlot()
-	        print("Container: " .. destContainer.name)
 	        if destSlot == nil then
 	            return remainingCount
 	        end
-	        print("Destslot " .. destSlot)
-	        print("Destslotitem " .. textutils.serialise(destContainer:getSlot(destSlot)))
 	        local moved = sourceContainer.internal.pushItems(destContainer.name, sourceSlot, remainingCount, destSlot)
 	        remainingCount = remainingCount - moved
 	        local sourceSlotTable = sourceContainer.index:getSlot(sourceSlot) or {count = 0}
@@ -2934,14 +2930,11 @@ function MODULE_utils_storage_Storage()
 	    local container = nil
 	    local remainingCount = 0
 	    for _, furnace in pairs(self.furnaces) do
-	        print(furnace, #containers)
 	        remainingCount = furnace:getOutputCount()
 	        while #containers > 0 and remainingCount > 0 do
-	            print("Remaining: " .. remainingCount)
 	            if container == nil or container:getEmptySlot() == nil then
 	                container = table.remove(containers, 1)
 	            end
-	            print("Ended remaining: " .. remainingCount)
 	            remainingCount = furnace:clearOutputs(container)
 	        end
 	        if remainingCount > 0 then
