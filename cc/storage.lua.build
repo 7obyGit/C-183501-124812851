@@ -2684,9 +2684,7 @@ function MODULE_utils_storage_Storage()
 	    end
 	    local items = sourceContainer:getItemList()
 	    for _, item in pairs(items) do
-	        print("Moving " .. item.count .. " " .. item.name)
 	        self:moveFromIo(item.name, item.count, sourceContainer)
-	        print("Moved " .. item.count .. " " .. item.name)
 	    end
 	end
 	function Storage:dumpAllOtherIOs()
