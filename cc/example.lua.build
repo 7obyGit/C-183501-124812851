@@ -204,7 +204,7 @@ function MODULE_utils_controlflow_Parallel()
 	            :waitForAny()
 	        return result
 	    end
-	    return Parallel.map(obj, funcWithTimeout)
+	    return Parallel.mapList(obj, funcWithTimeout)
 	end
 	function Parallel.mapTableWithTimeout(obj, func, timeoutSeconds)
 	    timeoutSeconds = timeoutSeconds or 1
@@ -216,7 +216,7 @@ function MODULE_utils_controlflow_Parallel()
 	            :waitForAny()
 	        return result
 	    end
-	    return Parallel.map(obj, funcWithTimeout)
+	    return Parallel.mapTable(obj, funcWithTimeout)
 	end
 	return Parallel
 end
