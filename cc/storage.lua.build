@@ -2932,9 +2932,11 @@ function MODULE_utils_storage_Storage()
 	        print(furnace, #containers)
 	        remainingCount = furnace:getOutputCount()
 	        while #containers > 0 and remainingCount > 0 do
+	            print("Remaining: " .. remainingCount)
 	            if container == nil or container:getEmptySlot() == nil then
 	                container = table.remove(containers, 1)
 	            end
+	            print("Ended remaining: " .. remainingCount)
 	            remainingCount = furnace:clearOutputs(container)
 	        end
 	        if remainingCount > 0 then
