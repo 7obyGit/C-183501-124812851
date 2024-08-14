@@ -2794,6 +2794,8 @@ function MODULE_utils_storage_Container()
 	    return self.internal.getItemLimit(slotNumber)
 	end
 	function Container:putItems(sourceContainer, itemName, count)
+	    sourceContainer:updateIndex()
+	    self:updateIndex()
 	    if self.internal == nil or sourceContainer.internal == nil then
 	        return count
 	    end
