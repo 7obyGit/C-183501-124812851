@@ -2930,14 +2930,13 @@ function MODULE_utils_storage_Container()
 	    return self.internal.getItemLimit(slotNumber)
 	end
 	function Container:putItems(sourceContainer, itemName, count)
-	    sourceContainer:updateIndex()
-	    self:updateIndex()
 	    if self.internal == nil or sourceContainer.internal == nil then
 	        return count
 	    end
 	    local destContainer = self
 	    local remainingCount = count
-	    while remainingCount > 0 do
+	    local attempts = 0
+	    while remainingCount > 0 and attempts < self.size do
 	        local sourceSlotTable = sourceContainer:findItemSlot(itemName)
 	        if sourceSlotTable == nil then
 	            return remainingCount  -- Source container is empty
@@ -2954,6 +2953,7 @@ function MODULE_utils_storage_Container()
 	        local destSlotCount = moved  -- Was initially empty
 	        sourceContainer.index:updateSlot(sourceSlot, itemName, sourceSlotCount)
 	        destContainer.index:updateSlot(destSlot, itemName, destSlotCount)
+	        attempts = attempts + 1
 	    end
 	    return remainingCount
 	end
