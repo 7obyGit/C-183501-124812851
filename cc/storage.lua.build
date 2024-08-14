@@ -1721,6 +1721,8 @@ function MODULE_utils_storage_machines_Furnace()
 	    local remainingCount = sourceSlotTable.count
 	    while remainingCount > 0 do
 	        local destSlot = destContainer:getEmptySlot()
+	        print("destSlot: " .. destSlot)
+	        print("Container: " .. destContainer.name)
 	        if destSlot == nil then
 	            return remainingCount
 	        end
