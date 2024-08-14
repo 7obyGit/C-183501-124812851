@@ -170,7 +170,6 @@ function MODULE_utils_controlflow_Parallel()
 	    local output = {}
 	    local parallel = Parallel.new()
 	    local chunkSize = 24
-	    print("CALLED list")
 	    for i = 1, #list, chunkSize do
 	        local chunk = {}
 	        for j = i, math.min(i + chunkSize - 1, #list) do
@@ -196,7 +195,6 @@ function MODULE_utils_controlflow_Parallel()
 	    for key, _ in pairs(table_) do
 	        table.insert(keys, key)
 	    end
-	    print("CALLED table")
 	    for i = 1, #keys, chunkSize do
 	        local chunk = {}
 	        for j = i, math.min(i + chunkSize - 1, #keys) do
