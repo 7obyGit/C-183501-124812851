@@ -2878,10 +2878,10 @@ function MODULE_utils_storage_Storage()
 	        currentCount = currentCount - itemsToAssign
 	    end
 	    local smeltedItemCounts = Parallel.mapTableWithTimeout(acceptingFurnaces, function(index, furnace)
-	        print("Smelting " .. itemName .. " in " .. furnace.name)
+	        print("Smelting " .. itemName .. " in " .. furnace)
 	        local location = locations[index]
 	        if location == nil then
-	            print("Warning: No location found for " .. furnace.name)
+	            print("Warning: No location found for " .. furnace)
 	            return 0
 	        end
 	        local container = self.inventories[location.containerName]
