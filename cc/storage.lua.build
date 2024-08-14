@@ -2698,8 +2698,10 @@ function MODULE_utils_storage_Storage()
 	end
 	function Storage:dumpAllInputs()
 	    for _, container in pairs(self.inputs) do
+	        print("Dumping " .. container.name)
 	        container:updateIndex()
 	        self:dump(container)
+	        print("Dumped " .. container.name)
 	    end
 	end
 	function Storage:populateKeepFilledBarrels()
