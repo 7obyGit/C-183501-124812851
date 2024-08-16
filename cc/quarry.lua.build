@@ -2608,7 +2608,15 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryStates()
 	    end
 	    if currentPosition.y ~= dumpPosition.y then
 	        local direction = currentPosition:verticalDirectionTo(dumpPosition)
-	        Turtle.move(direction)
+	        local moved = Turtle.move(direction)
+	        if not moved then
+	            local success = Turtle.safeDig(direction)
+	            if not success then
+	                self.log("Cannot move to the dump position - turtle is stuck")
+	                self.log("Please move the turtle manually")
+	                self.config:set("state", self.states.COMMAND_PROMPT)
+	            end
+	        end
 	        return
 	    end
 	    local direction = currentPosition:directionTo(dumpPosition)
