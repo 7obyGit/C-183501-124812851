@@ -3468,10 +3468,6 @@ function MODULE_utils_network_protocols_logging_LogProtocol()
 	    end)
 	end
 	function LogProtocol:_send(command, message)
-	    print("Sending log message")
-	    print("Command: " .. command)
-	    print("Message: " .. message)
-	    print("Protocol: " .. self.protocolName)
 	    Network.broadcast({
 	        command = command,
 	        message = message,
@@ -3551,8 +3547,8 @@ function MODULE_jobs_definitions_mobile_treeFarm_TreeFarmJob()
 	    self.backgroundTask = function() self:onBackgroundStep() end
 	    self.backgroundDelay = 5  -- This task should be infrequent
 	    self.commands = Commands.new()
-	    self.commands:add(Command.new("exit", "Terminates the program", function(...) CommonCommands.commandExit(self, ...) end))
-	    self.commands:add(Command.new("start", "Starts the program", function(...) TreeFarmCommands.commandTreeFarmStart(self, ...) end))
+	    self.commands:add("exit", Command.new("exit", "Terminates the program", function(...) CommonCommands.commandExit(self, ...) end))
+	    self.commands:add("start", Command.new("start", "Starts the program", function(...) TreeFarmCommands.commandTreeFarmStart(self, ...) end))
 	    self.config = config
 	    self.states = {
 	        COMMAND_PROMPT = "COMMAND_PROMPT",
