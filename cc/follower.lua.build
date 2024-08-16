@@ -3311,6 +3311,10 @@ function MODULE_utils_network_protocols_logging_LogProtocol()
 	    end)
 	end
 	function LogProtocol:_send(command, message)
+	    print("Sending log message")
+	    print("Command: " .. command)
+	    print("Message: " .. message)
+	    print("Protocol: " .. self.protocolName)
 	    Network.broadcast({
 	        command = command,
 	        message = message,
