@@ -3507,10 +3507,10 @@ function MODULE_jobs_definitions_mobile_quarry_QuarryJob()
 	    self.backgroundTask = function() self:onBackgroundStep() end
 	    self.backgroundDelay = 5  -- This task should be infrequent
 	    self.commands = Commands.new()
-	    self.commands:add(Command.new("exit", "Terminates the program", function(...) CommonCommands.commandExit(self, ...) end))
-	    self.commands:add(Command.new("setup", "Enters setup mode", function(...) QuarryCommands.commandSetup(self, ...) end))
-	    self.commands:add(Command.new("showConfig", "Displays the current configuration set using the `setup` command", function(...) QuarryCommands.commandShowConfig(self, ...) end))
-	    self.commands:add(Command.new("start", "Starts the program", function(...) QuarryCommands.commandQuarryStart(self, ...) end))
+	    self.commands:add("exit", Command.new("exit", "Terminates the program", function(...) CommonCommands.commandExit(self, ...) end))
+	    self.commands:add("setup", Command.new("setup", "Enters setup mode", function(...) QuarryCommands.commandSetup(self, ...) end))
+	    self.commands:add("showConfig", Command.new("showConfig", "Displays the current configuration set using the `setup` command", function(...) QuarryCommands.commandShowConfig(self, ...) end))
+	    self.commands:add("start", Command.new("start", "Starts the program", function(...) QuarryCommands.commandQuarryStart(self, ...) end))
 	    self.config = config
 	    self.states = {
 	        SETUP = "SETUP",
