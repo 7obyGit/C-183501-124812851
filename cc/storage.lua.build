@@ -2473,6 +2473,7 @@ function MODULE_utils_storage_Storage()
 	local Table = utils_data_Table
 	local PlayerDetector = utils_peripherals_PlayerDetector
 	local Vector3 = utils_math_Vector3
+	local LibOs   = utils_libs_LibOs
 	local Storage = {}
 	Storage.__index = Storage
 	function Storage.new(config)
@@ -2501,7 +2502,7 @@ function MODULE_utils_storage_Storage()
 	                print("Unexpected keep filled configuration: " .. Text.serialize(keepFilled))
 	                break
 	            else
-	                self.keepFilled[keepFilled.name] = {container = self.barrels[keepFilled.name], item = keepFilled.item}
+	                self.keepFilled[keepFilled.name] = {container = self.barrels[keepFilled.name], item = keepFilled.item, name = keepFilled.name}
 	            end
 	        end
 	    end
@@ -2713,13 +2714,18 @@ function MODULE_utils_storage_Storage()
 	    for _, keepFilled in pairs(self.keepFilled) do
 	        local container = keepFilled.container
 	        local item = keepFilled.item
-	        container:updateIndex()
-	        local itemCount = container:getItemCount(item)
-	        local remainingCount = 64 - itemCount
-	        if remainingCount > 0 then
-	            self:moveToIo(item, remainingCount, container)
-	            container:defragment()
-	        end
+	        if container == nil then
+	            print("WARNING: Failed to find " .. textutils.serialise(keepFilled))
+	            LibOs.sleep(1)
+	        else
+	            container:updateIndex()
+	            local itemCount = container:getItemCount(item)
+	            local remainingCount = 64 - itemCount
+	            if remainingCount > 0 then
+	                self:moveToIo(item, remainingCount, container)
+	                container:defragment()
+	            end
+	        end 
 	    end
 	end
 	function Storage:placeBlockIndicator(containerName, blockIndicator, secondaryIndicator)
