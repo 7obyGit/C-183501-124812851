@@ -2497,7 +2497,12 @@ function MODULE_utils_storage_Storage()
 	    self.keepFilled = {}
 	    if self.config.keepFilled ~= nil then
 	        for _, keepFilled in pairs(self.config.keepFilled) do
-	            self.keepFilled[keepFilled.name] = {container = self.barrels[keepFilled.name], item = keepFilled.item}
+	            if keepFilled.name == nil or keepFilled.item == nil then
+	                print("Unexpected keep filled configuration: " .. Text.serialize(keepFilled))
+	                break
+	            else
+	                self.keepFilled[keepFilled.name] = {container = self.barrels[keepFilled.name], item = keepFilled.item}
+	            end
 	        end
 	    end
 	    return self
