@@ -130,6 +130,7 @@ local utils_config_JobConfig = MODULE_utils_config_JobConfig()
 function MODULE_utils_controlflow_Parallel()
 	local Parallel = {}
 	Parallel.__index = Parallel
+	Parallel.CHUNK_SIZE = 48
 	function Parallel.new()
 	    local self = setmetatable({}, Parallel)
 	    self.tasks = {}
@@ -166,20 +167,40 @@ function MODULE_utils_controlflow_Parallel()
 	        return Parallel.mapList(obj, func)
 	    end
 	end
+	local function getChunks(list, chunkSize)
+	    local chunks = {}
+	    for i = 1, chunkSize do
+	        chunks[i] = {}
+	    end
+	    for i, item in ipairs(list) do
+	        table.insert(chunks[(i - 1) % chunkSize + 1], item)
+	    end
+	    return chunks
+	end
+	local function getChunksMap(map, chunkSize)
+	    local chunks = {}
+	    for i = 1, chunkSize do
+	        chunks[i] = {}
+	    end
+	    local keys = {}
+	    for key, _ in pairs(map) do
+	        table.insert(keys, key)
+	    end
+	    for i, key in ipairs(keys) do
+	        table.insert(chunks[(i - 1) % chunkSize + 1], key)
+	    end
+	    return chunks
+	end
 	function Parallel.mapList(list, func)
 	    local output = {}
 	    local parallel = Parallel.new()
-	    local chunkSize = 24
-	    for i = 1, #list, chunkSize do
-	        local chunk = {}
-	        for j = i, math.min(i + chunkSize - 1, #list) do
-	            table.insert(chunk, list[j])
-	        end
+	    local chunks = getChunks(list, Parallel.CHUNK_SIZE)
+	    for i, chunk in ipairs(chunks) do
 	        parallel:addTask(function()
 	            for index, item in ipairs(chunk) do
 	                if item ~= nil then
 	                    local elementResult = func(item)
-	                    output[i + index - 1] = elementResult
+	                    output[(i - 1) * Parallel.CHUNK_SIZE + index] = elementResult
 	                end
 	            end
 	        end)
@@ -190,18 +211,11 @@ function MODULE_utils_controlflow_Parallel()
 	function Parallel.mapTable(table_, func)
 	    local output = {}
 	    local parallel = Parallel.new()
-	    local chunkSize = 24
-	    local keys = {}
-	    for key, _ in pairs(table_) do
-	        table.insert(keys, key)
-	    end
-	    for i = 1, #keys, chunkSize do
-	        local chunk = {}
-	        for j = i, math.min(i + chunkSize - 1, #keys) do
-	            chunk[keys[j]] = table_[keys[j]]
-	        end
+	    local chunks = getChunksMap(table_, Parallel.CHUNK_SIZE)
+	    for i, chunk in ipairs(chunks) do
 	        parallel:addTask(function()
-	            for key, item in pairs(chunk) do
+	            for _, key in ipairs(chunk) do
+	                local item = table_[key]
 	                if item ~= nil then
 	                    local elementResult = func(key, item)
 	                    output[key] = elementResult
@@ -214,27 +228,23 @@ function MODULE_utils_controlflow_Parallel()
 	end
 	function Parallel.mapListWithTimeout(obj, func, timeoutSeconds)
 	    timeoutSeconds = timeoutSeconds or 1
-	    local funcWithTimeout = function(value)
-	        local result = nil
-	        Parallel.new()
-	            :addTask(function() result = func(value) end)
-	            :addTimeout(timeoutSeconds)
-	            :waitForAny()
-	        return result
+	    local function applyFuncToObjItems()
+	        Parallel.mapList(obj, func)
 	    end
-	    return Parallel.mapList(obj, funcWithTimeout)
+	    return Parallel.new()
+	        :addTask(applyFuncToObjItems)
+	        :addTimeout(timeoutSeconds)
+	        :waitForAny()
 	end
 	function Parallel.mapTableWithTimeout(obj, func, timeoutSeconds)
 	    timeoutSeconds = timeoutSeconds or 1
-	    local funcWithTimeout = function(key, value)
-	        local result = nil
-	        Parallel.new()
-	            :addTask(function() result = func(key, value) end)
-	            :addTimeout(timeoutSeconds)
-	            :waitForAny()
-	        return result
+	    local function applyFuncToObjItems()
+	        Parallel.mapTable(obj, func)
 	    end
-	    return Parallel.mapTable(obj, funcWithTimeout)
+	    return Parallel.new()
+	        :addTask(applyFuncToObjItems)
+	        :addTimeout(timeoutSeconds)
+	        :waitForAny()
 	end
 	return Parallel
 end
@@ -2596,10 +2606,7 @@ function MODULE_utils_storage_Storage()
 	    local status, err = pcall(
 	        function()
 	            Parallel.mapTableWithTimeout(inventories, function(name, container)
-	                Parallel.new()
-	                    :addTask(function() container:defragment() end)
-	                    :addTimeout(2)
-	                    :waitForAny()
+	                container:defragment()
 	            end, 15)
 	        end
 	    )
@@ -3551,6 +3558,16 @@ function MODULE_jobs_definitions_static_storage_StorageBackgroundTasks()
 	        :setPeriod(5)
 	        :setCallback(function()
 	            self.storage:dumpAllInputs()
+	        end)
+	        :when(function() return self.config:get("state", nil) == self.states.COMMAND_PROMPT end)
+	        :start()
+	end
+	function StorageBackgroundTasks.defragment(self)
+	    BackgroundTask.new()
+	        :setName("Defragment")
+	        :setPeriod(60)
+	        :setCallback(function()
+	            self.storage:defragment()
 	        end)
 	        :when(function() return self.config:get("state", nil) == self.states.COMMAND_PROMPT end)
 	        :start()
@@ -4522,6 +4539,7 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	        StorageBackgroundTasks.refuelFurnaces,
 	        StorageBackgroundTasks.dumpFurnaces,
 	        StorageBackgroundTasks.dumpAllInputs,
+	        StorageBackgroundTasks.defragment,
 	        StorageBackgroundTasks.populateKeepFilledBarrels,
 	        StorageBackgroundTasks.updateSmeltQueue,
 	        StorageBackgroundTasks.detectAddedPeripherals,
