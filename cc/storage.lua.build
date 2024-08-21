@@ -2681,13 +2681,6 @@ function MODULE_utils_storage_Storage()
 	        remainingCount = sourceContainer:sendItems(destinationContainer, itemName, remainingCount)
 	        table.insert(destinations, destinationContainer)
 	    end
-	    if math.random(1, 10) == 1 then
-	        Parallel.mapListWithTimeout(
-	            destinations,
-	            function(destination) destination:defragment() end,
-	            15
-	        )
-	    end
 	    return remainingCount
 	end
 	function Storage:dump(sourceContainer)
