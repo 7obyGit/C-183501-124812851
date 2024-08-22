@@ -2491,6 +2491,9 @@ function MODULE_utils_storage_Storage()
 	local Storage = {}
 	Storage.__index = Storage
 	function Storage.new(config)
+	    print("Waiting for chunks to load...")
+	    LibOs.sleep(5)
+	    print("Wait complete - assuming chunks are loaded")
 	    local self = setmetatable({}, Storage)
 	    self.config = config or {}
 	    self.barrels = Storage.connectToBarrels()
