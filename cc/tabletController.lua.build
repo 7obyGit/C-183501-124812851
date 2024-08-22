@@ -191,8 +191,8 @@ function MODULE_utils_controlflow_Parallel()
 	    end
 	    return chunks
 	end
-	function Parallel.mapList(list, func)
-	    local output = {}
+	function Parallel.mapList(list, func, output)
+	    output = output or {}
 	    local parallel = Parallel.new()
 	    local chunks = getChunks(list, Parallel.CHUNK_SIZE)
 	    for i, chunk in ipairs(chunks) do
@@ -208,8 +208,8 @@ function MODULE_utils_controlflow_Parallel()
 	    parallel:run()
 	    return output
 	end
-	function Parallel.mapTable(table_, func)
-	    local output = {}
+	function Parallel.mapTable(table_, func, output)
+	    output = output or {}
 	    local parallel = Parallel.new()
 	    local chunks = getChunksMap(table_, Parallel.CHUNK_SIZE)
 	    for i, chunk in ipairs(chunks) do
@@ -228,23 +228,27 @@ function MODULE_utils_controlflow_Parallel()
 	end
 	function Parallel.mapListWithTimeout(obj, func, timeoutSeconds)
 	    timeoutSeconds = timeoutSeconds or 1
+	    local output = {}
 	    local function applyFuncToObjItems()
-	        Parallel.mapList(obj, func)
+	        output = Parallel.mapList(obj, func, output)
 	    end
-	    return Parallel.new()
+	    Parallel.new()
 	        :addTask(applyFuncToObjItems)
 	        :addTimeout(timeoutSeconds)
 	        :waitForAny()
+	    return output
 	end
 	function Parallel.mapTableWithTimeout(obj, func, timeoutSeconds)
 	    timeoutSeconds = timeoutSeconds or 1
+	    local output = {}
 	    local function applyFuncToObjItems()
-	        Parallel.mapTable(obj, func)
+	        output = Parallel.mapTable(obj, func, output)
 	    end
-	    return Parallel.new()
+	    Parallel.new()
 	        :addTask(applyFuncToObjItems)
 	        :addTimeout(timeoutSeconds)
 	        :waitForAny()
+	    return output
 	end
 	return Parallel
 end
