@@ -2588,6 +2588,25 @@ function MODULE_jobs_definitions_tablet_scanner_ScannerCommands()
 	local Table = utils_data_Table
 	local LibOs = utils_libs_LibOs
 	local ScannerCommands = {}
+	function ScannerCommands.commandSetYLimit(self, yLimit)
+	    if yLimit == nil then
+	        print("No arguments provided")
+	        print("Please provide the y limit for scanning")
+	        print("E.g. set-y-limit 32")
+	        return
+	    end
+	    if not tonumber(yLimit) then
+	        print("Invalid argument provided")
+	        print("Please provide a number for the y limit")
+	        print("E.g. set-y-limit 32")
+	        return
+	    end
+	    self.config:set("y-limit", tonumber(yLimit))
+	    print("Y limit set to " .. yLimit)
+	end
+	function ScannerCommands.commandGetYLimit(self)
+	    print("Y limit is " .. self.config:get("y-limit", 32))
+	end
 	local function scan(self, targetBlocks)
 	    print("Starting...")
 	    LibOs.sleep(2)
@@ -2601,10 +2620,12 @@ function MODULE_jobs_definitions_tablet_scanner_ScannerCommands()
 	            local closestBlock = nil
 	            local closestDistance = math.huge
 	            for _, block in pairs(relevantBlocks) do
-	                local distance = math.abs(block.x) + math.abs(block.y) + math.abs(block.z)
-	                if distance < closestDistance then
-	                    closestBlock = block
-	                    closestDistance = distance
+	                if math.abs(block.y) < self.config:get("y-limit", 32) then
+	                    local distance = math.abs(block.x) + math.abs(block.y) + math.abs(block.z)
+	                    if distance < closestDistance then
+	                        closestBlock = block
+	                        closestDistance = distance
+	                    end
 	                end
 	            end
 	            if closestBlock ~= nil then
@@ -2685,6 +2706,8 @@ function MODULE_jobs_definitions_tablet_scanner_ScannerJob()
 	    self.commands = Commands.new()
 	    self.commands:add(Command.new("exit", "Terminates the program", function(...) CommonCommands.commandExit(self, ...) end))
 	    self.commands:add(Command.new("scan", "Scans for the specified blocks\nE.g. scan <block1>\nE.g. scan <block1> <block2>\nE.g. scan nocheck <block1> <block2>\n*'nocheck' disables spell checking", function(...) ScannerCommands.commandScan(self, ...) end))
+	    self.commands:add(Command.new("set-y-limit", "Sets the y limit for scanning\nE.g. set-y-limit 32", function(...) ScannerCommands.commandSetYLimit(self, ...) end))
+	    self.commands:add(Command.new("get-y-limit", "Gets the y limit for scanning", function(...) ScannerCommands.commandGetYLimit(self) end))
 	    self.config = config
 	    self.states = {
 	        COMMAND_PROMPT = "COMMAND_PROMPT",
