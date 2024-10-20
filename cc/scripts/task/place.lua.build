@@ -28,20 +28,20 @@ function MODULE_entrypoints_scripts_task_place()
 	    turtle.turnLeft()
 	    turtle.turnLeft()  -- Turn 180 degrees
 	    for i = 1, block_count do
+	        turtle.back()  -- Move backward before placing each block
 	        place_block()
-	        turtle.back()  -- Move backward after placing each block
 	    end
 	    turtle.turnLeft()
 	    turtle.turnLeft()  -- Turn back to original facing direction
 	elseif direction == "up" then
 	    for i = 1, block_count do
+	        turtle.up()  -- Move up before placing each block
 	        place_block()
-	        turtle.up()  -- Move up after placing each block
 	    end
 	elseif direction == "down" then
 	    for i = 1, block_count do
+	        turtle.down()  -- Move down before placing each block
 	        place_block()
-	        turtle.down()  -- Move down after placing each block
 	    end
 	end
 	print("Finished placing " .. block_count .. " blocks in direction " .. direction)
