@@ -1,0 +1,50 @@
+function MODULE_entrypoints_scripts_task_place()
+	local args = { ... }
+	local direction = args[1] or "front"  -- Default direction is "front"
+	local block_count = tonumber(args[2]) or 64  -- Default to 64 blocks
+	local function select_next_block()
+	    for slot = 1, 16 do
+	        if turtle.getItemCount(slot) > 0 then
+	            turtle.select(slot)
+	            return true
+	        end
+	    end
+	    return false  -- No blocks found
+	end
+	local function place_block()
+	    if not select_next_block() then
+	        print("Out of blocks!")
+	        return false
+	    end
+	    if direction == "up" then
+	        turtle.placeDown()
+	    elseif direction == "down" then
+	        turtle.placeUp()
+	    else  -- "front"
+	        turtle.place()
+	    end
+	    return true
+	end
+	if direction == "front" then
+	    turtle.turnLeft()
+	    turtle.turnLeft()  -- Turn 180 degrees
+	    for i = 1, block_count do
+	        place_block()
+	        turtle.back()  -- Move backward after placing each block
+	    end
+	    turtle.turnLeft()
+	    turtle.turnLeft()  -- Turn back to original facing direction
+	elseif direction == "up" then
+	    for i = 1, block_count do
+	        place_block()
+	        turtle.up()  -- Move up after placing each block
+	    end
+	elseif direction == "down" then
+	    for i = 1, block_count do
+	        place_block()
+	        turtle.down()  -- Move down after placing each block
+	    end
+	end
+	print("Finished placing " .. block_count .. " blocks in direction " .. direction)
+end
+local entrypoints_scripts_task_place = MODULE_entrypoints_scripts_task_place()

@@ -1,0 +1,20 @@
+function MODULE_entrypoints_scripts_task_dig()
+	local args = { ... }
+	local direction = args[1] or "front"  -- Default direction is "front"
+	local block_count = tonumber(args[2]) or 64  -- Default to 64 blocks
+	local function mine_block()
+	    if direction == "up" then
+	        turtle.digUp()
+	    elseif direction == "down" then
+	        turtle.digDown()
+	    else
+	        turtle.dig()
+	    end
+	end
+	for i = 1, block_count do
+	    mine_block()
+	    turtle.forward()  -- Move forward after each mining action
+	end
+	print("Finished mining " .. block_count .. " blocks in direction " .. direction)
+end
+local entrypoints_scripts_task_dig = MODULE_entrypoints_scripts_task_dig()

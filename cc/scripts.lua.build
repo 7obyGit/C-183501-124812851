@@ -7,4 +7,6 @@ download("https://raw.githubusercontent.com/7obyGit/C-183501-124812851/main/cc/s
 download("https://raw.githubusercontent.com/7obyGit/C-183501-124812851/main/cc/scripts/move/left.lua.build", "/scripts/move/left.lua")
 download("https://raw.githubusercontent.com/7obyGit/C-183501-124812851/main/cc/scripts/move/right.lua.build", "/scripts/move/right.lua")
 download("https://raw.githubusercontent.com/7obyGit/C-183501-124812851/main/cc/scripts/move/up.lua.build", "/scripts/move/up.lua")
+download("https://raw.githubusercontent.com/7obyGit/C-183501-124812851/main/cc/scripts/task/dig.lua.build", "/scripts/task/dig.lua")
+download("https://raw.githubusercontent.com/7obyGit/C-183501-124812851/main/cc/scripts/task/place.lua.build", "/scripts/task/place.lua")
 print("Downloaded all scripts") 
