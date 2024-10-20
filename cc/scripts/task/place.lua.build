@@ -1,7 +1,6 @@
 function MODULE_entrypoints_scripts_task_place()
-	local args = { ... }
-	local direction = args[1] or "front"  -- Default direction is "front"
-	local block_count = tonumber(args[2]) or 64  -- Default to 64 blocks
+	local direction = arg[1] or "front"  -- Default direction is "front"
+	local block_count = tonumber(arg[2]) or 64  -- Default to 64 blocks
 	local function select_next_block()
 	    for slot = 1, 16 do
 	        if turtle.getItemCount(slot) > 0 then
