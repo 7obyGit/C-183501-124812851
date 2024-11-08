@@ -1,0 +1,79 @@
+function MODULE_entrypoints_scripts_task_placeChainStarter()
+	local direction = arg[1] or "front"  -- Default direction is "front"
+	local function detectRedstoneInput()
+	   return redstone.getInput("top") or
+	          redstone.getInput("bottom") or
+	          redstone.getInput("front") or
+	          redstone.getInput("back") or
+	          redstone.getInput("left") or
+	          redstone.getInput("right")
+	end
+	local function pulseRedstone()
+	   redstone.setOutput("top", true)
+	   redstone.setOutput("bottom", true)
+	   redstone.setOutput("front", true)
+	   redstone.setOutput("back", true)
+	   redstone.setOutput("left", true)
+	   redstone.setOutput("right", true)
+	   os.sleep(2)
+	   redstone.setOutput("top", false)
+	   redstone.setOutput("bottom", false)
+	   redstone.setOutput("front", false)
+	   redstone.setOutput("back", false)
+	   redstone.setOutput("left", false)
+	   redstone.setOutput("right", false)
+	end
+	local function select_next_block()
+	   for slot = 1, 16 do
+	       if turtle.getItemCount(slot) > 0 then
+	           turtle.select(slot)
+	           return true
+	       end
+	   end
+	   return false  -- No blocks found
+	end
+	local function place_block()
+	   if not select_next_block() then
+	       print("Out of blocks!")
+	       return false
+	   end
+	   pulseRedstone()  -- Pulse redstone before placing
+	   if direction == "up" then
+	       turtle.placeDown()
+	   elseif direction == "down" then
+	       turtle.placeUp()
+	   else  -- "front"
+	       turtle.place()
+	   end
+	   return true
+	end
+	local function move_and_place()
+	   pulseRedstone()  -- Pulse redstone before moving
+	   if direction == "front" then
+	       turtle.back()
+	       place_block()
+	   elseif direction == "up" then
+	       turtle.up()
+	       place_block()
+	   elseif direction == "down" then
+	       turtle.down()
+	       place_block()
+	   end
+	end
+	print("Waiting for redstone signal to place blocks in direction: " .. direction)
+	local wasActive = false
+	if direction == "front" then
+	   turtle.turnLeft()
+	   turtle.turnLeft()
+	end
+	while true do
+	   local isActive = detectRedstoneInput()
+	   if isActive and not wasActive then
+	       move_and_place()
+	       print("Placed one block in direction: " .. direction)
+	   end
+	   wasActive = isActive
+	   os.sleep(0.1)  -- Small delay to prevent excessive CPU usage
+	end
+end
+local entrypoints_scripts_task_placeChainStarter = MODULE_entrypoints_scripts_task_placeChainStarter()

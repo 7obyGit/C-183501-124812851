@@ -1,0 +1,37 @@
+function MODULE_entrypoints_scripts_task_digChaingStarter()
+	local direction = arg[1] or "front"  -- Default direction is "front"
+	local block_count = tonumber(arg[2]) or 64  -- Default to 64 blocks
+	local function pulseRedstone()
+	    redstone.setOutput("top", true)
+	    redstone.setOutput("bottom", true)
+	    redstone.setOutput("front", true)
+	    redstone.setOutput("back", true)
+	    redstone.setOutput("left", true)
+	    redstone.setOutput("right", true)
+	    os.sleep(2)
+	    redstone.setOutput("top", false)
+	    redstone.setOutput("bottom", false)
+	    redstone.setOutput("front", false)
+	    redstone.setOutput("back", false)
+	    redstone.setOutput("left", false)
+	    redstone.setOutput("right", false)
+	end
+	local function mine_and_move()
+	    pulseRedstone()
+	    if direction == "up" then
+	        turtle.digUp()
+	        turtle.up()  -- Move up after mining
+	    elseif direction == "down" then
+	        turtle.digDown()
+	        turtle.down()  -- Move down after mining
+	    else  -- "front" by default
+	        turtle.dig()
+	        turtle.forward()  -- Move forward after mining
+	    end
+	end
+	for i = 1, block_count do
+	    mine_and_move()
+	end
+	print("Finished mining " .. block_count .. " blocks in direction " .. direction)
+end
+local entrypoints_scripts_task_digChaingStarter = MODULE_entrypoints_scripts_task_digChaingStarter()
