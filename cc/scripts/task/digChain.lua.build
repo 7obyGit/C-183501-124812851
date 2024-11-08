@@ -1,0 +1,51 @@
+function MODULE_entrypoints_scripts_task_digChain()
+	local direction = arg[1] or "front"  -- Default direction is "front"
+	local function detectRedstoneInput()
+	   return redstone.getInput("top") or
+	          redstone.getInput("bottom") or
+	          redstone.getInput("front") or
+	          redstone.getInput("back") or
+	          redstone.getInput("left") or
+	          redstone.getInput("right")
+	end
+	local function pulseRedstone()
+	   redstone.setOutput("top", true)
+	   redstone.setOutput("bottom", true)
+	   redstone.setOutput("front", true)
+	   redstone.setOutput("back", true)
+	   redstone.setOutput("left", true)
+	   redstone.setOutput("right", true)
+	   os.sleep(0.5)
+	   redstone.setOutput("top", false)
+	   redstone.setOutput("bottom", false)
+	   redstone.setOutput("front", false)
+	   redstone.setOutput("back", false)
+	   redstone.setOutput("left", false)
+	   redstone.setOutput("right", false)
+	end
+	local function mine_and_move()
+	   pulseRedstone()
+	   if direction == "up" then
+	       turtle.digUp()
+	       turtle.up()  -- Move up after mining
+	   elseif direction == "down" then
+	       turtle.digDown()
+	       turtle.down()  -- Move down after mining
+	   else  -- "front" by default
+	       turtle.dig()
+	       turtle.forward()  -- Move forward after mining
+	   end
+	end
+	print("Waiting for redstone signal to mine in direction: " .. direction)
+	local wasActive = false
+	while true do
+	   local isActive = detectRedstoneInput()
+	   if isActive and not wasActive then
+	       mine_and_move()
+	       print("Moved one block in direction: " .. direction)
+	   end
+	   wasActive = isActive
+	   os.sleep(0.1)  -- Small delay to prevent excessive CPU usage
+	end
+end
+local entrypoints_scripts_task_digChain = MODULE_entrypoints_scripts_task_digChain()

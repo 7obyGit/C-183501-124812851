@@ -1,0 +1,83 @@
+function MODULE_entrypoints_scripts_task_placeChain()
+	local direction = arg[1] or "front"  -- Default direction is "front"
+	local function getHighestRedstoneInput()
+	    local highest = 0
+	    local sides = {"top", "bottom", "front", "back", "left", "right"}
+	    for _, side in ipairs(sides) do
+	        local level = redstone.getAnalogInput(side)
+	        if level > highest then
+	            highest = level
+	        end
+	    end
+	    return highest
+	end
+	local function outputRedstone(level)
+	    redstone.setAnalogOutput("top", level)
+	    redstone.setAnalogOutput("bottom", level)
+	    redstone.setAnalogOutput("front", level)
+	    redstone.setAnalogOutput("back", level)
+	    redstone.setAnalogOutput("left", level)
+	    redstone.setAnalogOutput("right", level)
+	    os.sleep(0.5)
+	    redstone.setAnalogOutput("top", 0)
+	    redstone.setAnalogOutput("bottom", 0)
+	    redstone.setAnalogOutput("front", 0)
+	    redstone.setAnalogOutput("back", 0)
+	    redstone.setAnalogOutput("left", 0)
+	    redstone.setAnalogOutput("right", 0)
+	end
+	local function select_next_block()
+	    for slot = 1, 16 do
+	        if turtle.getItemCount(slot) > 0 then
+	            turtle.select(slot)
+	            return true
+	        end
+	    end
+	    return false  -- No blocks found
+	end
+	local function place_block(signalLevel)
+	    if not select_next_block() then
+	        print("Out of blocks!")
+	        return false
+	    end
+	    outputRedstone(signalLevel)  -- Forward the redstone signal before placing
+	    if direction == "up" then
+	        turtle.placeDown()
+	    elseif direction == "down" then
+	        turtle.placeUp()
+	    else  -- "front"
+	        turtle.place()
+	    end
+	    return true
+	end
+	local function move_and_place(signalLevel)
+	    outputRedstone(signalLevel)  -- Forward the redstone signal before moving
+	    if direction == "front" then
+	        turtle.back()
+	        place_block(signalLevel)
+	    elseif direction == "up" then
+	        turtle.up()
+	        place_block(signalLevel)
+	    elseif direction == "down" then
+	        turtle.down()
+	        place_block(signalLevel)
+	    end
+	end
+	print("Waiting for redstone signal to place blocks in direction: " .. direction)
+	local lastSignalLevel = 0
+	if direction == "front" then
+	    turtle.turnLeft()
+	    turtle.turnLeft()
+	end
+	while true do
+	    local currentSignalLevel = getHighestRedstoneInput()
+	    if currentSignalLevel > 0 and lastSignalLevel == 0 then
+	        print("Received signal level: " .. currentSignalLevel)
+	        move_and_place(currentSignalLevel)
+	        print("Placed one block in direction: " .. direction)
+	    end
+	    lastSignalLevel = currentSignalLevel
+	    os.sleep(0.1)  -- Small delay to prevent excessive CPU usage
+	end
+end
+local entrypoints_scripts_task_placeChain = MODULE_entrypoints_scripts_task_placeChain()
