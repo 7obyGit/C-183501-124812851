@@ -14,113 +14,96 @@ function MODULE_entrypoints_scripts_task_digRegion()
 	    end
 	    return commands
 	end
-	local function reverse_direction(direction)
-	    if direction == "forward" then return "back"
-	    elseif direction == "back" then return "forward"
-	    elseif direction == "left" then return "right"
-	    elseif direction == "right" then return "left"
-	    elseif direction == "up" then return "down"
-	    elseif direction == "down" then return "up"
-	    end
-	end
-	local function turn_to_direction(direction)
-	    if direction == "left" then
-	        turtle.turnLeft()
-	        return true
-	    elseif direction == "right" then
+	local facing = 0  -- 0 = initial direction, 1 = right, 2 = backward, 3 = left
+	local function turn_to(target_facing)
+	    while facing ~= target_facing do
 	        turtle.turnRight()
-	        return true
-	    end
-	    return false
-	end
-	local function mine_and_move(direction)
-	    if direction == "up" then
-	        turtle.digUp()
-	        return turtle.up()
-	    elseif direction == "down" then
-	        turtle.digDown()
-	        return turtle.down()
-	    elseif direction == "forward" then
-	        turtle.dig()
-	        return turtle.forward()
+	        facing = (facing + 1) % 4
 	    end
 	end
-	local function move_no_mine(direction)
-	    if direction == "up" then
-	        return turtle.up()
-	    elseif direction == "down" then
-	        return turtle.down()
-	    elseif direction == "forward" then
-	        return turtle.forward()
-	    elseif direction == "back" then
-	        return turtle.back()
-	    end
+	local function restore_facing()
+	    turn_to(0)
 	end
-	local function execute_command(direction, count)
-	    local moves = {}
-	    local success = true
-	    if direction == "left" or direction == "right" then
-	        turn_to_direction(direction)
-	        direction = "forward"
-	    end
-	    for i = 1, count do
-	        if mine_and_move(direction) then
-	            table.insert(moves, {
-	                direction = reverse_direction(direction),
-	                turned = false
-	            })
-	        else
-	            success = false
-	            break
+	local function mine_layer(width, length)
+	    local going_right = true
+	    for w = 1, width do
+	        for l = 1, length - 1 do
+	            turtle.dig()
+	            turtle.forward()
 	        end
-	    end
-	    return moves, success
-	end
-	local function return_to_start(return_path)
-	    for i = #return_path, 1, -1 do
-	        local move = return_path[i]
-	        if move.turned then
-	            if move.direction == "left" then
+	        if w < width then
+	            if going_right then
+	                turtle.turnRight()
+	                turtle.dig()
+	                turtle.forward()
 	                turtle.turnRight()
 	            else
 	                turtle.turnLeft()
+	                turtle.dig()
+	                turtle.forward()
+	                turtle.turnLeft()
 	            end
-	        else
-	            if not move_no_mine(move.direction) then
-	                print("Warning: Failed to return to original position")
-	                return false
-	            end
+	            going_right = not going_right
 	        end
 	    end
-	    return true
+	    if width % 2 == 0 then
+	        turn_to(2)  -- Face backward
+	        for l = 1, length - 1 do
+	            turtle.forward()
+	        end
+	        turn_to(3)  -- Face left
+	        for w = 1, width - 1 do
+	            turtle.forward()
+	        end
+	        restore_facing()
+	    else
+	        turn_to(3)  -- Face left
+	        for w = 1, width - 1 do
+	            turtle.forward()
+	        end
+	        restore_facing()
+	    end
+	end
+	local function excavate_volume(length, width, height)
+	    local starting_height = height
+	    for h = 1, height do
+	        mine_layer(width, length)
+	        if h < height then
+	            turtle.digDown()
+	            turtle.down()
+	        end
+	    end
+	    for h = 1, height - 1 do
+	        turtle.up()
+	    end
 	end
 	local commands = parse_args()
-	if not commands then
-	    print("Usage: dig.lua <direction> <count> [direction2] [count2] ...")
-	    print("Directions: forward, up, down, left, right")
+	if not commands or #commands ~= 3 then
+	    print("Usage: dig.lua <forward> <blocks> <right/left> <blocks> <down> <blocks>")
+	    print("Example: dig.lua forward 5 right 3 down 2")
 	    return
 	end
-	local return_path = {}
-	local success = true
+	local length, width, height = 0, 0, 0
+	local valid_commands = true
 	for _, cmd in ipairs(commands) do
-	    local moves, cmd_success = execute_command(cmd.direction, cmd.count)
-	    for _, move in ipairs(moves) do
-	        table.insert(return_path, move)
-	    end
-	    if not cmd_success then
-	        success = false
+	    if cmd.direction == "forward" then
+	        length = cmd.count
+	    elseif cmd.direction == "right" or cmd.direction == "left" then
+	        width = cmd.count
+	    elseif cmd.direction == "down" then
+	        height = cmd.count
+	    else
+	        print("Invalid direction: " .. cmd.direction)
+	        valid_commands = false
 	        break
 	    end
 	end
-	if not return_to_start(return_path) then
-	    print("Warning: Could not fully return to start position")
-	else
-	    print("Successfully returned to start position")
+	if not valid_commands or length == 0 or width == 0 or height == 0 then
+	    print("Please specify exactly one forward, one right/left, and one down dimension")
+	    return
 	end
-	if success then
-	    print("Mining operation completed successfully")
-	else
-	    print("Mining operation encountered obstacles")
-	end
+	print(string.format("Mining volume: %d x %d x %d", length, width, height))
+	excavate_volume(length, width, height)
+	print("Mining complete!")
 end
 local entrypoints_scripts_task_digRegion = MODULE_entrypoints_scripts_task_digRegion()
