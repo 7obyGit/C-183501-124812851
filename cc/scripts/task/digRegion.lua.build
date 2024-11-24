@@ -1,21 +1,33 @@
 function MODULE_entrypoints_scripts_task_digRegion()
-	if #arg ~= 3 then
-	    print("Usage: dig.lua forwards up down")
+	local forwards = 0
+	local up = 0
+	local down = 0
+	if #arg % 2 ~= 0 then
+	    print("Invalid arguments. Usage: dig.lua <direction> <distance> ...")
 	    return
 	end
-	local forwards = tonumber(arg[1])
-	local up = tonumber(arg[2])
-	local down = tonumber(arg[3])
-	if not forwards or not up or not down then
-	    print("Invalid arguments. Usage: dig.lua forwards up down")
-	    return
+	local validDirections = { forward = true, up = true, down = true }
+	for i = 1, #arg, 2 do
+	    local direction = arg[i]
+	    local distance = tonumber(arg[i + 1])
+	    if not validDirections[direction] or not distance then
+	        print("Invalid arguments. Usage: dig.lua <direction> <distance> ...")
+	        return
+	    end
+	    if distance < 0 then
+	        print("Distances must be non-negative numbers.")
+	        return
+	    end
+	    if direction == "forward" then
+	        forwards = distance
+	    elseif direction == "up" then
+	        up = distance
+	    elseif direction == "down" then
+	        down = distance
+	    end
 	end
 	if forwards <= 0 then
-	    print("Forwards must be positive.")
-	    return
-	end
-	if up < 0 or down < 0 then
-	    print("Up and down must be non-negative.")
+	    print("Forward distance must be a positive number.")
 	    return
 	end
 	local total_height = 1 + up + down
