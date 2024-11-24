@@ -1,113 +1,104 @@
 function MODULE_entrypoints_scripts_task_digRegion()
-	local function parse_args()
-	    if #arg ~= 6 then
-	        print("Usage: dig.lua forward <blocks> left/right <blocks> down/up <blocks>")
-	        return nil
-	    end
-	    local dims = {}
-	    dims.forward = tonumber(arg[2])
-	    dims.width = tonumber(arg[4])
-	    dims.vertical = tonumber(arg[6])
-	    dims.is_left = arg[3] == "left"
-	    dims.is_down = arg[5] == "down"
-	    if not dims.forward or not dims.width or not dims.vertical then
-	        print("All dimensions must be numbers")
-	        return nil
-	    end
-	    return dims
-	end
-	local function mine_layer(forward_blocks, width_blocks, is_left)
-	    for row = 1, width_blocks do
-	        for i = 1, forward_blocks - 1 do
-	            turtle.dig()
-	            turtle.forward()
+	local args = {...}
+	local directions = {left = 0, forward = 0, right = 0, down = 0, up = 0}
+	local function parseArguments()
+	    for i = 1, #args, 2 do
+	        local dir = args[i]
+	        local dist = tonumber(args[i + 1])
+	        if directions[dir] ~= nil then
+	            directions[dir] = dist
+	        else
+	            print("Invalid argument: " .. dir)
+	            return false
 	        end
-	        if row < width_blocks then
-	            if is_left then
-	                if row % 2 == 1 then
-	                    turtle.turnLeft()
-	                    turtle.dig()
-	                    turtle.forward()
-	                    turtle.turnLeft()
-	                else
-	                    turtle.turnRight()
-	                    turtle.dig()
-	                    turtle.forward()
-	                    turtle.turnRight()
-	                end
+	    end
+	    return true
+	end
+	local function digForward()
+	    while not turtle.forward() do
+	        turtle.dig()
+	        sleep(0.2)
+	    end
+	end
+	local function digUp()
+	    while not turtle.up() do
+	        turtle.digUp()
+	        sleep(0.2)
+	    end
+	end
+	local function digDown()
+	    while not turtle.down() do
+	        turtle.digDown()
+	        sleep(0.2)
+	    end
+	end
+	local function mineLayer(width, length)
+	    for row = 1, length do
+	        for col = 1, width - 1 do
+	            digForward()
+	        end
+	        if row < length then
+	            if row % 2 == 1 then
+	                turtle.turnRight()
+	                digForward()
+	                turtle.turnRight()
 	            else
-	                if row % 2 == 1 then
-	                    turtle.turnRight()
-	                    turtle.dig()
-	                    turtle.forward()
-	                    turtle.turnRight()
-	                else
-	                    turtle.turnLeft()
-	                    turtle.dig()
-	                    turtle.forward()
-	                    turtle.turnLeft()
-	                end
+	                turtle.turnLeft()
+	                digForward()
+	                turtle.turnLeft()
 	            end
 	        end
 	    end
-	end
-	local function return_to_layer_start(forward_blocks, width_blocks, is_left)
-	    if width_blocks % 2 == 1 then
-	        turtle.turnRight()
-	        turtle.turnRight()
-	        for i = 1, forward_blocks - 1 do
-	            turtle.forward()
+	    if length % 2 == 1 then
+	        turtle.turnLeft()
+	        turtle.turnLeft()
+	        for i = 1, width - 1 do
+	            digForward()
 	        end
 	    end
-	    if is_left then
-	        turtle.turnRight()
-	    else
-	        turtle.turnLeft()
-	    end
-	    for i = 1, width_blocks - 1 do
-	        turtle.forward()
-	    end
-	    if is_left then
-	        turtle.turnLeft()
-	    else
-	        turtle.turnRight()
-	    end
 	end
-	local function mine_volume(dims)
-	    for layer = 1, dims.vertical do
-	        mine_layer(dims.forward, dims.width, dims.is_left)
-	        return_to_layer_start(dims.forward, dims.width, dims.is_left)
-	        if layer < dims.vertical then
-	            if dims.is_down then
-	                turtle.digDown()
-	                turtle.down()
+	local function returnToStart(height)
+	    turtle.turnLeft()
+	    turtle.turnLeft()
+	    for i = 1, directions.forward do
+	        digForward()
+	    end
+	    turtle.turnRight()
+	    for i = 1, directions.left do
+	        digForward()
+	    end
+	    if height > 0 then
+	        for i = 1, height do
+	            digUp()
+	        end
+	    elseif height < 0 then
+	        for i = 1, -height do
+	            digDown()
+	        end
+	    end
+	    turtle.turnRight()
+	end
+	local function main()
+	    if not parseArguments() then
+	        print("Usage: ./dig.lua <direction> <distance> ...")
+	        return
+	    end
+	    local width = directions.left + directions.right + 1
+	    local length = directions.forward
+	    local height = directions.up - directions.down
+	    for level = 1, math.abs(height) + 1 do
+	        mineLayer(width, length)
+	        if level <= math.abs(height) then
+	            if height > 0 then
+	                digUp()
 	            else
-	                turtle.digUp()
-	                turtle.up()
+	                digDown()
 	            end
 	        end
 	    end
-	    if dims.is_down then
-	        for i = 1, dims.vertical - 1 do
-	            turtle.up()
-	        end
-	    else
-	        for i = 1, dims.vertical - 1 do
-	            turtle.down()
-	        end
-	    end
+	    returnToStart(height)
+	    print("Mining complete!")
 	end
-	local dims = parse_args()
-	if not dims then
-	    return
-	end
-	print(string.format("Mining volume: forward %d, %s %d, %s %d",
-	    dims.forward,
-	    dims.is_left and "left" or "right",
-	    dims.width,
-	    dims.is_down and "down" or "up",
-	    dims.vertical))
-	mine_volume(dims)
-	print("Mining complete!")
+	main()
 end
 local entrypoints_scripts_task_digRegion = MODULE_entrypoints_scripts_task_digRegion()
