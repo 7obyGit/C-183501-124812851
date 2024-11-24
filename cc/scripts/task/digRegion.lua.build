@@ -1,101 +1,157 @@
 function MODULE_entrypoints_scripts_task_digRegion()
-	local directions = {left = 0, forward = 0, right = 0, down = 0, up = 0}
+	local currentPosition = { x = 0, y = 0, z = 0 }
+	local currentDirection = 0 -- 0 = north, 1 = east, 2 = south, 3 = west
+	local startingDirection = currentDirection
+	local directions = { left = 0, forward = 0, right = 0, down = 0, up = 0 }
 	local function parseArguments()
 	    for i = 1, #arg, 2 do
 	        local dir = arg[i]
 	        local dist = tonumber(arg[i + 1])
-	        if directions[dir] ~= nil then
+	        if directions[dir] ~= nil and dist ~= nil then
 	            directions[dir] = dist
 	        else
-	            print("Invalid argument: " .. dir)
+	            print("Invalid argument: " .. tostring(dir))
+	            print("Usage: dig.lua <direction> <distance> ...")
 	            return false
 	        end
 	    end
 	    return true
 	end
-	local function digForward()
+	local function moveForward()
 	    while not turtle.forward() do
 	        turtle.dig()
 	        sleep(0.2)
 	    end
+	    if currentDirection == 0 then
+	        currentPosition.z = currentPosition.z + 1
+	    elseif currentDirection == 1 then
+	        currentPosition.x = currentPosition.x + 1
+	    elseif currentDirection == 2 then
+	        currentPosition.z = currentPosition.z - 1
+	    elseif currentDirection == 3 then
+	        currentPosition.x = currentPosition.x - 1
+	    end
 	end
-	local function digUp()
+	local function moveUp()
 	    while not turtle.up() do
 	        turtle.digUp()
 	        sleep(0.2)
 	    end
+	    currentPosition.y = currentPosition.y + 1
 	end
-	local function digDown()
+	local function moveDown()
 	    while not turtle.down() do
 	        turtle.digDown()
 	        sleep(0.2)
 	    end
+	    currentPosition.y = currentPosition.y - 1
+	end
+	local function turnLeft()
+	    turtle.turnLeft()
+	    currentDirection = (currentDirection + 3) % 4
+	end
+	local function turnRight()
+	    turtle.turnRight()
+	    currentDirection = (currentDirection + 1) % 4
+	end
+	local function faceDirection(dir)
+	    local turn = (dir - currentDirection) % 4
+	    if turn == 1 then
+	        turnRight()
+	    elseif turn == 2 then
+	        turnRight()
+	        turnRight()
+	    elseif turn == 3 then
+	        turnLeft()
+	    end
+	end
+	local function moveTo(targetX, targetZ)
+	    local dx = targetX - currentPosition.x
+	    local dz = targetZ - currentPosition.z
+	    if dx ~= 0 then
+	        if dx > 0 then
+	            faceDirection(1) -- East
+	        else
+	            faceDirection(3) -- West
+	        end
+	        for i = 1, math.abs(dx) do
+	            moveForward()
+	        end
+	    end
+	    if dz ~= 0 then
+	        if dz > 0 then
+	            faceDirection(0) -- North
+	        else
+	            faceDirection(2) -- South
+	        end
+	        for i = 1, math.abs(dz) do
+	            moveForward()
+	        end
+	    end
 	end
 	local function mineLayer(width, length)
-	    for row = 1, length do
-	        for col = 1, width - 1 do
-	            digForward()
+	    local evenRow = true
+	    for z = 1, length do
+	        for x = 1, width - 1 do
+	            moveForward()
 	        end
-	        if row < length then
-	            if row % 2 == 1 then
-	                turtle.turnRight()
-	                digForward()
-	                turtle.turnRight()
+	        if z < length then
+	            if evenRow then
+	                turnRight()
+	                moveForward()
+	                turnRight()
 	            else
-	                turtle.turnLeft()
-	                digForward()
-	                turtle.turnLeft()
+	                turnLeft()
+	                moveForward()
+	                turnLeft()
 	            end
+	            evenRow = not evenRow
 	        end
 	    end
-	    if length % 2 == 1 then
-	        turtle.turnLeft()
-	        turtle.turnLeft()
-	        for i = 1, width - 1 do
-	            digForward()
-	        end
+	    faceDirection((startingDirection + 2) % 4) -- Turn around
+	    for i = 1, width - 1 do
+	        moveForward()
 	    end
-	end
-	local function returnToStart(height)
-	    turtle.turnLeft()
-	    turtle.turnLeft()
-	    for i = 1, directions.forward do
-	        digForward()
+	    faceDirection((startingDirection + 1) % 4) -- Turn right
+	    for i = 1, length - 1 do
+	        moveForward()
 	    end
-	    turtle.turnRight()
-	    for i = 1, directions.left do
-	        digForward()
-	    end
-	    if height > 0 then
-	        for i = 1, height do
-	            digUp()
-	        end
-	    elseif height < 0 then
-	        for i = 1, -height do
-	            digDown()
-	        end
-	    end
-	    turtle.turnRight()
+	    faceDirection(startingDirection)
 	end
 	local function main()
 	    if not parseArguments() then
-	        print("Usage: ./dig.lua <direction> <distance> ...")
 	        return
 	    end
 	    local width = directions.left + directions.right + 1
 	    local length = directions.forward
 	    local height = directions.up - directions.down
-	    for level = 1, math.abs(height) + 1 do
+	    if width <= 0 or length <= 0 or height == 0 then
+	        print("Invalid dimensions")
+	        return
+	    end
+	    faceDirection((startingDirection + 3) % 4) -- Turn left
+	    for i = 1, directions.left do
+	        moveForward()
+	    end
+	    faceDirection(startingDirection) -- Face original direction
+	    local layers = math.abs(height)
+	    local moveLayer = height > 0 and moveUp or moveDown
+	    for layer = 1, layers + 1 do
 	        mineLayer(width, length)
-	        if level <= math.abs(height) then
-	            if height > 0 then
-	                digUp()
-	            else
-	                digDown()
-	            end
+	        if layer <= layers then
+	            moveLayer()
 	        end
 	    end
-	    returnToStart(height)
+	    local dy = currentPosition.y
+	    if dy > 0 then
+	        for i = 1, dy do
+	            moveDown()
+	        end
+	    elseif dy < 0 then
+	        for i = 1, -dy do
+	            moveUp()
+	        end
+	    end
 	    print("Mining complete!")
 	end
 	main()
