@@ -1,10 +1,9 @@
 function MODULE_entrypoints_scripts_task_digRegion()
-	local args = {...}
 	local directions = {left = 0, forward = 0, right = 0, down = 0, up = 0}
 	local function parseArguments()
-	    for i = 1, #args, 2 do
-	        local dir = args[i]
-	        local dist = tonumber(args[i + 1])
+	    for i = 1, #arg, 2 do
+	        local dir = arg[i]
+	        local dist = tonumber(arg[i + 1])
 	        if directions[dir] ~= nil then
 	            directions[dir] = dist
 	        else
