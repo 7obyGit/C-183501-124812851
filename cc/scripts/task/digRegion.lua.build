@@ -1,149 +1,46 @@
 function MODULE_entrypoints_scripts_task_digRegion()
-	local currentPosition = { x = 0, y = 0, z = 0 }
-	local currentDirection = 0 -- 0 = east (+x), 1 = south (+z), 2 = west (-x), 3 = north (-z)
-	local args = { ... }
-	if #args ~= 3 then
-	    print("Usage: dig.lua x y z")
+	if #arg ~= 3 then
+	    print("Usage: dig.lua forwards up down")
 	    return
 	end
-	local xSize = tonumber(args[1])
-	local ySize = tonumber(args[2])
-	local zSize = tonumber(args[3])
-	if not xSize or not ySize or not zSize then
-	    print("Invalid dimensions")
+	local forwards = tonumber(arg[1])
+	local up = tonumber(arg[2])
+	local down = tonumber(arg[3])
+	if not forwards or not up or not down then
+	    print("Invalid arguments. Usage: dig.lua forwards up down")
 	    return
 	end
-	xSize = math.abs(xSize)
-	ySize = math.abs(ySize)
-	zSize = math.abs(zSize)
-	local function moveForward()
-	    while not turtle.forward() do
-	        turtle.dig()
-	        sleep(0.2)
-	    end
-	    if currentDirection == 0 then
-	        currentPosition.x = currentPosition.x + 1
-	    elseif currentDirection == 1 then
-	        currentPosition.z = currentPosition.z + 1
-	    elseif currentDirection == 2 then
-	        currentPosition.x = currentPosition.x - 1
-	    elseif currentDirection == 3 then
-	        currentPosition.z = currentPosition.z - 1
-	    end
+	if forwards <= 0 then
+	    print("Forwards must be positive.")
+	    return
 	end
-	local function moveUp()
-	    while not turtle.up() do
-	        turtle.digUp()
-	        sleep(0.2)
-	    end
-	    currentPosition.y = currentPosition.y + 1
+	if up < 0 or down < 0 then
+	    print("Up and down must be non-negative.")
+	    return
 	end
-	local function moveDown()
+	local total_height = 1 + up + down
+	for i = 1, down do
 	    while not turtle.down() do
 	        turtle.digDown()
 	        sleep(0.2)
 	    end
-	    currentPosition.y = currentPosition.y - 1
 	end
-	local function turnLeft()
-	    turtle.turnLeft()
-	    currentDirection = (currentDirection + 3) % 4
-	end
-	local function turnRight()
-	    turtle.turnRight()
-	    currentDirection = (currentDirection + 1) % 4
-	end
-	local function faceDirection(dir)
-	    local turn = (dir - currentDirection) % 4
-	    if turn == 1 then
-	        turnRight()
-	    elseif turn == 2 then
-	        turnRight()
-	        turnRight()
-	    elseif turn == 3 then
-	        turnLeft()
-	    end
-	end
-	local function moveTo(targetX, targetY, targetZ)
-	    local dy = targetY - currentPosition.y
-	    if dy > 0 then
-	        for i = 1, dy do
-	            moveUp()
-	        end
-	    elseif dy < 0 then
-	        for i = 1, -dy do
-	            moveDown()
+	for layer = 1, total_height do
+	    for step = 1, forwards do
+	        while not turtle.forward() do
+	            turtle.dig()
+	            sleep(0.2)
 	        end
 	    end
-	    local dx = targetX - currentPosition.x
-	    if dx ~= 0 then
-	        if dx > 0 then
-	            faceDirection(0) -- East
-	        else
-	            faceDirection(2) -- West
-	        end
-	        for i = 1, math.abs(dx) do
-	            moveForward()
-	        end
-	    end
-	    local dz = targetZ - currentPosition.z
-	    if dz ~= 0 then
-	        if dz > 0 then
-	            faceDirection(1) -- South
-	        else
-	            faceDirection(3) -- North
-	        end
-	        for i = 1, math.abs(dz) do
-	            moveForward()
+	    if layer < total_height then
+	        turtle.turnLeft()
+	        turtle.turnLeft()
+	        while not turtle.up() do
+	            turtle.digUp()
+	            sleep(0.2)
 	        end
 	    end
 	end
-	local function mineLayer(xSize, zSize)
-	    for z = 1, zSize do
-	        for x = 1, xSize - 1 do
-	            moveForward()
-	        end
-	        if z < zSize then
-	            if z % 2 == 1 then
-	                turnRight()
-	                moveForward()
-	                turnRight()
-	            else
-	                turnLeft()
-	                moveForward()
-	                turnLeft()
-	            end
-	        end
-	    end
-	    if (zSize % 2 == 0) then
-	        faceDirection(2) -- West
-	        for i = 1, xSize - 1 do
-	            moveForward()
-	        end
-	    end
-	    faceDirection(3) -- North
-	    for i = 1, zSize - 1 do
-	        moveForward()
-	    end
-	    faceDirection(0) -- East
-	end
-	local function main()
-	    for y = 1, ySize do
-	        mineLayer(xSize, zSize)
-	        if y < ySize then
-	            moveUp()
-	        end
-	    end
-	    local dy = currentPosition.y
-	    if dy > 0 then
-	        for i = 1, dy do
-	            moveDown()
-	        end
-	    end
-	    moveTo(0, 0, 0)
-	    faceDirection(0) -- East
-	    print("Mining complete!")
-	end
-	main()
+	print("Mining complete!")
 end
 local entrypoints_scripts_task_digRegion = MODULE_entrypoints_scripts_task_digRegion()
