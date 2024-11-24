@@ -1,0 +1,126 @@
+function MODULE_entrypoints_scripts_task_digRegion()
+	local function parse_args()
+	    local commands = {}
+	    local i = 1
+	    while i <= #arg do
+	        local direction = arg[i]
+	        local count = tonumber(arg[i + 1])
+	        if not count then
+	            print("Error: Expected number after direction " .. direction)
+	            return nil
+	        end
+	        table.insert(commands, {direction = direction, count = count})
+	        i = i + 2
+	    end
+	    return commands
+	end
+	local function reverse_direction(direction)
+	    if direction == "forward" then return "back"
+	    elseif direction == "back" then return "forward"
+	    elseif direction == "left" then return "right"
+	    elseif direction == "right" then return "left"
+	    elseif direction == "up" then return "down"
+	    elseif direction == "down" then return "up"
+	    end
+	end
+	local function turn_to_direction(direction)
+	    if direction == "left" then
+	        turtle.turnLeft()
+	        return true
+	    elseif direction == "right" then
+	        turtle.turnRight()
+	        return true
+	    end
+	    return false
+	end
+	local function mine_and_move(direction)
+	    if direction == "up" then
+	        turtle.digUp()
+	        return turtle.up()
+	    elseif direction == "down" then
+	        turtle.digDown()
+	        return turtle.down()
+	    elseif direction == "forward" then
+	        turtle.dig()
+	        return turtle.forward()
+	    end
+	end
+	local function move_no_mine(direction)
+	    if direction == "up" then
+	        return turtle.up()
+	    elseif direction == "down" then
+	        return turtle.down()
+	    elseif direction == "forward" then
+	        return turtle.forward()
+	    elseif direction == "back" then
+	        return turtle.back()
+	    end
+	end
+	local function execute_command(direction, count)
+	    local moves = {}
+	    local success = true
+	    if direction == "left" or direction == "right" then
+	        turn_to_direction(direction)
+	        direction = "forward"
+	    end
+	    for i = 1, count do
+	        if mine_and_move(direction) then
+	            table.insert(moves, {
+	                direction = reverse_direction(direction),
+	                turned = false
+	            })
+	        else
+	            success = false
+	            break
+	        end
+	    end
+	    return moves, success
+	end
+	local function return_to_start(return_path)
+	    for i = #return_path, 1, -1 do
+	        local move = return_path[i]
+	        if move.turned then
+	            if move.direction == "left" then
+	                turtle.turnRight()
+	            else
+	                turtle.turnLeft()
+	            end
+	        else
+	            if not move_no_mine(move.direction) then
+	                print("Warning: Failed to return to original position")
+	                return false
+	            end
+	        end
+	    end
+	    return true
+	end
+	local commands = parse_args()
+	if not commands then
+	    print("Usage: dig.lua <direction> <count> [direction2] [count2] ...")
+	    print("Directions: forward, up, down, left, right")
+	    return
+	end
+	local return_path = {}
+	local success = true
+	for _, cmd in ipairs(commands) do
+	    local moves, cmd_success = execute_command(cmd.direction, cmd.count)
+	    for _, move in ipairs(moves) do
+	        table.insert(return_path, move)
+	    end
+	    if not cmd_success then
+	        success = false
+	        break
+	    end
+	end
+	if not return_to_start(return_path) then
+	    print("Warning: Could not fully return to start position")
+	else
+	    print("Successfully returned to start position")
+	end
+	if success then
+	    print("Mining operation completed successfully")
+	else
+	    print("Mining operation encountered obstacles")
+	end
+end
+local entrypoints_scripts_task_digRegion = MODULE_entrypoints_scripts_task_digRegion()
