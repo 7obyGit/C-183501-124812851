@@ -1,39 +1,30 @@
 function MODULE_entrypoints_scripts_task_digRegion()
 	local function parse_args()
-	    local commands = {}
-	    local i = 1
-	    while i <= #arg do
-	        local direction = arg[i]
-	        local count = tonumber(arg[i + 1])
-	        if not count then
-	            print("Error: Expected number after direction " .. direction)
-	            return nil
-	        end
-	        table.insert(commands, {direction = direction, count = count})
-	        i = i + 2
+	    if #arg ~= 6 then
+	        print("Usage: dig.lua forward <blocks> left/right <blocks> down/up <blocks>")
+	        return nil
 	    end
-	    return commands
-	end
-	local facing = 0  -- 0 = initial direction, 1 = right, 2 = backward, 3 = left
-	local function turn_to(target_facing)
-	    while facing ~= target_facing do
-	        turtle.turnRight()
-	        facing = (facing + 1) % 4
+	    local dims = {}
+	    dims.forward = tonumber(arg[2])
+	    dims.width = tonumber(arg[4])
+	    dims.vertical = tonumber(arg[6])
+	    dims.is_left = arg[3] == "left"
+	    dims.is_down = arg[5] == "down"
+	    if not dims.forward or not dims.width or not dims.vertical then
+	        print("All dimensions must be numbers")
+	        return nil
 	    end
+	    return dims
 	end
-	local function restore_facing()
-	    turn_to(0)
-	end
-	local function mine_layer(width, length, is_left)
-	    local going_forward = true
-	    for w = 1, width do
-	        for l = 1, length - 1 do
+	local function mine_layer(forward_blocks, width_blocks, is_left)
+	    for row = 1, width_blocks do
+	        for i = 1, forward_blocks - 1 do
 	            turtle.dig()
 	            turtle.forward()
 	        end
-	        if w < width then
+	        if row < width_blocks then
 	            if is_left then
-	                if going_forward then
+	                if row % 2 == 1 then
 	                    turtle.turnLeft()
 	                    turtle.dig()
 	                    turtle.forward()
@@ -45,7 +36,7 @@ function MODULE_entrypoints_scripts_task_digRegion()
 	                    turtle.turnRight()
 	                end
 	            else
-	                if going_forward then
+	                if row % 2 == 1 then
 	                    turtle.turnRight()
 	                    turtle.dig()
 	                    turtle.forward()
@@ -57,84 +48,66 @@ function MODULE_entrypoints_scripts_task_digRegion()
 	                    turtle.turnLeft()
 	                end
 	            end
-	            going_forward = not going_forward
-	        end
-	    end
-	    if width % 2 == 0 then
-	        for l = 1, length - 1 do
-	            turtle.forward()
-	        end
-	        if is_left then
-	            turn_to(1)  -- Face right
-	        else
-	            turn_to(3)  -- Face left
-	        end
-	        for w = 1, width - 1 do
-	            turtle.forward()
-	        end
-	        restore_facing()
-	    else
-	        if is_left then
-	            turn_to(1)  -- Face right
-	        else
-	            turn_to(3)  -- Face left
-	        end
-	        for w = 1, width - 1 do
-	            turtle.forward()
-	        end
-	        restore_facing()
-	    end
-	    if width % 2 == 0 then
-	    else
-	        for l = 1, length - 1 do
-	            turtle.forward()
 	        end
 	    end
 	end
-	local function excavate_volume(length, width, height, is_left)
-	    for h = 1, height do
-	        mine_layer(width, length, is_left)
-	        if h < height then
-	            turtle.digDown()
+	local function return_to_layer_start(forward_blocks, width_blocks, is_left)
+	    if width_blocks % 2 == 1 then
+	        turtle.turnRight()
+	        turtle.turnRight()
+	        for i = 1, forward_blocks - 1 do
+	            turtle.forward()
+	        end
+	    end
+	    if is_left then
+	        turtle.turnRight()
+	    else
+	        turtle.turnLeft()
+	    end
+	    for i = 1, width_blocks - 1 do
+	        turtle.forward()
+	    end
+	    if is_left then
+	        turtle.turnLeft()
+	    else
+	        turtle.turnRight()
+	    end
+	end
+	local function mine_volume(dims)
+	    for layer = 1, dims.vertical do
+	        mine_layer(dims.forward, dims.width, dims.is_left)
+	        return_to_layer_start(dims.forward, dims.width, dims.is_left)
+	        if layer < dims.vertical then
+	            if dims.is_down then
+	                turtle.digDown()
+	                turtle.down()
+	            else
+	                turtle.digUp()
+	                turtle.up()
+	            end
+	        end
+	    end
+	    if dims.is_down then
+	        for i = 1, dims.vertical - 1 do
+	            turtle.up()
+	        end
+	    else
+	        for i = 1, dims.vertical - 1 do
 	            turtle.down()
 	        end
 	    end
-	    for h = 1, height - 1 do
-	        turtle.up()
-	    end
 	end
-	local commands = parse_args()
-	if not commands or #commands ~= 3 then
-	    print("Usage: dig.lua <forward> <blocks> <left/right> <blocks> <down> <blocks>")
-	    print("Example: dig.lua forward 5 left 3 down 2")
+	local dims = parse_args()
+	if not dims then
 	    return
 	end
-	local length, width, height = 0, 0, 0
-	local is_left = false
-	local valid_commands = true
-	for _, cmd in ipairs(commands) do
-	    if cmd.direction == "forward" then
-	        length = cmd.count
-	    elseif cmd.direction == "left" then
-	        width = cmd.count
-	        is_left = true
-	    elseif cmd.direction == "right" then
-	        width = cmd.count
-	        is_left = false
-	    elseif cmd.direction == "down" then
-	        height = cmd.count
-	    else
-	        print("Invalid direction: " .. cmd.direction)
-	        valid_commands = false
-	        break
-	    end
-	end
-	if not valid_commands or length == 0 or width == 0 or height == 0 then
-	    print("Please specify exactly one forward, one right/left, and one down dimension")
-	    return
-	end
-	print(string.format("Mining volume: %d x %d x %d", length, width, height))
-	excavate_volume(length, width, height, is_left)
+	print(string.format("Mining volume: forward %d, %s %d, %s %d",
+	    dims.forward,
+	    dims.is_left and "left" or "right",
+	    dims.width,
+	    dims.is_down and "down" or "up",
+	    dims.vertical))
+	mine_volume(dims)
 	print("Mining complete!")
 end
 local entrypoints_scripts_task_digRegion = MODULE_entrypoints_scripts_task_digRegion()
