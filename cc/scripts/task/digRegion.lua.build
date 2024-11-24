@@ -1,35 +1,34 @@
 function MODULE_entrypoints_scripts_task_digRegion()
 	local currentPosition = { x = 0, y = 0, z = 0 }
-	local currentDirection = 0 -- 0 = north, 1 = east, 2 = south, 3 = west
-	local startingDirection = currentDirection
-	local directions = { left = 0, forward = 0, right = 0, down = 0, up = 0 }
-	local function parseArguments()
-	    for i = 1, #arg, 2 do
-	        local dir = arg[i]
-	        local dist = tonumber(arg[i + 1])
-	        if directions[dir] ~= nil and dist ~= nil then
-	            directions[dir] = dist
-	        else
-	            print("Invalid argument: " .. tostring(dir))
-	            print("Usage: dig.lua <direction> <distance> ...")
-	            return false
-	        end
-	    end
-	    return true
+	local currentDirection = 0 -- 0 = east (+x), 1 = south (+z), 2 = west (-x), 3 = north (-z)
+	local args = { ... }
+	if #args ~= 3 then
+	    print("Usage: dig.lua x y z")
+	    return
 	end
+	local xSize = tonumber(args[1])
+	local ySize = tonumber(args[2])
+	local zSize = tonumber(args[3])
+	if not xSize or not ySize or not zSize then
+	    print("Invalid dimensions")
+	    return
+	end
+	xSize = math.abs(xSize)
+	ySize = math.abs(ySize)
+	zSize = math.abs(zSize)
 	local function moveForward()
 	    while not turtle.forward() do
 	        turtle.dig()
 	        sleep(0.2)
 	    end
 	    if currentDirection == 0 then
-	        currentPosition.z = currentPosition.z + 1
-	    elseif currentDirection == 1 then
 	        currentPosition.x = currentPosition.x + 1
+	    elseif currentDirection == 1 then
+	        currentPosition.z = currentPosition.z + 1
 	    elseif currentDirection == 2 then
-	        currentPosition.z = currentPosition.z - 1
-	    elseif currentDirection == 3 then
 	        currentPosition.x = currentPosition.x - 1
+	    elseif currentDirection == 3 then
+	        currentPosition.z = currentPosition.z - 1
 	    end
 	end
 	local function moveUp()
@@ -65,38 +64,47 @@ function MODULE_entrypoints_scripts_task_digRegion()
 	        turnLeft()
 	    end
 	end
-	local function moveTo(targetX, targetZ)
+	local function moveTo(targetX, targetY, targetZ)
+	    local dy = targetY - currentPosition.y
+	    if dy > 0 then
+	        for i = 1, dy do
+	            moveUp()
+	        end
+	    elseif dy < 0 then
+	        for i = 1, -dy do
+	            moveDown()
+	        end
+	    end
 	    local dx = targetX - currentPosition.x
-	    local dz = targetZ - currentPosition.z
 	    if dx ~= 0 then
 	        if dx > 0 then
-	            faceDirection(1) -- East
+	            faceDirection(0) -- East
 	        else
-	            faceDirection(3) -- West
+	            faceDirection(2) -- West
 	        end
 	        for i = 1, math.abs(dx) do
 	            moveForward()
 	        end
 	    end
+	    local dz = targetZ - currentPosition.z
 	    if dz ~= 0 then
 	        if dz > 0 then
-	            faceDirection(0) -- North
+	            faceDirection(1) -- South
 	        else
-	            faceDirection(2) -- South
+	            faceDirection(3) -- North
 	        end
 	        for i = 1, math.abs(dz) do
 	            moveForward()
 	        end
 	    end
 	end
-	local function mineLayer(width, length)
-	    local evenRow = true
-	    for z = 1, length do
-	        for x = 1, width - 1 do
+	local function mineLayer(xSize, zSize)
+	    for z = 1, zSize do
+	        for x = 1, xSize - 1 do
 	            moveForward()
 	        end
-	        if z < length then
-	            if evenRow then
+	        if z < zSize then
+	            if z % 2 == 1 then
 	                turnRight()
 	                moveForward()
 	                turnRight()
@@ -105,41 +113,25 @@ function MODULE_entrypoints_scripts_task_digRegion()
 	                moveForward()
 	                turnLeft()
 	            end
-	            evenRow = not evenRow
 	        end
 	    end
-	    faceDirection((startingDirection + 2) % 4) -- Turn around
-	    for i = 1, width - 1 do
+	    if (zSize % 2 == 0) then
+	        faceDirection(2) -- West
+	        for i = 1, xSize - 1 do
+	            moveForward()
+	        end
+	    end
+	    faceDirection(3) -- North
+	    for i = 1, zSize - 1 do
 	        moveForward()
 	    end
-	    faceDirection((startingDirection + 1) % 4) -- Turn right
-	    for i = 1, length - 1 do
-	        moveForward()
-	    end
-	    faceDirection(startingDirection)
+	    faceDirection(0) -- East
 	end
 	local function main()
-	    if not parseArguments() then
-	        return
-	    end
-	    local width = directions.left + directions.right + 1
-	    local length = directions.forward
-	    local height = directions.up - directions.down
-	    if width <= 0 or length <= 0 or height == 0 then
-	        print("Invalid dimensions")
-	        return
-	    end
-	    faceDirection((startingDirection + 3) % 4) -- Turn left
-	    for i = 1, directions.left do
-	        moveForward()
-	    end
-	    faceDirection(startingDirection) -- Face original direction
-	    local layers = math.abs(height)
-	    local moveLayer = height > 0 and moveUp or moveDown
-	    for layer = 1, layers + 1 do
-	        mineLayer(width, length)
-	        if layer <= layers then
-	            moveLayer()
+	    for y = 1, ySize do
+	        mineLayer(xSize, zSize)
+	        if y < ySize then
+	            moveUp()
 	        end
 	    end
 	    local dy = currentPosition.y
@@ -147,11 +139,9 @@ function MODULE_entrypoints_scripts_task_digRegion()
 	        for i = 1, dy do
 	            moveDown()
 	        end
-	    elseif dy < 0 then
-	        for i = 1, -dy do
-	            moveUp()
-	        end
 	    end
+	    moveTo(0, 0, 0)
+	    faceDirection(0) -- East
 	    print("Mining complete!")
 	end
 	main()
