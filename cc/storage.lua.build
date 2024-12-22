@@ -2742,11 +2742,9 @@ function MODULE_utils_storage_Storage()
 	end
 	function Storage:populateColonyBarrel(requestedItems)
 	    if self.colonyBarrel == nil then
-	        print("WARNING: No colony barrel found")
 	        return
 	    end
 	    for _, item in pairs(requestedItems) do
-	        print("Moving " .. item.count .. " " .. item.name .. " to the colony barrel")
 	        local itemName = item.name
 	        local itemCount = item.count
 	        local remainingCount = self:moveToIo(itemName, itemCount, self.colonyBarrel)
@@ -3776,11 +3774,10 @@ function MODULE_jobs_definitions_static_storage_StorageBackgroundTasks()
 	function StorageBackgroundTasks.populateColonyBarrel(self)
 	    BackgroundTask.new()
 	        :setName("Fulfil Colony Requests")
-	        :setPeriod(10)
+	        :setPeriod(60)
 	        :setCallback(function()
 	            local requestedItems = ColonyIntegrator.getRequestedItems() or {}
 	            if #requestedItems == 0 then
-	                print("No items requested.")
 	                return
 	            end
 	            self.storage:populateColonyBarrel(requestedItems)
