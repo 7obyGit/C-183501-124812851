@@ -3773,7 +3773,7 @@ function MODULE_jobs_definitions_static_storage_StorageBackgroundTasks()
 	        end)
 	        :start()
 	end
-	function StorageBackgroundTasks.checkForRequests(self)
+	function StorageBackgroundTasks.populateColonyBarrel(self)
 	    BackgroundTask.new()
 	        :setName("Fulfil Colony Requests")
 	        :setPeriod(10)
@@ -4692,6 +4692,7 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	        StorageBackgroundTasks.updateSmeltQueue,
 	        StorageBackgroundTasks.detectAddedPeripherals,
 	        StorageBackgroundTasks.detectRemovedPeripherals,
+	        StorageBackgroundTasks.populateColonyBarrel,
 	    }
 	    if PlayerDetector.detector ~= nil then table.insert(self.backgroundTasks, function() PlayerDetector.onPlayerMoved(function (username, oldPosition, newPosition) self.protocols.events:sendOnPlayerMoved(username, oldPosition, newPosition) end, Me.username, 5) end) end
 	    if EnvironmentDetector.detector ~= nil then table.insert(self.backgroundTasks, StorageBackgroundTasks.onEntityEnterOrLeave) end
