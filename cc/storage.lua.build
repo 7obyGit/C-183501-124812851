@@ -2524,6 +2524,10 @@ function MODULE_utils_storage_Storage()
 	            end
 	        end
 	    end
+	    self.colonyBarrel = nil
+	    if self.config.colonyBarrel ~= nil then
+	        self.colonyBarrel = self.barrels[self.config.colonyBarrel]
+	    end
 	    return self
 	end
 	function Storage.connectToChests()
@@ -2734,6 +2738,18 @@ function MODULE_utils_storage_Storage()
 	                container:defragment()
 	            end
 	        end 
+	    end
+	end
+	function Storage:populateColonyBarrel(requestedItems)
+	    if self.colonyBarrel == nil then
+	        print("WARNING: No colony barrel found")
+	        return
+	    end
+	    for _, item in pairs(requestedItems) do
+	        print("Moving " .. item.count .. " " .. item.name .. " to the colony barrel")
+	        local itemName = item.name
+	        local itemCount = item.count
+	        local remainingCount = self:moveToIo(itemName, itemCount, self.colonyBarrel)
 	    end
 	end
 	function Storage:placeBlockIndicator(containerName, blockIndicator, secondaryIndicator)
@@ -3448,6 +3464,119 @@ end
 local utils_network_protocols_logging_LogChannels = MODULE_utils_network_protocols_logging_LogChannels()
 
 
+function MODULE_utils_peripherals_ColonyIntegrator()
+	local LibOs = utils_libs_LibOs
+	local ColonyIntegrator = {}
+	ColonyIntegrator.internal = peripheral.find("colonyIntegrator")
+	ColonyIntegrator.CHECK_DELAY = 1
+	function ColonyIntegrator.sleep()
+	    LibOs.sleep(ColonyIntegrator.CHECK_DELAY)
+	end
+	function ColonyIntegrator.getCitizens()
+	    if not ColonyIntegrator.internal then return nil end
+	    return ColonyIntegrator.internal.getCitizens()
+	end
+	function ColonyIntegrator.getVisitors()
+	    if not ColonyIntegrator.internal then return nil end
+	    return ColonyIntegrator.internal.getVisitors()
+	end
+	function ColonyIntegrator.getBuildings()
+	    if not ColonyIntegrator.internal then return nil end
+	    return ColonyIntegrator.internal.getBuildings()
+	end
+	function ColonyIntegrator.getResearch()
+	    if not ColonyIntegrator.internal then return nil end
+	    return ColonyIntegrator.internal.getResearch()
+	end
+	function ColonyIntegrator.getRequests()
+	    if not ColonyIntegrator.internal then return nil end
+	    return ColonyIntegrator.internal.getRequests()
+	end
+	function ColonyIntegrator.getWorkOrders()
+	    if not ColonyIntegrator.internal then return nil end
+	    return ColonyIntegrator.internal.getWorkOrders()
+	end
+	function ColonyIntegrator.getWorkOrderResources(workOrderId)
+	    if not ColonyIntegrator.internal then return nil end
+	    return ColonyIntegrator.internal.getWorkOrderResources(workOrderId)
+	end
+	function ColonyIntegrator.getBuilderResources(position)
+	    if not ColonyIntegrator.internal then return nil end
+	    return ColonyIntegrator.internal.getBuilderResources(position)
+	end
+	function ColonyIntegrator.getColonyID()
+	    if not ColonyIntegrator.internal then return 0 end
+	    return ColonyIntegrator.internal.getColonyID()
+	end
+	function ColonyIntegrator.getColonyName()
+	    if not ColonyIntegrator.internal then return "" end
+	    return ColonyIntegrator.internal.getColonyName()
+	end
+	function ColonyIntegrator.getColonyStyle()
+	    if not ColonyIntegrator.internal then return "" end
+	    return ColonyIntegrator.internal.getColonyStyle()
+	end
+	function ColonyIntegrator.getLocation()
+	    if not ColonyIntegrator.internal then return nil end
+	    return ColonyIntegrator.internal.getLocation()
+	end
+	function ColonyIntegrator.getHappiness()
+	    if not ColonyIntegrator.internal then return 0 end
+	    return ColonyIntegrator.internal.getHappiness()
+	end
+	function ColonyIntegrator.isActive()
+	    if not ColonyIntegrator.internal then return false end
+	    return ColonyIntegrator.internal.isActive()
+	end
+	function ColonyIntegrator.isUnderAttack()
+	    if not ColonyIntegrator.internal then return false end
+	    return ColonyIntegrator.internal.isUnderAttack()
+	end
+	function ColonyIntegrator.isInColony()
+	    if not ColonyIntegrator.internal then return false end
+	    return ColonyIntegrator.internal.isInColony()
+	end
+	function ColonyIntegrator.isWithin(position)
+	    if not ColonyIntegrator.internal then return false end
+	    return ColonyIntegrator.internal.isWithin(position)
+	end
+	function ColonyIntegrator.amountOfCitizens()
+	    if not ColonyIntegrator.internal then return 0 end
+	    return ColonyIntegrator.internal.amountOfCitizens()
+	end
+	function ColonyIntegrator.maxOfCitizens()
+	    if not ColonyIntegrator.internal then return 0 end
+	    return ColonyIntegrator.internal.maxOfCitizens()
+	end
+	function ColonyIntegrator.amountOfGraves()
+	    if not ColonyIntegrator.internal then return 0 end
+	    return ColonyIntegrator.internal.amountOfGraves()
+	end
+	function ColonyIntegrator.amountOfConstructionSites()
+	    if not ColonyIntegrator.internal then return 0 end
+	    return ColonyIntegrator.internal.amountOfConstructionSites()
+	end
+	function ColonyIntegrator.getRequestedItems()
+	    if not ColonyIntegrator.internal then return {} end
+	    local results = {}
+	    local requests = ColonyIntegrator.internal.getRequests() or {}
+	    for _, request in ipairs(requests) do
+	        for _, item in ipairs(request.items or {}) do
+	            if item.count > 0 then
+	                table.insert(results, {
+	                    name = item.name,
+	                    count = item.count
+	                })
+	            end
+	        end
+	    end
+	    return results
+	end
+	return ColonyIntegrator
+end
+local utils_peripherals_ColonyIntegrator = MODULE_utils_peripherals_ColonyIntegrator()
+
+
 function MODULE_utils_controlflow_BackgroundTask()
 	local BackgroundTask = {}
 	function BackgroundTask.new()
@@ -3497,6 +3626,7 @@ function MODULE_jobs_definitions_static_storage_StorageBackgroundTasks()
 	local EnvironmentDetector = utils_peripherals_EnvironmentDetector
 	local LogChannels = utils_network_protocols_logging_LogChannels
 	local ChatBox = utils_peripherals_ChatBox
+	local ColonyIntegrator = utils_peripherals_ColonyIntegrator
 	local Me = utils_other_Me
 	local Players = utils_other_Players
 	local BackgroundTask = utils_controlflow_BackgroundTask
@@ -3640,6 +3770,23 @@ function MODULE_jobs_definitions_static_storage_StorageBackgroundTasks()
 	            local event, peripheralName = os.pullEvent("peripheral_detach")
 	            print("Peripheral removed: " .. peripheralName)
 	            self.storage:removePeripheral(peripheralName)
+	        end)
+	        :start()
+	end
+	function StorageBackgroundTasks.checkForRequests(self)
+	    BackgroundTask.new()
+	        :setName("Fulfil Colony Requests")
+	        :setPeriod(10)
+	        :setCallback(function()
+	            local requestedItems = ColonyIntegrator.getRequestedItems() or {}
+	            if #requestedItems == 0 then
+	                print("No items requested.")
+	                return
+	            end
+	            self.storage:populateColonyBarrel(requestedItems)
+	        end)
+	        :when(function()
+	            return self.config:get("state", nil) == self.states.COMMAND_PROMPT
 	        end)
 	        :start()
 	end
