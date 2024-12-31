@@ -4041,6 +4041,7 @@ function MODULE_jobs_definitions_static_storage_StorageCommands()
 	                print("Type 'help get' for more information")
 	                return
 	            end
+	            self.storage:updateIndex()
 	            print("Getting " .. quantity .. " " .. itemName)
 	            self.storage:moveToIo(itemName, quantity)
 	        end
