@@ -3191,7 +3191,7 @@ function MODULE_utils_storage_Storage()
 	function Storage:updateIndex()
 	    Parallel.mapTableWithTimeout(self.inventories, function(name, container) container:updateIndex() end, 15)
 	    Parallel.mapTableWithTimeout(self.barrels, function(name, container) container:updateIndex() end, 15)
-	    Parallel.mapDictWithTimeout(self.draws, function(name, container) print(container) container:updateIndex() end, 15)
+	    Parallel.mapDictWithTimeout(self.draws, function(name, container) container:updateIndex() end, 15)
 	end
 	function Storage:defragment()
 	    local inventories = Table.copy(self.inventories)
