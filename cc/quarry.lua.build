@@ -3185,6 +3185,11 @@ function MODULE_utils_storage_Container()
 	        return count
 	    end
 	    local destContainer = self
+	    local remainingCount = self:_putItemsLoop(sourceContainer, destContainer, itemName, count)
+	    destContainer:updateIndex()
+	    return remainingCount
+	end
+	function Container:_putItemsLoop(sourceContainer, destContainer, itemName, count)
 	    local remainingCount = count
 	    local attempts = 0
 	    while remainingCount > 0 and attempts < self.size do
@@ -3193,17 +3198,14 @@ function MODULE_utils_storage_Container()
 	            return remainingCount  -- Source container is empty
 	        end
 	        local sourceSlot = sourceSlotTable.slot
-	        local destSlot = destContainer:getEmptySlot()
-	        if destSlot == nil then
-	            return remainingCount  -- Destination container is full
-	        end
-	        local moved = sourceContainer.internal.pushItems(destContainer.name, sourceSlot, remainingCount, destSlot)
+	        local moved = sourceContainer.internal.pushItems(destContainer.name, sourceSlot, remainingCount)
 	        remainingCount = remainingCount - moved  -- Track the remaining count
+	        if moved == 0 then
+	            return remainingCount
+	        end
 	        local sourceSlotTable = sourceContainer.index:getSlot(sourceSlot) or {count = 0}
 	        local sourceSlotCount = sourceSlotTable.count - moved
-	        local destSlotCount = moved  -- Was initially empty
 	        sourceContainer.index:updateSlot(sourceSlot, itemName, sourceSlotCount)
-	        destContainer.index:updateSlot(destSlot, itemName, destSlotCount)
 	        attempts = attempts + 1
 	    end
 	    return remainingCount
