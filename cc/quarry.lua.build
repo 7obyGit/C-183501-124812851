@@ -3749,6 +3749,7 @@ function MODULE_utils_storage_Container()
 	    end
 	end
 	function Container:hasItem(itemName)
+	    print("Has item: " .. itemName, self.index:hasItem(itemName))
 	    return self.index:hasItem(itemName)
 	end
 	function Container:getItemLimit(slotNumber)
