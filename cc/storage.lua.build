@@ -3428,19 +3428,21 @@ function MODULE_utils_storage_Storage()
 	end
 	function Storage:findItemLocations(itemName)
 	    local locations = {}
-	    for _, draw in pairs(self.draws:values()) do
-	        local slots = draw:findItemSlots(itemName)
-	        for _, slot in pairs(slots) do
-	            local count = draw:getItemCount(slot)
-	            table.insert(locations, {
-	                containerName = draw.name,
-	                itemName = itemName,
-	                slot = slot,
-	                count = count,
-	                container = draw,
-	            })
-	        end
-	    end
+	    self.draws
+	        :values()
+	        :map(function (draw)
+	            local slots = draw:findItemSlots(itemName)
+	            for _, slot in pairs(slots) do
+	                local count = draw:getItemCount(slot)
+	                table.insert(locations, {
+	                    containerName = draw.name,
+	                    itemName = itemName,
+	                    slot = slot,
+	                    count = count,
+	                    container = draw,
+	                })
+	            end
+	        end)
 	    for _, container in pairs(self.inventories) do
 	        local slots = container:findItemSlots(itemName)
 	        for _, slot in pairs(slots) do
