@@ -3422,13 +3422,12 @@ function MODULE_utils_storage_ContainerIndex()
 	function ContainerIndex.new(slotCount)
 	    local self = setmetatable({}, ContainerIndex)
 	    self.slotCount = slotCount
-	    self.slotIndex = {}  -- slotIndex[slot] = {name = itemName, count = itemCount, maxCount = maxCount}
+	    self.slotIndex = {}  -- slotIndex[slot] = {name = itemName, count = itemCount}
 	    self.itemIndex = {}  -- itemIndex[itemName] = {slot1 = itemCount1, slot2 = itemCount2, ...}
 	    return self
 	end
-	function ContainerIndex:addSlot(slot, itemName, itemCount, maxCount)
-	    self.slotIndex[slot] = {name = itemName, count = itemCount, maxCount = maxCount}
-	    print("Adding slot", slot, itemName, itemCount, maxCount)
+	function ContainerIndex:addSlot(slot, itemName, itemCount)
+	    self.slotIndex[slot] = {name = itemName, count = itemCount}
 	    if self.itemIndex[itemName] == nil then
 	        self.itemIndex[itemName] = {}
 	    end
@@ -3455,8 +3454,7 @@ function MODULE_utils_storage_ContainerIndex()
 	        return slots
 	    end
 	    for slot, itemCount in pairs(itemSlots) do
-	        local maxCount = self.slotIndex[slot].maxCount
-	        table.insert(slots, {slot = slot, name = itemName, count = itemCount, maxCount = maxCount})
+	        table.insert(slots, {slot = slot, name = itemName, count = itemCount})
 	    end
 	    return slots
 	end
@@ -3500,18 +3498,17 @@ function MODULE_utils_storage_ContainerIndex()
 	    end
 	    return {name = itemName, count = itemCount, slots = slots}
 	end
-	function ContainerIndex:updateSlot(slot, itemName, itemCount, maxCount)
-	    print("Updating slot", slot, itemName, itemCount, maxCount)
+	function ContainerIndex:updateSlot(slot, itemName, itemCount)
 	    if slot == nil then
 	        error("Slot should not be nil")
 	    end
 	    if self.slotIndex[slot] == nil then
-	        self:addSlot(slot, itemName, itemCount, maxCount)
+	        self:addSlot(slot, itemName, itemCount)
 	    end
 	    if self.itemIndex[itemName] == nil then
 	        self.itemIndex[itemName] = {}
 	    end
-	    self.slotIndex[slot] = {name = itemName, count = itemCount, maxCount = maxCount}
+	    self.slotIndex[slot] = {name = itemName, count = itemCount}
 	    self.itemIndex[itemName][slot] = itemCount
 	    if itemCount == 0 then
 	        self:removeSlot(slot)
@@ -3714,7 +3711,7 @@ function MODULE_utils_storage_Container()
 	    end
 	    self.index = ContainerIndex.new(self.size)
 	    for slot, item in pairs(self:_getInternalList()) do
-	        self.index:addSlot(slot, item.name, item.count, item.maxCount)
+	        self.index:addSlot(slot, item.name, item.count)
 	    end
 	end
 	function Container:hasItem(itemName)
@@ -3744,7 +3741,7 @@ function MODULE_utils_storage_Container()
 	        if moved == 0 or remainingCount == 0 then
 	            return remainingCount
 	        end
-	        sourceContainer.index:updateSlot(slotWithItem.slot, itemName, slotWithItem.count - moved, slotWithItem.maxCount)
+	        sourceContainer.index:updateSlot(slotWithItem.slot, itemName, slotWithItem.count - moved)
 	    end
 	    return remainingCount
 	end
@@ -3805,9 +3802,12 @@ function MODULE_utils_storage_Container()
 	end
 	function Container:_defragmentSingleItem(item)
 	    local slots = self:findItemSlots(item.name)
-	    slots = Collections.List
-	        .new(slots)
-	        :filter(function(slot) return slot.count < slot.maxCount end)
+	    slots = Collections.List.new(slots)
+	    if slots:size() == 0 then
+	        return
+	    end
+	    local maxCount = self:getMaxCount(slots[1].slot)
+	    slots = slots:filter(function(slot) return slot.count < maxCount end)
 	    if slots:size() <= 1 then
 	        return
 	    end
