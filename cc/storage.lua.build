@@ -3711,10 +3711,10 @@ function MODULE_utils_storage_Storage()
 	    end
 	end
 	function Storage:_dumpUnstackableItem(container, destination, itemName)
-	    local moved = 0
-	    while moved == 0 do
-	        moved = container:sendItems(destination, itemName, 1)
-	        print("*" .. moved)
+	    local remainingItems = 1
+	    while remainingItems == 1 do
+	        remainingItems = container:sendItems(destination, itemName, 1)
+	        print("*" .. remainingItems)
 	        LibOs.sleep(0.1)
 	    end
 	    print("Moved unstackable item: " .. itemName)
