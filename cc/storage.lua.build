@@ -3059,7 +3059,7 @@ function MODULE_utils_storage_Storage()
 	    self.inventories = Storage.connectToChests()
 	    self.furnaces = Storage.connectToFurnaces()
 	    self.draws = Storage.connectToDraws()
-	    print("Found: ", self.draws:size())
+	    print("Found: ", #self.draws)
 	    for i in 1, 1000 do end
 	    self.io = self.barrels[self.config.io or Blocks.barrel .. "_0"]
 	    self.otherIOs = {}
@@ -3129,7 +3129,7 @@ function MODULE_utils_storage_Storage()
 	            draws[name] = Container.new(name)
 	        end
 	    end, 15)
-	    return Collections.List.new(draws)
+	    return draws
 	end
 	function Storage:addPeripheral(name)
 	    if Text.contains(name, Blocks.barrel) then
