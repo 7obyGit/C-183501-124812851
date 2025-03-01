@@ -3059,8 +3059,6 @@ function MODULE_utils_storage_Storage()
 	    self.inventories = Storage.connectToChests()
 	    self.furnaces = Storage.connectToFurnaces()
 	    self.draws = Storage.connectToDraws()
-	    print("Found: ", textutils.serialise(self.draws))
-	    for i in 1, 1000 do end
 	    self.io = self.barrels[self.config.io or Blocks.barrel .. "_0"]
 	    self.otherIOs = {}
 	    if self.config.otherIOs ~= nil then
@@ -3122,14 +3120,11 @@ function MODULE_utils_storage_Storage()
 	    return barrels
 	end
 	function Storage.connectToDraws()
-	    local draws = {}
+	    local draws = Collections.Dict.new()
 	    local allPeripheralNames =  peripheral.getNames()
 	    Parallel.mapListWithTimeout(allPeripheralNames, function(name)
-	        print("Checking: ", name)
 	        if Text.contains(name, "drawers") then
-	            print("Found: ", name)
-	            draws[name] = Container.new(name)
-	            print("ADDED: ", name)
+	            draws.add(name, Container.new(name))
 	        end
 	    end, 15)
 	    return draws
@@ -3258,11 +3253,18 @@ function MODULE_utils_storage_Storage()
 	end
 	function Storage:moveFromIo(itemName, count, sourceContainer)
 	    sourceContainer = sourceContainer or self.io
-	    local destinations = {}
 	    local remainingCount = count
+	    local draw = self.draws:filter(function (_, draw) draw:hasItem(itemName) end):values():first()
+	    if draw ~= nil then
+	        remainingCount = sourceContainer:sendItems(draw, itemName, remainingCount)
+	    end
+	    if remainingCount == 0 then
+	        return remainingCount
+	    end
+	    local destinations = {}
 	    for _, destinationContainer in pairs(self.inventories) do
 	        if remainingCount == 0 then
-	            break  -- All items have been moved
+	            return remainingCount
 	        end
 	        remainingCount = sourceContainer:sendItems(destinationContainer, itemName, remainingCount)
 	        table.insert(destinations, destinationContainer)
