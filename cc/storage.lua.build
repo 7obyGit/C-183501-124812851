@@ -5017,6 +5017,7 @@ function MODULE_jobs_definitions_static_storage_StorageCommands()
 	                return
 	            end
 	            print("Dumping Unstackables")
+	            self.storage:updateIndex()
 	            self.storage:dumpAllUnstackables(destinationName)
 	        end
 	    )
