@@ -3243,8 +3243,18 @@ function MODULE_utils_storage_Storage()
 	end
 	function Storage:moveToIo(itemName, count, destinationContainer)
 	    destinationContainer = destinationContainer or self.io
-	    local locations = self:findItemLocations(itemName)
 	    local remainingCount = count
+	    local draw = self.draws
+	        :filter(function (_, draw) return draw:hasItem(itemName) end)
+	        :values()
+	        :first()
+	    if draw ~= nil then
+	        remainingCount = draw:sendItems(destinationContainer, itemName, remainingCount)
+	    end
+	    if remainingCount == 0 then
+	        return remainingCount
+	    end
+	    local locations = self:findItemLocations(itemName)
 	    while remainingCount ~= 0 and #locations > 0 do
 	        local location = table.remove(locations, 1)
 	        local container = self.inventories[location.containerName]
@@ -3253,9 +3263,6 @@ function MODULE_utils_storage_Storage()
 	            error("Container not found: " .. location.containerName)
 	        end
 	        remainingCount = container:sendItems(destinationContainer, itemName, remainingCount)
-	    end
-	    if destinationContainer == self.io then
-	        destinationContainer:defragment()
 	    end
 	    return remainingCount
 	end
