@@ -1250,10 +1250,7 @@ function MODULE_utils_data_Collections()
 	    return copy
 	end
 	function Dict:add(key, value)
-	    print("Data", self.data)
-	    print("Adding", key, value)
 	    self.data[key] = value
-	    print("Added", key, value)
 	end
 	function Dict:addAll(dict)
 	    if dict.type ~= Dict.TYPE then
@@ -3065,9 +3062,7 @@ function MODULE_utils_storage_Storage()
 	    self.barrels = Storage.connectToBarrels()
 	    self.inventories = Storage.connectToChests()
 	    self.furnaces = Storage.connectToFurnaces()
-	    print("BEFORE END OF STORAGE INITIALIZATION")
 	    self.draws = Storage.connectToDraws()
-	    print("REACHED END OF STORAGE INITIALIZATION")
 	    self.io = self.barrels[self.config.io or Blocks.barrel .. "_0"]
 	    self.otherIOs = {}
 	    if self.config.otherIOs ~= nil then
@@ -3263,9 +3258,7 @@ function MODULE_utils_storage_Storage()
 	function Storage:moveFromIo(itemName, count, sourceContainer)
 	    sourceContainer = sourceContainer or self.io
 	    local remainingCount = count
-	    print("Before filter")
 	    local draw = self.draws:filter(function (_, draw) draw:hasItem(itemName) end):values():first()
-	    print("End")
 	    if draw ~= nil then
 	        remainingCount = sourceContainer:sendItems(draw, itemName, remainingCount)
 	    end
