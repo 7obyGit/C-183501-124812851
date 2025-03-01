@@ -2656,7 +2656,9 @@ function MODULE_utils_data_Collections()
 	function Dict:filter(func)
 	    local results = Dict.new()
 	    for key, value in pairs(self.data) do
+	        print(key, value, func(key, value))
 	        if func(key, value) == true then
+	            print("ADDING")
 	            results:add(key, value)
 	        end
 	    end
