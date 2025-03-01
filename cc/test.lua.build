@@ -1349,8 +1349,10 @@ function MODULE_utils_data_Collections()
 	    for i, v in ipairs(self.data) do
 	        local mapped = func(v)
 	        if mapped.type == List.TYPE then
+	            print("Adding all")
 	            results:addAll(mapped)
 	        else
+	            print("Adding singular")
 	            results:add(mapped)
 	        end
 	    end
