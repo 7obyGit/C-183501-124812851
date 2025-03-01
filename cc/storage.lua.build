@@ -2233,6 +2233,10 @@ function MODULE_utils_storage_Container()
 	    end
 	    return newMatchingPatterns
 	end
+	function Container:isEmpty()
+	    local slots = self:getUsedSlots()
+	    return #slots == 0
+	end
 	return Container
 end
 local utils_storage_Container = MODULE_utils_storage_Container()
@@ -3713,6 +3717,8 @@ function MODULE_utils_storage_Storage()
 	function Storage:_dumpUnstackableItem(container, destination, itemName)
 	    local remainingItems = 1
 	    while remainingItems == 1 do
+	        container:updateIndex()
+	        destination:updateIndex()
 	        remainingItems = container:sendItems(destination, itemName, 1)
 	        print("*" .. remainingItems)
 	        LibOs.sleep(0.1)

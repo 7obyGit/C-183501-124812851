@@ -3931,6 +3931,10 @@ function MODULE_utils_storage_Container()
 	    end
 	    return newMatchingPatterns
 	end
+	function Container:isEmpty()
+	    local slots = self:getUsedSlots()
+	    return #slots == 0
+	end
 	return Container
 end
 local utils_storage_Container = MODULE_utils_storage_Container()
