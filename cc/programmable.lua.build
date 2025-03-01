@@ -3036,6 +3036,37 @@ function MODULE_utils_data_Collections()
 	    end
 	    return groups
 	end
+	function List:skipFirst(count)
+	    local skipped = List.new()
+	    for i = count + 1, self:size() do
+	        skipped:add(self.data[i])
+	    end
+	    return skipped
+	end
+	function List:takeFirst(count)
+	    local taken = List.new()
+	    for i = 1, math.min(count, self:size()) do
+	        taken:add(self.data[i])
+	    end
+	    return taken
+	end
+	function List:skipLast(count)
+	    local skipped = List.new()
+	    for i = 1, self:size() - count do
+	        skipped:add(self.data[i])
+	    end
+	    return skipped
+	end
+	function List:takeLast(count)
+	    local taken = List.new()
+	    for i = math.max(1, self:size() - count + 1), self:size() do
+	        taken:add(self.data[i])
+	    end
+	    return taken
+	end
+	function List:splitAt(index)
+	    return self:takeFirst(index), self:skipFirst(index)
+	end
 	function List:toString()
 	    return textutils.serialise(self.data)
 	end
@@ -3440,6 +3471,7 @@ function MODULE_utils_storage_Container()
 	        return
 	    end
 	    slots
+	        :skipFirst(1)
 	        :reverse()
 	        :map(function (slot)
 	            self.internal.pushItems(self.name, slot.slot)
