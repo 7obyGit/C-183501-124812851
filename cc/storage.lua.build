@@ -5357,6 +5357,7 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	        StorageBackgroundTasks.detectRemovedPeripherals,
 	        StorageBackgroundTasks.populateColonyBarrel,
 	        StorageBackgroundTasks.refreshIndex,
+	        StorageBackgroundTasks.moveItemsToDraws,
 	    }
 	    if PlayerDetector.detector ~= nil then table.insert(self.backgroundTasks, function() PlayerDetector.onPlayerMoved(function (username, oldPosition, newPosition) self.protocols.events:sendOnPlayerMoved(username, oldPosition, newPosition) end, Me.username, 5) end) end
 	    if EnvironmentDetector.detector ~= nil then table.insert(self.backgroundTasks, StorageBackgroundTasks.onEntityEnterOrLeave) end
