@@ -3274,15 +3274,16 @@ function MODULE_utils_storage_Storage()
 	function Storage:moveFromIo(itemName, count, sourceContainer)
 	    sourceContainer = sourceContainer or self.io
 	    local remainingCount = count
-	    local draw = self.draws
+	    local draws = self.draws
 	        :filter(function (_, draw) return draw:hasItem(itemName) end)
 	        :values()
-	        :first()
-	    if draw ~= nil then
+	        :whereNotNil()
+	        :toTable()
+	    for _, draw in pairs(draws) do
 	        remainingCount = sourceContainer:sendItems(draw, itemName, remainingCount)
-	    end
-	    if remainingCount == 0 then
-	        return remainingCount
+	        if remainingCount == 0 then
+	            return remainingCount
+	        end
 	    end
 	    local destinations = {}
 	    for _, destinationContainer in pairs(self.inventories) do
