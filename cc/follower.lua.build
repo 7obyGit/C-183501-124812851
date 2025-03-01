@@ -3505,6 +3505,7 @@ function MODULE_utils_storage_Container()
 	        return
 	    end
 	    self.index = ContainerIndex.new(self.size)
+	    print(textutils.serialise(self.internal.getItemDetail(28)))
 	    for slot, item in pairs(self:_getInternalList()) do
 	        self.index:addSlot(slot, item.name, item.count)
 	        print("Slot: " .. slot .. " Item: " .. item.name .. " Count: " .. item.count)
