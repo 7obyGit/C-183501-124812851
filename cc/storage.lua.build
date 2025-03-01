@@ -5010,9 +5010,14 @@ function MODULE_jobs_definitions_static_storage_StorageCommands()
 	    return Command.new(
 	        "dumpUnstackables",
 	        "Dumps all unstackable items from the storage",
-	        function()
+	        function(destinationName)
+	            if destinationName == nil then
+	                print("No destination provided")
+	                print("Expected: dumpUnstackables <destination>")
+	                return
+	            end
 	            print("Dumping Unstackables")
-	            self.storage:dumpAllUnstackables()
+	            self.storage:dumpAllUnstackables(destinationName)
 	        end
 	    )
 	end
