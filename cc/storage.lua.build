@@ -3268,9 +3268,11 @@ function MODULE_utils_storage_Storage()
 	    local remainingCount = count
 	    local draw = self.draws:filter(function (_, draw) draw:hasItem(itemName) end):values():first()
 	    if draw ~= nil then
+	        print("Using draw for " .. itemName)
 	        remainingCount = sourceContainer:sendItems(draw, itemName, remainingCount)
 	    end
 	    if remainingCount == 0 then
+	        print("Moved all items to draw")
 	        return remainingCount
 	    end
 	    local destinations = {}
