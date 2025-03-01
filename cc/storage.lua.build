@@ -3059,6 +3059,7 @@ function MODULE_utils_storage_Storage()
 	    self.inventories = Storage.connectToChests()
 	    self.furnaces = Storage.connectToFurnaces()
 	    self.draws = Storage.connectToDraws()
+	    print("Found", self.draws:size())
 	    for i in 1, 1000 do
 	    print("Found", self.draws:size())
 	    end
