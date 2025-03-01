@@ -1339,9 +1339,7 @@ function MODULE_utils_data_Collections()
 	function Dict:filter(func)
 	    local results = Dict.new()
 	    for key, value in pairs(self.data) do
-	        print(key, func(key, value))
-	        if func(key, value) == true then
-	            print("ADDING")
+	        if func(key, value) then
 	            results:add(key, value)
 	        end
 	    end
@@ -3264,14 +3262,14 @@ function MODULE_utils_storage_Storage()
 	function Storage:moveFromIo(itemName, count, sourceContainer)
 	    sourceContainer = sourceContainer or self.io
 	    local remainingCount = count
-	    local draw = self.draws:filter(function (_, draw) return draw:hasItem(itemName) end):values():first()
-	    print(draw)
+	    local draw = self.draws
+	        :filter(function (_, draw) return draw:hasItem(itemName) end)
+	        :values()
+	        :first()
 	    if draw ~= nil then
-	        print("Using draw for " .. itemName)
 	        remainingCount = sourceContainer:sendItems(draw, itemName, remainingCount)
 	    end
 	    if remainingCount == 0 then
-	        print("Moved all items to draw")
 	        return remainingCount
 	    end
 	    local destinations = {}
