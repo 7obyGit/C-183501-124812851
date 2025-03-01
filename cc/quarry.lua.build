@@ -3193,14 +3193,9 @@ function MODULE_utils_storage_Container()
 	    local remainingCount = count
 	    local slotsWithItem = sourceContainer:findItemSlots(itemName)
 	    for _, slotWithItem in pairs(slotsWithItem) do
-	        if remainingCount == 0 then
-	            return 0
-	        end
 	        local moved = sourceContainer.internal.pushItems(destContainer.name, slotWithItem.slot, remainingCount)
 	        remainingCount = remainingCount - moved  -- Track the remaining count
-	        print(textutils.serialise(slotWithItem))
-	        print(moved)
-	        if moved == 0 then
+	        if moved == 0 or remainingCount == 0 then
 	            return remainingCount
 	        end
 	        sourceContainer.index:updateSlot(slotWithItem.slot, itemName, slotWithItem.count - moved)
