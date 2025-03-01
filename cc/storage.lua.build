@@ -3125,7 +3125,7 @@ function MODULE_utils_storage_Storage()
 	    local draws = {}
 	    local allPeripheralNames =  peripheral.getNames()
 	    Parallel.mapListWithTimeout(allPeripheralNames, function(name)
-	        if Text.contains(name, "_drawers_") then
+	        if Text.contains(name, "drawers") then
 	            draws[name] = Container.new(name)
 	        end
 	    end, 15)
