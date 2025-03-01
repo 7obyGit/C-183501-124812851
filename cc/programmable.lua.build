@@ -3377,8 +3377,10 @@ function MODULE_utils_storage_Container()
 	    end
 	end
 	function Container:hasItem(itemName)
-	    print("Container:hasItem with name " .. itemName)
+	    if #self:getItemList() > 0 then
+	        print("Container:hasItem with name " .. itemName)
 	    print(textutils.serialize(self.index:getItemList()))
+	    end
 	    return self.index:hasItem(itemName)
 	end
 	function Container:getItemLimit(slotNumber)
