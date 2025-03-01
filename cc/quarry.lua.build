@@ -3846,7 +3846,10 @@ function MODULE_utils_storage_Container()
 	        :skipFirst(1)
 	        :reverse()
 	        :map(function (slot)
-	            self.internal.pushItems(self.name, slot.slot)
+	            local moved = self.internal.pushItems(self.name, slot.slot)
+	            if moved > 0 then
+	                self.index:updateSlot(slot.slot, item.name, slot.count - moved)
+	            end
 	        end)
 	end
 	function Container:tostring()
