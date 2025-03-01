@@ -3059,7 +3059,9 @@ function MODULE_utils_storage_Storage()
 	    self.inventories = Storage.connectToChests()
 	    self.furnaces = Storage.connectToFurnaces()
 	    self.draws = Storage.connectToDraws()
+	    for i in 1 .. 1000 do
 	    print("Found", self.draws:size())
+	    end
 	    self.io = self.barrels[self.config.io or Blocks.barrel .. "_0"]
 	    self.otherIOs = {}
 	    if self.config.otherIOs ~= nil then
