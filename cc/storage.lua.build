@@ -3261,7 +3261,9 @@ function MODULE_utils_storage_Storage()
 	function Storage:moveFromIo(itemName, count, sourceContainer)
 	    sourceContainer = sourceContainer or self.io
 	    local remainingCount = count
+	    print("Before filter")
 	    local draw = self.draws:filter(function (_, draw) draw:hasItem(itemName) end):values():first()
+	    print("End")
 	    if draw ~= nil then
 	        remainingCount = sourceContainer:sendItems(draw, itemName, remainingCount)
 	    end
