@@ -5012,7 +5012,7 @@ function MODULE_jobs_definitions_static_storage_StorageCommands()
 	        "Dumps all unstackable items from the storage",
 	        function()
 	            print("Dumping Unstackables")
-	            self.storage:dumpUnstackables()
+	            self.storage:dumpAllUnstackables()
 	        end
 	    )
 	end
