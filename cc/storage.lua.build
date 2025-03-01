@@ -3787,6 +3787,18 @@ function MODULE_jobs_definitions_static_storage_StorageBackgroundTasks()
 	        end)
 	        :start()
 	end
+	function StorageBackgroundTasks.refreshIndex(self)
+	    BackgroundTask.new()
+	        :setName("Refresh Storage Index")
+	        :setPeriod(60)
+	        :setCallback(function ()
+	            self.storage:updateIndex()
+	        end)
+	        :when(function()
+	            return self.config:get("state", nil) == self.states.COMMAND_PROMPT
+	        end)
+	        :start()
+	end
 	return StorageBackgroundTasks
 end
 local jobs_definitions_static_storage_StorageBackgroundTasks = MODULE_jobs_definitions_static_storage_StorageBackgroundTasks()
@@ -4691,6 +4703,7 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	        StorageBackgroundTasks.detectAddedPeripherals,
 	        StorageBackgroundTasks.detectRemovedPeripherals,
 	        StorageBackgroundTasks.populateColonyBarrel,
+	        StorageBackgroundTasks.refreshIndex,
 	    }
 	    if PlayerDetector.detector ~= nil then table.insert(self.backgroundTasks, function() PlayerDetector.onPlayerMoved(function (username, oldPosition, newPosition) self.protocols.events:sendOnPlayerMoved(username, oldPosition, newPosition) end, Me.username, 5) end) end
 	    if EnvironmentDetector.detector ~= nil then table.insert(self.backgroundTasks, StorageBackgroundTasks.onEntityEnterOrLeave) end
