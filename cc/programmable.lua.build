@@ -2854,6 +2854,18 @@ function MODULE_utils_data_Collections()
 	    end
 	    return results
 	end
+	function List:flatMap(func)
+	    local results = List.new()
+	    for i, v in ipairs(self.data) do
+	        local mapped = func(v)
+	        if mapped.type == List.TYPE then
+	            results:addAll(mapped)
+	        else
+	            results:add(mapped)
+	        end
+	    end
+	    return results
+	end
 	function List:filter(func)
 	    local results = List.new()
 	    for i, v in ipairs(self.data) do

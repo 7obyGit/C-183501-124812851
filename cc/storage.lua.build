@@ -1537,6 +1537,18 @@ function MODULE_utils_data_Collections()
 	    end
 	    return results
 	end
+	function List:flatMap(func)
+	    local results = List.new()
+	    for i, v in ipairs(self.data) do
+	        local mapped = func(v)
+	        if mapped.type == List.TYPE then
+	            results:addAll(mapped)
+	        else
+	            results:add(mapped)
+	        end
+	    end
+	    return results
+	end
 	function List:filter(func)
 	    local results = List.new()
 	    for i, v in ipairs(self.data) do
@@ -3221,6 +3233,11 @@ function MODULE_utils_storage_Storage()
 	    return closestIO.io
 	end
 	function Storage:hasItem(itemName)
+	    if self.draws
+	        :values()
+	        :any(function(draw) return draw:hasItem(itemName) end) then
+	        return true
+	    end
 	    for _, container in pairs(self.inventories) do
 	        if container:hasItem(itemName) then
 	            return true
@@ -3228,41 +3245,13 @@ function MODULE_utils_storage_Storage()
 	    end
 	    return false
 	end
-	function Storage:sendItems(sourceName, destinationName, itemName, count)
-	    local sourceContainer = self.inventories[sourceName]
-	    local destinationContainer = self.inventories[destinationName]
-	    if sourceContainer == nil then
-	        error("Source container not found: " .. sourceName)
-	    end
-	    if destinationContainer == nil then
-	        error("Destination container not found: " .. destinationName)
-	    end
-	    local remainingCount = sourceContainer:sendItems(destinationContainer, itemName, count)
-	    destinationContainer:defragment()
-	    return remainingCount
-	end
 	function Storage:moveToIo(itemName, count, destinationContainer)
 	    destinationContainer = destinationContainer or self.io
 	    local remainingCount = count
-	    local draw = self.draws
-	        :filter(function (_, draw) return draw:hasItem(itemName) end)
-	        :values()
-	        :first()
-	    if draw ~= nil then
-	        remainingCount = draw:sendItems(destinationContainer, itemName, remainingCount)
-	    end
-	    if remainingCount == 0 then
-	        return remainingCount
-	    end
 	    local locations = self:findItemLocations(itemName)
 	    while remainingCount ~= 0 and #locations > 0 do
 	        local location = table.remove(locations, 1)
-	        local container = self.inventories[location.containerName]
-	        local slot = location.slot
-	        if container == nil then
-	            error("Container not found: " .. location.containerName)
-	        end
-	        remainingCount = container:sendItems(destinationContainer, itemName, remainingCount)
+	        remainingCount = location.container:sendItems(destinationContainer, itemName, remainingCount)
 	    end
 	    return remainingCount
 	end
@@ -3329,9 +3318,8 @@ function MODULE_utils_storage_Storage()
 	            local remainingCount = 64 - itemCount
 	            if remainingCount > 0 then
 	                self:moveToIo(item, remainingCount, container)
-	                container:defragment()
 	            end
-	        end 
+	        end
 	    end
 	end
 	function Storage:populateColonyBarrel(requestedItems)
@@ -3406,6 +3394,10 @@ function MODULE_utils_storage_Storage()
 	end
 	function Storage:getItemList()
 	    local items = {}
+	    self.draws
+	        :values()
+	        :flatMap(function (container) return Collections.List.new(container:getItemList()) end)
+	        :map(function (item) items[item.name] = (items[item.name] or 0) + item.count end)
 	    for _, container in pairs(self.inventories) do
 	        local containerItems = container:getItemList()
 	        for _, item in pairs(containerItems) do
@@ -3420,6 +3412,19 @@ function MODULE_utils_storage_Storage()
 	end
 	function Storage:findItemLocations(itemName)
 	    local locations = {}
+	    for _, draw in pairs(self.draws:values()) do
+	        local slots = draw:findItemSlots(itemName)
+	        for _, slot in pairs(slots) do
+	            local count = draw:getItemCount(slot)
+	            table.insert(locations, {
+	                containerName = draw.name,
+	                itemName = itemName,
+	                slot = slot,
+	                count = count,
+	                container = draw,
+	            })
+	        end
+	    end
 	    for _, container in pairs(self.inventories) do
 	        local slots = container:findItemSlots(itemName)
 	        for _, slot in pairs(slots) do
@@ -3429,6 +3434,7 @@ function MODULE_utils_storage_Storage()
 	                itemName = itemName,
 	                slot = slot,
 	                count = count,
+	                container = container,
 	            })
 	        end
 	    end
@@ -3436,6 +3442,9 @@ function MODULE_utils_storage_Storage()
 	end
 	function Storage:getItemCount(itemName)
 	    local count = 0
+	    self.draws
+	        :values()
+	        :map(function(draw) count = count + draw:getItemCount(itemName) end)
 	    for _, container in pairs(self.inventories) do
 	        local itemList = container:getItemList()
 	        for _, item in pairs(itemList) do
@@ -3448,6 +3457,9 @@ function MODULE_utils_storage_Storage()
 	end
 	function Storage:getEmptySlotCount()
 	    local count = 0
+	    self.draws
+	        :values()
+	        :map(function(draw) count = count + draw:getEmptySlotCount() end)
 	    for _, container in pairs(self.inventories) do
 	        count = count + #container:getEmptySlots()
 	    end
@@ -3455,6 +3467,9 @@ function MODULE_utils_storage_Storage()
 	end
 	function Storage:getUsedSlotCount()
 	    local count = 0
+	    self.draws
+	        :values()
+	        :map(function(draw) count = count + draw:getUsedSlotCount() end)
 	    for _, container in pairs(self.inventories) do
 	        count = count + #container:getUsedSlots()
 	    end
@@ -3468,7 +3483,7 @@ function MODULE_utils_storage_Storage()
 	    return usedCapacity
 	end
 	function Storage:getContainerCount()
-	    local count = 0
+	    local count = self.draws:size()
 	    for _, _ in pairs(self.inventories) do
 	        count = count + 1
 	    end
@@ -3490,6 +3505,10 @@ function MODULE_utils_storage_Storage()
 	end
 	function Storage:getPresentItemNames()
 	    local itemNames = {}
+	    self.draws
+	        :values()
+	        :flatMap(function(draw) return Collections.List.new(draw:getItemList()) end)
+	        :map(function(item) table.insert(itemNames, item.name) end)
 	    for name, count in pairs(self:getItemList()) do
 	        table.insert(itemNames, name)
 	    end
@@ -3532,9 +3551,8 @@ function MODULE_utils_storage_Storage()
 	        if location == nil then
 	            return 0
 	        end
-	        local container = self.inventories[location.containerName]
 	        local itemsToAssign = itemsToAllocate[furnace.name]
-	        local itemsNotSmelted = furnace:smelt(container, itemName, itemsToAssign)
+	        local itemsNotSmelted = furnace:smelt(location.container, itemName, itemsToAssign)
 	        return itemsToAssign - itemsNotSmelted
 	    end, 60)
 	    local totalItemsSmelted = Stream.sumList(smeltedItemCounts)
