@@ -3113,21 +3113,22 @@ function MODULE_utils_storage_Container()
 	function Container:_putItemsLoop(sourceContainer, destContainer, itemName, count)
 	    local remainingCount = count
 	    local attempts = 0
-	    while remainingCount > 0 and attempts < self.size do
-	        local sourceSlotTable = sourceContainer:findItemSlot(itemName)
-	        if sourceSlotTable == nil then
-	            return remainingCount  -- Source container is empty
+	    local slotsWithItem = sourceContainer:findItemSlots(itemName)
+	    for _, slotWithItem in pairs(slotsWithItem) do
+	        if remainingCount == 0 then
+	            return 0
 	        end
-	        local sourceSlot = sourceSlotTable.slot
-	        local moved = sourceContainer.internal.pushItems(destContainer.name, sourceSlot, remainingCount)
+	        local destSlotTable = destContainer:findItemSlot(itemName)
+	        if destSlotTable == nil then
+	            return remainingCount  -- Destination container is full
+	        end
+	        local destSlot = destSlotTable.slot
+	        local moved = sourceContainer.internal.pushItems(destContainer.name, slotWithItem.slot, remainingCount, destSlot)
 	        remainingCount = remainingCount - moved  -- Track the remaining count
 	        if moved == 0 then
 	            return remainingCount
 	        end
-	        local sourceSlotTable = sourceContainer.index:getSlot(sourceSlot) or {count = 0}
-	        local sourceSlotCount = sourceSlotTable.count - moved
-	        sourceContainer.index:updateSlot(sourceSlot, itemName, sourceSlotCount)
-	        attempts = attempts + 1
+	        sourceContainer.index:updateSlot(slotWithItem.slot, itemName, slotWithItem.count - moved)
 	    end
 	    return remainingCount
 	end
