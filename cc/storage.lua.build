@@ -3140,6 +3140,8 @@ function MODULE_utils_storage_Storage()
 	        self.inventories[name] = Container.new(name)
 	    elseif Text.contains(name, Blocks.furnace) then
 	        self.furnaces[name] = Furnace.new(name)
+	    elseif Text.contains(name, "drawers") then
+	        self.draws:add(name, Container.new(name))
 	    end
 	end
 	function Storage:removePeripheral(name)
@@ -3149,6 +3151,8 @@ function MODULE_utils_storage_Storage()
 	        self.inventories[name] = nil
 	    elseif Text.contains(name, Blocks.furnace) then
 	        self.furnaces[name] = nil
+	    elseif Text.contains(name, "drawers") then
+	        self.draws:remove(name)
 	    end
 	    if Text.contains(name, Blocks.barrel) then
 	        if self.config.io == name then
@@ -3184,6 +3188,7 @@ function MODULE_utils_storage_Storage()
 	function Storage:updateIndex()
 	    Parallel.mapTableWithTimeout(self.inventories, function(name, container) container:updateIndex() end, 15)
 	    Parallel.mapTableWithTimeout(self.barrels, function(name, container) container:updateIndex() end, 15)
+	    Parallel.mapTableWithTimeout(self.draws, function(name, container) container:updateIndex() end, 15)
 	end
 	function Storage:defragment()
 	    local inventories = Table.copy(self.inventories)
