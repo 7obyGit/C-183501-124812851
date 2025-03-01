@@ -3634,6 +3634,25 @@ function MODULE_utils_storage_Storage()
 	        end
 	    end
 	end
+	function Storage:moveItemsToDraws()
+	    local drawMap = Collections.Dict.new()
+	    self.draws
+	        :values()
+	        :forEach(function(draw)
+	            Collections.List.new(draw:getItemList())
+	                :map(function(item) return item.name end)
+	                :forEach(function(itemName) drawMap:add(itemName, draw) end)
+	        end)
+	    for _, container in pairs(self.inventories) do
+	        local itemList = container:getItemList()
+	        for _, item in pairs(itemList) do
+	            local draw = drawMap:get(item.name)
+	            if draw ~= nil then
+	                container:sendItems(draw, item.name, item.count)
+	            end
+	        end
+	    end
+	end
 	return Storage
 end
 local utils_storage_Storage = MODULE_utils_storage_Storage()
@@ -4415,6 +4434,18 @@ function MODULE_jobs_definitions_static_storage_StorageBackgroundTasks()
 	        :setPeriod(60)
 	        :setCallback(function ()
 	            self.storage:updateIndex()
+	        end)
+	        :when(function()
+	            return self.config:get("state", nil) == self.states.COMMAND_PROMPT
+	        end)
+	        :start()
+	end
+	function StorageBackgroundTasks.moveItemsToDraws(self)
+	    BackgroundTask.new()
+	        :setName("Move Items to Draws")
+	        :setPeriod(8)
+	        :setCallback(function ()
+	            self.storage:moveItemsToDraws()
 	        end)
 	        :when(function()
 	            return self.config:get("state", nil) == self.states.COMMAND_PROMPT
