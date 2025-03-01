@@ -3676,15 +3676,23 @@ function MODULE_utils_storage_Storage()
 	    for _, container in pairs(self.inventories) do
 	        local itemList = container:getItemList()
 	        for _, item in pairs(itemList) do
-	            local draws = drawMap:get(item.name)
+	            local draws = drawMap
+	                :get(item.name)
+	                :whereNotNil()
 	            if draws ~= nil then
-	                local remainingItems = item.count
-	                while remainingItems > 0 do
-	                    local draw = draws:popFirst()
-	                    remainingItems = container:sendItems(draw, item.name, remainingItems)
-	                end
+	                self:_moveItemToDraws(container, item, draws)
 	            end
 	        end
+	    end
+	end
+	function Storage:_moveItemToDraws(container, item, draws)
+	    local remainingItems = item.count
+	    while remainingItems > 0 do
+	        local draw = draws:popFirst()
+	        if draw == nil then
+	            return
+	        end
+	        remainingItems = container:sendItems(draw, item.name, remainingItems)
 	    end
 	end
 	return Storage
