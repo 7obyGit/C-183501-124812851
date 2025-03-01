@@ -1214,10 +1214,6 @@ function MODULE_utils_data_Collections()
 	    local self = setmetatable({}, {__index = Dict})
 	    self.type = Dict.TYPE
 	    self.data = data or {}
-	    print("DATA", self.data)
-	    print(self.data["test"])
-	    self.data["test2"] = 2
-	    print(textutils.serialise(self.data))
 	    return self
 	end
 	function Dict.fromTable(data)
@@ -3121,6 +3117,7 @@ function MODULE_utils_storage_Storage()
 	            barrels[name] = Container.new(name)
 	        end
 	    end, 15)
+	    print("REACHED")
 	    return barrels
 	end
 	function Storage.connectToDraws()
