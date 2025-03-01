@@ -2051,7 +2051,6 @@ function MODULE_utils_storage_Container()
 	    end
 	end
 	function Container:hasItem(itemName)
-	    print("Has item: " .. itemName, self.index:hasItem(itemName))
 	    return self.index:hasItem(itemName)
 	end
 	function Container:getItemLimit(slotNumber)
@@ -3264,6 +3263,7 @@ function MODULE_utils_storage_Storage()
 	    sourceContainer = sourceContainer or self.io
 	    local remainingCount = count
 	    local draw = self.draws:filter(function (_, draw) draw:hasItem(itemName) end):values():first()
+	    print(draw)
 	    if draw ~= nil then
 	        print("Using draw for " .. itemName)
 	        remainingCount = sourceContainer:sendItems(draw, itemName, remainingCount)
