@@ -3056,6 +3056,7 @@ function MODULE_utils_storage_ContainerIndex()
 	end
 	function ContainerIndex:addSlot(slot, itemName, itemCount, maxCount)
 	    self.slotIndex[slot] = {name = itemName, count = itemCount, maxCount = maxCount}
+	    print("Adding slot", slot, itemName, itemCount, maxCount)
 	    if self.itemIndex[itemName] == nil then
 	        self.itemIndex[itemName] = {}
 	    end
@@ -3128,6 +3129,7 @@ function MODULE_utils_storage_ContainerIndex()
 	    return {name = itemName, count = itemCount, slots = slots}
 	end
 	function ContainerIndex:updateSlot(slot, itemName, itemCount, maxCount)
+	    print("Updating slot", slot, itemName, itemCount, maxCount)
 	    if slot == nil then
 	        error("Slot should not be nil")
 	    end
