@@ -2787,12 +2787,16 @@ function MODULE_utils_data_Collections()
 	    return results
 	end
 	function Dict:filter(func)
+	    print("Starting filter")
 	    local results = Dict.new()
 	    for key, value in pairs(self.data) do
+	        print("Testing key", key)
 	        if func(key, value) then
+	            print("Adding key", key)
 	            results:add(key, value)
 	        end
 	    end
+	    print("Ending filter")
 	    return results
 	end
 	function Dict:reduce(func, initialValue)
