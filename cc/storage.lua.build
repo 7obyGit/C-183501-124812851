@@ -3693,6 +3693,30 @@ function MODULE_utils_storage_Storage()
 	        remainingItems = container:sendItems(draw, item.name, remainingItems)
 	    end
 	end
+	function Storage:dumpAllUnstackables(destinationName)
+	    local destination = self.barrels[destinationName]
+	    if destination == nil then
+	        print("Failed to find destination barrel: '" .. destinationName .. "'")
+	        return
+	    end
+	    for _, container in pairs(self.inventories) do
+	        local usedSlots = container:getUsedSlots()
+	        for _, usedSlot in pairs(usedSlots) do
+	            local maxCount = container:getMaxCount(usedSlot)
+	            local itemName = container:getSlot(usedSlot).name
+	            if maxCount == 1 then
+	                self:_dumpUnstackableItem(container, destination, itemName)
+	            end
+	        end
+	    end
+	end
+	function Storage:_dumpUnstackableItem(container, destination, itemName)
+	    local moved = 0
+	    while moved == 0 do
+	        moved = container:sendItems(destination, itemName, 1)
+	        LibOs.sleep(0.1)
+	    end
+	end
 	return Storage
 end
 local utils_storage_Storage = MODULE_utils_storage_Storage()
@@ -4982,6 +5006,16 @@ function MODULE_jobs_definitions_static_storage_StorageCommands()
 	        end
 	    )
 	end
+	function StorageCommands.dumpUnstackables(self)
+	    return Command.new(
+	        "dumpUnstackables",
+	        "Dumps all unstackable items from the storage",
+	        function()
+	            print("Dumping Unstackables")
+	            self.storage:dumpUnstackables()
+	        end
+	    )
+	end
 	return StorageCommands
 end
 local jobs_definitions_static_storage_StorageCommands = MODULE_jobs_definitions_static_storage_StorageCommands()
@@ -5404,6 +5438,7 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	    self.commands:add("updateIndex", StorageCommands.getCommandUpdateIndex(self))
 	    self.commands:add("smelt", StorageCommands.getCommandSmelt(self))
 	    self.commands:add("iopos", StorageCommands.getCommandIoPos(self))
+	    self.commands:add(StorageCommands.dumpUnstackables(self))
 	    print("Setting states and config")
 	    self.config = config
 	    self.states = {
