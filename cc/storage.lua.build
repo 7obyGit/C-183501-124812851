@@ -3129,6 +3129,7 @@ function MODULE_utils_storage_Storage()
 	        if Text.contains(name, "drawers") then
 	            print("Found: ", name)
 	            draws[name] = Container.new(name)
+	            print("ADDED")
 	        end
 	    end, 15)
 	    return draws
