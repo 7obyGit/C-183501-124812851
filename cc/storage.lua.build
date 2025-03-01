@@ -1053,6 +1053,7 @@ function MODULE_utils_blocks_Blocks()
 	    computercraft_wired_modem = "computercraft:wired_modem",
 	    computercraft_turtle_advanced = "computercraft:turtle_advanced",
 	    computercraft_turtle_normal = "computercraft:turtle_normal",
+	    minecolonies_rack = "minecolonies:blockminecoloniesrack",
 	    irons_spellbooks_arcane_debris = "irons_spellbooks:arcane_debris",
 	}
 	return Blocks
@@ -3102,6 +3103,7 @@ function MODULE_utils_storage_Storage()
 	    self.inventories = Storage.connectToChests()
 	    self.furnaces = Storage.connectToFurnaces()
 	    self.draws = Storage.connectToDraws()
+	    self.racks = Storage.connectToRacks()
 	    self.io = self.barrels[self.config.io or Blocks.barrel .. "_0"]
 	    self.otherIOs = {}
 	    if self.config.otherIOs ~= nil then
@@ -3167,10 +3169,21 @@ function MODULE_utils_storage_Storage()
 	    local allPeripheralNames =  peripheral.getNames()
 	    Parallel.mapListWithTimeout(allPeripheralNames, function(name)
 	        if Text.contains(name, "drawers") then
+	            print("Connecting to " .. name)
 	            draws:add(name, Container.new(name))
 	        end
 	    end, 15)
 	    return draws
+	end
+	function Storage.connectToRacks()
+	    local racks = Collections.Dict.new()
+	    local allPeripheralNames =  peripheral.getNames()
+	    Parallel.mapListWithTimeout(allPeripheralNames, function(name)
+	        if Text.contains(name, Blocks.minecolonies_rack) then
+	            racks:add(name, Container.new(name))
+	        end
+	    end, 15)
+	    return racks
 	end
 	function Storage:addPeripheral(name)
 	    if Text.contains(name, Blocks.barrel) then
