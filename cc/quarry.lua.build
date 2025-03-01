@@ -250,6 +250,9 @@ function MODULE_utils_controlflow_Parallel()
 	        :waitForAny()
 	    return output
 	end
+	function Parallel.mapDictWithTimeout(dict, func, timeoutSeconds)
+	    return Parallel.mapTableWithTimeout(dict:toTable(), func, timeoutSeconds)
+	end
 	return Parallel
 end
 local utils_controlflow_Parallel = MODULE_utils_controlflow_Parallel()

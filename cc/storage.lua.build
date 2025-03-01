@@ -250,6 +250,9 @@ function MODULE_utils_controlflow_Parallel()
 	        :waitForAny()
 	    return output
 	end
+	function Parallel.mapDictWithTimeout(dict, func, timeoutSeconds)
+	    return Parallel.mapTableWithTimeout(dict:toTable(), func, timeoutSeconds)
+	end
 	return Parallel
 end
 local utils_controlflow_Parallel = MODULE_utils_controlflow_Parallel()
@@ -3188,7 +3191,7 @@ function MODULE_utils_storage_Storage()
 	function Storage:updateIndex()
 	    Parallel.mapTableWithTimeout(self.inventories, function(name, container) container:updateIndex() end, 15)
 	    Parallel.mapTableWithTimeout(self.barrels, function(name, container) container:updateIndex() end, 15)
-	    Parallel.mapTableWithTimeout(self.draws, function(name, container) print(container) container:updateIndex() end, 15)
+	    Parallel.mapDictWithTimeout(self.draws, function(name, container) print(container) container:updateIndex() end, 15)
 	end
 	function Storage:defragment()
 	    local inventories = Table.copy(self.inventories)
