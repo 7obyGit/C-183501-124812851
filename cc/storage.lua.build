@@ -2108,7 +2108,7 @@ function MODULE_utils_storage_Container()
 	    if slots:size() == 0 then
 	        return
 	    end
-	    local maxCount = self:getMaxCount(slots[1].slot)
+	    local maxCount = self:getMaxCount(slots:first().slot)
 	    slots = slots:filter(function(slot) return slot.count < maxCount end)
 	    if slots:size() <= 1 then
 	        return
