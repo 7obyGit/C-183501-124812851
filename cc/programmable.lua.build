@@ -2567,7 +2567,10 @@ function MODULE_utils_data_Collections()
 	    return copy
 	end
 	function Dict:add(key, value)
+	    print("Data", self.data)
+	    print("Adding", key, value)
 	    self.data[key] = value
+	    print("Added", key, value)
 	end
 	function Dict:addAll(dict)
 	    if dict.type ~= Dict.TYPE then
