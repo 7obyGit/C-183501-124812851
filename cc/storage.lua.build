@@ -1286,6 +1286,9 @@ function MODULE_utils_data_Collections()
 	function Dict:get(key)
 	    return self.data[key]
 	end
+	function Dict:getOrDefault(key, default)
+	    return self.data[key] or default
+	end
 	function Dict:getKey(value)
 	    for k, v in pairs(self.data) do
 	        if v == value then
@@ -1486,6 +1489,15 @@ function MODULE_utils_data_Collections()
 	function List:removeByIndex(index)
 	    table.remove(self.data, index)
 	    return self
+	end
+	function List:pop(index)
+	    return table.remove(self.data, index)
+	end
+	function List:popFirst()
+	    return self:pop(1)
+	end
+	function List:popLast()
+	    return self:pop(#self.data)
 	end
 	function List:contains(value)
 	    for _, v in ipairs(self.data) do
@@ -3642,14 +3654,22 @@ function MODULE_utils_storage_Storage()
 	        :forEach(function(draw)
 	            Collections.List.new(draw:getItemList())
 	                :map(function(item) return item.name end)
-	                :forEach(function(itemName) drawMap:add(itemName, draw) end)
+	                :forEach(function(itemName)
+	                    local currentValue = drawMap:getOrDefault(itemName, Collections.List.new())
+	                    currentValue:add(draw)
+	                    drawMap:add(itemName, currentValue)
+	                end)
 	        end)
 	    for _, container in pairs(self.inventories) do
 	        local itemList = container:getItemList()
 	        for _, item in pairs(itemList) do
-	            local draw = drawMap:get(item.name)
-	            if draw ~= nil then
-	                container:sendItems(draw, item.name, item.count)
+	            local draws = drawMap:get(item.name)
+	            if draws ~= nil then
+	                local remainingItems = item.count
+	                while remainingItems > 0 do
+	                    local draw = draws:popFirst()
+	                    remainingItems = container:sendItems(draw, item.name, remainingItems)
+	                end
 	            end
 	        end
 	    end
