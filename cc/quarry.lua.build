@@ -2946,7 +2946,7 @@ function MODULE_utils_data_Collections()
 	    return self
 	end
 	function Dict:addAll(dict)
-	    if dict.type ~= Dict.TYPE then
+	    if dict.type == Dict.TYPE then
 	        dict = dict.data
 	    end
 	    for key, value in pairs(dict) do
@@ -3151,7 +3151,7 @@ function MODULE_utils_data_Collections()
 	    return self
 	end
 	function List:addAll(list)
-	    if list.type ~= List.TYPE then
+	    if list.type == List.TYPE then
 	        list = list.data
 	    end
 	    for i, v in ipairs(list) do
@@ -3240,10 +3240,8 @@ function MODULE_utils_data_Collections()
 	    for i, v in ipairs(self.data) do
 	        local mapped = func(v)
 	        if mapped.type == List.TYPE then
-	            print("Adding all")
 	            results:addAll(mapped)
 	        else
-	            print("Adding singular")
 	            results:add(mapped)
 	        end
 	    end
