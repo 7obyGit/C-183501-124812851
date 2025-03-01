@@ -3059,10 +3059,8 @@ function MODULE_utils_storage_Storage()
 	    self.inventories = Storage.connectToChests()
 	    self.furnaces = Storage.connectToFurnaces()
 	    self.draws = Storage.connectToDraws()
-	    print("Found", self.draws:size())
-	    for i in 1, 1000 do
-	    print("Found", self.draws:size())
-	    end
+	    print("Found: ", self.draws:size())
+	    for i in 1, 1000 do end
 	    self.io = self.barrels[self.config.io or Blocks.barrel .. "_0"]
 	    self.otherIOs = {}
 	    if self.config.otherIOs ~= nil then
@@ -3127,7 +3125,7 @@ function MODULE_utils_storage_Storage()
 	    local draws = {}
 	    local allPeripheralNames =  peripheral.getNames()
 	    Parallel.mapListWithTimeout(allPeripheralNames, function(name)
-	        if Text.contains(name, "_full_drawers_") then
+	        if Text.contains(name, "_drawers_") then
 	            draws[name] = Container.new(name)
 	        end
 	    end, 15)
