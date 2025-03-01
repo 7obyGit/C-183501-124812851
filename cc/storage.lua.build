@@ -4743,7 +4743,7 @@ function MODULE_jobs_definitions_static_storage_StorageJob()
 	end
 	function StorageJob:onStart()
 	    self.config:set("alive", true)
-	    self.log("Loading stroage config...")
+	    self.log("Loading storage config...")
 	    local storageConfig = self.config:get("storageConfig", nil)
 	    self.log("Creating the storage...")
 	    self.storage = Storage.new(storageConfig)
