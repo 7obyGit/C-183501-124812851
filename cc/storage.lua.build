@@ -3412,7 +3412,7 @@ function MODULE_utils_storage_Storage()
 	    local items = {}
 	    self.draws
 	        :values()
-	        :flatMap(function (container) print(container) return Collections.List.new(container:getItemList()) end)
+	        :flatMap(function (container) print(#container:getItemList()) return Collections.List.new(container:getItemList()) end)
 	        :map(function (item) print(item) items[item.name] = (items[item.name] or 0) + item.count end)
 	    for _, container in pairs(self.inventories) do
 	        local containerItems = container:getItemList()
