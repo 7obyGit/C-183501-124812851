@@ -3264,7 +3264,7 @@ function MODULE_utils_storage_Storage()
 	function Storage:moveFromIo(itemName, count, sourceContainer)
 	    sourceContainer = sourceContainer or self.io
 	    local remainingCount = count
-	    local draw = self.draws:filter(function (_, draw) draw:hasItem(itemName) end):values():first()
+	    local draw = self.draws:filter(function (_, draw) return draw:hasItem(itemName) end):values():first()
 	    print(draw)
 	    if draw ~= nil then
 	        print("Using draw for " .. itemName)
