@@ -3057,6 +3057,8 @@ function MODULE_utils_storage_Storage()
 	    self.barrels = Storage.connectToBarrels()
 	    self.inventories = Storage.connectToChests()
 	    self.furnaces = Storage.connectToFurnaces()
+	    self.draws = Storage.connectToDraws()
+	    print(textutils.serialise(self.draws))
 	    self.io = self.barrels[self.config.io or Blocks.barrel .. "_0"]
 	    self.otherIOs = {}
 	    if self.config.otherIOs ~= nil then
@@ -3116,6 +3118,16 @@ function MODULE_utils_storage_Storage()
 	        end
 	    end, 15)
 	    return barrels
+	end
+	function Storage.connectToDraws()
+	    local draws = {}
+	    local allPeripheralNames =  peripheral.getNames()
+	    Parallel.mapListWithTimeout(allPeripheralNames, function(name)
+	        if Text.contains(name, "_full_drawers_") then
+	            draws[name] = Container.new(name)
+	        end
+	    end, 15)
+	    return draws
 	end
 	function Storage:addPeripheral(name)
 	    if Text.contains(name, Blocks.barrel) then
