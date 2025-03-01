@@ -3169,7 +3169,6 @@ function MODULE_utils_storage_Storage()
 	    local allPeripheralNames =  peripheral.getNames()
 	    Parallel.mapListWithTimeout(allPeripheralNames, function(name)
 	        if Text.contains(name, "drawers") then
-	            print("Connecting to " .. name)
 	            draws:add(name, Container.new(name))
 	        end
 	    end, 15)
