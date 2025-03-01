@@ -3046,6 +3046,7 @@ function MODULE_utils_storage_Storage()
 	local PlayerDetector = utils_peripherals_PlayerDetector
 	local Vector3 = utils_math_Vector3
 	local LibOs   = utils_libs_LibOs
+	local Collections = utils_data_Collections
 	local Storage = {}
 	Storage.__index = Storage
 	function Storage.new(config)
@@ -3058,7 +3059,7 @@ function MODULE_utils_storage_Storage()
 	    self.inventories = Storage.connectToChests()
 	    self.furnaces = Storage.connectToFurnaces()
 	    self.draws = Storage.connectToDraws()
-	    print(textutils.serialise(self.draws))
+	    print("Found", self.draws:size())
 	    self.io = self.barrels[self.config.io or Blocks.barrel .. "_0"]
 	    self.otherIOs = {}
 	    if self.config.otherIOs ~= nil then
@@ -3127,7 +3128,7 @@ function MODULE_utils_storage_Storage()
 	            draws[name] = Container.new(name)
 	        end
 	    end, 15)
-	    return draws
+	    return Collections.List.new(draws)
 	end
 	function Storage:addPeripheral(name)
 	    if Text.contains(name, Blocks.barrel) then
