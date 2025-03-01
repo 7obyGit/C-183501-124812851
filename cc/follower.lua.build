@@ -2707,6 +2707,7 @@ function MODULE_utils_data_Collections()
 	end
 	function Dict:add(key, value)
 	    self.data[key] = value
+	    return self
 	end
 	function Dict:addAll(dict)
 	    if dict.type ~= Dict.TYPE then
@@ -2715,9 +2716,11 @@ function MODULE_utils_data_Collections()
 	    for key, value in pairs(dict) do
 	        self:add(key, value)
 	    end
+	    return self
 	end
 	function Dict:remove(key)
 	    self.data[key] = nil
+	    return self
 	end
 	function Dict:contains(key)
 	    return self.data[key] ~= nil
@@ -2909,6 +2912,7 @@ function MODULE_utils_data_Collections()
 	end
 	function List:add(value)
 	    table.insert(self.data, value)
+	    return self
 	end
 	function List:addAll(list)
 	    if list.type ~= List.TYPE then
@@ -2917,20 +2921,24 @@ function MODULE_utils_data_Collections()
 	    for i, v in ipairs(list) do
 	        self:add(v)
 	    end
+	    return self
 	end
 	function List:insert(index, value)
 	    table.insert(self.data, index, value)
+	    return self
 	end
 	function List:removeByValue(value)
 	    for i, v in ipairs(self.data) do
 	        if v == value then
 	            table.remove(self.data, i)
-	            return
+	            return self
 	        end
 	    end
+	    return self
 	end
 	function List:removeByIndex(index)
 	    table.remove(self.data, index)
+	    return self
 	end
 	function List:contains(value)
 	    for _, v in ipairs(self.data) do
@@ -2976,6 +2984,7 @@ function MODULE_utils_data_Collections()
 	end
 	function List:clear()
 	    self.data = {}
+	    return self
 	end
 	function List:size()
 	    return #self.data
@@ -3011,6 +3020,12 @@ function MODULE_utils_data_Collections()
 	    end
 	    return results
 	end
+	function List:whereNil()
+	    return self:filter(function(v) return v == nil end)
+	end
+	function List:whereNotNil()
+	    return self:filter(function(v) return v ~= nil end)
+	end
 	function List:reduce(func, initialValue)
 	    local accumulator = initialValue
 	    for i, v in ipairs(self.data) do
@@ -3022,6 +3037,7 @@ function MODULE_utils_data_Collections()
 	    for i, v in ipairs(self.data) do
 	        func(v)
 	    end
+	    return self
 	end
 	function List:first(default)
 	    if self:isEmpty() then

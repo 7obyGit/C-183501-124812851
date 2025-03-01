@@ -1254,6 +1254,7 @@ function MODULE_utils_data_Collections()
 	end
 	function Dict:add(key, value)
 	    self.data[key] = value
+	    return self
 	end
 	function Dict:addAll(dict)
 	    if dict.type ~= Dict.TYPE then
@@ -1262,9 +1263,11 @@ function MODULE_utils_data_Collections()
 	    for key, value in pairs(dict) do
 	        self:add(key, value)
 	    end
+	    return self
 	end
 	function Dict:remove(key)
 	    self.data[key] = nil
+	    return self
 	end
 	function Dict:contains(key)
 	    return self.data[key] ~= nil
@@ -1456,6 +1459,7 @@ function MODULE_utils_data_Collections()
 	end
 	function List:add(value)
 	    table.insert(self.data, value)
+	    return self
 	end
 	function List:addAll(list)
 	    if list.type ~= List.TYPE then
@@ -1464,20 +1468,24 @@ function MODULE_utils_data_Collections()
 	    for i, v in ipairs(list) do
 	        self:add(v)
 	    end
+	    return self
 	end
 	function List:insert(index, value)
 	    table.insert(self.data, index, value)
+	    return self
 	end
 	function List:removeByValue(value)
 	    for i, v in ipairs(self.data) do
 	        if v == value then
 	            table.remove(self.data, i)
-	            return
+	            return self
 	        end
 	    end
+	    return self
 	end
 	function List:removeByIndex(index)
 	    table.remove(self.data, index)
+	    return self
 	end
 	function List:contains(value)
 	    for _, v in ipairs(self.data) do
@@ -1523,6 +1531,7 @@ function MODULE_utils_data_Collections()
 	end
 	function List:clear()
 	    self.data = {}
+	    return self
 	end
 	function List:size()
 	    return #self.data
@@ -1558,6 +1567,12 @@ function MODULE_utils_data_Collections()
 	    end
 	    return results
 	end
+	function List:whereNil()
+	    return self:filter(function(v) return v == nil end)
+	end
+	function List:whereNotNil()
+	    return self:filter(function(v) return v ~= nil end)
+	end
 	function List:reduce(func, initialValue)
 	    local accumulator = initialValue
 	    for i, v in ipairs(self.data) do
@@ -1569,6 +1584,7 @@ function MODULE_utils_data_Collections()
 	    for i, v in ipairs(self.data) do
 	        func(v)
 	    end
+	    return self
 	end
 	function List:first(default)
 	    if self:isEmpty() then
@@ -3561,26 +3577,17 @@ function MODULE_utils_storage_Storage()
 	end
 	function Storage:refuelFurnaces()
 	    local fuelItem = Blocks.charcoal
-	    local containersWithFuel = Parallel.mapTableWithTimeout(self.inventories, function(_, container)
-	        if container:hasItem(fuelItem) then
-	            return container
-	        else
-	            return nil
-	        end
-	    end, 15)
-	    containersWithFuel = Stream.nonNilTable(containersWithFuel)
-	    containersWithFuel = Stream.getValues(containersWithFuel)
-	    containersWithFuel = Stream.shuffleList(containersWithFuel)
+	    local containersWithFuel = Collections.List.new(self:findItemLocations(fuelItem))
+	        :map(function(location) return location.container end)
+	        :whereNotNil()
+	        :shuffle()
 	    local furnaces = Stream.getValues(self.furnaces)
 	    furnaces = Stream.shuffleList(furnaces)
 	    furnaces = Stream.enumerate(furnaces)
 	    Parallel.mapListWithTimeout(furnaces, function(pair)
-	        local index = (pair.index % #containersWithFuel) + 1
+	        local index = (pair.index % containersWithFuel:size()) + 1
 	        local furnace = pair.value
-	        local container = containersWithFuel[index]
-	        if container == nil then
-	            return
-	        end
+	        local container = containersWithFuel:get(index)
 	        local requiredFuelCount = furnace:getRequiredFuelCount()
 	        if requiredFuelCount > 0 then
 	            furnace:addFuel(container, fuelItem, requiredFuelCount)
@@ -3588,17 +3595,16 @@ function MODULE_utils_storage_Storage()
 	    end, 15)
 	end
 	function Storage:dumpFurnaces()
-	    local containers = {}
-	    for _, container in pairs(self.inventories) do
-	        table.insert(containers, container)
-	    end
+	    local containers = Collections.List.new(self.inventories)
+	        :concat(self.draws)
 	    local container = nil
 	    local remainingCount = 0
 	    for _, furnace in pairs(self.furnaces) do
 	        remainingCount = furnace:getOutputCount()
-	        while #containers > 0 and remainingCount > 0 do
+	        while containers:size() > 0 and remainingCount > 0 do
 	            if container == nil or container:getEmptySlot() == nil then
-	                container = table.remove(containers, 1)
+	                container = containers:first()
+	                containers:removeByValue(container)
 	            end
 	            remainingCount = furnace:clearOutputs(container)
 	        end
@@ -3608,14 +3614,16 @@ function MODULE_utils_storage_Storage()
 	    end
 	end
 	function Storage:dumpFurnaceInputs()
-	    local containers = Stream.getValues(self.inventories)
+	    local containers = Collections.List.new(self.inventories)
+	        :concat(self.draws)
 	    local container = nil
 	    local remainingCount = 0
 	    for _, furnace in pairs(self.furnaces) do
 	        remainingCount = furnace:getInputCount()
-	        while #containers > 0 and remainingCount > 0 do
+	        while containers:size() > 0 and remainingCount > 0 do
 	            if container == nil or container:getEmptySlot() == nil then
-	                container = table.remove(containers, 1)
+	                container = containers:first()
+	                containers:removeByValue(container)
 	            end
 	            remainingCount = furnace:clearInputs(container)
 	        end
