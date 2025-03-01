@@ -3723,10 +3723,8 @@ function MODULE_utils_storage_Storage()
 	        container:updateIndex()
 	        destination:updateIndex()
 	        remainingItems = container:sendItems(destination, itemName, 1)
-	        print("*" .. remainingItems)
 	        LibOs.sleep(0.1)
 	    end
-	    print("Moved unstackable item: " .. itemName)
 	end
 	return Storage
 end
