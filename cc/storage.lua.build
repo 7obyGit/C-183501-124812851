@@ -2042,10 +2042,10 @@ function MODULE_utils_storage_Container()
 	    if self.internal == nil then
 	        return
 	    end
-	    print(textutils.serialise(self:_getInternalList()))
 	    self.index = ContainerIndex.new(self.size)
 	    for slot, item in pairs(self:_getInternalList()) do
 	        self.index:addSlot(slot, item.name, item.count)
+	        print("Slot: " .. slot .. " Item: " .. item.name .. " Count: " .. item.count)
 	    end
 	end
 	function Container:hasItem(itemName)
