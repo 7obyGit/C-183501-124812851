@@ -3678,7 +3678,6 @@ function MODULE_utils_storage_Storage()
 	        for _, item in pairs(itemList) do
 	            local draws = drawMap
 	                :get(item.name)
-	                :whereNotNil()
 	            if draws ~= nil then
 	                self:_moveItemToDraws(container, item, draws)
 	            end
