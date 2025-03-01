@@ -2819,8 +2819,8 @@ function MODULE_utils_storage_Container()
 	end
 	function Container:_putItemsLoop(sourceContainer, destContainer, itemName, count)
 	    local remainingCount = count
-	    local attempts = 0
 	    local slotsWithItem = sourceContainer:findItemSlots(itemName)
+	    print(textutils.serialise(slotsWithItem))
 	    for _, slotWithItem in pairs(slotsWithItem) do
 	        if remainingCount == 0 then
 	            return 0
