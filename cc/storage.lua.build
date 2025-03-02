@@ -3626,7 +3626,7 @@ function MODULE_utils_storage_Storage()
 	    end, 15)
 	end
 	function Storage:dumpFurnaces()
-	    local containers = Collections.List.new(self.inventories)
+	    local containers = Collections.List.new(Collections.Dict.new(self.inventories):values())
 	        :concat(self.draws)
 	    print("Furnace Containers: " .. containers:size())
 	    return 0
