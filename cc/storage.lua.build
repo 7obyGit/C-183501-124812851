@@ -3506,7 +3506,7 @@ function MODULE_utils_storage_Storage()
 	    local count = 0
 	    self.draws
 	        :values()
-	        :map(function(draw) count = count + draw:getEmptySlotCount() end)
+	        :map(function(draw) count = count + draw:getEmptySlots() end)
 	    for _, container in pairs(self.inventories) do
 	        count = count + #container:getEmptySlots()
 	    end
