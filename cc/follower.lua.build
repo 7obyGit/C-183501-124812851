@@ -2923,8 +2923,13 @@ function MODULE_utils_data_Collections()
 	        list = list.data
 	    end
 	    print("Adding all")
+	    for k, v in pairs(list) do
+	        print("Adding Pair: K " .. k)
+	        print("Adding Pair: V " .. v)
+	        self:add(v)
+	    end
 	    for i, v in ipairs(list) do
-	        print("Adding: " .. v)
+	        print("Adding IPair: " .. v)
 	        self:add(v)
 	    end
 	    return self
