@@ -3155,7 +3155,11 @@ function MODULE_utils_data_Collections()
 	    return self
 	end
 	function List:addAll(list)
+	    if list.type == List.TYPE then
+	        print("Old update")
+	    end
 	    if list.data ~= nil then
+	        print("Updating list type")
 	        list = list.data
 	    end
 	    for i, v in ipairs(list) do
