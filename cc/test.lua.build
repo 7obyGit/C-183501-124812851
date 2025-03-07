@@ -1266,6 +1266,7 @@ function MODULE_utils_data_Collections()
 	    if list.type == List.TYPE then
 	        list = list.data
 	    end
+	    print("Adding all")
 	    for i, v in ipairs(list) do
 	        print("Adding: " .. v)
 	        self:add(v)
