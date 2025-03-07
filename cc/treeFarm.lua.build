@@ -3076,6 +3076,10 @@ function MODULE_utils_data_Collections()
 	    return self
 	end
 	function List:addAll(list)
+	    if list.type == List.TYPE then
+	        print("Updating list type 0")
+	        list = list.data
+	    end
 	    if list.data ~= nil then
 	        print("Updating list type 1")
 	        list = list.data

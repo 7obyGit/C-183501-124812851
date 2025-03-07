@@ -1466,6 +1466,10 @@ function MODULE_utils_data_Collections()
 	    return self
 	end
 	function List:addAll(list)
+	    if list.type == List.TYPE then
+	        print("Updating list type 0")
+	        list = list.data
+	    end
 	    if list.data ~= nil then
 	        print("Updating list type 1")
 	        list = list.data
@@ -3642,7 +3646,7 @@ function MODULE_utils_storage_Storage()
 	    local inventoryValues = inventory:values()
 	    print("Inventory Values: " .. inventoryValues:size())
 	    local containers = Collections.List.new()
-	        :concat(self.draws)  -- TODO: Need to combine both inventories and draws - concat appears to be returning incorrect value
+	        :concat(self.draws:values())  -- TODO: Need to combine both inventories and draws - concat appears to be returning incorrect value
 	    print("Found Furnace Containers: " .. containers:size())
 	    return 0
 	end
