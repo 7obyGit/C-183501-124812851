@@ -3160,7 +3160,6 @@ function MODULE_utils_data_Collections()
 	        list = list.data
 	    end
 	    for i, v in ipairs(list) do
-	        print("Adding IPair: " .. v)
 	        self:add(v)
 	    end
 	    return self
