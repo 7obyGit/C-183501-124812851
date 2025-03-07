@@ -3628,8 +3628,21 @@ function MODULE_utils_storage_Storage()
 	function Storage:dumpFurnaces()
 	    local inventories = Collections.Dict.new(self.inventories)
 	    local containers = self.draws:values():concat(inventories:values())
-	    print("Found Furnace Containers: " .. containers:size())
-	    return 0
+	    local container = nil
+	    local remainingCount = 0
+	    for _, furnace in pairs(self.furnaces) do
+	        remainingCount = furnace:getOutputCount()
+	        while containers:size() > 0 and remainingCount > 0 do
+	            if container == nil or container:getEmptySlot() == nil then
+	                container = containers:first()
+	                containers:removeByValue(container)
+	            end
+	            remainingCount = furnace:clearOutputs(container)
+	        end
+	        if remainingCount > 0 then
+	            print("Warning: Failed to clear all outputs from " .. furnace.name)
+	        end
+	    end
 	end
 	function Storage:dumpFurnaceInputs()
 	    local containers = Collections.List.new(self.inventories)
