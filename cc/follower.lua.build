@@ -2920,7 +2920,6 @@ function MODULE_utils_data_Collections()
 	end
 	function List:addAll(list)
 	    if list.type == List.TYPE then
-	        print("Updating list type 0")
 	        list = list.data
 	    end
 	    for i, v in ipairs(list) do
