@@ -2923,19 +2923,6 @@ function MODULE_utils_data_Collections()
 	        print("Updating list type 0")
 	        list = list.data
 	    end
-	    if list.data ~= nil then
-	        print("Updating list type 1")
-	        list = list.data
-	    end
-	    if list.data ~= nil then
-	        print("Updating list type 2")
-	        list = list.data
-	    end
-	    for k, v in pairs(list) do
-	        print("Adding Pair K: " .. k)
-	        print("Adding Pair V: " .. v)
-	        self:add(v)
-	    end
 	    for i, v in ipairs(list) do
 	        print("Adding IPair: " .. v)
 	        self:add(v)
