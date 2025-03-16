@@ -1481,7 +1481,6 @@ function MODULE_utils_data_Collections()
 	function List:removeByValue(value)
 	    for i, v in ipairs(self.data) do
 	        if v == value then
-	            print("REMOVING: " .. value)
 	            table.remove(self.data, i)
 	            return self
 	        end
@@ -3643,7 +3642,9 @@ function MODULE_utils_storage_Storage()
 	                print("Getting next container")
 	                container = containers:first()
 	                print("Got container: " .. container.name)
+	                print("Length of containers BEFORE: " .. containers:size())
 	                containers:removeByValue(container)
+	                print("Length of containers AFTER: " .. containers:size())
 	                print("Removed container")
 	            end
 	            print("Clearing outputs")
