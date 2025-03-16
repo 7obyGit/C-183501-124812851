@@ -2361,6 +2361,7 @@ function MODULE_utils_storage_machines_Furnace()
 	    local itemName = sourceSlotTable.name
 	    local remainingCount = sourceSlotTable.count
 	    while remainingCount > 0 do
+	        print("Clearing slot: " .. sourceSlot .. " with " .. remainingCount .. " items")
 	        local destSlot = destContainer:getEmptySlot()
 	        if destSlot == nil then
 	            return remainingCount
@@ -3641,7 +3642,9 @@ function MODULE_utils_storage_Storage()
 	                containers:removeByValue(container)
 	                print("Removed container")
 	            end
+	            print("Clearing outputs")
 	            remainingCount = furnace:clearOutputs(container)
+	            print("Cleared outputs")
 	        end
 	        if remainingCount > 0 then
 	            print("Warning: Failed to clear all outputs from " .. furnace.name)
