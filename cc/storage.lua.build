@@ -3648,7 +3648,11 @@ function MODULE_utils_storage_Storage()
 	                print("Removed container")
 	            end
 	            print("Clearing outputs")
-	            remainingCount = furnace:clearOutputs(container)
+	            local newRemainingCount = furnace:clearOutputs(container)
+	            if newRemainingCount == remainingCount then
+	                container = nil
+	            end
+	            remainingCount = newRemainingCount
 	            print("Cleared outputs")
 	        end
 	        if remainingCount > 0 then
