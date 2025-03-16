@@ -3635,8 +3635,11 @@ function MODULE_utils_storage_Storage()
 	        while containers:size() > 0 and remainingCount > 0 do
 	            print(containers:size() .. " containers remaining and " .. remainingCount .. " items to move")
 	            if container == nil or container:getEmptySlot() == nil then
+	                print("Getting next container")
 	                container = containers:first()
+	                print("Got container: " .. container.name)
 	                containers:removeByValue(container)
+	                print("Removed container")
 	            end
 	            remainingCount = furnace:clearOutputs(container)
 	        end
