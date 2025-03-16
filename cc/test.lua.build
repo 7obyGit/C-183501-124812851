@@ -1278,6 +1278,7 @@ function MODULE_utils_data_Collections()
 	function List:removeByValue(value)
 	    for i, v in ipairs(self.data) do
 	        if v == value then
+	            print("REMOVING: " .. value)
 	            table.remove(self.data, i)
 	            return self
 	        end
