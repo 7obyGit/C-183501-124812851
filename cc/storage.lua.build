@@ -2367,6 +2367,9 @@ function MODULE_utils_storage_machines_Furnace()
 	            return remainingCount
 	        end
 	        local moved = sourceContainer.internal.pushItems(destContainer.name, sourceSlot, remainingCount, destSlot)
+	        if moved == 0 then
+	            break
+	        end
 	        remainingCount = remainingCount - moved
 	        local sourceSlotTable = sourceContainer.index:getSlot(sourceSlot) or {count = 0}
 	        local sourceSlotCount = sourceSlotTable.count - moved
