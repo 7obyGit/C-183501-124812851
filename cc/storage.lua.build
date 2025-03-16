@@ -2361,7 +2361,6 @@ function MODULE_utils_storage_machines_Furnace()
 	    local itemName = sourceSlotTable.name
 	    local remainingCount = sourceSlotTable.count
 	    while remainingCount > 0 do
-	        print("Clearing slot: " .. sourceSlot .. " with " .. remainingCount .. " items")
 	        local destSlot = destContainer:getEmptySlot()
 	        if destSlot == nil then
 	            return remainingCount
@@ -3637,23 +3636,15 @@ function MODULE_utils_storage_Storage()
 	    for _, furnace in pairs(self.furnaces) do
 	        remainingCount = furnace:getOutputCount()
 	        while containers:size() > 0 and remainingCount > 0 do
-	            print(containers:size() .. " containers remaining and " .. remainingCount .. " items to move")
 	            if container == nil or container:getEmptySlot() == nil then
-	                print("Getting next container")
 	                container = containers:first()
-	                print("Got container: " .. container.name)
-	                print("Length of containers BEFORE: " .. containers:size())
 	                containers:removeByValue(container)
-	                print("Length of containers AFTER: " .. containers:size())
-	                print("Removed container")
 	            end
-	            print("Clearing outputs")
 	            local newRemainingCount = furnace:clearOutputs(container)
 	            if newRemainingCount == remainingCount then
 	                container = nil
 	            end
 	            remainingCount = newRemainingCount
-	            print("Cleared outputs")
 	        end
 	        if remainingCount > 0 then
 	            print("Warning: Failed to clear all outputs from " .. furnace.name)
@@ -4396,9 +4387,7 @@ function MODULE_jobs_definitions_static_storage_StorageBackgroundTasks()
 	        :setName("Refuel Furnaces")
 	        :setPeriod(64)
 	        :setCallback(function()
-	            print("Refueling Furnaces")
 	            self.storage:refuelFurnaces()
-	            print("Finished refueling furnaces")
 	        end)
 	        :when(function() return self.config:get("state", nil) == self.states.COMMAND_PROMPT end)
 	        :start()
@@ -4408,9 +4397,7 @@ function MODULE_jobs_definitions_static_storage_StorageBackgroundTasks()
 	        :setName("Dump Furnaces")
 	        :setPeriod(32)
 	        :setCallback(function()
-	            print("Dumping furnaces")
 	            self.storage:dumpFurnaces()
-	            print("Finished dumping furnaces")
 	        end)
 	        :when(function() return self.config:get("state", nil) == self.states.COMMAND_PROMPT end)
 	        :start()
