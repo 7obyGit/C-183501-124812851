@@ -102,8 +102,11 @@ end
 
 
 function update()
-    oldInfo = textutils.unserializeJSON(readFile("info.json"))
-
+    -- Load the old version of the `info.json` if it exists
+    oldInfo = {}
+    if fs.exists("info.json") then
+        oldInfo = textutils.unserializeJSON(readFile("info.json"))
+    end
 
     -- Delete the current contents of the `old` directory
     print("\n(1/5) Preparing Environment...")
