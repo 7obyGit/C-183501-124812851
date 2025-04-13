@@ -10,6 +10,7 @@
   "deployment": {
     "manifest": [
       "startup.lua",
+      "run.lua",
       "update.lua",
       "app/main.lua"
     ],
@@ -26,5 +27,8 @@
     "level": "DEBUG",
     "writeToFile": true,
     "maxFileLines": 1000
+  },
+  "lifetime": {
+    "onCrash": "ROLLBACK"
   }
 }

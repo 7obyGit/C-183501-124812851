@@ -1,1 +1,1 @@
-local r = http.get("https://raw.githubusercontent.com/7obyGit/C-183501-124812851/main/cc2/src/entrypoints/example/deploy.lua") local f = fs.open("deploy.lua", "w") f.write(r.readAll()) f.close() r.close() os.run({}, "deploy.lua")
+﻿local r = http.get("https://raw.githubusercontent.com/7obyGit/C-183501-124812851/main/cc2/src/entrypoints/example/deploy.lua") local f = fs.open("deploy.lua", "w") f.write(r.readAll()) f.close() r.close() os.run({}, "deploy.lua")
