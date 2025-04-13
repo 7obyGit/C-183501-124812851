@@ -9,10 +9,7 @@
   },
   "deployment": {
     "manifest": [
-      "startup.lua",
-      "run.lua",
-      "update.lua",
-      "app/main.lua"
+      "/data/config.json"
     ],
     "configScript": [
       "echo 'Test Message'",

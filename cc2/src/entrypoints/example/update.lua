@@ -141,8 +141,11 @@ function update()
         error("`deployment.manifest` field not found in `info.json`.")
     end
     print(" | Retrieved `deployment.manifest`")
-    fileCount = countElements(manifest)
-    print(" | " .. fileCount .. " files identified")
+    print(" | " .. #manifest .. " files identified")
+    table.insert(manifest, "/app/main.lua")
+    table.insert(manifest, "/run.lua")
+    table.insert(manifest, "/startup.lua")
+    print(" | Key files added")
     for _, path in ipairs(manifest) do
         print(" | [ ] Downloading '" .. path .. "'...")
         local text = download(baseUrl + path)

@@ -3,6 +3,33 @@
 --- be easily copied into a computer
 
 
+baseUrl = "REPLACE_TOKEN_BASE_URL"
+
+
+function download(url)
+    local request = http.get(url)
+    local text = request.readAll()
+    request.close()
+    return text
+end
+
+
+function writeFile(path, content)
+    local dir = fs.getDir(path)
+    if dir ~= "" then
+        createDirectory(dir)
+    end
+
+    local file = fs.open(path, "w")
+    file.write(content)
+    file.close()
+end
+
+
+if not fs.exists("update.lua") then
+    local updateScript = download(baseUrl .. "/update.lua")
+    writeFile("/update.lua", updateScript)
+end
 os.run({}, "update.lua")
 
 
