@@ -1,7 +1,7 @@
 ﻿print(" | Checking for updates...")
 
 
-baseUrl = "REPLACE_TOKEN_BASE_URL"
+baseUrl = "https://raw.githubusercontent.com/7obyGit/C-183501-124812851/main/cc2/src/entrypoints/example"
 
 
 function download(url)
