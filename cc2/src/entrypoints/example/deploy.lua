@@ -1,4 +1,6 @@
-﻿--- This script is responsible for setting up a new instance of an application
+﻿print("Start...")
+
+--- This script is responsible for setting up a new instance of an application
 --- It is intended to be pulled by a significantly simpler "one liner" that can
 --- be easily copied into a computer
 
