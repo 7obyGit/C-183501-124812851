@@ -146,6 +146,7 @@ function update()
     table.insert(manifest, "/run.lua")
     table.insert(manifest, "/startup.lua")
     print(" | Key files added")
+    print(" | Starting download of " .. #manifest .. " files...")
     for _, path in ipairs(manifest) do
         print(" | [ ] Downloading '" .. path .. "'...")
         local text = download(baseUrl + path)
