@@ -1,4 +1,5 @@
-﻿print(" | Checking for updates...")
+﻿--- This script is responsible for updating the application
+--- It will only update everything if there is a new version of the app to be installed
 
 
 baseUrl = "https://raw.githubusercontent.com/7obyGit/C-183501-124812851/main/cc2/src/entrypoints/example"
@@ -26,6 +27,7 @@ function createDirectory(path)
         end
     end
 end
+
 
 function writeFile(path, content)
     local dir = fs.getDir(path)
