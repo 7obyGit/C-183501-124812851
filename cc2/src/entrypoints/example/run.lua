@@ -94,6 +94,7 @@ function run()
 
         -- Decide what to do based on the `onCrash` strategy
         local backupExists = fs.exists("old")
+        print("Backup exists: " .. backupExists)
         if lifetime.onCrash == "ROLLBACK" and backupExists then
             -- There is a backup in the `old` directory, rollback to that version
             print("Rolling back to the previous version...")
