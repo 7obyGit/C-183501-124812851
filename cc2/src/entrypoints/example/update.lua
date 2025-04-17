@@ -184,6 +184,13 @@ function update()
         print(" | Restored data files")
     end
     print(" | Complete!")
+    
+    -- Log useful information
+    print("\nUpdate Complete!")
+    print("Previous Version: " .. oldInfo.version)
+    print("Version: " .. info.version)
+    print("Name: " .. info.name)
+    print("Description: " .. info.description)
 end
 
 

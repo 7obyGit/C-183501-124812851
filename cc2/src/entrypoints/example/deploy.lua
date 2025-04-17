@@ -27,15 +27,23 @@ function writeFile(path, content)
 end
 
 
-if not fs.exists("update.lua") then
-    local updateScript = download(baseUrl .. "/update.lua")
-    writeFile("/update.lua", updateScript)
+function readFile(path)
+    local file = fs.open(path, "r")
+    if not file then
+        error("Could not open file: " .. path)
+    end
+    local content = file.readAll()
+    file.close()
+    return content
 end
+
+
+local updateScript = download(baseUrl .. "/update.lua")
+writeFile("/update.lua", updateScript)
 os.run({}, "update.lua")
 
 
-infoText = download(baseUrl + "info.json")
-info = textutils.unserializeJSON(infoText)
+info = textutils.unserializeJSON(readFile("info.json"))
 
 
 print("\nDeployment completed successfully")
