@@ -26,6 +26,7 @@
     "maxFileLines": 1000
   },
   "lifetime": {
-    "onCrash": "ROLLBACK"
+    "onCrash": "ROLLBACK",
+    "restartDelaySeconds": 5
   }
 }

@@ -100,6 +100,7 @@ function run()
         elseif lifetime.onCrash == "ROLLBACK" or lifetime.onCrash == "RESTART" then
             -- Ok to restart, no action needed
             print("Restarting...")
+            os.sleep(lifetime.restartDelaySeconds or 1)
         elseif lifetime.onCrash == "TERMINATE" then
             -- Do nothing
             print("Terminating Wrapper...")

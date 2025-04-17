@@ -2760,123 +2760,19 @@ return {
 ["bundle"] = function(...) 
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
+local __TS__New = ____lualib.__TS__New
 local Error = ____lualib.Error
 local RangeError = ____lualib.RangeError
 local ReferenceError = ____lualib.ReferenceError
 local SyntaxError = ____lualib.SyntaxError
 local TypeError = ____lualib.TypeError
 local URIError = ____lualib.URIError
-local __TS__New = ____lualib.__TS__New
 local Set = ____lualib.Set
 local __TS__Spread = ____lualib.__TS__Spread
 local __TS__ArrayFrom = ____lualib.__TS__ArrayFrom
 local ____ = "use strict";
 (function()
     local LuaList
-    local ____class_0 = __TS__Class()
-    ____class_0.name = "Lua"
-    function ____class_0.prototype.____constructor(self)
-    end
-    function ____class_0.literal(self, luaVersion)
-        error(
-            __TS__New(
-                Error,
-                ("Lua.literal(" .. tostring(luaVersion)) .. ") has no Typescript alternative"
-            ),
-            0
-        )
-    end
-    local Lua = ____class_0
-    local _CcPeripheral = __TS__Class()
-    _CcPeripheral.name = "_CcPeripheral"
-    function _CcPeripheral.prototype.____constructor(self, internalPeripheral)
-        self.internalPeripheral = internalPeripheral
-    end
-    function _CcPeripheral.find(self, peripheralName, filter)
-        local internalPeripheral = peripheral.find(peripheralName, filter)
-        return __TS__New(_CcPeripheral, internalPeripheral)
-    end
-    function _CcPeripheral.getNames(self)
-        return peripheral.getNames()
-    end
-    function _CcPeripheral.isPresent(self, name)
-        return peripheral.isPresent(name)
-    end
-    function _CcPeripheral.getType(self, peripheral)
-        return peripheral.getType(peripheral)
-    end
-    function _CcPeripheral.hasType(self, peripheral, peripheralType)
-        return peripheral.hasType(peripheral, peripheralType)
-    end
-    function _CcPeripheral.getMethods(self, name)
-        return peripheral.getMethods(name)
-    end
-    function _CcPeripheral.getName(self, peripheral)
-        return peripheral.getName(peripheral)
-    end
-    function _CcPeripheral.call(self, name, method, ...)
-        return peripheral.call(name, method, ...args)
-    end
-    function _CcPeripheral.wrap(self, name)
-        return peripheral.wrap(name)
-    end
-    function _CcPeripheral.prototype.hasType(self, peripheralType)
-        return peripheral.hasType(self.internalPeripheral, peripheralType)
-    end
-    function _CcPeripheral.prototype.getType(self)
-        return peripheral.getType(self.internalPeripheral)
-    end
-    function _CcPeripheral.prototype.getName(self)
-        return peripheral.getName(self.internalPeripheral)
-    end
-    function _CcPeripheral.prototype.call(self, method, ...)
-        return peripheral.call(self.internalPeripheral, method, ...args)
-    end
-    function _CcPeripheral.prototype.getMethods(self)
-        return peripheral.getMethods(self.internalPeripheral)
-    end
-    local CcPeripheral = _CcPeripheral
-    local ____class_1 = __TS__Class()
-    ____class_1.name = "ChatBox"
-    function ____class_1.prototype.____constructor(self)
-    end
-    function ____class_1.onMessage(self, listener)
-        local event = ""
-        local username = ""
-        local message = ""
-        local uuid = ""
-        local isHidden = true
-        while true do
-            local event, username, message, uuid, isHidden = os.pullEvent(\"chat\")
-            listener(_G, {
-                event = event,
-                username = username,
-                message = message,
-                uuid = uuid,
-                isHidden = isHidden
-            })
-        end
-    end
-    function ____class_1.sendMessage(self, message, prefix, brackets, bracketColor, range)
-        ChatBox._internalChatBox.sendMessage(message, prefix, brackets, bracketColor, range)
-    end
-    function ____class_1.sendMessageToPlayer(self, message, username, prefix, brackets, bracketColor, range)
-        ChatBox._internalChatBox.sendMessageToPlayer(message, username, prefix, brackets, bracketColor, range)
-    end
-    function ____class_1.sendToastToPlayer(self, message, title, username, prefix, brackets, bracketColor, range)
-        ChatBox._internalChatBox.sendToastToPlayer(message, title, username, prefix, brackets, bracketColor, range)
-    end
-    function ____class_1.sendFormattedMessage(self, json, prefix, brackets, bracketColor, range)
-        ChatBox._internalChatBox.sendFormattedMessage(json, prefix, brackets, bracketColor, range)
-    end
-    function ____class_1.sendFormattedMessageToPlayer(self, json, username, prefix, brackets, bracketColor, range)
-        ChatBox._internalChatBox.sendFormattedMessageToPlayer(json, username, prefix, brackets, bracketColor, range)
-    end
-    function ____class_1.sendFormattedToastToPlayer(self, messageJson, titleJson, username, prefix, brackets, bracketColor, range)
-        ChatBox._internalChatBox.sendFormattedToastToPlayer(messageJson, titleJson, username, prefix, brackets, bracketColor, range)
-    end
-    ____class_1._internalChatBox = CcPeripheral:find("chatBox")
-    local ChatBox = ____class_1
     local _Optional = __TS__Class()
     _Optional.name = "_Optional"
     function _Optional.prototype.____constructor(self, value)
@@ -2904,11 +2800,11 @@ local ____ = "use strict";
         return self.value
     end
     function _Optional.prototype.getValueOrDefault(self, defaultValue)
-        local ____self_value_2 = self.value
-        if ____self_value_2 == nil then
-            ____self_value_2 = defaultValue
+        local ____self_value_0 = self.value
+        if ____self_value_0 == nil then
+            ____self_value_0 = defaultValue
         end
-        return ____self_value_2
+        return ____self_value_0
     end
     _Optional.prototype["then"] = function(self, callback)
         if not self.value then
@@ -2929,13 +2825,13 @@ local ____ = "use strict";
         return self
     end
     _Optional.prototype["or"] = function(self, other)
-        local ____table_value_3
+        local ____table_value_1
         if self.value then
-            ____table_value_3 = self
+            ____table_value_1 = self
         else
-            ____table_value_3 = other
+            ____table_value_1 = other
         end
-        return ____table_value_3
+        return ____table_value_1
     end
     local Optional = _Optional
     local _LuaSet = __TS__Class()
@@ -3237,11 +3133,11 @@ local ____ = "use strict";
             while i < self.elements.length do
                 local element = self.elements[i]
                 local selectorValue = selector(_G, element)
-                local ____minSelectorValue_4 = minSelectorValue
-                if ____minSelectorValue_4 == nil then
-                    ____minSelectorValue_4 = 0
+                local ____minSelectorValue_2 = minSelectorValue
+                if ____minSelectorValue_2 == nil then
+                    ____minSelectorValue_2 = 0
                 end
-                if selectorValue < ____minSelectorValue_4 then
+                if selectorValue < ____minSelectorValue_2 then
                     minElement = element
                     minSelectorValue = selectorValue
                 end
@@ -3267,11 +3163,11 @@ local ____ = "use strict";
             while i < self.elements.length do
                 local element = self.elements[i]
                 local selectorValue = selector(_G, element)
-                local ____maxSelectorValue_5 = maxSelectorValue
-                if ____maxSelectorValue_5 == nil then
-                    ____maxSelectorValue_5 = 0
+                local ____maxSelectorValue_3 = maxSelectorValue
+                if ____maxSelectorValue_3 == nil then
+                    ____maxSelectorValue_3 = 0
                 end
-                if selectorValue > ____maxSelectorValue_5 then
+                if selectorValue > ____maxSelectorValue_3 then
                     maxElement = element
                     maxSelectorValue = selectorValue
                 end
@@ -3313,7 +3209,6 @@ local ____ = "use strict";
     LuaList = _LuaList
     local text = LuaList:ofSingleton("Hello"):append("World"):append("!"):join(" ")
     print("Text: " .. tostring(text))
-    ChatBox:sendMessageToPlayer("Hello World!", "SenderName")
 end)(_G)
  end,
 }
