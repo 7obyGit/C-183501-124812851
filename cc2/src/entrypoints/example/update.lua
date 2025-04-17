@@ -125,7 +125,7 @@ function update()
     -- Pull down the new files
     print("\n(2/5) Loading Info...")
     print(" | [ ] Downloading `info.json`...")
-    infoText = download(baseUrl + "info.json")
+    infoText = download(baseUrl .. "info.json")
     print(" | [*] Downloaded latest `info.json`")
     writeFile("info.json", infoText)
     print(" | Saved " .. #infoText .. " bytes to `info.json`")
