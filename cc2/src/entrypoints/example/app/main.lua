@@ -2783,29 +2783,97 @@ local ____ = "use strict";
         )
     end
     local Lua = ____class_0
-    local _Peripheral = __TS__Class()
-    _Peripheral.name = "_Peripheral"
-    function _Peripheral.prototype.____constructor(self, internalPeripheral)
+    local _CcPeripheral = __TS__Class()
+    _CcPeripheral.name = "_CcPeripheral"
+    function _CcPeripheral.prototype.____constructor(self, internalPeripheral)
         self.internalPeripheral = internalPeripheral
     end
-    function _Peripheral.find(self, peripheralName)
-        local internalPeripheral = peripheral.find(peripheralName)
-        return __TS__New(_Peripheral, internalPeripheral)
+    function _CcPeripheral.find(self, peripheralName, filter)
+        local internalPeripheral = peripheral.find(peripheralName, filter)
+        return __TS__New(_CcPeripheral, internalPeripheral)
     end
-    local Peripheral = _Peripheral
+    function _CcPeripheral.getNames(self)
+        return peripheral.getNames()
+    end
+    function _CcPeripheral.isPresent(self, name)
+        return peripheral.isPresent(name)
+    end
+    function _CcPeripheral.getType(self, peripheral)
+        return peripheral.getType(peripheral)
+    end
+    function _CcPeripheral.hasType(self, peripheral, peripheralType)
+        return peripheral.hasType(peripheral, peripheralType)
+    end
+    function _CcPeripheral.getMethods(self, name)
+        return peripheral.getMethods(name)
+    end
+    function _CcPeripheral.getName(self, peripheral)
+        return peripheral.getName(peripheral)
+    end
+    function _CcPeripheral.call(self, name, method, ...)
+        return peripheral.call(name, method, ...args)
+    end
+    function _CcPeripheral.wrap(self, name)
+        return peripheral.wrap(name)
+    end
+    function _CcPeripheral.prototype.hasType(self, peripheralType)
+        return peripheral.hasType(self.internalPeripheral, peripheralType)
+    end
+    function _CcPeripheral.prototype.getType(self)
+        return peripheral.getType(self.internalPeripheral)
+    end
+    function _CcPeripheral.prototype.getName(self)
+        return peripheral.getName(self.internalPeripheral)
+    end
+    function _CcPeripheral.prototype.call(self, method, ...)
+        return peripheral.call(self.internalPeripheral, method, ...args)
+    end
+    function _CcPeripheral.prototype.getMethods(self)
+        return peripheral.getMethods(self.internalPeripheral)
+    end
+    local CcPeripheral = _CcPeripheral
     local ____class_1 = __TS__Class()
     ____class_1.name = "ChatBox"
     function ____class_1.prototype.____constructor(self)
     end
-    function ____class_1.sendMessage(self, senderName, message)
-        ChatBox._internalChatBox.sendMessage(message, senderName)
+    function ____class_1.onMessage(self, listener)
+        local event = ""
+        local username = ""
+        local message = ""
+        local uuid = ""
+        local isHidden = true
+        while true do
+            local event, username, message, uuid, isHidden = os.pullEvent(\"chat\")
+            listener(_G, {
+                event = event,
+                username = username,
+                message = message,
+                uuid = uuid,
+                isHidden = isHidden
+            })
+        end
     end
-    function ____class_1.sendMessageToPlayer(self, senderName, player, message)
-        ChatBox._internalChatBox.sendMessageToPlayer(message, senderName, player);
+    function ____class_1.sendMessage(self, message, prefix, brackets, bracketColor, range)
+        ChatBox._internalChatBox.sendMessage(message, prefix, brackets, bracketColor, range)
     end
-    ____class_1._internalChatBox = Peripheral:find("ChatBox")
+    function ____class_1.sendMessageToPlayer(self, message, username, prefix, brackets, bracketColor, range)
+        ChatBox._internalChatBox.sendMessageToPlayer(message, username, prefix, brackets, bracketColor, range)
+    end
+    function ____class_1.sendToastToPlayer(self, message, title, username, prefix, brackets, bracketColor, range)
+        ChatBox._internalChatBox.sendToastToPlayer(message, title, username, prefix, brackets, bracketColor, range)
+    end
+    function ____class_1.sendFormattedMessage(self, json, prefix, brackets, bracketColor, range)
+        ChatBox._internalChatBox.sendFormattedMessage(json, prefix, brackets, bracketColor, range)
+    end
+    function ____class_1.sendFormattedMessageToPlayer(self, json, username, prefix, brackets, bracketColor, range)
+        ChatBox._internalChatBox.sendFormattedMessageToPlayer(json, username, prefix, brackets, bracketColor, range)
+    end
+    function ____class_1.sendFormattedToastToPlayer(self, messageJson, titleJson, username, prefix, brackets, bracketColor, range)
+        ChatBox._internalChatBox.sendFormattedToastToPlayer(messageJson, titleJson, username, prefix, brackets, bracketColor, range)
+    end
+    ____class_1._internalChatBox = CcPeripheral:find("chatBox")
     local ChatBox = ____class_1
-    ChatBox:sendMessage("SenderName", "Hello World!")
+    ChatBox:sendMessageToPlayer("Hello World!", "SenderName")
 end)(_G)
  end,
 }
