@@ -2767,8 +2767,12 @@ local SyntaxError = ____lualib.SyntaxError
 local TypeError = ____lualib.TypeError
 local URIError = ____lualib.URIError
 local __TS__New = ____lualib.__TS__New
+local Set = ____lualib.Set
+local __TS__Spread = ____lualib.__TS__Spread
+local __TS__ArrayFrom = ____lualib.__TS__ArrayFrom
 local ____ = "use strict";
 (function()
+    local LuaList
     local ____class_0 = __TS__Class()
     ____class_0.name = "Lua"
     function ____class_0.prototype.____constructor(self)
@@ -2873,6 +2877,442 @@ local ____ = "use strict";
     end
     ____class_1._internalChatBox = CcPeripheral:find("chatBox")
     local ChatBox = ____class_1
+    local _Optional = __TS__Class()
+    _Optional.name = "_Optional"
+    function _Optional.prototype.____constructor(self, value)
+        self.value = value
+    end
+    function _Optional.of(self, value)
+        return __TS__New(_Optional, value)
+    end
+    function _Optional.empty(self)
+        return __TS__New(_Optional, nil)
+    end
+    function _Optional.prototype.isPresent(self)
+        return self.value ~= nil
+    end
+    function _Optional.prototype.isEmpty(self)
+        return self.value == nil
+    end
+    function _Optional.prototype.getValueUnsafe(self)
+        if not self.value then
+            error(
+                __TS__New(Error, "Cannot unwrap undefined value"),
+                0
+            )
+        end
+        return self.value
+    end
+    function _Optional.prototype.getValueOrDefault(self, defaultValue)
+        local ____self_value_2 = self.value
+        if ____self_value_2 == nil then
+            ____self_value_2 = defaultValue
+        end
+        return ____self_value_2
+    end
+    _Optional.prototype["then"] = function(self, callback)
+        if not self.value then
+            return _Optional:empty()
+        end
+        return _Optional:of(callback(_G, self.value))
+    end
+    function _Optional.prototype.ifPresent(self, callback)
+        if self.value then
+            callback(_G, self.value)
+        end
+        return self
+    end
+    function _Optional.prototype.ifEmpty(self, callback)
+        if not self.value then
+            callback(_G)
+        end
+        return self
+    end
+    _Optional.prototype["or"] = function(self, other)
+        local ____table_value_3
+        if self.value then
+            ____table_value_3 = self
+        else
+            ____table_value_3 = other
+        end
+        return ____table_value_3
+    end
+    local Optional = _Optional
+    local _LuaSet = __TS__Class()
+    _LuaSet.name = "_LuaSet"
+    function _LuaSet.prototype.____constructor(self)
+        self.elements = __TS__New(Set)
+    end
+    function _LuaSet.ofArray(self, elements)
+        return __TS__New(_LuaSet):addAll(elements)
+    end
+    function _LuaSet.ofList(self, elements)
+        return __TS__New(_LuaSet):addAll(elements)
+    end
+    function _LuaSet.ofSingleton(self, element)
+        return __TS__New(_LuaSet):add(element)
+    end
+    function _LuaSet.empty(self)
+        return __TS__New(_LuaSet)
+    end
+    function _LuaSet.prototype.addAll(self, elements)
+        elements:forEach(function(____, element) return self:add(element) end)
+        return self
+    end
+    function _LuaSet.prototype.removeAll(self, elements)
+        elements:forEach(function(____, element) return self:remove(element) end)
+        return self
+    end
+    function _LuaSet.prototype.add(self, element)
+        self.elements:add(element)
+        return self
+    end
+    function _LuaSet.prototype.remove(self, element)
+        self.elements:delete(element)
+        return self
+    end
+    function _LuaSet.prototype.contains(self, element)
+        return self.elements:has(element)
+    end
+    function _LuaSet.prototype.select(self, selector)
+        local result = __TS__New(_LuaSet)
+        self.elements:forEach(function(____, element) return result:add(selector(_G, element)) end)
+        return result
+    end
+    function _LuaSet.prototype.where(self, predicate)
+        local result = __TS__New(_LuaSet)
+        self.elements:forEach(function(____, element)
+            if predicate(_G, element) then
+                result:add(element)
+            end
+        end)
+        return result
+    end
+    function _LuaSet.prototype.clear(self)
+        self.elements:clear()
+        return self
+    end
+    function _LuaSet.prototype.size(self)
+        return self.elements.size
+    end
+    function _LuaSet.prototype.isEmpty(self)
+        return self.elements.size == 0
+    end
+    function _LuaSet.prototype.isNotEmpty(self)
+        return self.elements.size > 0
+    end
+    function _LuaSet.prototype.forEach(self, action)
+        self.elements:forEach(action)
+        return self
+    end
+    function _LuaSet.prototype.toList(self)
+        return LuaList:ofSet(self)
+    end
+    function _LuaSet.prototype.copy(self)
+        return __TS__New(_LuaSet):addAll(self)
+    end
+    function _LuaSet.prototype.union(self, other)
+        return __TS__New(_LuaSet):addAll(self):addAll(other)
+    end
+    function _LuaSet.prototype.intersection(self, other)
+        return self:where(other.contains)
+    end
+    function _LuaSet.prototype.difference(self, other)
+        return self:where(function(____, element) return not other:contains(element) end)
+    end
+    function _LuaSet.prototype.isSubsetOf(self, other)
+        return other:difference(self):isEmpty()
+    end
+    function _LuaSet.prototype.isSupersetOf(self, other)
+        return other:isSubsetOf(self)
+    end
+    function _LuaSet.prototype.isStrictSubsetOf(self, other)
+        return self:size() < other:size() and self:isSubsetOf(other)
+    end
+    function _LuaSet.prototype.isStrictSupersetOf(self, other)
+        return self:size() > other:size() and self:isSupersetOf(other)
+    end
+    function _LuaSet.prototype.toArray(self)
+        return {__TS__Spread(self.elements)}
+    end
+    local LuaSet = _LuaSet
+    local _LuaList = __TS__Class()
+    _LuaList.name = "_LuaList"
+    function _LuaList.prototype.____constructor(self, elements)
+        self.elements = elements
+    end
+    function _LuaList.of(self, elements)
+        return __TS__New(_LuaList, elements)
+    end
+    function _LuaList.ofSingleton(self, element)
+        return __TS__New(_LuaList, {element})
+    end
+    function _LuaList.ofRange(self, start, count)
+        return __TS__New(
+            _LuaList,
+            __TS__ArrayFrom(
+                {length = count},
+                function(____, _, i) return start + i end
+            )
+        )
+    end
+    function _LuaList.ofSet(self, set)
+        return __TS__New(
+            _LuaList,
+            set:toArray()
+        )
+    end
+    function _LuaList.empty(self)
+        return __TS__New(_LuaList, {})
+    end
+    function _LuaList.prototype.get(self, index)
+        return self.elements[index]
+    end
+    function _LuaList.prototype.append(self, element)
+        self.elements:push(element)
+        return self
+    end
+    function _LuaList.prototype.appendAll(self, elements)
+        elements:forEach(self.append)
+        return self
+    end
+    function _LuaList.prototype.prepend(self, element)
+        self.elements:unshift(element)
+        return self
+    end
+    function _LuaList.prototype.set(self, index, element)
+        self.elements[index] = element
+        return self
+    end
+    function _LuaList.prototype.removeFirst(self)
+        if self.elements.length == 0 then
+            return Optional:empty()
+        end
+        return Optional:of(self.elements:shift())
+    end
+    function _LuaList.prototype.removeLast(self)
+        if self.elements.length == 0 then
+            return Optional:empty()
+        end
+        return Optional:of(self.elements:pop())
+    end
+    function _LuaList.prototype.removeAt(self, index)
+        if index < 0 or index >= self.elements.length then
+            error(
+                __TS__New(Error, "Index was out of range"),
+                0
+            )
+        end
+        return self.elements:splice(index, 1)[0]
+    end
+    function _LuaList.prototype.remove(self, element)
+        local index = self.elements:indexOf(element)
+        if index == -1 then
+            return self
+        end
+        self.elements:splice(index, 1)
+        return self
+    end
+    function _LuaList.prototype.clear(self)
+        self.elements:splice(0)
+        return self
+    end
+    function _LuaList.prototype.contains(self, element)
+        return self.elements:includes(element)
+    end
+    function _LuaList.prototype.containsAll(self, elements)
+        return elements:every(function(____, element) return self:contains(element) end)
+    end
+    function _LuaList.prototype.containsAny(self, elements)
+        return elements:some(function(____, element) return self:contains(element) end)
+    end
+    function _LuaList.prototype.indexOf(self, element)
+        return self.elements:indexOf(element)
+    end
+    function _LuaList.prototype.isEmpty(self)
+        return self.elements.length == 0
+    end
+    function _LuaList.prototype.isNotEmpty(self)
+        return self.elements.length > 0
+    end
+    function _LuaList.prototype.reversed(self)
+        return __TS__New(
+            _LuaList,
+            self.elements:reverse()
+        )
+    end
+    function _LuaList.prototype.sorted(self, compareFn)
+        return __TS__New(
+            _LuaList,
+            self.elements:sort(compareFn)
+        )
+    end
+    function _LuaList.prototype.join(self, separator)
+        return self.elements:join(separator)
+    end
+    function _LuaList.prototype.flatten(self)
+        return __TS__New(
+            _LuaList,
+            self.elements:flat()
+        )
+    end
+    function _LuaList.prototype.size(self)
+        return self.elements.length
+    end
+    function _LuaList.prototype.forEach(self, action)
+        self.elements:forEach(action)
+        return self
+    end
+    function _LuaList.prototype.select(self, selector)
+        return __TS__New(
+            _LuaList,
+            self.elements:map(selector)
+        )
+    end
+    function _LuaList.prototype.where(self, predicate)
+        return __TS__New(
+            _LuaList,
+            self.elements:filter(predicate)
+        )
+    end
+    function _LuaList.prototype.reduce(self, collector, initialValue)
+        return self.elements:reduce(collector, initialValue)
+    end
+    function _LuaList.prototype.first(self)
+        if self.elements.length == 0 then
+            return Optional:empty()
+        end
+        return Optional:of(self.elements[0])
+    end
+    function _LuaList.prototype.firstOrDefault(self, defaultValue)
+        if self.elements.length == 0 then
+            return defaultValue
+        end
+        return self.elements[0]
+    end
+    function _LuaList.prototype.last(self)
+        if self.elements.length == 0 then
+            return Optional:empty()
+        end
+        return Optional:of(self.elements[self.elements.length - 1])
+    end
+    function _LuaList.prototype.lastOrDefault(self, defaultValue)
+        if self.elements.length == 0 then
+            return defaultValue
+        end
+        return self.elements[self.elements.length - 1]
+    end
+    function _LuaList.prototype.any(self, predicate)
+        return self.elements:some(predicate)
+    end
+    function _LuaList.prototype.all(self, predicate)
+        return self.elements:every(predicate)
+    end
+    function _LuaList.prototype.sum(self)
+        return self:reduce(
+            function(____, sum, element) return sum + element end,
+            0
+        )
+    end
+    function _LuaList.prototype.average(self)
+        if self.elements.length == 0 then
+            return Optional:empty()
+        end
+        return Optional:of(self:sum() / self.elements.length)
+    end
+    function _LuaList.prototype.min(self)
+        if self.elements.length == 0 then
+            return Optional:empty()
+        end
+        return Optional:of(math.min(__TS__Spread(self.elements)))
+    end
+    function _LuaList.prototype.minBy(self, selector)
+        if self.elements.length == 0 then
+            return Optional:empty()
+        end
+        local minElement = self.elements[0]
+        local minSelectorValue = selector(_G, self.elements[0])
+        do
+            local i = 1
+            while i < self.elements.length do
+                local element = self.elements[i]
+                local selectorValue = selector(_G, element)
+                local ____minSelectorValue_4 = minSelectorValue
+                if ____minSelectorValue_4 == nil then
+                    ____minSelectorValue_4 = 0
+                end
+                if selectorValue < ____minSelectorValue_4 then
+                    minElement = element
+                    minSelectorValue = selectorValue
+                end
+                i = i + 1
+            end
+        end
+        return Optional:of(minElement)
+    end
+    function _LuaList.prototype.max(self)
+        if self.elements.length == 0 then
+            return Optional:empty()
+        end
+        return Optional:of(math.max(__TS__Spread(self.elements)))
+    end
+    function _LuaList.prototype.maxBy(self, selector)
+        if self.elements.length == 0 then
+            return Optional:empty()
+        end
+        local maxElement = self.elements[0]
+        local maxSelectorValue = selector(_G, self.elements[0])
+        do
+            local i = 1
+            while i < self.elements.length do
+                local element = self.elements[i]
+                local selectorValue = selector(_G, element)
+                local ____maxSelectorValue_5 = maxSelectorValue
+                if ____maxSelectorValue_5 == nil then
+                    ____maxSelectorValue_5 = 0
+                end
+                if selectorValue > ____maxSelectorValue_5 then
+                    maxElement = element
+                    maxSelectorValue = selectorValue
+                end
+                i = i + 1
+            end
+        end
+        return Optional:of(maxElement)
+    end
+    function _LuaList.prototype.copy(self)
+        return __TS__New(
+            _LuaList,
+            self.elements:slice()
+        )
+    end
+    function _LuaList.prototype.distinct(self)
+        return __TS__New(
+            _LuaList,
+            {__TS__Spread(__TS__New(Set, self.elements))}
+        )
+    end
+    function _LuaList.prototype.skip(self, count)
+        return __TS__New(
+            _LuaList,
+            self.elements:slice(count)
+        )
+    end
+    function _LuaList.prototype.take(self, count)
+        return __TS__New(
+            _LuaList,
+            self.elements:slice(0, count)
+        )
+    end
+    function _LuaList.prototype.toSet(self)
+        return LuaSet:ofList(self)
+    end
+    function _LuaList.prototype.toArray(self)
+        return self.elements
+    end
+    LuaList = _LuaList
+    local text = LuaList:ofSingleton("Hello"):append("World"):append("!"):join(" ")
+    print("Text: " .. tostring(text))
     ChatBox:sendMessageToPlayer("Hello World!", "SenderName")
 end)(_G)
  end,
