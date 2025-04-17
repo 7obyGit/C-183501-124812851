@@ -116,8 +116,10 @@ function update()
 
     -- Move the existing files from the `app` directory to the `old` directory
     -- so that they can be restored if necessary
-    moveDirectory("app", "old")
-    print(" | Created new backup")
+    if fs.exists("app") then
+        moveDirectory("app", "old")
+        print(" | Created new backup")
+    end
     print(" | Environment ready!")
 
     -- Pull down the new files
