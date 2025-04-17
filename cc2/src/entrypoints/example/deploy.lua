@@ -34,6 +34,10 @@ end
 os.run({}, "update.lua")
 
 
+infoText = download(baseUrl + "info.json")
+info = textutils.unserializeJSON(infoText)
+
+
 print("\nDeployment completed successfully")
 print(" - v" .. info.version)
 print(" - Installed " .. #info.deployment.manifest .. " files")
