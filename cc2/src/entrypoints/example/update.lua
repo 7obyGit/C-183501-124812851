@@ -190,7 +190,7 @@ function update()
     
     -- Log useful information
     print("\nUpdate Complete!")
-    print("Previous Version: " .. oldInfo.version)
+    print("Previous Version: " .. (oldInfo.version or "Unknown"))
     print("Version: " .. info.version)
     print("Name: " .. info.name)
     print("Description: " .. info.description)
