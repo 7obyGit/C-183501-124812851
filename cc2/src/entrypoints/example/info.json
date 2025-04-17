@@ -4,7 +4,7 @@
   "description": "This is an example application.\nIt can have a long description.",
   "startup": {
     "delaySeconds": 5,
-    "autoUpdate": false,
+    "autoUpdate": true,
     "clearLogs": false
   },
   "deployment": {
