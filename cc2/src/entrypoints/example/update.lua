@@ -6,8 +6,10 @@ baseUrl = "https://raw.githubusercontent.com/7obyGit/C-183501-124812851/main/cc2
 
 
 function download(url)
-    print(url)
     local request = http.get(url)
+    if request == nil then
+        error("Could not download file: " .. url)
+    end
     local text = request.readAll()
     text = (text:sub(1,1) == "?" and text:sub(2)) or text
     request.close()
