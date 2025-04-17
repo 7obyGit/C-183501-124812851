@@ -155,7 +155,7 @@ function update()
     print(" | Starting download of " .. #manifest .. " files...")
     for _, path in ipairs(manifest) do
         print(" | [ ] Downloading '" .. path .. "'...")
-        local text = download(baseUrl + path)
+        local text = download(baseUrl .. path)
         writeFile(path, text)
         print(" | [*] Download Complete!")
     end
