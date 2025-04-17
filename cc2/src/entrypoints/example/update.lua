@@ -111,22 +111,9 @@ function update()
     if fs.exists("info.json") then
         oldInfo = textutils.unserializeJSON(readFile("info.json"))
     end
-
-    -- Delete the current contents of the `old` directory
-    print("\n(1/5) Preparing Environment...")
-    deleteDirectory("old")
-    print(" | Deleted previous backup files")
-
-    -- Move the existing files from the `app` directory to the `old` directory
-    -- so that they can be restored if necessary
-    if fs.exists("app") then
-        moveDirectory("app", "old")
-        print(" | Created new backup")
-    end
-    print(" | Environment ready!")
-
+    
     -- Pull down the new files
-    print("\n(2/5) Loading Info...")
+    print("\n(1/5) Loading Info...")
     print(" | [ ] Downloading `info.json`...")
     infoText = download(baseUrl .. "/info.json")
     print(" | [*] Downloaded latest `info.json`")
@@ -142,6 +129,20 @@ function update()
         return
     end
     print(" | Complete!")
+
+
+    -- Delete the current contents of the `old` directory
+    print("\n(2/5) Preparing Environment...")
+    deleteDirectory("old")
+    print(" | Deleted previous backup files")
+
+    -- Move the existing files from the `app` directory to the `old` directory
+    -- so that they can be restored if necessary
+    if fs.exists("app") then
+        moveDirectory("app", "old")
+        print(" | Created new backup")
+    end
+    print(" | Environment ready!")
 
 
     print("\n(3/5) Downloading Files...")
