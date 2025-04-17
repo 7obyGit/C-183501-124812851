@@ -100,6 +100,7 @@ function run()
         if lifetime.onCrash == "ROLLBACK" and backupExists then
             -- There is a backup in the `old` directory, rollback to that version
             print("Rolling back to the previous version...")
+            rollback()
             os.sleep(lifetime.restartDelaySeconds or 1)
         elseif lifetime.onCrash == "ROLLBACK" or lifetime.onCrash == "RESTART" then
             -- Ok to restart, no action needed

@@ -20,11 +20,13 @@ function deleteDirectory(path)
     end
 
     if not fs.isDir(path) then
+        print("DELETING DIR " .. path)
         fs.delete(path)
         return
     end
 
     for _, item in ipairs(fs.list(path)) do
+        print("DELETING " .. fs.combine(path, item)
         deleteDirectory(fs.combine(path, item))
     end
 
@@ -48,6 +50,8 @@ if startup.clearLogs then
     print(" | Clearing old logs")
     deleteDirectory("app/logs")
 end
+
+error("INTENTIONAL ERROR")
 
 
 -- In some situations it is necessary to wait for example for the area around a computer to load
