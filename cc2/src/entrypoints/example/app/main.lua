@@ -2876,6 +2876,67 @@ local ____ = "use strict";
     end
     ____class_1._internalChatBox = CcPeripheral:find("chatBox")
     local ChatBox = ____class_1
+    local _Optional = __TS__Class()
+    _Optional.name = "_Optional"
+    function _Optional.prototype.____constructor(self, value)
+        self.value = value
+    end
+    function _Optional.of(self, value)
+        return __TS__New(_Optional, value)
+    end
+    function _Optional.empty(self)
+        return __TS__New(_Optional, nil)
+    end
+    function _Optional.prototype.isPresent(self)
+        return self.value ~= nil
+    end
+    function _Optional.prototype.isEmpty(self)
+        return self.value == nil
+    end
+    function _Optional.prototype.getValueUnsafe(self)
+        if not self.value then
+            error(
+                __TS__New(Error, "Cannot unwrap undefined value"),
+                0
+            )
+        end
+        return self.value
+    end
+    function _Optional.prototype.getValueOrDefault(self, defaultValue)
+        local ____self_value_2 = self.value
+        if ____self_value_2 == nil then
+            ____self_value_2 = defaultValue
+        end
+        return ____self_value_2
+    end
+    _Optional.prototype["then"] = function(self, callback)
+        if not self.value then
+            return _Optional:empty()
+        end
+        return _Optional:of(callback(_G, self.value))
+    end
+    function _Optional.prototype.ifPresent(self, callback)
+        if self.value then
+            callback(_G, self.value)
+        end
+        return self
+    end
+    function _Optional.prototype.ifEmpty(self, callback)
+        if not self.value then
+            callback(_G)
+        end
+        return self
+    end
+    _Optional.prototype["or"] = function(self, other)
+        local ____table_value_3
+        if self.value then
+            ____table_value_3 = self
+        else
+            ____table_value_3 = other
+        end
+        return ____table_value_3
+    end
+    local Optional = _Optional
     local _LuaTableList = __TS__Class()
     _LuaTableList.name = "_LuaTableList"
     function _LuaTableList.prototype.____constructor(self)
@@ -2902,15 +2963,20 @@ local ____ = "use strict";
         return self._table[index]
     end
     function _LuaTableList.prototype.remove(self, element)
-        for index, value in ipairs(self._table) do
-            if value == element then
-                return table.remove(self._table, index)
-            end
+        local index = self:indexOf(element)
+        if index:isEmpty() then
+            return Optional:empty()
         end
-        return nil
+        local indexValue = index:getValueOrDefault(0)
+        return Optional:of(table.remove(self._table, indexValue))
     end
     function _LuaTableList.prototype.removeAt(self, index)
         return table.remove(self._table, index)
+    end
+    function _LuaTableList.prototype.indexOf(self, element)
+        for index, value in ipairs(self._table) do
+            if value == element then
+        return Optional:of(        return index)
     end
     local LuaTableList = _LuaTableList
     print("First")
@@ -2928,6 +2994,7 @@ local ____ = "use strict";
         list:size(),
         list
     )
+    print(list:indexOf(3))
     ChatBox:sendMessage("Hello World!")
     print("Last")
 end)(_G)
