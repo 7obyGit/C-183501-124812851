@@ -2953,7 +2953,7 @@ local ____ = "use strict";
     end
     function _LuaTableList.prototype.__tostring(self)
         local body = self:select(function(____, element) return tostring(element) end):join(", ")
-        return ("LuaTableList: {" .. body) .. "}"
+        return ("[" .. body) .. "]"
     end
     function _LuaTableList.prototype.size(self)
         return #self._table
