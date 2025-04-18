@@ -2788,6 +2788,9 @@ local ____ = "use strict";
     function _CcPeripheral.prototype.____constructor(self, internalPeripheral)
         self.internalPeripheral = internalPeripheral
     end
+    function _CcPeripheral.prototype.get(self)
+        return self.internalPeripheral
+    end
     function _CcPeripheral.find(self, peripheralName, filter)
         local internalPeripheral = peripheral.find(peripheralName, filter)
         return __TS__New(_CcPeripheral, internalPeripheral)
@@ -2854,22 +2857,22 @@ local ____ = "use strict";
         end
     end
     function ____class_1.sendMessage(self, message, prefix, brackets, bracketColor, range)
-        self._internalChatBox.sendMessage(message, prefix, brackets, bracketColor, range)
+        self._internalChatBox:get().sendMessage(message, prefix, brackets, bracketColor, range)
     end
     function ____class_1.sendMessageToPlayer(self, message, username, prefix, brackets, bracketColor, range)
-        self._internalChatBox.sendMessageToPlayer(message, username, prefix, brackets, bracketColor, range)
+        self._internalChatBox:get().sendMessageToPlayer(message, username, prefix, brackets, bracketColor, range)
     end
     function ____class_1.sendToastToPlayer(self, message, title, username, prefix, brackets, bracketColor, range)
-        self._internalChatBox.sendToastToPlayer(message, title, username, prefix, brackets, bracketColor, range)
+        self._internalChatBox:get().sendToastToPlayer(message, title, username, prefix, brackets, bracketColor, range)
     end
     function ____class_1.sendFormattedMessage(self, json, prefix, brackets, bracketColor, range)
-        self._internalChatBox.sendFormattedMessage(json, prefix, brackets, bracketColor, range)
+        self._internalChatBox:get().sendFormattedMessage(json, prefix, brackets, bracketColor, range)
     end
     function ____class_1.sendFormattedMessageToPlayer(self, json, username, prefix, brackets, bracketColor, range)
-        self._internalChatBox.sendFormattedMessageToPlayer(json, username, prefix, brackets, bracketColor, range)
+        self._internalChatBox:get().sendFormattedMessageToPlayer(json, username, prefix, brackets, bracketColor, range)
     end
     function ____class_1.sendFormattedToastToPlayer(self, messageJson, titleJson, username, prefix, brackets, bracketColor, range)
-        self._internalChatBox.sendFormattedToastToPlayer(messageJson, titleJson, username, prefix, brackets, bracketColor, range)
+        self._internalChatBox:get().sendFormattedToastToPlayer(messageJson, titleJson, username, prefix, brackets, bracketColor, range)
     end
     ____class_1._internalChatBox = CcPeripheral:find("chatBox")
     local ChatBox = ____class_1
