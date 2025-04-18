@@ -2958,6 +2958,13 @@ local ____ = "use strict";
     function _LuaTableList.empty(self)
         return __TS__New(_LuaTableList)
     end
+    function _LuaTableList.prototype.toArray(self)
+        local result = {}
+        for ____, element in __TS__Iterator(self) do
+            result[#result + 1] = element
+        end
+        return result
+    end
     function _LuaTableList.prototype.__tostring(self)
         local body = self:select(function(____, element) return tostring(element) end):join(", ")
         return ("[" .. body) .. "]"
@@ -3059,6 +3066,7 @@ local ____ = "use strict";
         list
     )
     print(list:indexOf(3))
+    print(list:toArray())
     ChatBox:sendMessage("Hello World!")
     print("Last")
 end)(_G)
