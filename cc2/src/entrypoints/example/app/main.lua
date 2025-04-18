@@ -3028,13 +3028,13 @@ local ____ = "use strict";
         local stringElements = self:select(function(____, element) return tostring(element) end)
         local result = ""
         local size = stringElements:size()
-        local index = 1
+        local index = 0
         for ____, stringElement in __TS__Iterator(stringElements) do
+            index = index + 1
             result = result .. tostring(stringElement)
-            if index <= size then
+            if index < size then
                 result = result .. tostring(separator)
             end
-            index = index + 1
         end
         return result
     end
