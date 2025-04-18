@@ -2843,7 +2843,7 @@ local ____ = "use strict";
         local uuid = ""
         local isHidden = true
         while true do
-            local event, username, message, uuid, isHidden = os.pullEvent("chat\")
+            local event, username, message, uuid, isHidden = os.pullEvent("chat")
             listener(_G, {
                 event = event,
                 username = username,
