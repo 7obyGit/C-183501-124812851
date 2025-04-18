@@ -2789,47 +2789,47 @@ local ____ = "use strict";
         self.internalPeripheral = internalPeripheral
     end
     function _CcPeripheral.find(self, peripheralName, filter)
-        local internalPeripheral = Lua:literal("peripheral.find(peripheralName, filter)")
+        local internalPeripheral = peripheral.find(peripheralName, filter)
         return __TS__New(_CcPeripheral, internalPeripheral)
     end
     function _CcPeripheral.getNames(self)
-        return Lua:literal("peripheral.getNames()")
+        return peripheral.getNames()
     end
     function _CcPeripheral.isPresent(self, name)
-        return Lua:literal("peripheral.isPresent(name)")
+        return peripheral.isPresent(name)
     end
     function _CcPeripheral.getType(self, peripheral)
-        return Lua:literal("peripheral.getType(peripheral)")
+        return peripheral.getType(peripheral)
     end
     function _CcPeripheral.hasType(self, peripheral, peripheralType)
-        return Lua:literal("peripheral.hasType(peripheral, peripheralType)")
+        return peripheral.hasType(peripheral, peripheralType)
     end
     function _CcPeripheral.getMethods(self, name)
-        return Lua:literal("peripheral.getMethods(name)")
+        return peripheral.getMethods(name)
     end
     function _CcPeripheral.getName(self, peripheral)
-        return Lua:literal("peripheral.getName(peripheral)")
+        return peripheral.getName(peripheral)
     end
     function _CcPeripheral.call(self, name, method, ...)
-        return Lua:literal("peripheral.call(name, method, ...)")
+        return peripheral.call(name, method, ...)
     end
     function _CcPeripheral.wrap(self, name)
-        return Lua:literal("peripheral.wrap(name)")
+        return peripheral.wrap(name)
     end
     function _CcPeripheral.prototype.hasType(self, peripheralType)
-        return Lua:literal("peripheral.hasType(self.internalPeripheral, peripheralType)")
+        return peripheral.hasType(self.internalPeripheral, peripheralType)
     end
     function _CcPeripheral.prototype.getType(self)
-        return Lua:literal("peripheral.getType(self.internalPeripheral)")
+        return peripheral.getType(self.internalPeripheral)
     end
     function _CcPeripheral.prototype.getName(self)
-        return Lua:literal("peripheral.getName(self.internalPeripheral)")
+        return peripheral.getName(self.internalPeripheral)
     end
     function _CcPeripheral.prototype.call(self, method, ...)
-        return Lua:literal("peripheral.call(self.internalPeripheral, method, ...)")
+        return peripheral.call(self.internalPeripheral, method, ...)
     end
     function _CcPeripheral.prototype.getMethods(self)
-        return Lua:literal("peripheral.getMethods(self.internalPeripheral)")
+        return peripheral.getMethods(self.internalPeripheral)
     end
     local CcPeripheral = _CcPeripheral
     local ____class_1 = __TS__Class()
@@ -2843,7 +2843,7 @@ local ____ = "use strict";
         local uuid = ""
         local isHidden = true
         while true do
-            Lua:literal("local event, username, message, uuid, isHidden = os.pullEvent(\"chat\")")
+            local event, username, message, uuid, isHidden = os.pullEvent("chat\")
             listener(_G, {
                 event = event,
                 username = username,
@@ -2854,22 +2854,22 @@ local ____ = "use strict";
         end
     end
     function ____class_1.sendMessage(self, message, prefix, brackets, bracketColor, range)
-        Lua:literal("ChatBox._internalChatBox.sendMessage(message, prefix, brackets, bracketColor, range)")
+        ChatBox._internalChatBox.sendMessage(message, prefix, brackets, bracketColor, range)
     end
     function ____class_1.sendMessageToPlayer(self, message, username, prefix, brackets, bracketColor, range)
-        Lua:literal("ChatBox._internalChatBox.sendMessageToPlayer(message, username, prefix, brackets, bracketColor, range)")
+        ChatBox._internalChatBox.sendMessageToPlayer(message, username, prefix, brackets, bracketColor, range)
     end
     function ____class_1.sendToastToPlayer(self, message, title, username, prefix, brackets, bracketColor, range)
-        Lua:literal("ChatBox._internalChatBox.sendToastToPlayer(message, title, username, prefix, brackets, bracketColor, range)")
+        ChatBox._internalChatBox.sendToastToPlayer(message, title, username, prefix, brackets, bracketColor, range)
     end
     function ____class_1.sendFormattedMessage(self, json, prefix, brackets, bracketColor, range)
-        Lua:literal("ChatBox._internalChatBox.sendFormattedMessage(json, prefix, brackets, bracketColor, range)")
+        ChatBox._internalChatBox.sendFormattedMessage(json, prefix, brackets, bracketColor, range)
     end
     function ____class_1.sendFormattedMessageToPlayer(self, json, username, prefix, brackets, bracketColor, range)
-        Lua:literal("ChatBox._internalChatBox.sendFormattedMessageToPlayer(json, username, prefix, brackets, bracketColor, range)")
+        ChatBox._internalChatBox.sendFormattedMessageToPlayer(json, username, prefix, brackets, bracketColor, range)
     end
     function ____class_1.sendFormattedToastToPlayer(self, messageJson, titleJson, username, prefix, brackets, bracketColor, range)
-        Lua:literal("ChatBox._internalChatBox.sendFormattedToastToPlayer(messageJson, titleJson, username, prefix, brackets, bracketColor, range)")
+        ChatBox._internalChatBox.sendFormattedToastToPlayer(messageJson, titleJson, username, prefix, brackets, bracketColor, range)
     end
     ____class_1._internalChatBox = CcPeripheral:find("chatBox")
     local ChatBox = ____class_1
