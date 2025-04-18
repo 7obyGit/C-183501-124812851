@@ -2767,6 +2767,9 @@ local SyntaxError = ____lualib.SyntaxError
 local TypeError = ____lualib.TypeError
 local URIError = ____lualib.URIError
 local __TS__New = ____lualib.__TS__New
+local __TS__Symbol = ____lualib.__TS__Symbol
+local Symbol = ____lualib.Symbol
+local __TS__Iterator = ____lualib.__TS__Iterator
 local ____ = "use strict";
 (function()
     local ____class_0 = __TS__Class()
@@ -2948,6 +2951,10 @@ local ____ = "use strict";
     function _LuaTableList.empty(self)
         return __TS__New(_LuaTableList)
     end
+    function _LuaTableList.prototype.__tostring(self)
+        local body = self:select(function(____, element) return tostring(element) end):join(", ")
+        return ("LuaTableList: {" .. body) .. "}"
+    end
     function _LuaTableList.prototype.size(self)
         return #self._table
     end
@@ -2980,6 +2987,56 @@ local ____ = "use strict";
             end
         end
         return Optional:of(nil)
+    end
+    _LuaTableList.prototype[Symbol.iterator] = function(self)
+        local index = 0
+        local size = self:size()
+        return {next = function()
+            index = index + 1
+            if index <= size then
+                return {
+                    done = false,
+                    value = self:get(index)
+                }
+            end
+            return {done = true, value = nil}
+        end}
+    end
+    function _LuaTableList.prototype.forEach(self, callback)
+        for ____, element in __TS__Iterator(self) do
+            callback(_G, element)
+        end
+        return self
+    end
+    function _LuaTableList.prototype.select(self, callback)
+        local result = __TS__New(_LuaTableList)
+        for ____, element in __TS__Iterator(self) do
+            result:add(callback(_G, element))
+        end
+        return result
+    end
+    function _LuaTableList.prototype.where(self, callback)
+        local result = __TS__New(_LuaTableList)
+        for ____, element in __TS__Iterator(self) do
+            if callback(_G, element) then
+                result:add(element)
+            end
+        end
+        return result
+    end
+    function _LuaTableList.prototype.join(self, separator)
+        local stringElements = self:select(function(____, element) return tostring(element) end)
+        local result = ""
+        local size = stringElements:size()
+        local index = 1
+        for ____, stringElement in __TS__Iterator(stringElements) do
+            result = result .. tostring(stringElement)
+            if index <= size then
+                result = result .. tostring(separator)
+            end
+            index = index + 1
+        end
+        return result
     end
     local LuaTableList = _LuaTableList
     print("First")
