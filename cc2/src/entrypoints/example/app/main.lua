@@ -2813,6 +2813,15 @@ local ____ = "use strict";
     end
     function _CcPeripheral.find(self, peripheralName, filter)
         local internalPeripheral = peripheral.find(peripheralName, filter)
+        if internalPeripheral == nil then
+            error(
+                __TS__New(
+                    Error,
+                    ("No peripheral of type \"" .. tostring(peripheralName)) .. "\" found."
+                ),
+                0
+            )
+        end
         return __TS__New(_CcPeripheral, internalPeripheral)
     end
     function _CcPeripheral.getNames(self)
