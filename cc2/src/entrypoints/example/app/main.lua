@@ -26,7 +26,8 @@ ____modules = {
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 local ____ = "use strict";
 (function()
-    print("Hello World!")
+    local x = {}
+    print(x)
 end)(_G)
  end,
 }
