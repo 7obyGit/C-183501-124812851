@@ -1,4 +1,4 @@
-﻿--- This script is responsible for updating the application
+--- This script is responsible for updating the application
 --- It will only update everything if there is a new version of the app to be installed
 
 

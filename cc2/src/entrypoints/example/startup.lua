@@ -1,4 +1,4 @@
-﻿--- This script runs automatically when the computer starts
+--- This script runs automatically when the computer starts
 --- Its purpose is to trigger the `main.lua` script while also performing
 --- any other work needed on startup which must happen before the main app starts
 

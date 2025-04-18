@@ -1,4 +1,4 @@
-﻿--- This script is responsible for safely running the main application
+--- This script is responsible for safely running the main application
 --- It can ensure that, in the event of an error, the application will continue
 --- to operate effectively
 
