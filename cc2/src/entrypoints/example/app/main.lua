@@ -2873,7 +2873,9 @@ local ____ = "use strict";
     end
     ____class_1._internalChatBox = CcPeripheral:find("chatBox")
     local ChatBox = ____class_1
+    print("First")
     ChatBox:sendMessageToPlayer("Hello World!", "SenderName")
+    print("Last")
 end)(_G)
  end,
 }
