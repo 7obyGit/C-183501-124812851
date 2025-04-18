@@ -2811,7 +2811,7 @@ local ____ = "use strict";
         return peripheral.getName(peripheral)
     end
     function _CcPeripheral.call(self, name, method, ...)
-        return peripheral.call(name, method, ...args)
+        return peripheral.call(name, method, ...)
     end
     function _CcPeripheral.wrap(self, name)
         return peripheral.wrap(name)
@@ -2826,7 +2826,7 @@ local ____ = "use strict";
         return peripheral.getName(self.internalPeripheral)
     end
     function _CcPeripheral.prototype.call(self, method, ...)
-        return peripheral.call(self.internalPeripheral, method, ...args)
+        return peripheral.call(self.internalPeripheral, method, ...)
     end
     function _CcPeripheral.prototype.getMethods(self)
         return peripheral.getMethods(self.internalPeripheral)
