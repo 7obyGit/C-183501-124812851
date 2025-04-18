@@ -2992,7 +2992,7 @@ local ____ = "use strict";
         list:size(),
         list
     )
-    list:removeAt(2)
+    list:remove(11)
     print(
         list:size(),
         list
