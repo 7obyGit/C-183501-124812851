@@ -26,8 +26,19 @@ ____modules = {
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 local ____ = "use strict";
 (function()
-    local x = {}
-    print(x)
+    local x = {
+        1,
+        2,
+        3,
+        5,
+        7,
+        8,
+        9,
+        10
+    }
+    for ____, i in ipairs(x) do
+        print(i)
+    end
 end)(_G)
  end,
 }
