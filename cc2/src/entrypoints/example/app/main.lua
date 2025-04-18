@@ -2976,7 +2976,10 @@ local ____ = "use strict";
     function _LuaTableList.prototype.indexOf(self, element)
         for index, value in ipairs(self._table) do
             if value == element then
-        return Optional:of(        return index)
+                return Optional:of(index)
+            end
+        end
+        return Optional:of(nil)
     end
     local LuaTableList = _LuaTableList
     print("First")
