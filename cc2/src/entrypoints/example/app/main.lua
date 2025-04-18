@@ -2767,9 +2767,9 @@ local SyntaxError = ____lualib.SyntaxError
 local TypeError = ____lualib.TypeError
 local URIError = ____lualib.URIError
 local __TS__New = ____lualib.__TS__New
+local __TS__Iterator = ____lualib.__TS__Iterator
 local __TS__Symbol = ____lualib.__TS__Symbol
 local Symbol = ____lualib.Symbol
-local __TS__Iterator = ____lualib.__TS__Iterator
 local ____ = "use strict";
 (function()
     local ____class_0 = __TS__Class()
@@ -2945,6 +2945,13 @@ local ____ = "use strict";
     function _LuaTableList.prototype.____constructor(self)
         self._table = {}
     end
+    function _LuaTableList.of(self, elements)
+        local result = __TS__New(_LuaTableList)
+        for ____, element in __TS__Iterator(elements) do
+            result:add(element)
+        end
+        return result
+    end
     function _LuaTableList.ofSingleton(self, element)
         return __TS__New(_LuaTableList):add(element)
     end
@@ -3040,10 +3047,7 @@ local ____ = "use strict";
     end
     local LuaTableList = _LuaTableList
     print("First")
-    local list = LuaTableList:empty()
-    list:add(11)
-    list:add(22)
-    list:add(44)
+    local list = LuaTableList:of({11, 22, 44})
     list:add(33)
     print(
         list:size(),
