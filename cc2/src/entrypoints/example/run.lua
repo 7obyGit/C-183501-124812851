@@ -87,7 +87,9 @@ function run()
         print(appName .. " Terminated")
 
 
-        if not success then
+        if success then
+            return
+        else
             print("Critical Error:")
             print(err)
         end
