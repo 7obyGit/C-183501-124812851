@@ -2894,11 +2894,23 @@ local ____ = "use strict";
         self._table[#self._table + 1] = element
         return self
     end
+    function _LuaTableList.prototype.insert(self, element, index)
+        table.insert(self._table, index, element)
+        return self
+    end
     function _LuaTableList.prototype.get(self, index)
         return self._table[index]
     end
+    function _LuaTableList.prototype.remove(self, element)
+        for index, value in ipairs(self._table) do
+            if value == element then
+                return table.remove(self._table, index
+            end
+        end
+        return return nil
+    end
     function _LuaTableList.prototype.removeAt(self, index)
-        return self._table[index]
+        return table.remove(self._table, index)
     end
     local LuaTableList = _LuaTableList
     print("First")
