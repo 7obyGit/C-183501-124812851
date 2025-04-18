@@ -2919,9 +2919,15 @@ local ____ = "use strict";
     list:add(22)
     list:add(44)
     list:add(33)
-    print(list:size())
+    print(
+        list:size(),
+        list
+    )
     list:removeAt(2)
-    print(list:size())
+    print(
+        list:size(),
+        list
+    )
     ChatBox:sendMessage("Hello World!")
     print("Last")
 end)(_G)
