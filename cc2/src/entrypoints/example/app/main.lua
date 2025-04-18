@@ -2907,7 +2907,7 @@ local ____ = "use strict";
                 return table.remove(self._table, index)
             end
         end
-        return return nil
+        return nil
     end
     function _LuaTableList.prototype.removeAt(self, index)
         return table.remove(self._table, index)
