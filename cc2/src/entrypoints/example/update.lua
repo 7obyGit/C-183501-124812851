@@ -153,8 +153,6 @@ function update()
     print(" | Retrieved `deployment.manifest`")
     print(" | " .. #manifest .. " files identified")
     table.insert(manifest, "/app/main.lua")
-    os.sleep(5)
-    print("DOWNLOADED APP")
     table.insert(manifest, "/run.lua")
     table.insert(manifest, "/startup.lua")
     print(" | Key files added")
@@ -197,6 +195,7 @@ function update()
     print("Version: " .. info.version)
     print("Name: " .. info.name)
     print("Description: " .. info.description)
+    os.sleep(3)
 end
 
 
