@@ -3091,7 +3091,7 @@ local ____ = "use strict";
             print(value)
             newList:append(value)
         end
-        print('end'
+        print('end')
         return newList
     end
     function _LuaList.ofSingleton(self, element)
