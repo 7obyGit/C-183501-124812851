@@ -3176,12 +3176,9 @@ local ____ = "use strict";
     end
     function _LuaList.ofTable(self, elements)
         local newList = __TS__New(_LuaList, {})
-        print('LuaList Adding: ' .. textutils.serialise(COMMAND_LINE_ARGUMENTS))
         for index, value in ipairs(elements) do
-            print(value)
             newList:append(value)
         end
-        print('end')
         return newList
     end
     function _LuaList.ofSingleton(self, element)
