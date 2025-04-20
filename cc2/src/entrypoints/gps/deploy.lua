@@ -40,7 +40,7 @@ end
 
 local updateScript = download(baseUrl .. "/update.lua")
 writeFile("/update.lua", updateScript)
-os.run({}, "update.lua")
+shell.run("update.lua")
 
 
 info = textutils.unserializeJSON(readFile("info.json"))
@@ -62,7 +62,7 @@ if completeScript then
     print(" | Retrieved `deployment.completeScript`")
     for _, command in ipairs(completeScript) do
         print(" | > " .. command)
-        os.run({}, command)
+        shell.run(command)
     end
     print(" | Complete!")
 end

@@ -39,7 +39,7 @@ info = textutils.unserializeJSON(readFile("info.json"))
 -- When no config is provided go straight to running the main application
 startup = info.startup
 if not startup then
-    os.run({}, "run.lua")
+    shell.run("run.lua")
 end
 
 
@@ -62,11 +62,11 @@ end
 -- and allows bugs to be remotely fixed without the need to manually access
 -- the computer
 if startup.autoUpdate then
-    os.run({}, "update.lua")
+    shell.run("update.lua")
 end
 
 
 -- Run the application
-os.run({}, "run.lua")
+shell.run("run.lua")
 
 

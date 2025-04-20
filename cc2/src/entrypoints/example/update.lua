@@ -172,7 +172,7 @@ function update()
         print(" | Retrieved `deployment.configScript`")
         for _, command in ipairs(configScript) do
             print(" | > " .. command)
-            os.run({}, command)
+            shell.run(command)
         end
         print(" | Complete!")
     else
