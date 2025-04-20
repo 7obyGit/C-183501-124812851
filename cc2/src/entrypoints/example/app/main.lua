@@ -3084,10 +3084,10 @@ local ____ = "use strict";
     function _LuaList.of(self, elements)
         return __TS__New(_LuaList, elements)
     end
-    function _LuaList.ofTable(self, ____table)
+    function _LuaList.ofTable(self, elements)
         local newList = __TS__New(_LuaList, {})
         print('LuaList Adding: ' .. textutils.serialise(COMMAND_LINE_ARGUMENTS))
-        for index, value in pairs(table) do
+        for index, value in ipairs(elements) do
             print(value)
             newList:append(value)
         end
