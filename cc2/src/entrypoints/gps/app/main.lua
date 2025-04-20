@@ -3177,6 +3177,7 @@ local ____ = "use strict";
     end
     function _LuaList.ofTable(self, ____table)
         local newList = __TS__New(_LuaList, {})
+        print('LuaList Adding: ' .. textutils.serialise(COMMAND_LINE_ARGUMENTS))
         for index, value in ipairs(table) do
             print('Adding value: ' .. value)
             newList:append(value)
@@ -3460,6 +3461,7 @@ local ____ = "use strict";
     end
     ____class_10.commandLineArguments = LuaList:ofTable(COMMAND_LINE_ARGUMENTS)
     local ExecutionContext = ____class_10
+    print('Entrypoint: ' .. textutils.serialise(COMMAND_LINE_ARGUMENTS))
     print("GPS")
     local args = ExecutionContext.commandLineArguments
     print("Args: ", args)

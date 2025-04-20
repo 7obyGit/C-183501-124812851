@@ -3087,6 +3087,7 @@ local ____ = "use strict";
     end
     function _LuaList.ofTable(self, ____table)
         local newList = __TS__New(_LuaList, {})
+        print('LuaList Adding: ' .. textutils.serialise(COMMAND_LINE_ARGUMENTS))
         for index, value in ipairs(table) do
             print('Adding value: ' .. value)
             newList:append(value)
