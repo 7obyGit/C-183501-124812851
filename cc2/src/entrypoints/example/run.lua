@@ -82,7 +82,7 @@ function run()
         -- Try to run the application
         print(appName .. " Starting...")
         local success, err = pcall(function()
-            os.run({"run"}, "app/main.lua")
+            os.run({}, "app/main.lua", "run")
         end)
         print(appName .. " Terminated")
 
