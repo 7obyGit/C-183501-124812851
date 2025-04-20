@@ -2,7 +2,6 @@
 --- This is necessary because the rest of the program is inside of transpiled functions and therefore `{...}`
 --- would not return command line arguments when used elsewhere
 COMMAND_LINE_ARGUMENTS = {...}
-print(textutils.serialise(COMMAND_LINE_ARGUMENTS))
 
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 
@@ -3088,7 +3087,7 @@ local ____ = "use strict";
     function _LuaList.ofTable(self, ____table)
         local newList = __TS__New(_LuaList, {})
         print('LuaList Adding: ' .. textutils.serialise(COMMAND_LINE_ARGUMENTS))
-        for index, value in ipairs(table) do
+        for index, value in pairs(table) do
             print('Adding value: ' .. value)
             newList:append(value)
         end
