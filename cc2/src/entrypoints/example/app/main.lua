@@ -2,6 +2,7 @@
 --- This is necessary because the rest of the program is inside of transpiled functions and therefore `{...}`
 --- would not return command line arguments when used elsewhere
 COMMAND_LINE_ARGUMENTS = {...}
+print(textutils.serialise(COMMAND_LINE_ARGUMENTS))
 
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 
