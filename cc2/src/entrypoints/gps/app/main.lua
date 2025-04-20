@@ -2803,108 +2803,6 @@ local ____ = "use strict";
         )
     end
     local Lua = ____class_0
-    local _CcPeripheral = __TS__Class()
-    _CcPeripheral.name = "_CcPeripheral"
-    function _CcPeripheral.prototype.____constructor(self, internalPeripheral)
-        self.internalPeripheral = internalPeripheral
-    end
-    function _CcPeripheral.prototype.get(self)
-        return self.internalPeripheral
-    end
-    function _CcPeripheral.find(self, peripheralName, filter)
-        local internalPeripheral = peripheral.find(peripheralName, filter)
-        if internalPeripheral == nil then
-            error(
-                __TS__New(
-                    Error,
-                    ("No peripheral of type \"" .. tostring(peripheralName)) .. "\" found."
-                ),
-                0
-            )
-        end
-        return __TS__New(_CcPeripheral, internalPeripheral)
-    end
-    function _CcPeripheral.getNames(self)
-        return peripheral.getNames()
-    end
-    function _CcPeripheral.isPresent(self, name)
-        return peripheral.isPresent(name)
-    end
-    function _CcPeripheral.getType(self, peripheral)
-        return peripheral.getType(peripheral)
-    end
-    function _CcPeripheral.hasType(self, peripheral, peripheralType)
-        return peripheral.hasType(peripheral, peripheralType)
-    end
-    function _CcPeripheral.getMethods(self, name)
-        return peripheral.getMethods(name)
-    end
-    function _CcPeripheral.getName(self, peripheral)
-        return peripheral.getName(peripheral)
-    end
-    function _CcPeripheral.call(self, name, method, ...)
-        return peripheral.call(name, method, ...)
-    end
-    function _CcPeripheral.wrap(self, name)
-        return peripheral.wrap(name)
-    end
-    function _CcPeripheral.prototype.hasType(self, peripheralType)
-        return peripheral.hasType(self.internalPeripheral, peripheralType)
-    end
-    function _CcPeripheral.prototype.getType(self)
-        return peripheral.getType(self.internalPeripheral)
-    end
-    function _CcPeripheral.prototype.getName(self)
-        return peripheral.getName(self.internalPeripheral)
-    end
-    function _CcPeripheral.prototype.call(self, method, ...)
-        return peripheral.call(self.internalPeripheral, method, ...)
-    end
-    function _CcPeripheral.prototype.getMethods(self)
-        return peripheral.getMethods(self.internalPeripheral)
-    end
-    local CcPeripheral = _CcPeripheral
-    local ____class_1 = __TS__Class()
-    ____class_1.name = "ChatBox"
-    function ____class_1.prototype.____constructor(self)
-    end
-    function ____class_1.onMessage(self, listener)
-        local event = ""
-        local username = ""
-        local message = ""
-        local uuid = ""
-        local isHidden = true
-        while true do
-            local event, username, message, uuid, isHidden = os.pullEvent("chat")
-            listener(_G, {
-                event = event,
-                username = username,
-                message = message,
-                uuid = uuid,
-                isHidden = isHidden
-            })
-        end
-    end
-    function ____class_1.sendMessage(self, message, prefix, brackets, bracketColor, range)
-        self._internalChatBox:get().sendMessage(message, prefix, brackets, bracketColor, range)
-    end
-    function ____class_1.sendMessageToPlayer(self, message, username, prefix, brackets, bracketColor, range)
-        self._internalChatBox:get().sendMessageToPlayer(message, username, prefix, brackets, bracketColor, range)
-    end
-    function ____class_1.sendToastToPlayer(self, message, title, username, prefix, brackets, bracketColor, range)
-        self._internalChatBox:get().sendToastToPlayer(message, title, username, prefix, brackets, bracketColor, range)
-    end
-    function ____class_1.sendFormattedMessage(self, json, prefix, brackets, bracketColor, range)
-        self._internalChatBox:get().sendFormattedMessage(json, prefix, brackets, bracketColor, range)
-    end
-    function ____class_1.sendFormattedMessageToPlayer(self, json, username, prefix, brackets, bracketColor, range)
-        self._internalChatBox:get().sendFormattedMessageToPlayer(json, username, prefix, brackets, bracketColor, range)
-    end
-    function ____class_1.sendFormattedToastToPlayer(self, messageJson, titleJson, username, prefix, brackets, bracketColor, range)
-        self._internalChatBox:get().sendFormattedToastToPlayer(messageJson, titleJson, username, prefix, brackets, bracketColor, range)
-    end
-    ____class_1._internalChatBox = CcPeripheral:find("chatBox")
-    local ChatBox = ____class_1
     local _Optional = __TS__Class()
     _Optional.name = "_Optional"
     function _Optional.prototype.____constructor(self, value)
@@ -2938,11 +2836,11 @@ local ____ = "use strict";
         return self.value
     end
     function _Optional.prototype.getValueOrDefault(self, defaultValue)
-        local ____self_value_2 = self.value
-        if ____self_value_2 == nil then
-            ____self_value_2 = defaultValue
+        local ____self_value_1 = self.value
+        if ____self_value_1 == nil then
+            ____self_value_1 = defaultValue
         end
-        return ____self_value_2
+        return ____self_value_1
     end
     _Optional.prototype["then"] = function(self, callback)
         if not self.value then
@@ -2963,15 +2861,207 @@ local ____ = "use strict";
         return self
     end
     _Optional.prototype["or"] = function(self, other)
-        local ____table_value_3
+        local ____table_value_2
         if self.value then
-            ____table_value_3 = self
+            ____table_value_2 = self
         else
-            ____table_value_3 = other
+            ____table_value_2 = other
         end
-        return ____table_value_3
+        return ____table_value_2
     end
     local Optional = _Optional
+    local _Result = __TS__Class()
+    _Result.name = "_Result"
+    function _Result.prototype.____constructor(self, value, errorMessage)
+        if value == nil and errorMessage == nil then
+            error(
+                __TS__New(Error, "Cannot create a result with both undefined values"),
+                0
+            )
+        end
+        self.value = value
+        self.errorMessage = errorMessage
+    end
+    function _Result.of(self, value)
+        return __TS__New(_Result, value, nil)
+    end
+    function _Result.ofError(self, value, errorMessage)
+        return __TS__New(_Result, value, errorMessage)
+    end
+    function _Result.void(self)
+        return __TS__New(_Result, nil, nil)
+    end
+    function _Result.error(self, errorMessage)
+        return __TS__New(_Result, nil, errorMessage)
+    end
+    function _Result.errorValue(self, value, errorMessage)
+        return __TS__New(_Result, value, errorMessage)
+    end
+    function _Result.prototype.isSuccess(self)
+        return self.errorMessage == nil
+    end
+    function _Result.prototype.isError(self)
+        return not self:isSuccess()
+    end
+    function _Result.prototype.ifSuccess(self, callback)
+        if self:isSuccess() then
+            callback(_G, self.value)
+        end
+        return self
+    end
+    function _Result.prototype.ifError(self, callback)
+        if self:isError() then
+            callback(_G, self.errorMessage)
+        end
+        return self
+    end
+    function _Result.prototype.getValueUnsafe(self)
+        if not self.value then
+            error(
+                __TS__New(Error, "Cannot unwrap undefined value"),
+                0
+            )
+        end
+        return self.value
+    end
+    function _Result.prototype.getValueOrDefault(self, defaultValue)
+        local ____self_value_3 = self.value
+        if ____self_value_3 == nil then
+            ____self_value_3 = defaultValue
+        end
+        return ____self_value_3
+    end
+    function _Result.prototype.asOptional(self)
+        return Optional:of(self.value)
+    end
+    _Result.prototype["then"] = function(self, callback)
+        if not self.value then
+            return _Result:error(self.errorMessage)
+        end
+        return _Result:of(callback(_G, self.value))
+    end
+    local Result = _Result
+    local ____class_4 = __TS__Class()
+    ____class_4.name = "CcShell"
+    function ____class_4.prototype.____constructor(self)
+    end
+    function ____class_4.execute(self, command, ...)
+        local success = false
+        success = shell.execute(command, table.unpack(args))
+        return Result:of(success)
+    end
+    function ____class_4.run(self, ...)
+        local success = false
+        success = shell.run(table.unpack(args))
+        return Result:of(success)
+    end
+    function ____class_4.exit(self)
+        shell.exit()
+    end
+    function ____class_4.getCurrentWorkingDirectory(self)
+        local currentDir = ""
+        currentDir = shell.dir()
+        return currentDir
+    end
+    function ____class_4.setCurrentWorkingDirectory(self, dir)
+        local success = true
+        local ____error = nil
+        local ok, err = pcall(function()
+            shell.setDir(dir)
+        end)
+        success = ok
+        error = err
+        local ____success_5
+        if success then
+            ____success_5 = Result:void()
+        else
+            ____success_5 = Result:error(____error or "Unknown error")
+        end
+        return ____success_5
+    end
+    function ____class_4.getPath(self)
+        local currentPath = ""
+        currentPath = shell.path()
+        return currentPath
+    end
+    function ____class_4.setPath(self, path)
+        shell.setPath(path)
+    end
+    function ____class_4.getAbsolutePath(self, path)
+        local resolvedPath = ""
+        resolvedPath = shell.resolve(path)
+        return resolvedPath
+    end
+    function ____class_4.resolveProgramPath(self, command)
+        local programPath
+        programPath = shell.resolveProgram(command)
+        return Optional:ofNullable(programPath)
+    end
+    function ____class_4.getProgramList(self, includeHidden)
+        local programs = {}
+        local progs = shell.programs(includeHidden)
+        for i = 1, #progs do
+            programs[i] = progs[i]
+        end
+        return programs
+    end
+    function ____class_4.getCompletions(self, sLine)
+        local completions = shell.complete(sLine)
+        return Optional:ofNullable(completions):getValueOrDefault({})
+    end
+    function ____class_4.getCompletionsForProgramName(self, program)
+        local completions = {}
+        local comps = shell.completeProgram(program)
+        for i = 1, #comps do
+            completions[i] = comps[i]
+        end
+        return completions
+    end
+    function ____class_4.setCompletionFunction(self, program, complete)
+        shell.setCompletionFunction(program, complete)
+    end
+    function ____class_4.getCompletionInfo(self)
+        local info = {}
+        local compInfo = shell.getCompletionInfo()
+        for k,v in pairs(compInfo) do
+            info[k] = v
+        end
+        return info
+    end
+    function ____class_4.getPathToRunningProgram(self)
+        local programPath = ""
+        programPath = shell.getRunningProgram()
+        return programPath
+    end
+    function ____class_4.setAlias(self, command, program)
+        shell.setAlias(command, program)
+    end
+    function ____class_4.clearAlias(self, command)
+        shell.clearAlias(command)
+    end
+    function ____class_4.aliases(self)
+        local aliases = {}
+        local als = shell.aliases()
+        for k,v in pairs(als) do
+            aliases[k] = v
+        end
+        return aliases
+    end
+    function ____class_4.openTab(self, ...)
+        local tabId = nil
+        tabId = shell.openTab(table.unpack(args))
+        local ____temp_6
+        if tabId ~= nil then
+            ____temp_6 = Result:of(tabId)
+        else
+            ____temp_6 = Result:error("Failed to open tab")
+        end
+        return ____temp_6
+    end
+    function ____class_4.switchTab(self, id)
+        shell.switchTab(id)
+    end
+    local CcShell = ____class_4
     local _LuaSet = __TS__Class()
     _LuaSet.name = "_LuaSet"
     function _LuaSet.prototype.____constructor(self)
@@ -3107,8 +3197,8 @@ local ____ = "use strict";
         return self.elements[index]
     end
     function _LuaList.prototype.append(self, element)
-        local ____self_elements_4 = self.elements
-        ____self_elements_4[#____self_elements_4 + 1] = element
+        local ____self_elements_7 = self.elements
+        ____self_elements_7[#____self_elements_7 + 1] = element
         return self
     end
     function _LuaList.prototype.appendAll(self, elements)
@@ -3276,11 +3366,11 @@ local ____ = "use strict";
             while i < #self.elements do
                 local element = self.elements[i + 1]
                 local selectorValue = selector(_G, element)
-                local ____minSelectorValue_5 = minSelectorValue
-                if ____minSelectorValue_5 == nil then
-                    ____minSelectorValue_5 = 0
+                local ____minSelectorValue_8 = minSelectorValue
+                if ____minSelectorValue_8 == nil then
+                    ____minSelectorValue_8 = 0
                 end
-                if selectorValue < ____minSelectorValue_5 then
+                if selectorValue < ____minSelectorValue_8 then
                     minElement = element
                     minSelectorValue = selectorValue
                 end
@@ -3306,11 +3396,11 @@ local ____ = "use strict";
             while i < #self.elements do
                 local element = self.elements[i + 1]
                 local selectorValue = selector(_G, element)
-                local ____maxSelectorValue_6 = maxSelectorValue
-                if ____maxSelectorValue_6 == nil then
-                    ____maxSelectorValue_6 = 0
+                local ____maxSelectorValue_9 = maxSelectorValue
+                if ____maxSelectorValue_9 == nil then
+                    ____maxSelectorValue_9 = 0
                 end
-                if selectorValue > ____maxSelectorValue_6 then
+                if selectorValue > ____maxSelectorValue_9 then
                     maxElement = element
                     maxSelectorValue = selectorValue
                 end
@@ -3350,11 +3440,21 @@ local ____ = "use strict";
         return self.elements
     end
     LuaList = _LuaList
-    print("First")
-    local list = LuaList:ofSingleton(11):append(22):append(44):append(33)
-    print(list)
-    ChatBox:sendMessage("Hello World!")
-    print("Last")
+    print("GPS")
+    local args = {...}
+    print("Args: ", args)
+    local argsList = LuaList:of(args)
+    print("Args List: ", argsList)
+    local x = 0
+    local y = 0
+    local z = 0
+    CcShell:run(
+        "gps",
+        "host",
+        x,
+        y,
+        z
+    )
 end)(_G)
  end,
 }

@@ -1,5 +1,5 @@
 {
-  "version": "0.0.45",
+  "version": "0.0.46",
   "name": "Example Application",
   "description": "This is an example application.\nIt can have a long description.",
   "startup": {
@@ -19,6 +19,9 @@
       "startup.lua"
     ],
     "completeMessage": "This message is displayed when the app has finished deploying.\nIt will always appear before any completion script runs."
+  },
+  "update": {
+    "clean": true
   },
   "logging": {
     "level": "DEBUG",
