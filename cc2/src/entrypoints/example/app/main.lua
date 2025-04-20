@@ -2775,6 +2775,7 @@ local __TS__New = ____lualib.__TS__New
 local Set = ____lualib.Set
 local __TS__Spread = ____lualib.__TS__Spread
 local __TS__ArrayFrom = ____lualib.__TS__ArrayFrom
+local __TS__ArrayMap = ____lualib.__TS__ArrayMap
 local __TS__ArrayJoin = ____lualib.__TS__ArrayJoin
 local __TS__ArrayUnshift = ____lualib.__TS__ArrayUnshift
 local __TS__ArraySplice = ____lualib.__TS__ArraySplice
@@ -2784,7 +2785,6 @@ local __TS__ArrayReverse = ____lualib.__TS__ArrayReverse
 local __TS__ArraySort = ____lualib.__TS__ArraySort
 local __TS__ArrayFlat = ____lualib.__TS__ArrayFlat
 local __TS__ArrayForEach = ____lualib.__TS__ArrayForEach
-local __TS__ArrayMap = ____lualib.__TS__ArrayMap
 local __TS__ArrayFilter = ____lualib.__TS__ArrayFilter
 local __TS__ArrayReduce = ____lualib.__TS__ArrayReduce
 local __TS__ArraySome = ____lualib.__TS__ArraySome
@@ -3113,7 +3113,13 @@ local ____ = "use strict";
         return __TS__New(_LuaList, {})
     end
     function _LuaList.prototype.__tostring(self)
-        return ("[" .. __TS__ArrayJoin(self.elements, ", ")) .. "]"
+        return ("[" .. __TS__ArrayJoin(
+            __TS__ArrayMap(
+                self.elements,
+                function(____, element) return tostring(element) end
+            ),
+            ", "
+        )) .. "]"
     end
     function _LuaList.prototype.get(self, index)
         return self.elements[index]
