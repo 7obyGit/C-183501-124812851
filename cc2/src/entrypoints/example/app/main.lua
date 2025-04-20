@@ -3088,9 +3088,10 @@ local ____ = "use strict";
         local newList = __TS__New(_LuaList, {})
         print('LuaList Adding: ' .. textutils.serialise(COMMAND_LINE_ARGUMENTS))
         for index, value in pairs(table) do
-            print('Adding value: ' .. value)
+            print(value)
             newList:append(value)
         end
+        print('end'
         return newList
     end
     function _LuaList.ofSingleton(self, element)
