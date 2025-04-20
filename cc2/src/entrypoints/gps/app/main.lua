@@ -1,3 +1,4 @@
+COMMAND_LINE_ARGUMENTS = {...}
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 
 local ____modules = {}
@@ -3169,6 +3170,13 @@ local ____ = "use strict";
     function _LuaList.of(self, elements)
         return __TS__New(_LuaList, elements)
     end
+    function _LuaList.ofTable(self, ____table)
+        local newList = __TS__New(_LuaList, {})
+        for index, value in ipairs(table) do
+            newList:append(value)
+        end
+        return newList
+    end
     function _LuaList.ofSingleton(self, element)
         return __TS__New(_LuaList, {element})
     end
@@ -3440,11 +3448,15 @@ local ____ = "use strict";
         return self.elements
     end
     LuaList = _LuaList
+    local ____class_10 = __TS__Class()
+    ____class_10.name = "ExecutionContext"
+    function ____class_10.prototype.____constructor(self)
+    end
+    ____class_10.commandLineArguments = LuaList:ofTable(COMMAND_LINE_ARGUMENTS)
+    local ExecutionContext = ____class_10
     print("GPS")
-    local args = {...}
+    local args = ExecutionContext.commandLineArguments
     print("Args: ", args)
-    local argsList = LuaList:of(args)
-    print("Args List: ", argsList)
     local x = 0
     local y = 0
     local z = 0

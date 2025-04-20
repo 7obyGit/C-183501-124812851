@@ -1,3 +1,4 @@
+COMMAND_LINE_ARGUMENTS = {...}
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 
 local ____modules = {}
@@ -3078,6 +3079,13 @@ local ____ = "use strict";
     end
     function _LuaList.of(self, elements)
         return __TS__New(_LuaList, elements)
+    end
+    function _LuaList.ofTable(self, ____table)
+        local newList = __TS__New(_LuaList, {})
+        for index, value in ipairs(table) do
+            newList:append(value)
+        end
+        return newList
     end
     function _LuaList.ofSingleton(self, element)
         return __TS__New(_LuaList, {element})
