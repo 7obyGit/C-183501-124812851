@@ -4564,7 +4564,6 @@ local ____ = "use strict";
         self:registerRoute("run", self.routeRun)
     end
     function ____class_69.prototype.onStart(self)
-        Logger:addListener(__TS__New(FileLogListener))
     end
     function ____class_69.prototype.onStop(self)
     end
