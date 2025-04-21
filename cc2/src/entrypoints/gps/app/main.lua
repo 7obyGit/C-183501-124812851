@@ -4011,6 +4011,7 @@ local ____ = "use strict";
         end
         do
             local function ____catch(e)
+                error(e, 0)
                 local ____Result_error_27 = Result.error
                 local ____opt_result_26
                 if e ~= nil then
