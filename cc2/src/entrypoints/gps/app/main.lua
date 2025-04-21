@@ -4515,7 +4515,7 @@ local ____ = "use strict";
             return
         end
         local config = configResult:getValueUnsafe("Failed to load config")
-        Logger:debug(CcTextUtils:serializeJSON(config))
+        Logger:debug(CcTextUtils:serializeJSON(config):getValueUnsafe("No Config"))
         local ____opt_65 = config.data
         if ____opt_65 ~= nil then
             ____opt_65 = ____opt_65.x
