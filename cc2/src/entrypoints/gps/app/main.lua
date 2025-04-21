@@ -3990,7 +3990,9 @@ local ____ = "use strict";
         if file:isError() then
             return Result:error(file:getErrorMessage())
         end
-        local content = file:getValueUnsafe("No file"):readAllContent()
+        local handle = file:getValueUnsafe("No file")
+        local content = handle:readAllContent()
+        handle:close()
         if content == nil then
             return Result:error("Could not read file")
         end
@@ -4009,6 +4011,7 @@ local ____ = "use strict";
         if file:isError() then
             return Result:error(file:getErrorMessage())
         end
+        local handle = file:getValueUnsafe("No file")
         do
             local function ____catch(e)
                 local ____Result_error_27 = Result.error
@@ -4019,10 +4022,13 @@ local ____ = "use strict";
                 return true, ____Result_error_27(Result, ____opt_result_26)
             end
             local ____try, ____hasReturned, ____returnValue = pcall(function()
-                file:getValueUnsafe("No file"):writeContent(content)
+                handle:writeContent(content)
             end)
             if not ____try then
                 ____hasReturned, ____returnValue = ____catch(____hasReturned)
+            end
+            do
+                handle:close()
             end
             if ____hasReturned then
                 return ____returnValue
@@ -4039,6 +4045,7 @@ local ____ = "use strict";
         if file:isError() then
             return Result:error(file:getErrorMessage())
         end
+        local handle = file:getValueUnsafe("No file")
         do
             local function ____catch(e)
                 local ____Result_error_31 = Result.error
@@ -4049,10 +4056,13 @@ local ____ = "use strict";
                 return true, ____Result_error_31(Result, ____opt_result_30)
             end
             local ____try, ____hasReturned, ____returnValue = pcall(function()
-                file:getValueUnsafe("No file"):writeContent(content)
+                handle:writeContent(content)
             end)
             if not ____try then
                 ____hasReturned, ____returnValue = ____catch(____hasReturned)
+            end
+            do
+                handle:close()
             end
             if ____hasReturned then
                 return ____returnValue
