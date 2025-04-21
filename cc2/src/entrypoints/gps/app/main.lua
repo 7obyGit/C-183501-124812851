@@ -3932,8 +3932,10 @@ local ____ = "use strict";
     end
     function ____class_23.combinePath(self, ...)
         local paths = {...}
-        local pathsTable = TableUtil:fromArray(paths)
-        return fs.combine(...pathsTable)
+        local pathList = LuaList:of(paths)
+        local firstPart = pathList:first():orElseThrow()
+        local pathsTable = pathList:toTable()
+        return fs.combine(firstPart, ...pathsTable)
     end
     function ____class_23.getFileName(self, path)
         return fs.getName(path)
