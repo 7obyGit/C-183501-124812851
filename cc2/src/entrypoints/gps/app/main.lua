@@ -4398,17 +4398,113 @@ local ____ = "use strict";
     end
     local LuaMap = _LuaMap
     local ____class_60 = __TS__Class()
-    ____class_60.name = "ExecutionContext"
+    ____class_60.name = "LogListener"
     function ____class_60.prototype.____constructor(self)
     end
-    ____class_60.commandLineArguments = LuaList:ofTable(COMMAND_LINE_ARGUMENTS)
-    local ExecutionContext = ____class_60
+    local LogListener = ____class_60
     local ____class_61 = __TS__Class()
-    ____class_61.name = "Entrypoint"
-    function ____class_61.prototype.____constructor(self)
+    ____class_61.name = "ConsoleLogListener"
+    __TS__ClassExtends(____class_61, LogListener)
+    function ____class_61.prototype.getName(self)
+        return "ConsoleLogListener"
+    end
+    function ____class_61.prototype.onLog(self, level, message)
+        print((("[" .. tostring(level)) .. "] ") .. tostring(message))
+    end
+    local ConsoleLogListener = ____class_61
+    local ____class_62 = __TS__Class()
+    ____class_62.name = "Logger"
+    function ____class_62.prototype.____constructor(self)
+    end
+    function ____class_62.addListener(self, listener)
+        self.listeners:set(
+            listener:getName(),
+            listener
+        )
+    end
+    function ____class_62.clearListeners(self)
+        self.listeners:clear()
+    end
+    function ____class_62.log(self, level, ...)
+        local args = {...}
+        if (self.levelMap:get(level) or 0) < (self.levelMap:get(self.level) or 0) then
+            return
+        end
+        local message = table.concat(
+            __TS__ArrayMap(
+                args,
+                function(____, arg) return tostring(arg) end
+            ),
+            " "
+        )
+        self.listeners:forEachValue(function(____, listener)
+            listener:onLog(level, message)
+        end)
+    end
+    function ____class_62.debug(self, ...)
+        self:log("DEBUG", ...)
+    end
+    function ____class_62.info(self, ...)
+        self:log("INFO", ...)
+    end
+    function ____class_62.warn(self, ...)
+        self:log("WARN", ...)
+    end
+    function ____class_62.error(self, ...)
+        self:log("ERROR", ...)
+    end
+    ____class_62.level = "DEBUG"
+    ____class_62.levelMap = __TS__New(Map, {{"DEBUG", 0}, {"INFO", 1}, {"WARN", 2}, {"ERROR", 3}})
+    ____class_62.listeners = LuaMap:ofSingleton(
+        __TS__New(ConsoleLogListener):getName(),
+        __TS__New(ConsoleLogListener)
+    )
+    local Logger = ____class_62
+    local ____class_63 = __TS__Class()
+    ____class_63.name = "ExecutionContext"
+    function ____class_63.prototype.____constructor(self)
+    end
+    ____class_63.commandLineArguments = LuaList:ofTable(COMMAND_LINE_ARGUMENTS)
+    local ExecutionContext = ____class_63
+    local _Info = __TS__Class()
+    _Info.name = "_Info"
+    function _Info.prototype.____constructor(self, model)
+        self.version = model.version
+        self.name = model.name
+        self.description = model.description
+        self.startup = model.startup
+        self.deployment = model.deployment
+        self.logging = model.logging
+        self.lifetime = model.lifetime
+    end
+    function _Info.load(self)
+        local contentString = FileUtil:readText(self._path):getValueUnsafe("Could not read info.json")
+        local content = CcTextUtils:unserializeJSON(contentString):getValueUnsafe("Could not parse info.json")
+        return __TS__New(_Info, content)
+    end
+    _Info._path = "info.json"
+    local Info = _Info
+    local _FileLogListener = __TS__Class()
+    _FileLogListener.name = "_FileLogListener"
+    __TS__ClassExtends(_FileLogListener, LogListener)
+    function _FileLogListener.prototype.getName(self)
+        return "FileLogListener"
+    end
+    function _FileLogListener.prototype.onLog(self, level, message)
+        FileUtil:appendText(
+            _FileLogListener.LOG_PATH,
+            ((("[" .. tostring(level)) .. "] ") .. tostring(message)) .. "\n"
+        )
+    end
+    _FileLogListener.LOG_PATH = "app/logs/main.log"
+    local FileLogListener = _FileLogListener
+    local ____class_64 = __TS__Class()
+    ____class_64.name = "Entrypoint"
+    function ____class_64.prototype.____constructor(self)
         self._routes = LuaMap:empty()
     end
-    function ____class_61.prototype.run(self)
+    function ____class_64.prototype.run(self)
+        self:applyInfoConfig()
         self:registerRoutes()
         self:onStart()
         do
@@ -4424,10 +4520,27 @@ local ____ = "use strict";
         end
         self:onStop()
     end
-    function ____class_61.prototype.registerRoute(self, name, callback)
+    function ____class_64.prototype.applyInfoConfig(self)
+        local info = Info:load()
+        local ____opt_65 = info.logging
+        if ____opt_65 ~= nil then
+            ____opt_65 = ____opt_65.level
+        end
+        if ____opt_65 then
+            Logger.level = info.logging.level
+        end
+        local ____opt_67 = info.logging
+        if ____opt_67 ~= nil then
+            ____opt_67 = ____opt_67.writeToFile
+        end
+        if ____opt_67 then
+            Logger:addListener(__TS__New(FileLogListener))
+        end
+    end
+    function ____class_64.prototype.registerRoute(self, name, callback)
         self._routes:set(name, callback)
     end
-    function ____class_61.prototype.dispatchRoute(self)
+    function ____class_64.prototype.dispatchRoute(self)
         local targetRouteName = ExecutionContext.commandLineArguments:first():getValueUnsafe("The first command line argument (route name) was not provided")
         self._routes:get(targetRouteName):ifEmpty(function()
             local validRouteNamesString = ("'" .. self._routes:keys():join("', '")) .. "'"
@@ -4440,124 +4553,52 @@ local ____ = "use strict";
             )
         end):ifPresent(function(____, routeFunction) return routeFunction(_G) end)
     end
-    function ____class_61.prototype.onCrash(self, cause)
+    function ____class_64.prototype.onCrash(self, cause)
         error(cause, 0)
     end
-    local Entrypoint = ____class_61
-    local ____class_62 = __TS__Class()
-    ____class_62.name = "LogListener"
-    function ____class_62.prototype.____constructor(self)
-    end
-    local LogListener = ____class_62
-    local _FileLogListener = __TS__Class()
-    _FileLogListener.name = "_FileLogListener"
-    __TS__ClassExtends(_FileLogListener, LogListener)
-    function _FileLogListener.prototype.getName(self)
-        return "FileLogListener"
-    end
-    function _FileLogListener.prototype.onLog(self, level, message)
-        FileUtil:appendText(
-            _FileLogListener.LOG_PATH,
-            ((("[" .. tostring(level)) .. "] ") .. tostring(message)) .. "\n"
-        )
-    end
-    _FileLogListener.LOG_PATH = "app/logs/main.log"
-    local FileLogListener = _FileLogListener
-    local ____class_63 = __TS__Class()
-    ____class_63.name = "ConsoleLogListener"
-    __TS__ClassExtends(____class_63, LogListener)
-    function ____class_63.prototype.getName(self)
-        return "ConsoleLogListener"
-    end
-    function ____class_63.prototype.onLog(self, level, message)
-        print((("[" .. tostring(level)) .. "] ") .. tostring(message))
-    end
-    local ConsoleLogListener = ____class_63
-    local ____class_64 = __TS__Class()
-    ____class_64.name = "Logger"
-    function ____class_64.prototype.____constructor(self)
-    end
-    function ____class_64.addListener(self, listener)
-        self.listeners:set(
-            listener:getName(),
-            listener
-        )
-    end
-    function ____class_64.clearListeners(self)
-        self.listeners:clear()
-    end
-    function ____class_64.log(self, level, ...)
-        local args = {...}
-        local message = table.concat(
-            __TS__ArrayMap(
-                args,
-                function(____, arg) return tostring(arg) end
-            ),
-            " "
-        )
-        self.listeners:forEachValue(function(____, listener)
-            listener:onLog(level, message)
-        end)
-    end
-    function ____class_64.debug(self, ...)
-        self:log("DEBUG", ...)
-    end
-    function ____class_64.info(self, ...)
-        self:log("INFO", ...)
-    end
-    function ____class_64.warn(self, ...)
-        self:log("WARN", ...)
-    end
-    function ____class_64.error(self, ...)
-        self:log("ERROR", ...)
-    end
-    ____class_64.listeners = LuaMap:ofSingleton(
-        __TS__New(ConsoleLogListener):getName(),
-        __TS__New(ConsoleLogListener)
-    )
-    local Logger = ____class_64
-    local ____class_65 = __TS__Class()
-    ____class_65.name = "GpsEntrypoint"
-    __TS__ClassExtends(____class_65, Entrypoint)
-    function ____class_65.prototype.registerRoutes(self)
+    local Entrypoint = ____class_64
+    local ____class_69 = __TS__Class()
+    ____class_69.name = "GpsEntrypoint"
+    __TS__ClassExtends(____class_69, Entrypoint)
+    function ____class_69.prototype.registerRoutes(self)
         self:registerRoute("run", self.routeRun)
     end
-    function ____class_65.prototype.onStart(self)
+    function ____class_69.prototype.onStart(self)
         Logger:addListener(__TS__New(FileLogListener))
     end
-    function ____class_65.prototype.onStop(self)
+    function ____class_69.prototype.onStop(self)
     end
-    function ____class_65.prototype.routeRun(self)
+    function ____class_69.prototype.routeRun(self)
         Logger:debug("Running GPS entrypoint 'run' route")
         local config = Config:load():getValueUnsafe()
         Logger:debug("Extracting key values from config")
-        local ____opt_66 = config.data
-        if ____opt_66 ~= nil then
-            ____opt_66 = ____opt_66.x
+        local ____opt_70 = config.data
+        if ____opt_70 ~= nil then
+            ____opt_70 = ____opt_70.x
         end
-        local ____opt_66_68 = ____opt_66
-        if ____opt_66_68 == nil then
-            ____opt_66_68 = 0
+        local ____opt_70_72 = ____opt_70
+        if ____opt_70_72 == nil then
+            ____opt_70_72 = 0
         end
-        local x = ____opt_66_68
-        local ____opt_69 = config.data
-        if ____opt_69 ~= nil then
-            ____opt_69 = ____opt_69.y
+        local x = ____opt_70_72
+        local ____opt_73 = config.data
+        if ____opt_73 ~= nil then
+            ____opt_73 = ____opt_73.y
         end
-        local ____opt_69_71 = ____opt_69
-        if ____opt_69_71 == nil then
-            ____opt_69_71 = 0
+        local ____opt_73_75 = ____opt_73
+        if ____opt_73_75 == nil then
+            ____opt_73_75 = 0
         end
-        local y = ____opt_69_71
-        local ____opt_72 = config.data
-        if ____opt_72 ~= nil then
-            ____opt_72 = ____opt_72.z
+        local y = ____opt_73_75
+        local ____opt_76 = config.data
+        if ____opt_76 ~= nil then
+            ____opt_76 = ____opt_76.z
         end
-        local ____opt_72_74 = ____opt_72
-        if ____opt_72_74 == nil then
-            ____opt_72_74 = 0
+        local ____opt_76_78 = ____opt_76
+        if ____opt_76_78 == nil then
+            ____opt_76_78 = 0
         end
-        local z = ____opt_72_74
+        local z = ____opt_76_78
         Logger:debug((((("Config for 'run' route: x=" .. tostring(x)) .. ", y=") .. tostring(y)) .. ", z=") .. tostring(z))
         CcShell:run(
             "gps",
@@ -4568,7 +4609,7 @@ local ____ = "use strict";
         )
         Logger:debug("GPS entrypoint 'run' route finished")
     end
-    local GpsEntrypoint = ____class_65
+    local GpsEntrypoint = ____class_69
     __TS__New(GpsEntrypoint):run()
 end)(_G)
  end,
