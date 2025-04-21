@@ -2957,9 +2957,11 @@ local ____ = "use strict";
         end
         print(elements)
         print(elements.length)
+        local length = elements.length
+        print(length)
         do
             local i = 0
-            while i <= elements.length do
+            while i <= length do
                 local luaIndex = i + 1
                 result[luaIndex] = elements[luaIndex]
                 i = i + 1
