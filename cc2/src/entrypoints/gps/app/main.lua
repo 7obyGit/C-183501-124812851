@@ -2949,6 +2949,9 @@ local ____ = "use strict";
         end
         return ____self_value_7
     end
+    function _Result.prototype.getErrorMessage(self)
+        return self.errorMessage
+    end
     function _Result.prototype.asOptional(self)
         return Optional:of(self.value)
     end
@@ -3728,7 +3731,7 @@ local ____ = "use strict";
     function _FileUtil.readText(self, path)
         local file = CcFs:openFileForReading(path)
         if file:isError() then
-            return Result:error(file.errorMessage)
+            return Result:error(file:getErrorMessage())
         end
         local content = file:getValueUnsafe("No file"):readAllContent()
         if content == nil then
@@ -3743,7 +3746,7 @@ local ____ = "use strict";
         end
         local file = CcFs:openFileForWriting(path)
         if file:isError() then
-            return Result:error(file.errorMessage)
+            return Result:error(file:getErrorMessage())
         end
         do
             local function ____catch(e)
@@ -3773,7 +3776,7 @@ local ____ = "use strict";
         end
         local file = CcFs:openFileForAppending(path)
         if file:isError() then
-            return Result:error(file.errorMessage)
+            return Result:error(file:getErrorMessage())
         end
         do
             local function ____catch(e)
@@ -4047,7 +4050,7 @@ local ____ = "use strict";
     function _FileUtil.removeByteOrderMark(self, path)
         local contentResult = self:readText(path)
         if contentResult:isError() then
-            return Result:error(contentResult.errorMessage)
+            return Result:error(contentResult:getErrorMessage())
         end
         local content = contentResult:getValueUnsafe("No file")
         if not content:startsWith("?") then
@@ -4139,12 +4142,15 @@ local ____ = "use strict";
     function _Config.load(self)
         local contentString = FileUtil:readText(self.configPath)
         if contentString:isError() then
-            return Result:error(contentString.errorMessage)
+            return Result:error(contentString:getErrorMessage())
         end
         local content = CcTextUtils:unserializeJSON(contentString:getValueUnsafe("Could not read config.json"))
         if content:isError() then
             error(
-                __TS__New(Error, content.errorMessage),
+                __TS__New(
+                    Error,
+                    content:getErrorMessage()
+                ),
                 0
             )
         end
@@ -4157,21 +4163,21 @@ local ____ = "use strict";
         local config = __TS__New(_Config, data)
         local saved = config:save()
         if saved:isError() then
-            return Result:error(saved.errorMessage)
+            return Result:error(saved:getErrorMessage())
         end
         return Result:of(config)
     end
     function _Config.prototype.save(self)
         local contentString = CcTextUtils:serializeJSON(self.data)
         if contentString:isError() then
-            return Result:error(contentString.errorMessage)
+            return Result:error(contentString:getErrorMessage())
         end
         local result = FileUtil:writeText(
             _Config.configPath,
             contentString:getValueUnsafe("Could not serialize config.json")
         )
         if result:isError() then
-            return Result:error(result.errorMessage)
+            return Result:error(result:getErrorMessage())
         end
         return Result:void()
     end
@@ -4487,7 +4493,11 @@ local ____ = "use strict";
     function ____class_62.prototype.onStop(self)
     end
     function ____class_62.prototype.routeRun(self)
-        local config = Config:load():getValueUnsafe("Could not load GPS config")
+        local configResult = Config:load()
+        if configResult:isError() then
+            Logger:error(configResult:getErrorMessage())
+        end
+        local config = configResult:getValueUnsafe("Failed to load config")
         Logger:debug(CcTextUtils:serializeJSON(config))
         local ____opt_63 = config.data
         if ____opt_63 ~= nil then
