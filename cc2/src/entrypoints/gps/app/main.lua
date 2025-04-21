@@ -2791,14 +2791,55 @@ local __TS__ArraySome = ____lualib.__TS__ArraySome
 local __TS__ArrayEvery = ____lualib.__TS__ArrayEvery
 local __TS__Unpack = ____lualib.__TS__Unpack
 local __TS__ArraySlice = ____lualib.__TS__ArraySlice
+local Map = ____lualib.Map
+local __TS__Iterator = ____lualib.__TS__Iterator
+local __TS__ClassExtends = ____lualib.__TS__ClassExtends
 local ____ = "use strict";
 (function()
     local LuaList
-    local ____class_0 = __TS__Class()
-    ____class_0.name = "Lua"
-    function ____class_0.prototype.____constructor(self)
+    local __defProp = Object.defineProperty
+    local __getOwnPropDesc = Object.getOwnPropertyDescriptor
+    local function __decorateClass(____, decorators, target, key, kind)
+        local ____temp_1
+        if kind > 1 then
+            ____temp_1 = nil
+        else
+            local ____kind_0
+            if kind then
+                ____kind_0 = __getOwnPropDesc(_G, target, key)
+            else
+                ____kind_0 = target
+            end
+            ____temp_1 = ____kind_0
+        end
+        local result = ____temp_1
+        do
+            local i = decorators.length - 1
+            local decorator
+            while i >= 0 do
+                decorator = decorators[i]
+                if decorator then
+                    local ____kind_2
+                    if kind then
+                        ____kind_2 = decorator(_G, target, key, result)
+                    else
+                        ____kind_2 = decorator(_G, result)
+                    end
+                    result = ____kind_2 or result
+                end
+                i = i - 1
+            end
+        end
+        if kind and result then
+            __defProp(_G, target, key, result)
+        end
+        return result
     end
-    function ____class_0.literal(self, luaVersion)
+    local ____class_3 = __TS__Class()
+    ____class_3.name = "Lua"
+    function ____class_3.prototype.____constructor(self)
+    end
+    function ____class_3.literal(self, luaVersion)
         error(
             __TS__New(
                 Error,
@@ -2807,7 +2848,7 @@ local ____ = "use strict";
             0
         )
     end
-    local Lua = ____class_0
+    local Lua = ____class_3
     local _Optional = __TS__Class()
     _Optional.name = "_Optional"
     function _Optional.prototype.____constructor(self, value)
@@ -2841,11 +2882,11 @@ local ____ = "use strict";
         return self.value
     end
     function _Optional.prototype.getValueOrDefault(self, defaultValue)
-        local ____self_value_1 = self.value
-        if ____self_value_1 == nil then
-            ____self_value_1 = defaultValue
+        local ____self_value_4 = self.value
+        if ____self_value_4 == nil then
+            ____self_value_4 = defaultValue
         end
-        return ____self_value_1
+        return ____self_value_4
     end
     _Optional.prototype["then"] = function(self, callback)
         if not self.value then
@@ -2866,13 +2907,27 @@ local ____ = "use strict";
         return self
     end
     _Optional.prototype["or"] = function(self, other)
-        local ____table_value_2
+        local ____table_value_5
         if self.value then
-            ____table_value_2 = self
+            ____table_value_5 = self
         else
-            ____table_value_2 = other
+            ____table_value_5 = other
         end
-        return ____table_value_2
+        return ____table_value_5
+    end
+    function _Optional.prototype.orElseThrow(self, message)
+        if not self.value then
+            local ____Error_7 = Error
+            local ____message_6 = message
+            if ____message_6 == nil then
+                ____message_6 = "Cannot unwrap undefined value"
+            end
+            error(
+                __TS__New(____Error_7, ____message_6),
+                0
+            )
+        end
+        return self.value
     end
     local Optional = _Optional
     local _Result = __TS__Class()
@@ -2930,11 +2985,11 @@ local ____ = "use strict";
         return self.value
     end
     function _Result.prototype.getValueOrDefault(self, defaultValue)
-        local ____self_value_3 = self.value
-        if ____self_value_3 == nil then
-            ____self_value_3 = defaultValue
+        local ____self_value_8 = self.value
+        if ____self_value_8 == nil then
+            ____self_value_8 = defaultValue
         end
-        return ____self_value_3
+        return ____self_value_8
     end
     function _Result.prototype.asOptional(self)
         return Optional:of(self.value)
@@ -2946,19 +3001,16 @@ local ____ = "use strict";
         return _Result:of(callback(_G, self.value))
     end
     local Result = _Result
-    local ____class_4 = __TS__Class()
-    ____class_4.name = "TableUtil"
-    function ____class_4.prototype.____constructor(self)
+    local ____class_9 = __TS__Class()
+    ____class_9.name = "TableUtil"
+    function ____class_9.prototype.____constructor(self)
     end
-    function ____class_4.fromArray(self, elements)
+    function ____class_9.fromArray(self, elements)
         local result = {}
         if elements == nil then
             return result
         end
-        print(elements)
-        print(elements.length)
         local length = #elements
-        print(length)
         do
             local i = 0
             while i <= length do
@@ -2969,34 +3021,34 @@ local ____ = "use strict";
         end
         return result
     end
-    local TableUtil = ____class_4
-    local ____class_5 = __TS__Class()
-    ____class_5.name = "CcShell"
-    function ____class_5.prototype.____constructor(self)
+    local TableUtil = ____class_9
+    local ____class_10 = __TS__Class()
+    ____class_10.name = "CcShell"
+    function ____class_10.prototype.____constructor(self)
     end
-    function ____class_5.execute(self, command, ...)
-        local args2 = {...}
-        local argsTable = TableUtil:fromArray(args2)
+    function ____class_10.execute(self, command, ...)
+        local args = {...}
+        local argsTable = TableUtil:fromArray(args)
         local success = false
         success = shell.execute(command, table.unpack(argsTable))
         return Result:of(success)
     end
-    function ____class_5.run(self, command, ...)
-        local args2 = {...}
-        local argsTable = TableUtil:fromArray(args2)
+    function ____class_10.run(self, command, ...)
+        local args = {...}
+        local argsTable = TableUtil:fromArray(args)
         local success = false
         success = shell.run(command, table.unpack(argsTable))
         return Result:of(success)
     end
-    function ____class_5.exit(self)
+    function ____class_10.exit(self)
         shell.exit()
     end
-    function ____class_5.getCurrentWorkingDirectory(self)
+    function ____class_10.getCurrentWorkingDirectory(self)
         local currentDir = ""
         currentDir = shell.dir()
         return currentDir
     end
-    function ____class_5.setCurrentWorkingDirectory(self, dir)
+    function ____class_10.setCurrentWorkingDirectory(self, dir)
         local success = true
         local ____error = nil
         local ok, err = pcall(function()
@@ -3004,33 +3056,33 @@ local ____ = "use strict";
         end)
         success = ok
         error = err
-        local ____success_6
+        local ____success_11
         if success then
-            ____success_6 = Result:void()
+            ____success_11 = Result:void()
         else
-            ____success_6 = Result:error(____error or "Unknown error")
+            ____success_11 = Result:error(____error or "Unknown error")
         end
-        return ____success_6
+        return ____success_11
     end
-    function ____class_5.getPath(self)
+    function ____class_10.getPath(self)
         local currentPath = ""
         currentPath = shell.path()
         return currentPath
     end
-    function ____class_5.setPath(self, path)
+    function ____class_10.setPath(self, path)
         shell.setPath(path)
     end
-    function ____class_5.getAbsolutePath(self, path)
+    function ____class_10.getAbsolutePath(self, path)
         local resolvedPath = ""
         resolvedPath = shell.resolve(path)
         return resolvedPath
     end
-    function ____class_5.resolveProgramPath(self, command)
+    function ____class_10.resolveProgramPath(self, command)
         local programPath
         programPath = shell.resolveProgram(command)
         return Optional:ofNullable(programPath)
     end
-    function ____class_5.getProgramList(self, includeHidden)
+    function ____class_10.getProgramList(self, includeHidden)
         local programs = {}
         local progs = shell.programs(includeHidden)
         for i = 1, #progs do
@@ -3038,11 +3090,11 @@ local ____ = "use strict";
         end
         return programs
     end
-    function ____class_5.getCompletions(self, sLine)
+    function ____class_10.getCompletions(self, sLine)
         local completions = shell.complete(sLine)
         return Optional:ofNullable(completions):getValueOrDefault({})
     end
-    function ____class_5.getCompletionsForProgramName(self, program)
+    function ____class_10.getCompletionsForProgramName(self, program)
         local completions = {}
         local comps = shell.completeProgram(program)
         for i = 1, #comps do
@@ -3050,10 +3102,10 @@ local ____ = "use strict";
         end
         return completions
     end
-    function ____class_5.setCompletionFunction(self, program, complete)
+    function ____class_10.setCompletionFunction(self, program, complete)
         shell.setCompletionFunction(program, complete)
     end
-    function ____class_5.getCompletionInfo(self)
+    function ____class_10.getCompletionInfo(self)
         local info = {}
         local compInfo = shell.getCompletionInfo()
         for k,v in pairs(compInfo) do
@@ -3061,18 +3113,18 @@ local ____ = "use strict";
         end
         return info
     end
-    function ____class_5.getPathToRunningProgram(self)
+    function ____class_10.getPathToRunningProgram(self)
         local programPath = ""
         programPath = shell.getRunningProgram()
         return programPath
     end
-    function ____class_5.setAlias(self, command, program)
+    function ____class_10.setAlias(self, command, program)
         shell.setAlias(command, program)
     end
-    function ____class_5.clearAlias(self, command)
+    function ____class_10.clearAlias(self, command)
         shell.clearAlias(command)
     end
-    function ____class_5.aliases(self)
+    function ____class_10.aliases(self)
         local aliases = {}
         local als = shell.aliases()
         for k,v in pairs(als) do
@@ -3080,23 +3132,23 @@ local ____ = "use strict";
         end
         return aliases
     end
-    function ____class_5.openTab(self, command, ...)
-        local args2 = {...}
-        local argsTable = TableUtil:fromArray(args2)
+    function ____class_10.openTab(self, command, ...)
+        local args = {...}
+        local argsTable = TableUtil:fromArray(args)
         local tabId = nil
         tabId = shell.openTab(command, table.unpack(argsTable))
-        local ____temp_7
+        local ____temp_12
         if tabId ~= nil then
-            ____temp_7 = Result:of(tabId)
+            ____temp_12 = Result:of(tabId)
         else
-            ____temp_7 = Result:error("Failed to open tab")
+            ____temp_12 = Result:error("Failed to open tab")
         end
-        return ____temp_7
+        return ____temp_12
     end
-    function ____class_5.switchTab(self, id)
+    function ____class_10.switchTab(self, id)
         shell.switchTab(id)
     end
-    local CcShell = ____class_5
+    local CcShell = ____class_10
     local _LuaSet = __TS__Class()
     _LuaSet.name = "_LuaSet"
     function _LuaSet.prototype.____constructor(self)
@@ -3239,8 +3291,8 @@ local ____ = "use strict";
         return self.elements[index]
     end
     function _LuaList.prototype.append(self, element)
-        local ____self_elements_8 = self.elements
-        ____self_elements_8[#____self_elements_8 + 1] = element
+        local ____self_elements_13 = self.elements
+        ____self_elements_13[#____self_elements_13 + 1] = element
         return self
     end
     function _LuaList.prototype.appendAll(self, elements)
@@ -3408,11 +3460,11 @@ local ____ = "use strict";
             while i < #self.elements do
                 local element = self.elements[i + 1]
                 local selectorValue = selector(_G, element)
-                local ____minSelectorValue_9 = minSelectorValue
-                if ____minSelectorValue_9 == nil then
-                    ____minSelectorValue_9 = 0
+                local ____minSelectorValue_14 = minSelectorValue
+                if ____minSelectorValue_14 == nil then
+                    ____minSelectorValue_14 = 0
                 end
-                if selectorValue < ____minSelectorValue_9 then
+                if selectorValue < ____minSelectorValue_14 then
                     minElement = element
                     minSelectorValue = selectorValue
                 end
@@ -3438,11 +3490,11 @@ local ____ = "use strict";
             while i < #self.elements do
                 local element = self.elements[i + 1]
                 local selectorValue = selector(_G, element)
-                local ____maxSelectorValue_10 = maxSelectorValue
-                if ____maxSelectorValue_10 == nil then
-                    ____maxSelectorValue_10 = 0
+                local ____maxSelectorValue_15 = maxSelectorValue
+                if ____maxSelectorValue_15 == nil then
+                    ____maxSelectorValue_15 = 0
                 end
-                if selectorValue > ____maxSelectorValue_10 then
+                if selectorValue > ____maxSelectorValue_15 then
                     maxElement = element
                     maxSelectorValue = selectorValue
                 end
@@ -3482,25 +3534,301 @@ local ____ = "use strict";
         return self.elements
     end
     LuaList = _LuaList
-    local ____class_11 = __TS__Class()
-    ____class_11.name = "ExecutionContext"
-    function ____class_11.prototype.____constructor(self)
+    local ____class_16 = __TS__Class()
+    ____class_16.name = "ExecutionContext"
+    function ____class_16.prototype.____constructor(self)
     end
-    ____class_11.commandLineArguments = LuaList:ofTable(COMMAND_LINE_ARGUMENTS)
-    local ExecutionContext = ____class_11
-    print("GPS")
-    local args = ExecutionContext.commandLineArguments
-    print("Args: ", args)
-    local x = 0
-    local y = 0
-    local z = 0
-    CcShell:run(
-        "gps",
-        "host",
-        x,
-        y,
-        z
+    ____class_16.commandLineArguments = LuaList:ofTable(COMMAND_LINE_ARGUMENTS)
+    local ExecutionContext = ____class_16
+    local _LuaMapEntry = __TS__Class()
+    _LuaMapEntry.name = "_LuaMapEntry"
+    function _LuaMapEntry.prototype.____constructor(self, key, value)
+        self.key = key
+        self.value = value
+    end
+    function _LuaMapEntry.of(self, key, value)
+        return __TS__New(_LuaMapEntry, key, value)
+    end
+    function _LuaMapEntry.prototype.getKey(self)
+        return self.key
+    end
+    function _LuaMapEntry.prototype.getValue(self)
+        return self.value
+    end
+    local LuaMapEntry = _LuaMapEntry
+    local _LuaMap = __TS__Class()
+    _LuaMap.name = "_LuaMap"
+    function _LuaMap.prototype.____constructor(self)
+        self.map = __TS__New(Map)
+    end
+    function _LuaMap.ofEntries(self, entries)
+        return __TS__New(_LuaMap):setAllEntries(entries)
+    end
+    function _LuaMap.ofSingleton(self, key, value)
+        return __TS__New(_LuaMap):set(key, value)
+    end
+    function _LuaMap.ofSingletonEntry(self, entry)
+        return __TS__New(_LuaMap):setEntry(entry)
+    end
+    function _LuaMap.empty(self)
+        return __TS__New(_LuaMap)
+    end
+    function _LuaMap.prototype.get(self, key)
+        if not self.map:has(key) then
+            return Optional:empty()
+        end
+        return Optional:of(self.map:get(key))
+    end
+    function _LuaMap.prototype.getOrDefault(self, key, defaultValue)
+        if not self.map:has(key) then
+            return defaultValue
+        end
+        return self.map:get(key)
+    end
+    function _LuaMap.prototype.set(self, key, value)
+        self.map:set(key, value)
+        return self
+    end
+    function _LuaMap.prototype.setEntry(self, entry)
+        return self:set(
+            entry:getKey(),
+            entry:getValue()
+        )
+    end
+    function _LuaMap.prototype.setAllEntries(self, entries)
+        entries:forEach(self.setEntry)
+        return self
+    end
+    function _LuaMap.prototype.remove(self, key)
+        if not self.map:has(key) then
+            return Optional:empty()
+        end
+        local value = self.map:get(key)
+        self.map:delete(key)
+        return Optional:of(value)
+    end
+    function _LuaMap.prototype.clear(self)
+        self.map:clear()
+        return self
+    end
+    function _LuaMap.prototype.containsKey(self, key)
+        return self.map:has(key)
+    end
+    function _LuaMap.prototype.containsValue(self, value)
+        for ____, v in __TS__Iterator(self.map:values()) do
+            if v == value then
+                return true
+            end
+        end
+        return false
+    end
+    function _LuaMap.prototype.keys(self)
+        return LuaList:of({__TS__Spread(self.map:keys())})
+    end
+    function _LuaMap.prototype.values(self)
+        return LuaList:of({__TS__Spread(self.map:values())})
+    end
+    function _LuaMap.prototype.entries(self)
+        return LuaList:of(__TS__ArrayMap(
+            {__TS__Spread(self.map:entries())},
+            function(____, ____bindingPattern0)
+                local value
+                local key
+                key = ____bindingPattern0[1]
+                value = ____bindingPattern0[2]
+                return LuaMapEntry:of(key, value)
+            end
+        ))
+    end
+    function _LuaMap.prototype.isEmpty(self)
+        return self.map.size == 0
+    end
+    function _LuaMap.prototype.isNotEmpty(self)
+        return self.map.size > 0
+    end
+    function _LuaMap.prototype.size(self)
+        return self.map.size
+    end
+    function _LuaMap.prototype.forEach(self, action)
+        self.map:forEach(function(____, value, key) return action(_G, key, value) end)
+        return self
+    end
+    function _LuaMap.prototype.forEachEntry(self, action)
+        self:entries():forEach(action)
+        return self
+    end
+    function _LuaMap.prototype.select(self, transformer)
+        local result = __TS__New(_LuaMap)
+        self.map:forEach(function(____, value, key)
+            result:set(
+                key,
+                transformer(_G, key, value)
+            )
+        end)
+        return result
+    end
+    function _LuaMap.prototype.selectEntry(self, transformer)
+        local result = __TS__New(_LuaMap)
+        self:forEachEntry(function(____, entry)
+            result:set(
+                entry:getKey(),
+                transformer(_G, entry)
+            )
+        end)
+        return result
+    end
+    function _LuaMap.prototype.where(self, predicate)
+        local result = __TS__New(_LuaMap)
+        self.map:forEach(function(____, value, key)
+            if predicate(_G, key, value) then
+                result:set(key, value)
+            end
+        end)
+        return result
+    end
+    function _LuaMap.prototype.whereEntry(self, predicate)
+        local result = __TS__New(_LuaMap)
+        self:forEachEntry(function(____, entry)
+            if predicate(_G, entry) then
+                result:setEntry(entry)
+            end
+        end)
+        return result
+    end
+    function _LuaMap.prototype.whereKey(self, predicate)
+        local result = __TS__New(_LuaMap)
+        self.map:forEach(function(____, value, key)
+            if predicate(_G, key) then
+                result:set(key, value)
+            end
+        end)
+        return result
+    end
+    function _LuaMap.prototype.whereValue(self, predicate)
+        local result = __TS__New(_LuaMap)
+        self.map:forEach(function(____, value, key)
+            if predicate(_G, value) then
+                result:set(key, value)
+            end
+        end)
+        return result
+    end
+    function _LuaMap.prototype.merge(self, other)
+        local result = self:copy()
+        other:forEach(function(____, key, value)
+            result:set(key, value)
+        end)
+        return result
+    end
+    function _LuaMap.prototype.copy(self)
+        local newMap = __TS__New(_LuaMap)
+        self:forEachEntry(newMap.setEntry)
+        return newMap
+    end
+    local LuaMap = _LuaMap
+    local routes = __TS__New(Map)
+    local function Route(self)
+        return function(____, target, propertyKey)
+            local classConstructor = target.constructor
+            local methodName = propertyKey
+            if not routes:has(classConstructor) then
+                routes:set(classConstructor, {})
+            end
+            routes:get(classConstructor):push(methodName)
+        end
+    end
+    local function getRoutes(self, instance)
+        local constructor = instance.constructor
+        return routes:get(constructor) or ({})
+    end
+    local ____class_17 = __TS__Class()
+    ____class_17.name = "Entrypoint"
+    function ____class_17.prototype.____constructor(self)
+        self._routes = LuaMap:empty()
+    end
+    function ____class_17.prototype.run(self)
+        self:registerRoutes()
+        self:onStart()
+        do
+            local function ____catch(cause)
+                self:onCrash(cause)
+            end
+            local ____try, ____hasReturned = pcall(function()
+                self:dispatchRoute()
+            end)
+            if not ____try then
+                ____catch(____hasReturned)
+            end
+        end
+        self:onStop()
+    end
+    function ____class_17.prototype.registerRoutes(self)
+        getRoutes(_G, self):forEach(function(____, routeName)
+            self:registerRoute(
+                routeName,
+                Object:getPrototypeOf(self)[routeName]
+            )
+        end)
+    end
+    function ____class_17.prototype.registerRoute(self, name, callback)
+        self._routes:set(name, callback)
+    end
+    function ____class_17.prototype.dispatchRoute(self)
+        local targetRouteName = ExecutionContext.commandLineArguments:first():orElseThrow()
+        self._routes:get(targetRouteName):ifEmpty(function()
+            local validRouteNamesString = ("'" .. self._routes:keys():join("', '")) .. "'"
+            error(
+                __TS__New(
+                    Error,
+                    (("Unknown route: " .. tostring(targetRouteName)) .. "\nThe first argument must be a valid route name.\nE.g. ") .. validRouteNamesString
+                ),
+                0
+            )
+        end):ifPresent(function(____, routeFunction) return routeFunction(_G) end)
+    end
+    function ____class_17.prototype.onCrash(self, cause)
+        error(cause, 0)
+    end
+    local Entrypoint = ____class_17
+    local ____class_18 = __TS__Class()
+    ____class_18.name = "GpsEntrypoint"
+    __TS__ClassExtends(____class_18, Entrypoint)
+    function ____class_18.prototype.onStart(self)
+        error(
+            __TS__New(Error, "Method not implemented."),
+            0
+        )
+    end
+    function ____class_18.prototype.onStop(self)
+        error(
+            __TS__New(Error, "Method not implemented."),
+            0
+        )
+    end
+    function ____class_18.prototype.routeRun(self)
+        print("GPS")
+        local args = ExecutionContext.commandLineArguments
+        print("Args: ", args)
+        local x = 0
+        local y = 0
+        local z = 0
+        CcShell:run(
+            "gps",
+            "host",
+            x,
+            y,
+            z
+        )
+    end
+    local GpsEntrypoint = ____class_18
+    __decorateClass(
+        _G,
+        {Route(_G)},
+        GpsEntrypoint.prototype,
+        "routeRun",
+        1
     )
+    __TS__New(GpsEntrypoint):run()
 end)(_G)
  end,
 }

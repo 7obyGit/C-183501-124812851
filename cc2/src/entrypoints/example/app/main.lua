@@ -2976,6 +2976,20 @@ local ____ = "use strict";
         end
         return ____table_value_3
     end
+    function _Optional.prototype.orElseThrow(self, message)
+        if not self.value then
+            local ____Error_5 = Error
+            local ____message_4 = message
+            if ____message_4 == nil then
+                ____message_4 = "Cannot unwrap undefined value"
+            end
+            error(
+                __TS__New(____Error_5, ____message_4),
+                0
+            )
+        end
+        return self.value
+    end
     local Optional = _Optional
     local _LuaSet = __TS__Class()
     _LuaSet.name = "_LuaSet"
@@ -3119,8 +3133,8 @@ local ____ = "use strict";
         return self.elements[index]
     end
     function _LuaList.prototype.append(self, element)
-        local ____self_elements_4 = self.elements
-        ____self_elements_4[#____self_elements_4 + 1] = element
+        local ____self_elements_6 = self.elements
+        ____self_elements_6[#____self_elements_6 + 1] = element
         return self
     end
     function _LuaList.prototype.appendAll(self, elements)
@@ -3288,11 +3302,11 @@ local ____ = "use strict";
             while i < #self.elements do
                 local element = self.elements[i + 1]
                 local selectorValue = selector(_G, element)
-                local ____minSelectorValue_5 = minSelectorValue
-                if ____minSelectorValue_5 == nil then
-                    ____minSelectorValue_5 = 0
+                local ____minSelectorValue_7 = minSelectorValue
+                if ____minSelectorValue_7 == nil then
+                    ____minSelectorValue_7 = 0
                 end
-                if selectorValue < ____minSelectorValue_5 then
+                if selectorValue < ____minSelectorValue_7 then
                     minElement = element
                     minSelectorValue = selectorValue
                 end
@@ -3318,11 +3332,11 @@ local ____ = "use strict";
             while i < #self.elements do
                 local element = self.elements[i + 1]
                 local selectorValue = selector(_G, element)
-                local ____maxSelectorValue_6 = maxSelectorValue
-                if ____maxSelectorValue_6 == nil then
-                    ____maxSelectorValue_6 = 0
+                local ____maxSelectorValue_8 = maxSelectorValue
+                if ____maxSelectorValue_8 == nil then
+                    ____maxSelectorValue_8 = 0
                 end
-                if selectorValue > ____maxSelectorValue_6 then
+                if selectorValue > ____maxSelectorValue_8 then
                     maxElement = element
                     maxSelectorValue = selectorValue
                 end
