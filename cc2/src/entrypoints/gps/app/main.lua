@@ -3933,6 +3933,7 @@ local ____ = "use strict";
     function ____class_23.combinePath(self, ...)
         local paths = {...}
         local pathList = LuaList:of(paths)
+        print(pathList)
         local firstPart = pathList:first():orElseThrow()
         local lastPart = pathList:last():orElseThrow()
         return fs.combine(firstPart, lastPart)
