@@ -3733,7 +3733,7 @@ local ____ = "use strict";
     ____class_15.name = "GpsEntrypoint"
     __TS__ClassExtends(____class_15, Entrypoint)
     function ____class_15.prototype.registerRoutes(self)
-        self:registerRoute("run", self.routeRun)
+        self:registerRoute("runs", self.routeRun)
     end
     function ____class_15.prototype.onStart(self)
     end
