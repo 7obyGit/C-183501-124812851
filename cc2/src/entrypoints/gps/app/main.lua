@@ -3934,8 +3934,6 @@ local ____ = "use strict";
         local paths = {...}
         local pathList = LuaList:of(paths)
         print(pathList)
-        local firstPart = pathList:first():orElseThrow()
-        local lastPart = pathList:last():orElseThrow()
         return fs.combine(firstPart, lastPart)
     end
     function ____class_23.getFileName(self, path)
@@ -4040,7 +4038,9 @@ local ____ = "use strict";
     function _FileUtil.prototype.____constructor(self)
     end
     function _FileUtil.joinPath(self, ...)
-        return CcFs:combinePath(...)
+        local paths = {...}
+        print(LuaList:of(paths))
+        return CcFs:combinePath(__TS__Unpack(paths))
     end
     function _FileUtil.getParentDirectoryPath(self, path)
         return CcFs:getDirectoryName(path)
