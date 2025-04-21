@@ -2902,7 +2902,7 @@ local ____ = "use strict";
         return __TS__New(_Result, value, errorMessage)
     end
     function _Result.void(self)
-        return __TS__New(_Result, nil, nil)
+        return __TS__New(_Result, "No value", nil)
     end
     function _Result.error(self, errorMessage)
         local ____Result_6 = _Result
@@ -3016,17 +3016,15 @@ local ____ = "use strict";
     end
     function ____class_11.setCurrentWorkingDirectory(self, dir)
         local success = true
-        local ____error = nil
-        local ok, err = pcall(function()
+        local errorMessage = nil
+        local success, errorMessage = pcall(function()
             shell.setDir(dir)
         end)
-        success = ok
-        error = err
         local ____success_12
         if success then
             ____success_12 = Result:void()
         else
-            ____success_12 = Result:error(____error or "Unknown error")
+            ____success_12 = Result:error(errorMessage or "Unknown error")
         end
         return ____success_12
     end
@@ -4349,10 +4347,10 @@ local ____ = "use strict";
     end
     function ____class_61.serialize(self, obj, opts)
         local result = nil
-        local ____error = nil
-        result, error = textutils.serialize(obj, opts)
-        if ____error ~= nil then
-            return Result:error(____error)
+        local errorMessage = nil
+        result, errorMessage = textutils.serialize(obj, opts)
+        if error ~= nil then
+            return Result:error(errorMessage)
         end
         return Result:of(result)
     end
@@ -4366,19 +4364,19 @@ local ____ = "use strict";
     end
     function ____class_61.serializeJSON(self, obj, opts)
         local result = nil
-        local ____error = nil
-        result, error = textutils.serializeJSON(obj, opts)
-        if ____error ~= nil then
-            return Result:error(____error)
+        local errorMessage = nil
+        result, errorMessage = textutils.serializeJSON(obj, opts)
+        if errorMessage ~= nil then
+            return Result:error(errorMessage)
         end
         return Result:of(result)
     end
     function ____class_61.unserializeJSON(self, str, opts)
         local result = nil
-        local ____error = nil
-        result, error = textutils.unserializeJSON(str, opts)
-        if ____error ~= nil then
-            return Result:error(____error)
+        local errorMessage = nil
+        result, errorMessage = textutils.unserializeJSON(str, opts)
+        if errorMessage ~= nil then
+            return Result:error(errorMessage)
         end
         return Result:of(result)
     end
