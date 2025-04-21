@@ -3710,6 +3710,9 @@ local ____ = "use strict";
         self:onStop()
     end
     function ____class_14.prototype.registerRoutes(self)
+        for key in pairs(self) do
+            print(key)
+        end
     end
     function ____class_14.prototype.registerRoute(self, name, callback)
         self._routes:set(name, callback)
