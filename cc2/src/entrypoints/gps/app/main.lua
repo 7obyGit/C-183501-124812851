@@ -3188,9 +3188,7 @@ local ____ = "use strict";
         self.handle = handle
     end
     function ____class_16.prototype.writeContent(self, content)
-        print(self.handle)
-        print(content)
-        self.handle.write('THIS IS A TEST')
+        self.handle.write(content)
     end
     function ____class_16.prototype.writeLine(self, text)
         self.handle.writeLine(text)
