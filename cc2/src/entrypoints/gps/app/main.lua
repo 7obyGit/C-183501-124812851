@@ -2957,7 +2957,7 @@ local ____ = "use strict";
         end
         print(elements)
         print(elements.length)
-        local length = elements.length
+        local length = #elements
         print(length)
         do
             local i = 0
