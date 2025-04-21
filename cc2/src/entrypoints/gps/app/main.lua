@@ -3917,7 +3917,7 @@ local ____ = "use strict";
         local pathList = LuaList:of(paths)
         print(pathList)
         local pathsTable = pathList:toTable()
-        return fs.combine(pathsTable)
+        return fs.combine(...pathsTable)
     end
     function ____class_23.getFileName(self, path)
         return fs.getName(path)
