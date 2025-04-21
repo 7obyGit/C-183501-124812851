@@ -4465,7 +4465,7 @@ local ____ = "use strict";
     function ____class_62.prototype.onStop(self)
     end
     function ____class_62.prototype.routeRun(self)
-        Logger:info(FileUtil:getFiles("/"))
+        Logger:info(FileUtil:joinPath("app", "data", "config.json"))
         local info = Info:load()
         Logger:warn(info.name, info.version)
         Logger:info("GPS")
