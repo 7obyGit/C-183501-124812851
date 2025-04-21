@@ -3738,7 +3738,7 @@ local ____ = "use strict";
         self._routes:set(name, callback)
     end
     function ____class_16.prototype.dispatchRoute(self)
-        local targetRouteName = ExecutionContext.commandLineArguments:first():orElseThrow()
+        local targetRouteName = ExecutionContext.commandLineArguments:first():orElseThrow("The first command line argument (route name) was not provided")
         self._routes:get(targetRouteName):ifEmpty(function()
             local validRouteNamesString = ("'" .. self._routes:keys():join("', '")) .. "'"
             error(
