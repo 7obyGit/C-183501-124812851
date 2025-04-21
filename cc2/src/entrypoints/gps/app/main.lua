@@ -2952,6 +2952,9 @@ local ____ = "use strict";
     end
     function ____class_4.fromArray(self, elements)
         local result = {}
+        if elements == nil then
+            return result
+        end
         do
             local i = 0
             while i <= elements.length do
@@ -2974,11 +2977,11 @@ local ____ = "use strict";
         success = shell.execute(command, table.unpack(argsTable))
         return Result:of(success)
     end
-    function ____class_5.run(self, ...)
+    function ____class_5.run(self, command, ...)
         local args2 = {...}
         local argsTable = TableUtil:fromArray(args2)
         local success = false
-        success = shell.run(table.unpack(argsTable))
+        success = shell.run(command, table.unpack(argsTable))
         return Result:of(success)
     end
     function ____class_5.exit(self)
@@ -3073,11 +3076,11 @@ local ____ = "use strict";
         end
         return aliases
     end
-    function ____class_5.openTab(self, ...)
+    function ____class_5.openTab(self, command, ...)
         local args2 = {...}
         local argsTable = TableUtil:fromArray(args2)
         local tabId = nil
-        tabId = shell.openTab(table.unpack(argsTable))
+        tabId = shell.openTab(command, table.unpack(argsTable))
         local ____temp_7
         if tabId ~= nil then
             ____temp_7 = Result:of(tabId)
