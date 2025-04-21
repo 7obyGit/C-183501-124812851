@@ -4039,6 +4039,9 @@ local ____ = "use strict";
     end
     function _FileUtil.joinPath(self, ...)
         local paths = {...}
+        for ____, path in ipairs(paths) do
+            print(path)
+        end
         print(LuaList:of(paths))
         return CcFs:combinePath(__TS__Unpack(paths))
     end
