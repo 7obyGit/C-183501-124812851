@@ -4362,6 +4362,80 @@ local ____ = "use strict";
         return self:writeText(path, newContent)
     end
     local FileUtil = _FileUtil
+    local ____class_61 = __TS__Class()
+    ____class_61.name = "CcTextUtils"
+    function ____class_61.prototype.____constructor(self)
+    end
+    function ____class_61.slowWrite(self, text, rate)
+        textutils.slowWrite(text, rate)
+    end
+    function ____class_61.slowPrint(self, text, rate)
+        textutils.slowPrint(text, rate)
+    end
+    function ____class_61.formatTime(self, time, twentyFourHour)
+        local result = ""
+        result = textutils.formatTime(time, twentyFourHour)
+        return result
+    end
+    function ____class_61.pagedPrint(self, text, freeLines)
+        local result = 0
+        result = textutils.pagedPrint(text, freeLines)
+        return result
+    end
+    function ____class_61.tabulate(self, ...)
+        textutils.tabulate(...)
+    end
+    function ____class_61.pagedTabulate(self, ...)
+        textutils.pagedTabulate(...)
+    end
+    function ____class_61.serialize(self, obj, opts)
+        local result = nil
+        local ____error = nil
+        result, error = textutils.serialize(obj, opts)
+        if ____error ~= nil then
+            return Result:error(____error)
+        end
+        return Result:of(result)
+    end
+    function ____class_61.unserialize(self, str)
+        local result = nil
+        result = textutils.unserialize(str)
+        if result == nil then
+            return Result:error("Failed to unserialize")
+        end
+        return Result:of(result)
+    end
+    function ____class_61.serializeJSON(self, obj, opts)
+        local result = nil
+        local ____error = nil
+        result, error = textutils.serializeJSON(obj, opts)
+        if ____error ~= nil then
+            return Result:error(____error)
+        end
+        return Result:of(result)
+    end
+    function ____class_61.unserializeJSON(self, str, opts)
+        local result = nil
+        local ____error = nil
+        result, error = textutils.unserializeJSON(str, opts)
+        if ____error ~= nil then
+            return Result:error(____error)
+        end
+        return Result:of(result)
+    end
+    function ____class_61.urlEncode(self, str)
+        local result = ""
+        result = textutils.urlEncode(str)
+        return result
+    end
+    function ____class_61.getCompletion(self, searchText, searchTable)
+        local result = {}
+        result = textutils.complete(searchText, searchTable)
+        return result
+    end
+    ____class_61.empty_json_array = {}
+    ____class_61.json_null = {}
+    local CcTextUtils = ____class_61
     local _Info = __TS__Class()
     _Info.name = "_Info"
     function _Info.prototype.____constructor(self, model)
@@ -4375,22 +4449,22 @@ local ____ = "use strict";
     end
     function _Info.load(self)
         local contentString = FileUtil:readText(self._path):getValueUnsafe("Could not read info.json")
-        local content = JSON:parse(contentString)
+        local content = CcTextUtils:unserializeJSON(contentString):getValueUnsafe("Could not parse info.json")
         return __TS__New(_Info, content)
     end
     _Info._path = "info.json"
     local Info = _Info
-    local ____class_61 = __TS__Class()
-    ____class_61.name = "GpsEntrypoint"
-    __TS__ClassExtends(____class_61, Entrypoint)
-    function ____class_61.prototype.registerRoutes(self)
+    local ____class_62 = __TS__Class()
+    ____class_62.name = "GpsEntrypoint"
+    __TS__ClassExtends(____class_62, Entrypoint)
+    function ____class_62.prototype.registerRoutes(self)
         self:registerRoute("run", self.routeRun)
     end
-    function ____class_61.prototype.onStart(self)
+    function ____class_62.prototype.onStart(self)
     end
-    function ____class_61.prototype.onStop(self)
+    function ____class_62.prototype.onStop(self)
     end
-    function ____class_61.prototype.routeRun(self)
+    function ____class_62.prototype.routeRun(self)
         Logger:info(FileUtil:getFiles("/"))
         local info = Info:load()
         Logger:warn(info.name, info.version)
@@ -4408,7 +4482,7 @@ local ____ = "use strict";
             z
         )
     end
-    local GpsEntrypoint = ____class_61
+    local GpsEntrypoint = ____class_62
     __TS__New(GpsEntrypoint):run()
 end)(_G)
  end,
