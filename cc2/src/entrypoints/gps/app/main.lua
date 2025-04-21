@@ -4011,7 +4011,6 @@ local ____ = "use strict";
         end
         do
             local function ____catch(e)
-                print("Error writing content", e)
                 local ____Result_error_27 = Result.error
                 local ____opt_result_26
                 if e ~= nil then
@@ -4020,12 +4019,7 @@ local ____ = "use strict";
                 return true, ____Result_error_27(Result, ____opt_result_26)
             end
             local ____try, ____hasReturned, ____returnValue = pcall(function()
-                print("Getting file handle")
-                local fileHandle = file:getValueUnsafe("No file")
-                print(fileHandle)
-                print("Writing content")
-                fileHandle:writeContent(content)
-                print("Content written")
+                file:getValueUnsafe("No file"):writeContent(content)
             end)
             if not ____try then
                 ____hasReturned, ____returnValue = ____catch(____hasReturned)
@@ -4034,12 +4028,12 @@ local ____ = "use strict";
                 return ____returnValue
             end
         end
-        return Result:of(nil)
+        return Result:void()
     end
     function _FileUtil.appendText(self, path, content)
         if not _FileUtil:exists(path) then
             _FileUtil:writeText(path, content)
-            return Result:of(nil)
+            return Result:void()
         end
         local file = CcFs:openFileForAppending(path)
         if file:isError() then
@@ -4064,7 +4058,7 @@ local ____ = "use strict";
                 return ____returnValue
             end
         end
-        return Result:of(nil)
+        return Result:void()
     end
     function _FileUtil.exists(self, path)
         return CcFs:fileExists(path)
