@@ -3688,12 +3688,12 @@ local ____ = "use strict";
         return newMap
     end
     local LuaMap = _LuaMap
-    local ____class_14 = __TS__Class()
-    ____class_14.name = "Entrypoint"
-    function ____class_14.prototype.____constructor(self)
+    local _Entrypoint = __TS__Class()
+    _Entrypoint.name = "_Entrypoint"
+    function _Entrypoint.prototype.____constructor(self)
         self._routes = LuaMap:empty()
     end
-    function ____class_14.prototype.run(self)
+    function _Entrypoint.prototype.run(self)
         self:registerRoutes()
         self:onStart()
         do
@@ -3709,15 +3709,39 @@ local ____ = "use strict";
         end
         self:onStop()
     end
-    function ____class_14.prototype.registerRoutes(self)
+    function _Entrypoint.prototype.getMethodsFromBaseDown(self, instance, baseClass)
+        local methodSet = __TS__New(Set)
+        local proto = Object:getPrototypeOf(instance)
+        while proto and proto ~= Object.prototype do
+            local methodNames = __TS__ArrayFilter(
+                Object:getOwnPropertyNames(proto),
+                function(____, name)
+                    return type(proto[name]) == "function" and name ~= "constructor"
+                end
+            )
+            __TS__ArrayForEach(
+                methodNames,
+                function(____, name) return methodSet:add(name) end
+            )
+            if proto.constructor == baseClass then
+                break
+            end
+            proto = Object:getPrototypeOf(proto)
+        end
+        return __TS__ArrayFrom(methodSet)
+    end
+    function _Entrypoint.prototype.registerRoutes(self)
         for key in pairs(self) do
             print(key)
         end
+        for ____, key in ipairs(self:getMethodsFromBaseDown(self, _Entrypoint)) do
+            print(key)
+        end
     end
-    function ____class_14.prototype.registerRoute(self, name, callback)
+    function _Entrypoint.prototype.registerRoute(self, name, callback)
         self._routes:set(name, callback)
     end
-    function ____class_14.prototype.dispatchRoute(self)
+    function _Entrypoint.prototype.dispatchRoute(self)
         local targetRouteName = ExecutionContext.commandLineArguments:first():orElseThrow()
         self._routes:get(targetRouteName):ifEmpty(function()
             local validRouteNamesString = ("'" .. self._routes:keys():join("', '")) .. "'"
@@ -3730,18 +3754,18 @@ local ____ = "use strict";
             )
         end):ifPresent(function(____, routeFunction) return routeFunction(_G) end)
     end
-    function ____class_14.prototype.onCrash(self, cause)
+    function _Entrypoint.prototype.onCrash(self, cause)
         error(cause, 0)
     end
-    local Entrypoint = ____class_14
-    local ____class_15 = __TS__Class()
-    ____class_15.name = "GpsEntrypoint"
-    __TS__ClassExtends(____class_15, Entrypoint)
-    function ____class_15.prototype.onStart(self)
+    local Entrypoint = _Entrypoint
+    local ____class_14 = __TS__Class()
+    ____class_14.name = "GpsEntrypoint"
+    __TS__ClassExtends(____class_14, Entrypoint)
+    function ____class_14.prototype.onStart(self)
     end
-    function ____class_15.prototype.onStop(self)
+    function ____class_14.prototype.onStop(self)
     end
-    function ____class_15.prototype.routeRun(self)
+    function ____class_14.prototype.routeRun(self)
         print("GPS")
         local args = ExecutionContext.commandLineArguments
         print("Args: ", args)
@@ -3756,7 +3780,7 @@ local ____ = "use strict";
             z
         )
     end
-    local GpsEntrypoint = ____class_15
+    local GpsEntrypoint = ____class_14
     __TS__New(GpsEntrypoint):run()
 end)(_G)
  end,
