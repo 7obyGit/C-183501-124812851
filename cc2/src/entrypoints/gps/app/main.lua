@@ -2793,8 +2793,6 @@ local __TS__Unpack = ____lualib.__TS__Unpack
 local __TS__ArraySlice = ____lualib.__TS__ArraySlice
 local Map = ____lualib.Map
 local __TS__Iterator = ____lualib.__TS__Iterator
-local __TS__ObjectKeys = ____lualib.__TS__ObjectKeys
-local __TS__StringStartsWith = ____lualib.__TS__StringStartsWith
 local __TS__ClassExtends = ____lualib.__TS__ClassExtends
 local ____ = "use strict";
 (function()
@@ -3712,21 +3710,6 @@ local ____ = "use strict";
         self:onStop()
     end
     function ____class_14.prototype.registerRoutes(self)
-        for key in pairs(__TS__ObjectKeys(self)) do
-            print(key)
-        end
-        __TS__ArrayForEach(
-            __TS__ArrayFilter(
-                __TS__ObjectKeys(self),
-                function(____, key) return __TS__StringStartsWith(key, "route") end
-            ),
-            function(____, routeName)
-                self:registerRoute(
-                    routeName,
-                    Object:getPrototypeOf(self)[routeName]
-                )
-            end
-        )
     end
     function ____class_14.prototype.registerRoute(self, name, callback)
         self._routes:set(name, callback)
