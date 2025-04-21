@@ -4140,7 +4140,10 @@ local ____ = "use strict";
         self.data = data
     end
     function _Config.load(self)
-        local contentString = FileUtil:readText(self.configPath)
+        if not FileUtil:exists(self._configPath) then
+            FileUtil:writeText(self._configPath, "{}")
+        end
+        local contentString = FileUtil:readText(self._configPath)
         if contentString:isError() then
             return Result:error(contentString:getErrorMessage())
         end
@@ -4173,7 +4176,7 @@ local ____ = "use strict";
             return Result:error(contentString:getErrorMessage())
         end
         local result = FileUtil:writeText(
-            _Config.configPath,
+            _Config._configPath,
             contentString:getValueUnsafe("Could not serialize config.json")
         )
         if result:isError() then
@@ -4181,7 +4184,7 @@ local ____ = "use strict";
         end
         return Result:void()
     end
-    _Config.configPath = "app/data/config.json"
+    _Config._configPath = "app/data/config.json"
     local Config = _Config
     local _LuaMapEntry = __TS__Class()
     _LuaMapEntry.name = "_LuaMapEntry"
@@ -4496,6 +4499,7 @@ local ____ = "use strict";
         local configResult = Config:load()
         if configResult:isError() then
             Logger:error(configResult:getErrorMessage())
+            return
         end
         local config = configResult:getValueUnsafe("Failed to load config")
         Logger:debug(CcTextUtils:serializeJSON(config))
