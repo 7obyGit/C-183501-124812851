@@ -4035,7 +4035,7 @@ local ____ = "use strict";
         if file:isError() then
             return Result:error(file.errorMessage)
         end
-        local content = file:getValueUnsafe():readAllContent()
+        local content = file:getValueUnsafe("No file"):readAllContent()
         if content == nil then
             return Result:error("Could not read file")
         end
@@ -4060,7 +4060,7 @@ local ____ = "use strict";
                 return true, ____Result_error_27(Result, ____opt_result_26)
             end
             local ____try, ____hasReturned, ____returnValue = pcall(function()
-                file:getValueUnsafe():writeContent(content)
+                file:getValueUnsafe("No file"):writeContent(content)
             end)
             if not ____try then
                 ____hasReturned, ____returnValue = ____catch(____hasReturned)
@@ -4090,7 +4090,7 @@ local ____ = "use strict";
                 return true, ____Result_error_31(Result, ____opt_result_30)
             end
             local ____try, ____hasReturned, ____returnValue = pcall(function()
-                file:getValueUnsafe():writeContent(content)
+                file:getValueUnsafe("No file"):writeContent(content)
             end)
             if not ____try then
                 ____hasReturned, ____returnValue = ____catch(____hasReturned)
@@ -4354,7 +4354,7 @@ local ____ = "use strict";
         if contentResult:isError() then
             return Result:error(contentResult.errorMessage)
         end
-        local content = contentResult:getValueUnsafe()
+        local content = contentResult:getValueUnsafe("No file")
         if not content:startsWith("?") then
             return Result:void()
         end
@@ -4448,8 +4448,8 @@ local ____ = "use strict";
         self.lifetime = model.lifetime
     end
     function _Info.load(self)
-        local contentString = FileUtil:readText(self._path):getValueUnsafe()
-        local content = CcTextUtils:unserialize(contentString):getValueUnsafe()
+        local contentString = FileUtil:readText(self._path):getValueUnsafe("Could not read info.json")
+        local content = CcTextUtils:unserialize(contentString):getValueUnsafe("Could not parse info.json")
         return __TS__New(_Info, content)
     end
     _Info._path = "info.json"
