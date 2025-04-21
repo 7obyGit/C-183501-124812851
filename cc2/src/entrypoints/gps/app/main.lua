@@ -2935,24 +2935,28 @@ local ____ = "use strict";
     end
     function _Result.prototype.getValueUnsafe(self, message)
         if not self.value then
-            local ____Error_8 = Error
+            local ____Error_9 = Error
             local ____message_7 = message
             if ____message_7 == nil then
-                ____message_7 = "Cannot unwrap `Result` value"
+                ____message_7 = self.errorMessage
+            end
+            local ____message_7_8 = ____message_7
+            if ____message_7_8 == nil then
+                ____message_7_8 = "Cannot unwrap `Result` value"
             end
             error(
-                __TS__New(____Error_8, ____message_7),
+                __TS__New(____Error_9, ____message_7_8),
                 0
             )
         end
         return self.value
     end
     function _Result.prototype.getValueOrDefault(self, defaultValue)
-        local ____self_value_9 = self.value
-        if ____self_value_9 == nil then
-            ____self_value_9 = defaultValue
+        local ____self_value_10 = self.value
+        if ____self_value_10 == nil then
+            ____self_value_10 = defaultValue
         end
-        return ____self_value_9
+        return ____self_value_10
     end
     function _Result.prototype.getErrorMessage(self)
         return self.errorMessage
@@ -2967,11 +2971,11 @@ local ____ = "use strict";
         return _Result:of(callback(_G, self.value))
     end
     local Result = _Result
-    local ____class_10 = __TS__Class()
-    ____class_10.name = "TableUtil"
-    function ____class_10.prototype.____constructor(self)
+    local ____class_11 = __TS__Class()
+    ____class_11.name = "TableUtil"
+    function ____class_11.prototype.____constructor(self)
     end
-    function ____class_10.fromArray(self, elements)
+    function ____class_11.fromArray(self, elements)
         local result = {}
         if elements == nil then
             return result
@@ -2987,66 +2991,66 @@ local ____ = "use strict";
         end
         return result
     end
-    local TableUtil = ____class_10
-    local ____class_11 = __TS__Class()
-    ____class_11.name = "CcShell"
-    function ____class_11.prototype.____constructor(self)
+    local TableUtil = ____class_11
+    local ____class_12 = __TS__Class()
+    ____class_12.name = "CcShell"
+    function ____class_12.prototype.____constructor(self)
     end
-    function ____class_11.execute(self, command, ...)
+    function ____class_12.execute(self, command, ...)
         local args = {...}
         local argsTable = TableUtil:fromArray(args)
         local success = false
         success = shell.execute(command, table.unpack(argsTable))
         return Result:of(success)
     end
-    function ____class_11.run(self, command, ...)
+    function ____class_12.run(self, command, ...)
         local args = {...}
         local argsTable = TableUtil:fromArray(args)
         local success = false
         success = shell.run(command, table.unpack(argsTable))
         return Result:of(success)
     end
-    function ____class_11.exit(self)
+    function ____class_12.exit(self)
         shell.exit()
     end
-    function ____class_11.getCurrentWorkingDirectory(self)
+    function ____class_12.getCurrentWorkingDirectory(self)
         local currentDir = ""
         currentDir = shell.dir()
         return currentDir
     end
-    function ____class_11.setCurrentWorkingDirectory(self, dir)
+    function ____class_12.setCurrentWorkingDirectory(self, dir)
         local success = true
         local errorMessage = nil
         local success, errorMessage = pcall(function()
             shell.setDir(dir)
         end)
-        local ____success_12
+        local ____success_13
         if success then
-            ____success_12 = Result:void()
+            ____success_13 = Result:void()
         else
-            ____success_12 = Result:error(errorMessage or "Unknown error")
+            ____success_13 = Result:error(errorMessage or "Unknown error")
         end
-        return ____success_12
+        return ____success_13
     end
-    function ____class_11.getPath(self)
+    function ____class_12.getPath(self)
         local currentPath = ""
         currentPath = shell.path()
         return currentPath
     end
-    function ____class_11.setPath(self, path)
+    function ____class_12.setPath(self, path)
         shell.setPath(path)
     end
-    function ____class_11.getAbsolutePath(self, path)
+    function ____class_12.getAbsolutePath(self, path)
         local resolvedPath = ""
         resolvedPath = shell.resolve(path)
         return resolvedPath
     end
-    function ____class_11.resolveProgramPath(self, command)
+    function ____class_12.resolveProgramPath(self, command)
         local programPath
         programPath = shell.resolveProgram(command)
         return Optional:ofNullable(programPath)
     end
-    function ____class_11.getProgramList(self, includeHidden)
+    function ____class_12.getProgramList(self, includeHidden)
         local programs = {}
         local progs = shell.programs(includeHidden)
         for i = 1, #progs do
@@ -3054,11 +3058,11 @@ local ____ = "use strict";
         end
         return programs
     end
-    function ____class_11.getCompletions(self, sLine)
+    function ____class_12.getCompletions(self, sLine)
         local completions = shell.complete(sLine)
         return Optional:ofNullable(completions):getValueOrDefault({})
     end
-    function ____class_11.getCompletionsForProgramName(self, program)
+    function ____class_12.getCompletionsForProgramName(self, program)
         local completions = {}
         local comps = shell.completeProgram(program)
         for i = 1, #comps do
@@ -3066,10 +3070,10 @@ local ____ = "use strict";
         end
         return completions
     end
-    function ____class_11.setCompletionFunction(self, program, complete)
+    function ____class_12.setCompletionFunction(self, program, complete)
         shell.setCompletionFunction(program, complete)
     end
-    function ____class_11.getCompletionInfo(self)
+    function ____class_12.getCompletionInfo(self)
         local info = {}
         local compInfo = shell.getCompletionInfo()
         for k,v in pairs(compInfo) do
@@ -3077,18 +3081,18 @@ local ____ = "use strict";
         end
         return info
     end
-    function ____class_11.getPathToRunningProgram(self)
+    function ____class_12.getPathToRunningProgram(self)
         local programPath = ""
         programPath = shell.getRunningProgram()
         return programPath
     end
-    function ____class_11.setAlias(self, command, program)
+    function ____class_12.setAlias(self, command, program)
         shell.setAlias(command, program)
     end
-    function ____class_11.clearAlias(self, command)
+    function ____class_12.clearAlias(self, command)
         shell.clearAlias(command)
     end
-    function ____class_11.aliases(self)
+    function ____class_12.aliases(self)
         local aliases = {}
         local als = shell.aliases()
         for k,v in pairs(als) do
@@ -3096,55 +3100,25 @@ local ____ = "use strict";
         end
         return aliases
     end
-    function ____class_11.openTab(self, command, ...)
+    function ____class_12.openTab(self, command, ...)
         local args = {...}
         local argsTable = TableUtil:fromArray(args)
         local tabId = nil
         tabId = shell.openTab(command, table.unpack(argsTable))
-        local ____temp_13
+        local ____temp_14
         if tabId ~= nil then
-            ____temp_13 = Result:of(tabId)
+            ____temp_14 = Result:of(tabId)
         else
-            ____temp_13 = Result:error("Failed to open tab")
+            ____temp_14 = Result:error("Failed to open tab")
         end
-        return ____temp_13
+        return ____temp_14
     end
-    function ____class_11.switchTab(self, id)
+    function ____class_12.switchTab(self, id)
         shell.switchTab(id)
     end
-    local CcShell = ____class_11
-    local ____class_14 = __TS__Class()
-    ____class_14.name = "FileReadHandle"
-    function ____class_14.prototype.____constructor(self, handle)
-        self.handle = handle
-    end
-    function ____class_14.prototype.readBytes(self, count)
-        return self.handle.read(count)
-    end
-    function ____class_14.prototype.readAllContent(self)
-        return self.handle.readAll()
-    end
-    function ____class_14.prototype.readLine(self, includeTrailingNewline)
-        if includeTrailingNewline == nil then
-            includeTrailingNewline = false
-        end
-        return self.handle.readLine(includeTrailingNewline)
-    end
-    function ____class_14.prototype.seekPosition(self, whence, offset)
-        if whence == nil then
-            whence = "cur"
-        end
-        if offset == nil then
-            offset = 0
-        end
-        return self.handle.seek(whence, offset)
-    end
-    function ____class_14.prototype.close(self)
-        self.handle.close()
-    end
-    local FileReadHandle = ____class_14
+    local CcShell = ____class_12
     local ____class_15 = __TS__Class()
-    ____class_15.name = "FileReadWriteHandle"
+    ____class_15.name = "FileReadHandle"
     function ____class_15.prototype.____constructor(self, handle)
         self.handle = handle
     end
@@ -3160,15 +3134,6 @@ local ____ = "use strict";
         end
         return self.handle.readLine(includeTrailingNewline)
     end
-    function ____class_15.prototype.writeContent(self, content)
-        self.handle.write(content)
-    end
-    function ____class_15.prototype.writeLine(self, text)
-        self.handle.writeLine(text)
-    end
-    function ____class_15.prototype.flushBuffers(self)
-        self.handle.flush()
-    end
     function ____class_15.prototype.seekPosition(self, whence, offset)
         if whence == nil then
             whence = "cur"
@@ -3181,11 +3146,23 @@ local ____ = "use strict";
     function ____class_15.prototype.close(self)
         self.handle.close()
     end
-    local FileReadWriteHandle = ____class_15
+    local FileReadHandle = ____class_15
     local ____class_16 = __TS__Class()
-    ____class_16.name = "FileWriteHandle"
+    ____class_16.name = "FileReadWriteHandle"
     function ____class_16.prototype.____constructor(self, handle)
         self.handle = handle
+    end
+    function ____class_16.prototype.readBytes(self, count)
+        return self.handle.read(count)
+    end
+    function ____class_16.prototype.readAllContent(self)
+        return self.handle.readAll()
+    end
+    function ____class_16.prototype.readLine(self, includeTrailingNewline)
+        if includeTrailingNewline == nil then
+            includeTrailingNewline = false
+        end
+        return self.handle.readLine(includeTrailingNewline)
     end
     function ____class_16.prototype.writeContent(self, content)
         self.handle.write(content)
@@ -3208,12 +3185,39 @@ local ____ = "use strict";
     function ____class_16.prototype.close(self)
         self.handle.close()
     end
-    local FileWriteHandle = ____class_16
+    local FileReadWriteHandle = ____class_16
     local ____class_17 = __TS__Class()
-    ____class_17.name = "CcFs"
-    function ____class_17.prototype.____constructor(self)
+    ____class_17.name = "FileWriteHandle"
+    function ____class_17.prototype.____constructor(self, handle)
+        self.handle = handle
     end
-    function ____class_17.completeFileName(self, path, location, includeFiles, includeDirectories)
+    function ____class_17.prototype.writeContent(self, content)
+        self.handle.write(content)
+    end
+    function ____class_17.prototype.writeLine(self, text)
+        self.handle.writeLine(text)
+    end
+    function ____class_17.prototype.flushBuffers(self)
+        self.handle.flush()
+    end
+    function ____class_17.prototype.seekPosition(self, whence, offset)
+        if whence == nil then
+            whence = "cur"
+        end
+        if offset == nil then
+            offset = 0
+        end
+        return self.handle.seek(whence, offset)
+    end
+    function ____class_17.prototype.close(self)
+        self.handle.close()
+    end
+    local FileWriteHandle = ____class_17
+    local ____class_18 = __TS__Class()
+    ____class_18.name = "CcFs"
+    function ____class_18.prototype.____constructor(self)
+    end
+    function ____class_18.completeFileName(self, path, location, includeFiles, includeDirectories)
         if includeFiles == nil then
             includeFiles = true
         end
@@ -3222,51 +3226,51 @@ local ____ = "use strict";
         end
         return fs.complete(path, location, includeFiles, includeDirectories)
     end
-    function ____class_17.findFiles(self, path)
+    function ____class_18.findFiles(self, path)
         return fs.find(path)
     end
-    function ____class_17.isDriveRootDirectory(self, path)
+    function ____class_18.isDriveRootDirectory(self, path)
         return fs.isDriveRoot(path)
     end
-    function ____class_17.listDirectory(self, path)
+    function ____class_18.listDirectory(self, path)
         return fs.list(path)
     end
-    function ____class_17.combinePath(self, ...)
+    function ____class_18.combinePath(self, ...)
         local paths = {...}
         local pathsTable = TableUtil:fromArray(paths)
         return fs.combine(table.unpack(pathsTable))
     end
-    function ____class_17.getFileName(self, path)
+    function ____class_18.getFileName(self, path)
         return fs.getName(path)
     end
-    function ____class_17.getDirectoryName(self, path)
+    function ____class_18.getDirectoryName(self, path)
         return fs.getDir(path)
     end
-    function ____class_17.getFileSize(self, path)
+    function ____class_18.getFileSize(self, path)
         return fs.getSize(path)
     end
-    function ____class_17.fileExists(self, path)
+    function ____class_18.fileExists(self, path)
         return fs.exists(path)
     end
-    function ____class_17.isDirectory(self, path)
+    function ____class_18.isDirectory(self, path)
         return fs.isDir(path)
     end
-    function ____class_17.isReadOnly(self, path)
+    function ____class_18.isReadOnly(self, path)
         return fs.isReadOnly(path)
     end
-    function ____class_17.createDirectory(self, path)
+    function ____class_18.createDirectory(self, path)
         fs.makeDir(path)
     end
-    function ____class_17.move(self, sourcePath, destinationPath)
+    function ____class_18.move(self, sourcePath, destinationPath)
         fs.move(sourcePath, destinationPath)
     end
-    function ____class_17.copy(self, sourcePath, destinationPath)
+    function ____class_18.copy(self, sourcePath, destinationPath)
         fs.copy(sourcePath, destinationPath)
     end
-    function ____class_17.delete(self, path)
+    function ____class_18.delete(self, path)
         fs.delete(path)
     end
-    function ____class_17.openFileForReading(self, path)
+    function ____class_18.openFileForReading(self, path)
         local fileHandle = nil
         local errorMessage = nil
         fileHandle, errorMessage = fs.open(path, 'r')
@@ -3275,7 +3279,7 @@ local ____ = "use strict";
         end
         return Result:of(__TS__New(FileReadHandle, fileHandle))
     end
-    function ____class_17.openFileForWriting(self, path)
+    function ____class_18.openFileForWriting(self, path)
         local fileHandle = nil
         local errorMessage = nil
         fileHandle, errorMessage = fs.open(path, 'w')
@@ -3284,7 +3288,7 @@ local ____ = "use strict";
         end
         return Result:of(__TS__New(FileWriteHandle, fileHandle))
     end
-    function ____class_17.openFileForReadAndWrite(self, path)
+    function ____class_18.openFileForReadAndWrite(self, path)
         local fileHandle = nil
         local errorMessage = nil
         fileHandle, errorMessage = fs.open(path, 'rw')
@@ -3293,7 +3297,7 @@ local ____ = "use strict";
         end
         return Result:of(__TS__New(FileReadWriteHandle, fileHandle))
     end
-    function ____class_17.openFileForAppending(self, path)
+    function ____class_18.openFileForAppending(self, path)
         local fileHandle = nil
         local errorMessage = nil
         fileHandle, errorMessage = fs.open(path, 'a')
@@ -3302,7 +3306,7 @@ local ____ = "use strict";
         end
         return Result:of(__TS__New(FileWriteHandle, fileHandle))
     end
-    function ____class_17.openFileForBinaryReading(self, path)
+    function ____class_18.openFileForBinaryReading(self, path)
         local fileHandle = nil
         local errorMessage = nil
         fileHandle, errorMessage = fs.open(path, 'rb')
@@ -3311,7 +3315,7 @@ local ____ = "use strict";
         end
         return Result:of(__TS__New(FileReadHandle, fileHandle))
     end
-    function ____class_17.openFileForBinaryWriting(self, path)
+    function ____class_18.openFileForBinaryWriting(self, path)
         local fileHandle = nil
         local errorMessage = nil
         fileHandle, errorMessage = fs.open(path, 'wb')
@@ -3320,19 +3324,19 @@ local ____ = "use strict";
         end
         return Result:of(__TS__New(FileWriteHandle, fileHandle))
     end
-    function ____class_17.getDriveName(self, path)
+    function ____class_18.getDriveName(self, path)
         return Optional:ofNullable(fs.getDrive(path))
     end
-    function ____class_17.getFreeSpaceOnDrive(self, path)
+    function ____class_18.getFreeSpaceOnDrive(self, path)
         return fs.getFreeSpace(path)
     end
-    function ____class_17.getDriveCapacity(self, path)
+    function ____class_18.getDriveCapacity(self, path)
         return Optional:ofNullable(fs.getCapacity(path))
     end
-    function ____class_17.getFileAttributes(self, path)
+    function ____class_18.getFileAttributes(self, path)
         return fs.attributes(path)
     end
-    local CcFs = ____class_17
+    local CcFs = ____class_18
     local _LuaSet = __TS__Class()
     _LuaSet.name = "_LuaSet"
     function _LuaSet.prototype.____constructor(self)
@@ -3475,8 +3479,8 @@ local ____ = "use strict";
         return self.elements[index]
     end
     function _LuaList.prototype.append(self, element)
-        local ____self_elements_18 = self.elements
-        ____self_elements_18[#____self_elements_18 + 1] = element
+        local ____self_elements_19 = self.elements
+        ____self_elements_19[#____self_elements_19 + 1] = element
         return self
     end
     function _LuaList.prototype.appendAll(self, elements)
@@ -3644,11 +3648,11 @@ local ____ = "use strict";
             while i < #self.elements do
                 local element = self.elements[i + 1]
                 local selectorValue = selector(_G, element)
-                local ____minSelectorValue_19 = minSelectorValue
-                if ____minSelectorValue_19 == nil then
-                    ____minSelectorValue_19 = 0
+                local ____minSelectorValue_20 = minSelectorValue
+                if ____minSelectorValue_20 == nil then
+                    ____minSelectorValue_20 = 0
                 end
-                if selectorValue < ____minSelectorValue_19 then
+                if selectorValue < ____minSelectorValue_20 then
                     minElement = element
                     minSelectorValue = selectorValue
                 end
@@ -3674,11 +3678,11 @@ local ____ = "use strict";
             while i < #self.elements do
                 local element = self.elements[i + 1]
                 local selectorValue = selector(_G, element)
-                local ____maxSelectorValue_20 = maxSelectorValue
-                if ____maxSelectorValue_20 == nil then
-                    ____maxSelectorValue_20 = 0
+                local ____maxSelectorValue_21 = maxSelectorValue
+                if ____maxSelectorValue_21 == nil then
+                    ____maxSelectorValue_21 = 0
                 end
-                if selectorValue > ____maxSelectorValue_20 then
+                if selectorValue > ____maxSelectorValue_21 then
                     maxElement = element
                     maxSelectorValue = selectorValue
                 end
@@ -3756,12 +3760,12 @@ local ____ = "use strict";
         local handle = file:getValueUnsafe("No file")
         do
             local function ____catch(e)
-                local ____Result_error_24 = Result.error
-                local ____opt_result_23
+                local ____Result_error_25 = Result.error
+                local ____opt_result_24
                 if e ~= nil then
-                    ____opt_result_23 = e.message
+                    ____opt_result_24 = e.message
                 end
-                return true, ____Result_error_24(Result, ____opt_result_23)
+                return true, ____Result_error_25(Result, ____opt_result_24)
             end
             local ____try, ____hasReturned, ____returnValue = pcall(function()
                 handle:writeContent(content)
@@ -3790,12 +3794,12 @@ local ____ = "use strict";
         local handle = file:getValueUnsafe("No file")
         do
             local function ____catch(e)
-                local ____Result_error_28 = Result.error
-                local ____opt_result_27
+                local ____Result_error_29 = Result.error
+                local ____opt_result_28
                 if e ~= nil then
-                    ____opt_result_27 = e.message
+                    ____opt_result_28 = e.message
                 end
-                return true, ____Result_error_28(Result, ____opt_result_27)
+                return true, ____Result_error_29(Result, ____opt_result_28)
             end
             local ____try, ____hasReturned, ____returnValue = pcall(function()
                 handle:writeContent(content)
@@ -3824,12 +3828,12 @@ local ____ = "use strict";
     function _FileUtil.deleteFile(self, path)
         do
             local function ____catch(e)
-                local ____Result_error_32 = Result.error
-                local ____opt_result_31
+                local ____Result_error_33 = Result.error
+                local ____opt_result_32
                 if e ~= nil then
-                    ____opt_result_31 = e.message
+                    ____opt_result_32 = e.message
                 end
-                return true, ____Result_error_32(Result, ____opt_result_31)
+                return true, ____Result_error_33(Result, ____opt_result_32)
             end
             local ____try, ____hasReturned, ____returnValue = pcall(function()
                 CcFs:delete(path)
@@ -3846,12 +3850,12 @@ local ____ = "use strict";
     function _FileUtil.copyFile(self, source, destination)
         do
             local function ____catch(e)
-                local ____Result_error_36 = Result.error
-                local ____opt_result_35
+                local ____Result_error_37 = Result.error
+                local ____opt_result_36
                 if e ~= nil then
-                    ____opt_result_35 = e.message
+                    ____opt_result_36 = e.message
                 end
-                return true, ____Result_error_36(Result, ____opt_result_35)
+                return true, ____Result_error_37(Result, ____opt_result_36)
             end
             local ____try, ____hasReturned, ____returnValue = pcall(function()
                 CcFs:copy(source, destination)
@@ -3868,12 +3872,12 @@ local ____ = "use strict";
     function _FileUtil.moveFile(self, source, destination)
         do
             local function ____catch(e)
-                local ____Result_error_40 = Result.error
-                local ____opt_result_39
+                local ____Result_error_41 = Result.error
+                local ____opt_result_40
                 if e ~= nil then
-                    ____opt_result_39 = e.message
+                    ____opt_result_40 = e.message
                 end
-                return true, ____Result_error_40(Result, ____opt_result_39)
+                return true, ____Result_error_41(Result, ____opt_result_40)
             end
             local ____try, ____hasReturned, ____returnValue = pcall(function()
                 CcFs:move(source, destination)
@@ -3888,9 +3892,9 @@ local ____ = "use strict";
         end
     end
     function _FileUtil.getFileSize(self, path)
-        local ____self_41 = _FileUtil:readText(path)
-        return ____self_41["then"](
-            ____self_41,
+        local ____self_42 = _FileUtil:readText(path)
+        return ____self_42["then"](
+            ____self_42,
             function(____, content) return content.length end
         )
     end
@@ -3922,12 +3926,12 @@ local ____ = "use strict";
     function _FileUtil.createDirectory(self, path)
         do
             local function ____catch(e)
-                local ____Result_error_45 = Result.error
-                local ____opt_result_44
+                local ____Result_error_46 = Result.error
+                local ____opt_result_45
                 if e ~= nil then
-                    ____opt_result_44 = e.message
+                    ____opt_result_45 = e.message
                 end
-                return true, ____Result_error_45(Result, ____opt_result_44)
+                return true, ____Result_error_46(Result, ____opt_result_45)
             end
             local ____try, ____hasReturned, ____returnValue = pcall(function()
                 CcFs:createDirectory(path)
@@ -3944,12 +3948,12 @@ local ____ = "use strict";
     function _FileUtil.copyDirectory(self, source, destination)
         do
             local function ____catch(e)
-                local ____Result_error_49 = Result.error
-                local ____opt_result_48
+                local ____Result_error_50 = Result.error
+                local ____opt_result_49
                 if e ~= nil then
-                    ____opt_result_48 = e.message
+                    ____opt_result_49 = e.message
                 end
-                return true, ____Result_error_49(Result, ____opt_result_48)
+                return true, ____Result_error_50(Result, ____opt_result_49)
             end
             local ____try, ____hasReturned, ____returnValue = pcall(function()
                 CcFs:copy(source, destination)
@@ -4000,12 +4004,12 @@ local ____ = "use strict";
     function _FileUtil.moveDirectory(self, source, destination)
         do
             local function ____catch(e)
-                local ____Result_error_53 = Result.error
-                local ____opt_result_52
+                local ____Result_error_54 = Result.error
+                local ____opt_result_53
                 if e ~= nil then
-                    ____opt_result_52 = e.message
+                    ____opt_result_53 = e.message
                 end
-                return true, ____Result_error_53(Result, ____opt_result_52)
+                return true, ____Result_error_54(Result, ____opt_result_53)
             end
             local ____try, ____hasReturned, ____returnValue = pcall(function()
                 CcFs:move(source, destination)
@@ -4022,12 +4026,12 @@ local ____ = "use strict";
     function _FileUtil.deleteDirectory(self, path)
         do
             local function ____catch(e)
-                local ____Result_error_57 = Result.error
-                local ____opt_result_56
+                local ____Result_error_58 = Result.error
+                local ____opt_result_57
                 if e ~= nil then
-                    ____opt_result_56 = e.message
+                    ____opt_result_57 = e.message
                 end
-                return true, ____Result_error_57(Result, ____opt_result_56)
+                return true, ____Result_error_58(Result, ____opt_result_57)
             end
             local ____try, ____hasReturned, ____returnValue = pcall(function()
                 CcFs:delete(path)
@@ -4073,33 +4077,33 @@ local ____ = "use strict";
         return self:writeText(path, newContent)
     end
     local FileUtil = _FileUtil
-    local ____class_58 = __TS__Class()
-    ____class_58.name = "CcTextUtils"
-    function ____class_58.prototype.____constructor(self)
+    local ____class_59 = __TS__Class()
+    ____class_59.name = "CcTextUtils"
+    function ____class_59.prototype.____constructor(self)
     end
-    function ____class_58.slowWrite(self, text, rate)
+    function ____class_59.slowWrite(self, text, rate)
         textutils.slowWrite(text, rate)
     end
-    function ____class_58.slowPrint(self, text, rate)
+    function ____class_59.slowPrint(self, text, rate)
         textutils.slowPrint(text, rate)
     end
-    function ____class_58.formatTime(self, time, twentyFourHour)
+    function ____class_59.formatTime(self, time, twentyFourHour)
         local result = ""
         result = textutils.formatTime(time, twentyFourHour)
         return result
     end
-    function ____class_58.pagedPrint(self, text, freeLines)
+    function ____class_59.pagedPrint(self, text, freeLines)
         local result = 0
         result = textutils.pagedPrint(text, freeLines)
         return result
     end
-    function ____class_58.tabulate(self, ...)
+    function ____class_59.tabulate(self, ...)
         textutils.tabulate(...)
     end
-    function ____class_58.pagedTabulate(self, ...)
+    function ____class_59.pagedTabulate(self, ...)
         textutils.pagedTabulate(...)
     end
-    function ____class_58.serialize(self, obj, opts)
+    function ____class_59.serialize(self, obj, opts)
         local result = nil
         local errorMessage = nil
         result, errorMessage = textutils.serialize(obj, opts)
@@ -4108,7 +4112,7 @@ local ____ = "use strict";
         end
         return Result:of(result)
     end
-    function ____class_58.unserialize(self, str)
+    function ____class_59.unserialize(self, str)
         local result = nil
         result = textutils.unserialize(str)
         if result == nil then
@@ -4116,7 +4120,7 @@ local ____ = "use strict";
         end
         return Result:of(result)
     end
-    function ____class_58.serializeJSON(self, obj, opts)
+    function ____class_59.serializeJSON(self, obj, opts)
         local result = nil
         local errorMessage = nil
         result, errorMessage = textutils.serializeJSON(obj, opts)
@@ -4125,7 +4129,7 @@ local ____ = "use strict";
         end
         return Result:of(result)
     end
-    function ____class_58.unserializeJSON(self, str, opts)
+    function ____class_59.unserializeJSON(self, str, opts)
         local result = nil
         local errorMessage = nil
         result, errorMessage = textutils.unserializeJSON(str, opts)
@@ -4134,19 +4138,19 @@ local ____ = "use strict";
         end
         return Result:of(result)
     end
-    function ____class_58.urlEncode(self, str)
+    function ____class_59.urlEncode(self, str)
         local result = ""
         result = textutils.urlEncode(str)
         return result
     end
-    function ____class_58.getCompletion(self, searchText, searchTable)
+    function ____class_59.getCompletion(self, searchText, searchTable)
         local result = {}
         result = textutils.complete(searchText, searchTable)
         return result
     end
-    ____class_58.empty_json_array = {}
-    ____class_58.json_null = {}
-    local CcTextUtils = ____class_58
+    ____class_59.empty_json_array = {}
+    ____class_59.json_null = {}
+    local CcTextUtils = ____class_59
     local _Config = __TS__Class()
     _Config.name = "_Config"
     function _Config.prototype.____constructor(self, data)
@@ -4393,18 +4397,18 @@ local ____ = "use strict";
         return newMap
     end
     local LuaMap = _LuaMap
-    local ____class_59 = __TS__Class()
-    ____class_59.name = "ExecutionContext"
-    function ____class_59.prototype.____constructor(self)
-    end
-    ____class_59.commandLineArguments = LuaList:ofTable(COMMAND_LINE_ARGUMENTS)
-    local ExecutionContext = ____class_59
     local ____class_60 = __TS__Class()
-    ____class_60.name = "Entrypoint"
+    ____class_60.name = "ExecutionContext"
     function ____class_60.prototype.____constructor(self)
+    end
+    ____class_60.commandLineArguments = LuaList:ofTable(COMMAND_LINE_ARGUMENTS)
+    local ExecutionContext = ____class_60
+    local ____class_61 = __TS__Class()
+    ____class_61.name = "Entrypoint"
+    function ____class_61.prototype.____constructor(self)
         self._routes = LuaMap:empty()
     end
-    function ____class_60.prototype.run(self)
+    function ____class_61.prototype.run(self)
         self:registerRoutes()
         self:onStart()
         do
@@ -4420,10 +4424,10 @@ local ____ = "use strict";
         end
         self:onStop()
     end
-    function ____class_60.prototype.registerRoute(self, name, callback)
+    function ____class_61.prototype.registerRoute(self, name, callback)
         self._routes:set(name, callback)
     end
-    function ____class_60.prototype.dispatchRoute(self)
+    function ____class_61.prototype.dispatchRoute(self)
         local targetRouteName = ExecutionContext.commandLineArguments:first():getValueUnsafe("The first command line argument (route name) was not provided")
         self._routes:get(targetRouteName):ifEmpty(function()
             local validRouteNamesString = ("'" .. self._routes:keys():join("', '")) .. "'"
@@ -4436,39 +4440,39 @@ local ____ = "use strict";
             )
         end):ifPresent(function(____, routeFunction) return routeFunction(_G) end)
     end
-    function ____class_60.prototype.onCrash(self, cause)
+    function ____class_61.prototype.onCrash(self, cause)
         error(cause, 0)
     end
-    local Entrypoint = ____class_60
-    local ____class_61 = __TS__Class()
-    ____class_61.name = "LogListener"
-    function ____class_61.prototype.____constructor(self)
-    end
-    local LogListener = ____class_61
+    local Entrypoint = ____class_61
     local ____class_62 = __TS__Class()
-    ____class_62.name = "ConsoleLogListener"
-    __TS__ClassExtends(____class_62, LogListener)
-    function ____class_62.prototype.getName(self)
+    ____class_62.name = "LogListener"
+    function ____class_62.prototype.____constructor(self)
+    end
+    local LogListener = ____class_62
+    local ____class_63 = __TS__Class()
+    ____class_63.name = "ConsoleLogListener"
+    __TS__ClassExtends(____class_63, LogListener)
+    function ____class_63.prototype.getName(self)
         return "ConsoleLogListener"
     end
-    function ____class_62.prototype.onLog(self, level, message)
+    function ____class_63.prototype.onLog(self, level, message)
         print((("[" .. tostring(level)) .. "] ") .. tostring(message))
     end
-    local ConsoleLogListener = ____class_62
-    local ____class_63 = __TS__Class()
-    ____class_63.name = "Logger"
-    function ____class_63.prototype.____constructor(self)
+    local ConsoleLogListener = ____class_63
+    local ____class_64 = __TS__Class()
+    ____class_64.name = "Logger"
+    function ____class_64.prototype.____constructor(self)
     end
-    function ____class_63.addListener(self, listener)
+    function ____class_64.addListener(self, listener)
         self.listeners:set(
             listener:getName(),
             listener
         )
     end
-    function ____class_63.clearListeners(self)
+    function ____class_64.clearListeners(self)
         self.listeners:clear()
     end
-    function ____class_63.log(self, level, ...)
+    function ____class_64.log(self, level, ...)
         local args = {...}
         local message = table.concat(
             __TS__ArrayMap(
@@ -4481,68 +4485,68 @@ local ____ = "use strict";
             listener:onLog(level, message)
         end)
     end
-    function ____class_63.debug(self, ...)
+    function ____class_64.debug(self, ...)
         self:log("DEBUG", ...)
     end
-    function ____class_63.info(self, ...)
+    function ____class_64.info(self, ...)
         self:log("INFO", ...)
     end
-    function ____class_63.warn(self, ...)
+    function ____class_64.warn(self, ...)
         self:log("WARN", ...)
     end
-    function ____class_63.error(self, ...)
+    function ____class_64.error(self, ...)
         self:log("ERROR", ...)
     end
-    ____class_63.listeners = LuaMap:ofSingleton(
+    ____class_64.listeners = LuaMap:ofSingleton(
         __TS__New(ConsoleLogListener):getName(),
         __TS__New(ConsoleLogListener)
     )
-    local Logger = ____class_63
-    local ____class_64 = __TS__Class()
-    ____class_64.name = "GpsEntrypoint"
-    __TS__ClassExtends(____class_64, Entrypoint)
-    function ____class_64.prototype.registerRoutes(self)
+    local Logger = ____class_64
+    local ____class_65 = __TS__Class()
+    ____class_65.name = "GpsEntrypoint"
+    __TS__ClassExtends(____class_65, Entrypoint)
+    function ____class_65.prototype.registerRoutes(self)
         self:registerRoute("run", self.routeRun)
     end
-    function ____class_64.prototype.onStart(self)
+    function ____class_65.prototype.onStart(self)
     end
-    function ____class_64.prototype.onStop(self)
+    function ____class_65.prototype.onStop(self)
     end
-    function ____class_64.prototype.routeRun(self)
+    function ____class_65.prototype.routeRun(self)
         local configResult = Config:load()
         if configResult:isError() then
             Logger:error(configResult:getErrorMessage())
             return
         end
-        local config = configResult:getValueUnsafe("Failed to load config")
-        Logger:debug(CcTextUtils:serializeJSON(config):getValueUnsafe("No Config"))
-        local ____opt_65 = config.data
-        if ____opt_65 ~= nil then
-            ____opt_65 = ____opt_65.x
+        local config = configResult:getValueUnsafe()
+        Logger:debug(CcTextUtils:serializeJSON(config):getValueUnsafe())
+        local ____opt_66 = config.data
+        if ____opt_66 ~= nil then
+            ____opt_66 = ____opt_66.x
         end
-        local ____opt_65_67 = ____opt_65
-        if ____opt_65_67 == nil then
-            ____opt_65_67 = 0
+        local ____opt_66_68 = ____opt_66
+        if ____opt_66_68 == nil then
+            ____opt_66_68 = 0
         end
-        local x = ____opt_65_67
-        local ____opt_68 = config.data
-        if ____opt_68 ~= nil then
-            ____opt_68 = ____opt_68.y
+        local x = ____opt_66_68
+        local ____opt_69 = config.data
+        if ____opt_69 ~= nil then
+            ____opt_69 = ____opt_69.y
         end
-        local ____opt_68_70 = ____opt_68
-        if ____opt_68_70 == nil then
-            ____opt_68_70 = 0
+        local ____opt_69_71 = ____opt_69
+        if ____opt_69_71 == nil then
+            ____opt_69_71 = 0
         end
-        local y = ____opt_68_70
-        local ____opt_71 = config.data
-        if ____opt_71 ~= nil then
-            ____opt_71 = ____opt_71.z
+        local y = ____opt_69_71
+        local ____opt_72 = config.data
+        if ____opt_72 ~= nil then
+            ____opt_72 = ____opt_72.z
         end
-        local ____opt_71_73 = ____opt_71
-        if ____opt_71_73 == nil then
-            ____opt_71_73 = 0
+        local ____opt_72_74 = ____opt_72
+        if ____opt_72_74 == nil then
+            ____opt_72_74 = 0
         end
-        local z = ____opt_71_73
+        local z = ____opt_72_74
         CcShell:run(
             "gps",
             "host",
@@ -4551,7 +4555,7 @@ local ____ = "use strict";
             z
         )
     end
-    local GpsEntrypoint = ____class_64
+    local GpsEntrypoint = ____class_65
     __TS__New(GpsEntrypoint):run()
 end)(_G)
  end,
