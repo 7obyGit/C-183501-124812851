@@ -3749,16 +3749,8 @@ local ____ = "use strict";
     ____class_15.name = "GpsEntrypoint"
     __TS__ClassExtends(____class_15, Entrypoint)
     function ____class_15.prototype.onStart(self)
-        error(
-            __TS__New(Error, "Method not implemented."),
-            0
-        )
     end
     function ____class_15.prototype.onStop(self)
-        error(
-            __TS__New(Error, "Method not implemented."),
-            0
-        )
     end
     function ____class_15.prototype.routeRun(self)
         print("GPS")
