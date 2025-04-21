@@ -3103,7 +3103,6 @@ local ____ = "use strict";
             local i = 0
             while i < length do
                 local luaIndex = i + 1
-                print(luaIndex)
                 result[luaIndex] = elements[luaIndex]
                 i = i + 1
             end

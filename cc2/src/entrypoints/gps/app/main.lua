@@ -2991,7 +2991,6 @@ local ____ = "use strict";
             local i = 0
             while i < length do
                 local luaIndex = i + 1
-                print(luaIndex)
                 result[luaIndex] = elements[luaIndex]
                 i = i + 1
             end
@@ -3637,6 +3636,14 @@ local ____ = "use strict";
         self:entries():forEach(action)
         return self
     end
+    function _LuaMap.prototype.forEachKey(self, action)
+        self:keys():forEach(action)
+        return self
+    end
+    function _LuaMap.prototype.forEachValue(self, action)
+        self:values():forEach(action)
+        return self
+    end
     function _LuaMap.prototype.select(self, transformer)
         local result = __TS__New(_LuaMap)
         self.map:forEach(function(____, value, key)
@@ -3748,19 +3755,77 @@ local ____ = "use strict";
     end
     local Entrypoint = ____class_16
     local ____class_17 = __TS__Class()
-    ____class_17.name = "GpsEntrypoint"
-    __TS__ClassExtends(____class_17, Entrypoint)
-    function ____class_17.prototype.registerRoutes(self)
+    ____class_17.name = "LogListener"
+    function ____class_17.prototype.____constructor(self)
+    end
+    local LogListener = ____class_17
+    local ____class_18 = __TS__Class()
+    ____class_18.name = "ConsoleLogListener"
+    __TS__ClassExtends(____class_18, LogListener)
+    function ____class_18.prototype.getName(self)
+        return "ConsoleLogListener"
+    end
+    function ____class_18.prototype.onLog(self, level, message)
+        print((("[" .. tostring(level)) .. "] ") .. tostring(message))
+    end
+    local ConsoleLogListener = ____class_18
+    local ____class_19 = __TS__Class()
+    ____class_19.name = "Logger"
+    function ____class_19.prototype.____constructor(self)
+    end
+    function ____class_19.addListener(self, listener)
+        self.listeners:set(
+            listener:getName(),
+            listener
+        )
+    end
+    function ____class_19.clearListeners(self)
+        self.listeners:clear()
+    end
+    function ____class_19.log(self, level, ...)
+        local args = {...}
+        local message = table.concat(
+            __TS__ArrayMap(
+                args,
+                function(____, arg) return tostring(arg) end
+            ),
+            " "
+        )
+        self.listeners:forEachValue(function(____, listener)
+            listener:onLog(level, message)
+        end)
+    end
+    function ____class_19.debug(self, ...)
+        self:log("DEBUG", ...)
+    end
+    function ____class_19.info(self, ...)
+        self:log("INFO", ...)
+    end
+    function ____class_19.warn(self, ...)
+        self:log("WARN", ...)
+    end
+    function ____class_19.error(self, ...)
+        self:log("ERROR", ...)
+    end
+    ____class_19.listeners = LuaMap:ofSingleton(
+        __TS__New(ConsoleLogListener):getName(),
+        __TS__New(ConsoleLogListener)
+    )
+    local Logger = ____class_19
+    local ____class_20 = __TS__Class()
+    ____class_20.name = "GpsEntrypoint"
+    __TS__ClassExtends(____class_20, Entrypoint)
+    function ____class_20.prototype.registerRoutes(self)
         self:registerRoute("run", self.routeRun)
     end
-    function ____class_17.prototype.onStart(self)
+    function ____class_20.prototype.onStart(self)
     end
-    function ____class_17.prototype.onStop(self)
+    function ____class_20.prototype.onStop(self)
     end
-    function ____class_17.prototype.routeRun(self)
-        print("GPS")
+    function ____class_20.prototype.routeRun(self)
+        Logger:info("GPS")
         local args = ExecutionContext.commandLineArguments
-        print("Args: ", args)
+        Logger:debug("Args:", args)
         local x = 0
         local y = 0
         local z = 0
@@ -3772,7 +3837,7 @@ local ____ = "use strict";
             z
         )
     end
-    local GpsEntrypoint = ____class_17
+    local GpsEntrypoint = ____class_20
     __TS__New(GpsEntrypoint):run()
 end)(_G)
  end,
