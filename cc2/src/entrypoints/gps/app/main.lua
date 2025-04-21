@@ -2793,7 +2793,6 @@ local __TS__Unpack = ____lualib.__TS__Unpack
 local __TS__ArraySlice = ____lualib.__TS__ArraySlice
 local Map = ____lualib.Map
 local __TS__Iterator = ____lualib.__TS__Iterator
-local __TS__ObjectGetOwnPropertyDescriptor = ____lualib.__TS__ObjectGetOwnPropertyDescriptor
 local __TS__ClassExtends = ____lualib.__TS__ClassExtends
 local ____ = "use strict";
 (function()
@@ -3710,40 +3709,6 @@ local ____ = "use strict";
         end
         self:onStop()
     end
-    function ____class_14.prototype.getMethodsFromBaseDown(self, instance, baseClass)
-        local methodSet = __TS__New(Set)
-        local proto = Object:getPrototypeOf(instance)
-        while proto and proto ~= Object.prototype do
-            local methodNames = __TS__ArrayFilter(
-                Object:getOwnPropertyNames(proto),
-                function(____, name)
-                    return type(proto[name]) == "function" and name ~= "constructor"
-                end
-            )
-            __TS__ArrayForEach(
-                methodNames,
-                function(____, name) return methodSet:add(name) end
-            )
-            if proto.constructor == baseClass then
-                break
-            end
-            proto = Object:getPrototypeOf(proto)
-        end
-        return __TS__ArrayFrom(methodSet)
-    end
-    function ____class_14.prototype.registerRoutes(self)
-        local prototype = Object:getPrototypeOf(self)
-        __TS__ArrayForEach(
-            __TS__ArrayFilter(
-                Object:getOwnPropertyNames(prototype),
-                function(____, name)
-                    local descriptor = __TS__ObjectGetOwnPropertyDescriptor(prototype, name)
-                    return type(prototype[name]) == "function" and name ~= "constructor"
-                end
-            ),
-            console.log
-        )
-    end
     function ____class_14.prototype.registerRoute(self, name, callback)
         self._routes:set(name, callback)
     end
@@ -3767,6 +3732,9 @@ local ____ = "use strict";
     local ____class_15 = __TS__Class()
     ____class_15.name = "GpsEntrypoint"
     __TS__ClassExtends(____class_15, Entrypoint)
+    function ____class_15.prototype.registerRoutes(self)
+        self:registerRoute("run", self.routeRun)
+    end
     function ____class_15.prototype.onStart(self)
     end
     function ____class_15.prototype.onStop(self)
