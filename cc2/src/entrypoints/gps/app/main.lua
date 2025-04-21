@@ -4458,7 +4458,7 @@ local ____ = "use strict";
     function _FileLogListener.prototype.onLog(self, level, message)
         FileUtil:appendText(
             _FileLogListener.LOG_PATH,
-            (("[" .. tostring(level)) .. "] ") .. tostring(message)
+            ((("[" .. tostring(level)) .. "] ") .. tostring(message)) .. "\n"
         )
     end
     _FileLogListener.LOG_PATH = "app/logs/main.log"
