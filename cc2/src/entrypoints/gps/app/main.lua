@@ -4445,108 +4445,44 @@ local ____ = "use strict";
     end
     local Entrypoint = ____class_61
     local ____class_62 = __TS__Class()
-    ____class_62.name = "LogListener"
-    function ____class_62.prototype.____constructor(self)
-    end
-    local LogListener = ____class_62
-    local ____class_63 = __TS__Class()
-    ____class_63.name = "ConsoleLogListener"
-    __TS__ClassExtends(____class_63, LogListener)
-    function ____class_63.prototype.getName(self)
-        return "ConsoleLogListener"
-    end
-    function ____class_63.prototype.onLog(self, level, message)
-        print((("[" .. tostring(level)) .. "] ") .. tostring(message))
-    end
-    local ConsoleLogListener = ____class_63
-    local ____class_64 = __TS__Class()
-    ____class_64.name = "Logger"
-    function ____class_64.prototype.____constructor(self)
-    end
-    function ____class_64.addListener(self, listener)
-        self.listeners:set(
-            listener:getName(),
-            listener
-        )
-    end
-    function ____class_64.clearListeners(self)
-        self.listeners:clear()
-    end
-    function ____class_64.log(self, level, ...)
-        local args = {...}
-        local message = table.concat(
-            __TS__ArrayMap(
-                args,
-                function(____, arg) return tostring(arg) end
-            ),
-            " "
-        )
-        self.listeners:forEachValue(function(____, listener)
-            listener:onLog(level, message)
-        end)
-    end
-    function ____class_64.debug(self, ...)
-        self:log("DEBUG", ...)
-    end
-    function ____class_64.info(self, ...)
-        self:log("INFO", ...)
-    end
-    function ____class_64.warn(self, ...)
-        self:log("WARN", ...)
-    end
-    function ____class_64.error(self, ...)
-        self:log("ERROR", ...)
-    end
-    ____class_64.listeners = LuaMap:ofSingleton(
-        __TS__New(ConsoleLogListener):getName(),
-        __TS__New(ConsoleLogListener)
-    )
-    local Logger = ____class_64
-    local ____class_65 = __TS__Class()
-    ____class_65.name = "GpsEntrypoint"
-    __TS__ClassExtends(____class_65, Entrypoint)
-    function ____class_65.prototype.registerRoutes(self)
+    ____class_62.name = "GpsEntrypoint"
+    __TS__ClassExtends(____class_62, Entrypoint)
+    function ____class_62.prototype.registerRoutes(self)
         self:registerRoute("run", self.routeRun)
     end
-    function ____class_65.prototype.onStart(self)
+    function ____class_62.prototype.onStart(self)
     end
-    function ____class_65.prototype.onStop(self)
+    function ____class_62.prototype.onStop(self)
     end
-    function ____class_65.prototype.routeRun(self)
-        local configResult = Config:load()
-        if configResult:isError() then
-            Logger:error(configResult:getErrorMessage())
-            return
+    function ____class_62.prototype.routeRun(self)
+        local config = Config:load():getValueUnsafe()
+        local ____opt_63 = config.data
+        if ____opt_63 ~= nil then
+            ____opt_63 = ____opt_63.x
         end
-        local config = configResult:getValueUnsafe()
-        Logger:debug(CcTextUtils:serializeJSON(config):getValueUnsafe())
+        local ____opt_63_65 = ____opt_63
+        if ____opt_63_65 == nil then
+            ____opt_63_65 = 0
+        end
+        local x = ____opt_63_65
         local ____opt_66 = config.data
         if ____opt_66 ~= nil then
-            ____opt_66 = ____opt_66.x
+            ____opt_66 = ____opt_66.y
         end
         local ____opt_66_68 = ____opt_66
         if ____opt_66_68 == nil then
             ____opt_66_68 = 0
         end
-        local x = ____opt_66_68
+        local y = ____opt_66_68
         local ____opt_69 = config.data
         if ____opt_69 ~= nil then
-            ____opt_69 = ____opt_69.y
+            ____opt_69 = ____opt_69.z
         end
         local ____opt_69_71 = ____opt_69
         if ____opt_69_71 == nil then
             ____opt_69_71 = 0
         end
-        local y = ____opt_69_71
-        local ____opt_72 = config.data
-        if ____opt_72 ~= nil then
-            ____opt_72 = ____opt_72.z
-        end
-        local ____opt_72_74 = ____opt_72
-        if ____opt_72_74 == nil then
-            ____opt_72_74 = 0
-        end
-        local z = ____opt_72_74
+        local z = ____opt_69_71
         CcShell:run(
             "gps",
             "host",
@@ -4555,7 +4491,7 @@ local ____ = "use strict";
             z
         )
     end
-    local GpsEntrypoint = ____class_65
+    local GpsEntrypoint = ____class_62
     __TS__New(GpsEntrypoint):run()
 end)(_G)
  end,
