@@ -3089,6 +3089,27 @@ local ____ = "use strict";
         return {__TS__Spread(self.elements)}
     end
     local LuaSet = _LuaSet
+    local ____class_6 = __TS__Class()
+    ____class_6.name = "TableUtil"
+    function ____class_6.prototype.____constructor(self)
+    end
+    function ____class_6.fromArray(self, elements)
+        local result = {}
+        if elements == nil then
+            return result
+        end
+        local length = #elements
+        do
+            local i = 0
+            while i < length do
+                local luaIndex = i + 1
+                result[luaIndex] = elements[luaIndex]
+                i = i + 1
+            end
+        end
+        return result
+    end
+    local TableUtil = ____class_6
     local _LuaList = __TS__Class()
     _LuaList.name = "_LuaList"
     function _LuaList.prototype.____constructor(self, elements)
@@ -3133,8 +3154,8 @@ local ____ = "use strict";
         return self.elements[index]
     end
     function _LuaList.prototype.append(self, element)
-        local ____self_elements_6 = self.elements
-        ____self_elements_6[#____self_elements_6 + 1] = element
+        local ____self_elements_7 = self.elements
+        ____self_elements_7[#____self_elements_7 + 1] = element
         return self
     end
     function _LuaList.prototype.appendAll(self, elements)
@@ -3302,11 +3323,11 @@ local ____ = "use strict";
             while i < #self.elements do
                 local element = self.elements[i + 1]
                 local selectorValue = selector(_G, element)
-                local ____minSelectorValue_7 = minSelectorValue
-                if ____minSelectorValue_7 == nil then
-                    ____minSelectorValue_7 = 0
+                local ____minSelectorValue_8 = minSelectorValue
+                if ____minSelectorValue_8 == nil then
+                    ____minSelectorValue_8 = 0
                 end
-                if selectorValue < ____minSelectorValue_7 then
+                if selectorValue < ____minSelectorValue_8 then
                     minElement = element
                     minSelectorValue = selectorValue
                 end
@@ -3332,11 +3353,11 @@ local ____ = "use strict";
             while i < #self.elements do
                 local element = self.elements[i + 1]
                 local selectorValue = selector(_G, element)
-                local ____maxSelectorValue_8 = maxSelectorValue
-                if ____maxSelectorValue_8 == nil then
-                    ____maxSelectorValue_8 = 0
+                local ____maxSelectorValue_9 = maxSelectorValue
+                if ____maxSelectorValue_9 == nil then
+                    ____maxSelectorValue_9 = 0
                 end
-                if selectorValue > ____maxSelectorValue_8 then
+                if selectorValue > ____maxSelectorValue_9 then
                     maxElement = element
                     maxSelectorValue = selectorValue
                 end
@@ -3374,6 +3395,9 @@ local ____ = "use strict";
     end
     function _LuaList.prototype.toArray(self)
         return self.elements
+    end
+    function _LuaList.prototype.toTable(self)
+        return TableUtil:fromArray(self:toArray())
     end
     LuaList = _LuaList
     print("First")

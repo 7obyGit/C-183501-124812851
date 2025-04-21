@@ -2962,12 +2962,26 @@ local ____ = "use strict";
         end
         return _Result:of(callback(_G, self.value))
     end
-    local Result = _Result
-    local ____class_6 = __TS__Class()
-    ____class_6.name = "TableUtil"
-    function ____class_6.prototype.____constructor(self)
+    function _Result.prototype.orElseThrow(self, message)
+        if not self.value then
+            local ____Error_7 = Error
+            local ____message_6 = message
+            if ____message_6 == nil then
+                ____message_6 = "Cannot unwrap undefined value"
+            end
+            error(
+                __TS__New(____Error_7, ____message_6),
+                0
+            )
+        end
+        return self.value
     end
-    function ____class_6.fromArray(self, elements)
+    local Result = _Result
+    local ____class_8 = __TS__Class()
+    ____class_8.name = "TableUtil"
+    function ____class_8.prototype.____constructor(self)
+    end
+    function ____class_8.fromArray(self, elements)
         local result = {}
         if elements == nil then
             return result
@@ -2975,7 +2989,7 @@ local ____ = "use strict";
         local length = #elements
         do
             local i = 0
-            while i <= length do
+            while i < length do
                 local luaIndex = i + 1
                 result[luaIndex] = elements[luaIndex]
                 i = i + 1
@@ -2983,34 +2997,34 @@ local ____ = "use strict";
         end
         return result
     end
-    local TableUtil = ____class_6
-    local ____class_7 = __TS__Class()
-    ____class_7.name = "CcShell"
-    function ____class_7.prototype.____constructor(self)
+    local TableUtil = ____class_8
+    local ____class_9 = __TS__Class()
+    ____class_9.name = "CcShell"
+    function ____class_9.prototype.____constructor(self)
     end
-    function ____class_7.execute(self, command, ...)
+    function ____class_9.execute(self, command, ...)
         local args = {...}
         local argsTable = TableUtil:fromArray(args)
         local success = false
         success = shell.execute(command, table.unpack(argsTable))
         return Result:of(success)
     end
-    function ____class_7.run(self, command, ...)
+    function ____class_9.run(self, command, ...)
         local args = {...}
         local argsTable = TableUtil:fromArray(args)
         local success = false
         success = shell.run(command, table.unpack(argsTable))
         return Result:of(success)
     end
-    function ____class_7.exit(self)
+    function ____class_9.exit(self)
         shell.exit()
     end
-    function ____class_7.getCurrentWorkingDirectory(self)
+    function ____class_9.getCurrentWorkingDirectory(self)
         local currentDir = ""
         currentDir = shell.dir()
         return currentDir
     end
-    function ____class_7.setCurrentWorkingDirectory(self, dir)
+    function ____class_9.setCurrentWorkingDirectory(self, dir)
         local success = true
         local ____error = nil
         local ok, err = pcall(function()
@@ -3018,33 +3032,33 @@ local ____ = "use strict";
         end)
         success = ok
         error = err
-        local ____success_8
+        local ____success_10
         if success then
-            ____success_8 = Result:void()
+            ____success_10 = Result:void()
         else
-            ____success_8 = Result:error(____error or "Unknown error")
+            ____success_10 = Result:error(____error or "Unknown error")
         end
-        return ____success_8
+        return ____success_10
     end
-    function ____class_7.getPath(self)
+    function ____class_9.getPath(self)
         local currentPath = ""
         currentPath = shell.path()
         return currentPath
     end
-    function ____class_7.setPath(self, path)
+    function ____class_9.setPath(self, path)
         shell.setPath(path)
     end
-    function ____class_7.getAbsolutePath(self, path)
+    function ____class_9.getAbsolutePath(self, path)
         local resolvedPath = ""
         resolvedPath = shell.resolve(path)
         return resolvedPath
     end
-    function ____class_7.resolveProgramPath(self, command)
+    function ____class_9.resolveProgramPath(self, command)
         local programPath
         programPath = shell.resolveProgram(command)
         return Optional:ofNullable(programPath)
     end
-    function ____class_7.getProgramList(self, includeHidden)
+    function ____class_9.getProgramList(self, includeHidden)
         local programs = {}
         local progs = shell.programs(includeHidden)
         for i = 1, #progs do
@@ -3052,11 +3066,11 @@ local ____ = "use strict";
         end
         return programs
     end
-    function ____class_7.getCompletions(self, sLine)
+    function ____class_9.getCompletions(self, sLine)
         local completions = shell.complete(sLine)
         return Optional:ofNullable(completions):getValueOrDefault({})
     end
-    function ____class_7.getCompletionsForProgramName(self, program)
+    function ____class_9.getCompletionsForProgramName(self, program)
         local completions = {}
         local comps = shell.completeProgram(program)
         for i = 1, #comps do
@@ -3064,10 +3078,10 @@ local ____ = "use strict";
         end
         return completions
     end
-    function ____class_7.setCompletionFunction(self, program, complete)
+    function ____class_9.setCompletionFunction(self, program, complete)
         shell.setCompletionFunction(program, complete)
     end
-    function ____class_7.getCompletionInfo(self)
+    function ____class_9.getCompletionInfo(self)
         local info = {}
         local compInfo = shell.getCompletionInfo()
         for k,v in pairs(compInfo) do
@@ -3075,18 +3089,18 @@ local ____ = "use strict";
         end
         return info
     end
-    function ____class_7.getPathToRunningProgram(self)
+    function ____class_9.getPathToRunningProgram(self)
         local programPath = ""
         programPath = shell.getRunningProgram()
         return programPath
     end
-    function ____class_7.setAlias(self, command, program)
+    function ____class_9.setAlias(self, command, program)
         shell.setAlias(command, program)
     end
-    function ____class_7.clearAlias(self, command)
+    function ____class_9.clearAlias(self, command)
         shell.clearAlias(command)
     end
-    function ____class_7.aliases(self)
+    function ____class_9.aliases(self)
         local aliases = {}
         local als = shell.aliases()
         for k,v in pairs(als) do
@@ -3094,23 +3108,23 @@ local ____ = "use strict";
         end
         return aliases
     end
-    function ____class_7.openTab(self, command, ...)
+    function ____class_9.openTab(self, command, ...)
         local args = {...}
         local argsTable = TableUtil:fromArray(args)
         local tabId = nil
         tabId = shell.openTab(command, table.unpack(argsTable))
-        local ____temp_9
+        local ____temp_11
         if tabId ~= nil then
-            ____temp_9 = Result:of(tabId)
+            ____temp_11 = Result:of(tabId)
         else
-            ____temp_9 = Result:error("Failed to open tab")
+            ____temp_11 = Result:error("Failed to open tab")
         end
-        return ____temp_9
+        return ____temp_11
     end
-    function ____class_7.switchTab(self, id)
+    function ____class_9.switchTab(self, id)
         shell.switchTab(id)
     end
-    local CcShell = ____class_7
+    local CcShell = ____class_9
     local _LuaSet = __TS__Class()
     _LuaSet.name = "_LuaSet"
     function _LuaSet.prototype.____constructor(self)
@@ -3253,8 +3267,8 @@ local ____ = "use strict";
         return self.elements[index]
     end
     function _LuaList.prototype.append(self, element)
-        local ____self_elements_10 = self.elements
-        ____self_elements_10[#____self_elements_10 + 1] = element
+        local ____self_elements_12 = self.elements
+        ____self_elements_12[#____self_elements_12 + 1] = element
         return self
     end
     function _LuaList.prototype.appendAll(self, elements)
@@ -3422,11 +3436,11 @@ local ____ = "use strict";
             while i < #self.elements do
                 local element = self.elements[i + 1]
                 local selectorValue = selector(_G, element)
-                local ____minSelectorValue_11 = minSelectorValue
-                if ____minSelectorValue_11 == nil then
-                    ____minSelectorValue_11 = 0
+                local ____minSelectorValue_13 = minSelectorValue
+                if ____minSelectorValue_13 == nil then
+                    ____minSelectorValue_13 = 0
                 end
-                if selectorValue < ____minSelectorValue_11 then
+                if selectorValue < ____minSelectorValue_13 then
                     minElement = element
                     minSelectorValue = selectorValue
                 end
@@ -3452,11 +3466,11 @@ local ____ = "use strict";
             while i < #self.elements do
                 local element = self.elements[i + 1]
                 local selectorValue = selector(_G, element)
-                local ____maxSelectorValue_12 = maxSelectorValue
-                if ____maxSelectorValue_12 == nil then
-                    ____maxSelectorValue_12 = 0
+                local ____maxSelectorValue_14 = maxSelectorValue
+                if ____maxSelectorValue_14 == nil then
+                    ____maxSelectorValue_14 = 0
                 end
-                if selectorValue > ____maxSelectorValue_12 then
+                if selectorValue > ____maxSelectorValue_14 then
                     maxElement = element
                     maxSelectorValue = selectorValue
                 end
@@ -3495,13 +3509,16 @@ local ____ = "use strict";
     function _LuaList.prototype.toArray(self)
         return self.elements
     end
-    LuaList = _LuaList
-    local ____class_13 = __TS__Class()
-    ____class_13.name = "ExecutionContext"
-    function ____class_13.prototype.____constructor(self)
+    function _LuaList.prototype.toTable(self)
+        return TableUtil:fromArray(self:toArray())
     end
-    ____class_13.commandLineArguments = LuaList:ofTable(COMMAND_LINE_ARGUMENTS)
-    local ExecutionContext = ____class_13
+    LuaList = _LuaList
+    local ____class_15 = __TS__Class()
+    ____class_15.name = "ExecutionContext"
+    function ____class_15.prototype.____constructor(self)
+    end
+    ____class_15.commandLineArguments = LuaList:ofTable(COMMAND_LINE_ARGUMENTS)
+    local ExecutionContext = ____class_15
     local _LuaMapEntry = __TS__Class()
     _LuaMapEntry.name = "_LuaMapEntry"
     function _LuaMapEntry.prototype.____constructor(self, key, value)
@@ -3688,12 +3705,12 @@ local ____ = "use strict";
         return newMap
     end
     local LuaMap = _LuaMap
-    local ____class_14 = __TS__Class()
-    ____class_14.name = "Entrypoint"
-    function ____class_14.prototype.____constructor(self)
+    local ____class_16 = __TS__Class()
+    ____class_16.name = "Entrypoint"
+    function ____class_16.prototype.____constructor(self)
         self._routes = LuaMap:empty()
     end
-    function ____class_14.prototype.run(self)
+    function ____class_16.prototype.run(self)
         self:registerRoutes()
         self:onStart()
         do
@@ -3709,10 +3726,10 @@ local ____ = "use strict";
         end
         self:onStop()
     end
-    function ____class_14.prototype.registerRoute(self, name, callback)
+    function ____class_16.prototype.registerRoute(self, name, callback)
         self._routes:set(name, callback)
     end
-    function ____class_14.prototype.dispatchRoute(self)
+    function ____class_16.prototype.dispatchRoute(self)
         local targetRouteName = ExecutionContext.commandLineArguments:first():orElseThrow()
         self._routes:get(targetRouteName):ifEmpty(function()
             local validRouteNamesString = ("'" .. self._routes:keys():join("', '")) .. "'"
@@ -3725,21 +3742,21 @@ local ____ = "use strict";
             )
         end):ifPresent(function(____, routeFunction) return routeFunction(_G) end)
     end
-    function ____class_14.prototype.onCrash(self, cause)
+    function ____class_16.prototype.onCrash(self, cause)
         error(cause, 0)
     end
-    local Entrypoint = ____class_14
-    local ____class_15 = __TS__Class()
-    ____class_15.name = "GpsEntrypoint"
-    __TS__ClassExtends(____class_15, Entrypoint)
-    function ____class_15.prototype.registerRoutes(self)
+    local Entrypoint = ____class_16
+    local ____class_17 = __TS__Class()
+    ____class_17.name = "GpsEntrypoint"
+    __TS__ClassExtends(____class_17, Entrypoint)
+    function ____class_17.prototype.registerRoutes(self)
         self:registerRoute("run", self.routeRun)
     end
-    function ____class_15.prototype.onStart(self)
+    function ____class_17.prototype.onStart(self)
     end
-    function ____class_15.prototype.onStop(self)
+    function ____class_17.prototype.onStop(self)
     end
-    function ____class_15.prototype.routeRun(self)
+    function ____class_17.prototype.routeRun(self)
         print("GPS")
         local args = ExecutionContext.commandLineArguments
         print("Args: ", args)
@@ -3754,7 +3771,7 @@ local ____ = "use strict";
             z
         )
     end
-    local GpsEntrypoint = ____class_15
+    local GpsEntrypoint = ____class_17
     __TS__New(GpsEntrypoint):run()
 end)(_G)
  end,
