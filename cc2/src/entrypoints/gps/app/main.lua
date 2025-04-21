@@ -2775,7 +2775,6 @@ local __TS__New = ____lualib.__TS__New
 local Set = ____lualib.Set
 local __TS__Spread = ____lualib.__TS__Spread
 local __TS__ArrayFrom = ____lualib.__TS__ArrayFrom
-local __TS__ArrayMap = ____lualib.__TS__ArrayMap
 local __TS__ArrayJoin = ____lualib.__TS__ArrayJoin
 local __TS__ArrayUnshift = ____lualib.__TS__ArrayUnshift
 local __TS__ArraySplice = ____lualib.__TS__ArraySplice
@@ -2785,6 +2784,7 @@ local __TS__ArrayReverse = ____lualib.__TS__ArrayReverse
 local __TS__ArraySort = ____lualib.__TS__ArraySort
 local __TS__ArrayFlat = ____lualib.__TS__ArrayFlat
 local __TS__ArrayForEach = ____lualib.__TS__ArrayForEach
+local __TS__ArrayMap = ____lualib.__TS__ArrayMap
 local __TS__ArrayFilter = ____lualib.__TS__ArrayFilter
 local __TS__ArrayReduce = ____lualib.__TS__ArrayReduce
 local __TS__ArraySome = ____lualib.__TS__ArraySome
@@ -2947,28 +2947,49 @@ local ____ = "use strict";
     end
     local Result = _Result
     local ____class_4 = __TS__Class()
-    ____class_4.name = "CcShell"
+    ____class_4.name = "TableUtil"
     function ____class_4.prototype.____constructor(self)
     end
-    function ____class_4.execute(self, command, ...)
+    function ____class_4.fromArray(self, elements)
+        local result = {}
+        do
+            local i = 0
+            while i <= elements.length do
+                local luaIndex = i + 1
+                Lua:literal(((("result[" .. tostring(luaIndex)) .. "] = elements[") .. tostring(luaIndex)) .. "]")
+                i = i + 1
+            end
+        end
+        return result
+    end
+    local TableUtil = ____class_4
+    local ____class_5 = __TS__Class()
+    ____class_5.name = "CcShell"
+    function ____class_5.prototype.____constructor(self)
+    end
+    function ____class_5.execute(self, command, ...)
+        local args2 = {...}
+        local argsTable = TableUtil:fromArray(args2)
         local success = false
-        success = shell.execute(command, table.unpack(args))
+        success = shell.execute(command, table.unpack(argsTable))
         return Result:of(success)
     end
-    function ____class_4.run(self, ...)
+    function ____class_5.run(self, ...)
+        local args2 = {...}
+        local argsTable = TableUtil:fromArray(args2)
         local success = false
-        success = shell.run(table.unpack(args))
+        success = shell.run(table.unpack(argsTable))
         return Result:of(success)
     end
-    function ____class_4.exit(self)
+    function ____class_5.exit(self)
         shell.exit()
     end
-    function ____class_4.getCurrentWorkingDirectory(self)
+    function ____class_5.getCurrentWorkingDirectory(self)
         local currentDir = ""
         currentDir = shell.dir()
         return currentDir
     end
-    function ____class_4.setCurrentWorkingDirectory(self, dir)
+    function ____class_5.setCurrentWorkingDirectory(self, dir)
         local success = true
         local ____error = nil
         local ok, err = pcall(function()
@@ -2976,33 +2997,33 @@ local ____ = "use strict";
         end)
         success = ok
         error = err
-        local ____success_5
+        local ____success_6
         if success then
-            ____success_5 = Result:void()
+            ____success_6 = Result:void()
         else
-            ____success_5 = Result:error(____error or "Unknown error")
+            ____success_6 = Result:error(____error or "Unknown error")
         end
-        return ____success_5
+        return ____success_6
     end
-    function ____class_4.getPath(self)
+    function ____class_5.getPath(self)
         local currentPath = ""
         currentPath = shell.path()
         return currentPath
     end
-    function ____class_4.setPath(self, path)
+    function ____class_5.setPath(self, path)
         shell.setPath(path)
     end
-    function ____class_4.getAbsolutePath(self, path)
+    function ____class_5.getAbsolutePath(self, path)
         local resolvedPath = ""
         resolvedPath = shell.resolve(path)
         return resolvedPath
     end
-    function ____class_4.resolveProgramPath(self, command)
+    function ____class_5.resolveProgramPath(self, command)
         local programPath
         programPath = shell.resolveProgram(command)
         return Optional:ofNullable(programPath)
     end
-    function ____class_4.getProgramList(self, includeHidden)
+    function ____class_5.getProgramList(self, includeHidden)
         local programs = {}
         local progs = shell.programs(includeHidden)
         for i = 1, #progs do
@@ -3010,11 +3031,11 @@ local ____ = "use strict";
         end
         return programs
     end
-    function ____class_4.getCompletions(self, sLine)
+    function ____class_5.getCompletions(self, sLine)
         local completions = shell.complete(sLine)
         return Optional:ofNullable(completions):getValueOrDefault({})
     end
-    function ____class_4.getCompletionsForProgramName(self, program)
+    function ____class_5.getCompletionsForProgramName(self, program)
         local completions = {}
         local comps = shell.completeProgram(program)
         for i = 1, #comps do
@@ -3022,10 +3043,10 @@ local ____ = "use strict";
         end
         return completions
     end
-    function ____class_4.setCompletionFunction(self, program, complete)
+    function ____class_5.setCompletionFunction(self, program, complete)
         shell.setCompletionFunction(program, complete)
     end
-    function ____class_4.getCompletionInfo(self)
+    function ____class_5.getCompletionInfo(self)
         local info = {}
         local compInfo = shell.getCompletionInfo()
         for k,v in pairs(compInfo) do
@@ -3033,18 +3054,18 @@ local ____ = "use strict";
         end
         return info
     end
-    function ____class_4.getPathToRunningProgram(self)
+    function ____class_5.getPathToRunningProgram(self)
         local programPath = ""
         programPath = shell.getRunningProgram()
         return programPath
     end
-    function ____class_4.setAlias(self, command, program)
+    function ____class_5.setAlias(self, command, program)
         shell.setAlias(command, program)
     end
-    function ____class_4.clearAlias(self, command)
+    function ____class_5.clearAlias(self, command)
         shell.clearAlias(command)
     end
-    function ____class_4.aliases(self)
+    function ____class_5.aliases(self)
         local aliases = {}
         local als = shell.aliases()
         for k,v in pairs(als) do
@@ -3052,21 +3073,23 @@ local ____ = "use strict";
         end
         return aliases
     end
-    function ____class_4.openTab(self, ...)
+    function ____class_5.openTab(self, ...)
+        local args2 = {...}
+        local argsTable = TableUtil:fromArray(args2)
         local tabId = nil
-        tabId = shell.openTab(table.unpack(args))
-        local ____temp_6
+        tabId = shell.openTab(table.unpack(argsTable))
+        local ____temp_7
         if tabId ~= nil then
-            ____temp_6 = Result:of(tabId)
+            ____temp_7 = Result:of(tabId)
         else
-            ____temp_6 = Result:error("Failed to open tab")
+            ____temp_7 = Result:error("Failed to open tab")
         end
-        return ____temp_6
+        return ____temp_7
     end
-    function ____class_4.switchTab(self, id)
+    function ____class_5.switchTab(self, id)
         shell.switchTab(id)
     end
-    local CcShell = ____class_4
+    local CcShell = ____class_5
     local _LuaSet = __TS__Class()
     _LuaSet.name = "_LuaSet"
     function _LuaSet.prototype.____constructor(self)
@@ -3203,20 +3226,14 @@ local ____ = "use strict";
         return __TS__New(_LuaList, {})
     end
     function _LuaList.prototype.__tostring(self)
-        return ("[" .. __TS__ArrayJoin(
-            __TS__ArrayMap(
-                self.elements,
-                function(____, element) return tostring(element) end
-            ),
-            ", "
-        )) .. "]"
+        return ("[" .. __TS__ArrayJoin(self.elements, ", ")) .. "]"
     end
     function _LuaList.prototype.get(self, index)
         return self.elements[index]
     end
     function _LuaList.prototype.append(self, element)
-        local ____self_elements_7 = self.elements
-        ____self_elements_7[#____self_elements_7 + 1] = element
+        local ____self_elements_8 = self.elements
+        ____self_elements_8[#____self_elements_8 + 1] = element
         return self
     end
     function _LuaList.prototype.appendAll(self, elements)
@@ -3384,11 +3401,11 @@ local ____ = "use strict";
             while i < #self.elements do
                 local element = self.elements[i + 1]
                 local selectorValue = selector(_G, element)
-                local ____minSelectorValue_8 = minSelectorValue
-                if ____minSelectorValue_8 == nil then
-                    ____minSelectorValue_8 = 0
+                local ____minSelectorValue_9 = minSelectorValue
+                if ____minSelectorValue_9 == nil then
+                    ____minSelectorValue_9 = 0
                 end
-                if selectorValue < ____minSelectorValue_8 then
+                if selectorValue < ____minSelectorValue_9 then
                     minElement = element
                     minSelectorValue = selectorValue
                 end
@@ -3414,11 +3431,11 @@ local ____ = "use strict";
             while i < #self.elements do
                 local element = self.elements[i + 1]
                 local selectorValue = selector(_G, element)
-                local ____maxSelectorValue_9 = maxSelectorValue
-                if ____maxSelectorValue_9 == nil then
-                    ____maxSelectorValue_9 = 0
+                local ____maxSelectorValue_10 = maxSelectorValue
+                if ____maxSelectorValue_10 == nil then
+                    ____maxSelectorValue_10 = 0
                 end
-                if selectorValue > ____maxSelectorValue_9 then
+                if selectorValue > ____maxSelectorValue_10 then
                     maxElement = element
                     maxSelectorValue = selectorValue
                 end
@@ -3458,12 +3475,12 @@ local ____ = "use strict";
         return self.elements
     end
     LuaList = _LuaList
-    local ____class_10 = __TS__Class()
-    ____class_10.name = "ExecutionContext"
-    function ____class_10.prototype.____constructor(self)
+    local ____class_11 = __TS__Class()
+    ____class_11.name = "ExecutionContext"
+    function ____class_11.prototype.____constructor(self)
     end
-    ____class_10.commandLineArguments = LuaList:ofTable(COMMAND_LINE_ARGUMENTS)
-    local ExecutionContext = ____class_10
+    ____class_11.commandLineArguments = LuaList:ofTable(COMMAND_LINE_ARGUMENTS)
+    local ExecutionContext = ____class_11
     print("GPS")
     local args = ExecutionContext.commandLineArguments
     print("Args: ", args)
