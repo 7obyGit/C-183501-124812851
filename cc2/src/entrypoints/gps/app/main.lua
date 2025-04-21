@@ -2791,9 +2791,9 @@ local __TS__ArraySome = ____lualib.__TS__ArraySome
 local __TS__ArrayEvery = ____lualib.__TS__ArrayEvery
 local __TS__Unpack = ____lualib.__TS__Unpack
 local __TS__ArraySlice = ____lualib.__TS__ArraySlice
+local __TS__ClassExtends = ____lualib.__TS__ClassExtends
 local Map = ____lualib.Map
 local __TS__Iterator = ____lualib.__TS__Iterator
-local __TS__ClassExtends = ____lualib.__TS__ClassExtends
 local ____ = "use strict";
 (function()
     local LuaList
@@ -4134,58 +4134,21 @@ local ____ = "use strict";
     ____class_56.empty_json_array = {}
     ____class_56.json_null = {}
     local CcTextUtils = ____class_56
-    local _Config = __TS__Class()
-    _Config.name = "_Config"
-    function _Config.prototype.____constructor(self, data)
-        self.data = data
+    local ____class_57 = __TS__Class()
+    ____class_57.name = "LogListener"
+    function ____class_57.prototype.____constructor(self)
     end
-    function _Config.load(self)
-        if not FileUtil:exists(self._configPath) then
-            FileUtil:writeText(self._configPath, "{}")
-        end
-        local contentString = FileUtil:readText(self._configPath)
-        if contentString:isError() then
-            return Result:error(contentString:getErrorMessage())
-        end
-        local content = CcTextUtils:unserializeJSON(contentString:getValueUnsafe("Could not read config.json"))
-        if content:isError() then
-            error(
-                __TS__New(
-                    Error,
-                    content:getErrorMessage()
-                ),
-                0
-            )
-        end
-        return Result:of(__TS__New(
-            _Config,
-            content:getValueUnsafe("Could not parse config.json")
-        ))
+    local LogListener = ____class_57
+    local ____class_58 = __TS__Class()
+    ____class_58.name = "ConsoleLogListener"
+    __TS__ClassExtends(____class_58, LogListener)
+    function ____class_58.prototype.getName(self)
+        return "ConsoleLogListener"
     end
-    function _Config.create(self, data)
-        local config = __TS__New(_Config, data)
-        local saved = config:save()
-        if saved:isError() then
-            return Result:error(saved:getErrorMessage())
-        end
-        return Result:of(config)
+    function ____class_58.prototype.onLog(self, level, message)
+        print((("[" .. tostring(level)) .. "] ") .. tostring(message))
     end
-    function _Config.prototype.save(self)
-        local contentString = CcTextUtils:serializeJSON(self.data)
-        if contentString:isError() then
-            return Result:error(contentString:getErrorMessage())
-        end
-        local result = FileUtil:writeText(
-            _Config._configPath,
-            contentString:getValueUnsafe("Could not serialize config.json")
-        )
-        if result:isError() then
-            return Result:error(result:getErrorMessage())
-        end
-        return Result:void()
-    end
-    _Config._configPath = "app/data/config.json"
-    local Config = _Config
+    local ConsoleLogListener = ____class_58
     local _LuaMapEntry = __TS__Class()
     _LuaMapEntry.name = "_LuaMapEntry"
     function _LuaMapEntry.prototype.____constructor(self, key, value)
@@ -4380,18 +4343,117 @@ local ____ = "use strict";
         return newMap
     end
     local LuaMap = _LuaMap
-    local ____class_57 = __TS__Class()
-    ____class_57.name = "ExecutionContext"
-    function ____class_57.prototype.____constructor(self)
+    local ____class_59 = __TS__Class()
+    ____class_59.name = "Logger"
+    function ____class_59.prototype.____constructor(self)
     end
-    ____class_57.commandLineArguments = LuaList:ofTable(COMMAND_LINE_ARGUMENTS)
-    local ExecutionContext = ____class_57
-    local ____class_58 = __TS__Class()
-    ____class_58.name = "Entrypoint"
-    function ____class_58.prototype.____constructor(self)
+    function ____class_59.addListener(self, listener)
+        self.listeners:set(
+            listener:getName(),
+            listener
+        )
+    end
+    function ____class_59.clearListeners(self)
+        self.listeners:clear()
+    end
+    function ____class_59.log(self, level, ...)
+        local args = {...}
+        local message = table.concat(
+            __TS__ArrayMap(
+                args,
+                function(____, arg) return tostring(arg) end
+            ),
+            " "
+        )
+        self.listeners:forEachValue(function(____, listener)
+            listener:onLog(level, message)
+        end)
+    end
+    function ____class_59.debug(self, ...)
+        self:log("DEBUG", ...)
+    end
+    function ____class_59.info(self, ...)
+        self:log("INFO", ...)
+    end
+    function ____class_59.warn(self, ...)
+        self:log("WARN", ...)
+    end
+    function ____class_59.error(self, ...)
+        self:log("ERROR", ...)
+    end
+    ____class_59.listeners = LuaMap:ofSingleton(
+        __TS__New(ConsoleLogListener):getName(),
+        __TS__New(ConsoleLogListener)
+    )
+    local Logger = ____class_59
+    local _Config = __TS__Class()
+    _Config.name = "_Config"
+    function _Config.prototype.____constructor(self, data)
+        self.data = data
+    end
+    function _Config.load(self)
+        if not FileUtil:exists(self._configPath) then
+            Logger:debug("Creating new config.json file at ", self._configPath)
+            FileUtil:writeText(self._configPath, "{}")
+        end
+        Logger:debug("Loading config.json file")
+        local contentString = FileUtil:readText(self._configPath)
+        if contentString:isError() then
+            return Result:error(contentString:getErrorMessage())
+        end
+        Logger:debug("Parsing config.json file")
+        local content = CcTextUtils:unserializeJSON(contentString:getValueUnsafe("Could not read config.json"))
+        if content:isError() then
+            error(
+                __TS__New(
+                    Error,
+                    content:getErrorMessage()
+                ),
+                0
+            )
+        end
+        Logger:debug("Successfully loaded config.json file")
+        return Result:of(__TS__New(
+            _Config,
+            content:getValueUnsafe("Could not parse config.json")
+        ))
+    end
+    function _Config.create(self, data)
+        local config = __TS__New(_Config, data)
+        local saved = config:save()
+        if saved:isError() then
+            return Result:error(saved:getErrorMessage())
+        end
+        return Result:of(config)
+    end
+    function _Config.prototype.save(self)
+        local contentString = CcTextUtils:serializeJSON(self.data)
+        if contentString:isError() then
+            return Result:error(contentString:getErrorMessage())
+        end
+        local result = FileUtil:writeText(
+            _Config._configPath,
+            contentString:getValueUnsafe("Could not serialize config.json")
+        )
+        if result:isError() then
+            return Result:error(result:getErrorMessage())
+        end
+        return Result:void()
+    end
+    _Config._configPath = "app/data/config.json"
+    local Config = _Config
+    local ____class_60 = __TS__Class()
+    ____class_60.name = "ExecutionContext"
+    function ____class_60.prototype.____constructor(self)
+    end
+    ____class_60.commandLineArguments = LuaList:ofTable(COMMAND_LINE_ARGUMENTS)
+    local ExecutionContext = ____class_60
+    local ____class_61 = __TS__Class()
+    ____class_61.name = "Entrypoint"
+    function ____class_61.prototype.____constructor(self)
         self._routes = LuaMap:empty()
     end
-    function ____class_58.prototype.run(self)
+    function ____class_61.prototype.run(self)
         self:registerRoutes()
         self:onStart()
         do
@@ -4407,10 +4469,10 @@ local ____ = "use strict";
         end
         self:onStop()
     end
-    function ____class_58.prototype.registerRoute(self, name, callback)
+    function ____class_61.prototype.registerRoute(self, name, callback)
         self._routes:set(name, callback)
     end
-    function ____class_58.prototype.dispatchRoute(self)
+    function ____class_61.prototype.dispatchRoute(self)
         local targetRouteName = ExecutionContext.commandLineArguments:first():getValueUnsafe("The first command line argument (route name) was not provided")
         self._routes:get(targetRouteName):ifEmpty(function()
             local validRouteNamesString = ("'" .. self._routes:keys():join("', '")) .. "'"
@@ -4423,68 +4485,10 @@ local ____ = "use strict";
             )
         end):ifPresent(function(____, routeFunction) return routeFunction(_G) end)
     end
-    function ____class_58.prototype.onCrash(self, cause)
+    function ____class_61.prototype.onCrash(self, cause)
         error(cause, 0)
     end
-    local Entrypoint = ____class_58
-    local ____class_59 = __TS__Class()
-    ____class_59.name = "LogListener"
-    function ____class_59.prototype.____constructor(self)
-    end
-    local LogListener = ____class_59
-    local ____class_60 = __TS__Class()
-    ____class_60.name = "ConsoleLogListener"
-    __TS__ClassExtends(____class_60, LogListener)
-    function ____class_60.prototype.getName(self)
-        return "ConsoleLogListener"
-    end
-    function ____class_60.prototype.onLog(self, level, message)
-        print((("[" .. tostring(level)) .. "] ") .. tostring(message))
-    end
-    local ConsoleLogListener = ____class_60
-    local ____class_61 = __TS__Class()
-    ____class_61.name = "Logger"
-    function ____class_61.prototype.____constructor(self)
-    end
-    function ____class_61.addListener(self, listener)
-        self.listeners:set(
-            listener:getName(),
-            listener
-        )
-    end
-    function ____class_61.clearListeners(self)
-        self.listeners:clear()
-    end
-    function ____class_61.log(self, level, ...)
-        local args = {...}
-        local message = table.concat(
-            __TS__ArrayMap(
-                args,
-                function(____, arg) return tostring(arg) end
-            ),
-            " "
-        )
-        self.listeners:forEachValue(function(____, listener)
-            listener:onLog(level, message)
-        end)
-    end
-    function ____class_61.debug(self, ...)
-        self:log("DEBUG", ...)
-    end
-    function ____class_61.info(self, ...)
-        self:log("INFO", ...)
-    end
-    function ____class_61.warn(self, ...)
-        self:log("WARN", ...)
-    end
-    function ____class_61.error(self, ...)
-        self:log("ERROR", ...)
-    end
-    ____class_61.listeners = LuaMap:ofSingleton(
-        __TS__New(ConsoleLogListener):getName(),
-        __TS__New(ConsoleLogListener)
-    )
-    local Logger = ____class_61
+    local Entrypoint = ____class_61
     local ____class_62 = __TS__Class()
     ____class_62.name = "GpsEntrypoint"
     __TS__ClassExtends(____class_62, Entrypoint)
