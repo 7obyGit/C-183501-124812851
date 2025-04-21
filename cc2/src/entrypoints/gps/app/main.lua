@@ -3188,7 +3188,9 @@ local ____ = "use strict";
         self.handle = handle
     end
     function ____class_16.prototype.writeContent(self, content)
-        self.handle.write(content)
+        print(self.handle)
+        print(content)
+        self.handle.write('THIS IS A TEST')
     end
     function ____class_16.prototype.writeLine(self, text)
         self.handle.writeLine(text)
@@ -4349,7 +4351,7 @@ local ____ = "use strict";
         local result = nil
         local errorMessage = nil
         result, errorMessage = textutils.serialize(obj, opts)
-        if error ~= nil then
+        if errorMessage ~= nil then
             return Result:error(errorMessage)
         end
         return Result:of(result)
