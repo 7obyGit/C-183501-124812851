@@ -4011,13 +4011,8 @@ local ____ = "use strict";
         end
         do
             local function ____catch(e)
-                error(e, 0)
-                local ____Result_error_27 = Result.error
-                local ____opt_result_26
-                if e ~= nil then
-                    ____opt_result_26 = e.message
-                end
-                return true, ____Result_error_27(Result, ____opt_result_26)
+                print(e)
+                return true, Result:error(e)
             end
             local ____try, ____hasReturned, ____returnValue = pcall(function()
                 file:getValueUnsafe("No file"):writeContent(content)
@@ -4042,12 +4037,12 @@ local ____ = "use strict";
         end
         do
             local function ____catch(e)
-                local ____Result_error_31 = Result.error
-                local ____opt_result_30
+                local ____Result_error_27 = Result.error
+                local ____opt_result_26
                 if e ~= nil then
-                    ____opt_result_30 = e.message
+                    ____opt_result_26 = e.message
                 end
-                return true, ____Result_error_31(Result, ____opt_result_30)
+                return true, ____Result_error_27(Result, ____opt_result_26)
             end
             local ____try, ____hasReturned, ____returnValue = pcall(function()
                 file:getValueUnsafe("No file"):writeContent(content)
@@ -4073,12 +4068,12 @@ local ____ = "use strict";
     function _FileUtil.deleteFile(self, path)
         do
             local function ____catch(e)
-                local ____Result_error_35 = Result.error
-                local ____opt_result_34
+                local ____Result_error_31 = Result.error
+                local ____opt_result_30
                 if e ~= nil then
-                    ____opt_result_34 = e.message
+                    ____opt_result_30 = e.message
                 end
-                return true, ____Result_error_35(Result, ____opt_result_34)
+                return true, ____Result_error_31(Result, ____opt_result_30)
             end
             local ____try, ____hasReturned, ____returnValue = pcall(function()
                 CcFs:delete(path)
@@ -4095,12 +4090,12 @@ local ____ = "use strict";
     function _FileUtil.copyFile(self, source, destination)
         do
             local function ____catch(e)
-                local ____Result_error_39 = Result.error
-                local ____opt_result_38
+                local ____Result_error_35 = Result.error
+                local ____opt_result_34
                 if e ~= nil then
-                    ____opt_result_38 = e.message
+                    ____opt_result_34 = e.message
                 end
-                return true, ____Result_error_39(Result, ____opt_result_38)
+                return true, ____Result_error_35(Result, ____opt_result_34)
             end
             local ____try, ____hasReturned, ____returnValue = pcall(function()
                 CcFs:copy(source, destination)
@@ -4117,12 +4112,12 @@ local ____ = "use strict";
     function _FileUtil.moveFile(self, source, destination)
         do
             local function ____catch(e)
-                local ____Result_error_43 = Result.error
-                local ____opt_result_42
+                local ____Result_error_39 = Result.error
+                local ____opt_result_38
                 if e ~= nil then
-                    ____opt_result_42 = e.message
+                    ____opt_result_38 = e.message
                 end
-                return true, ____Result_error_43(Result, ____opt_result_42)
+                return true, ____Result_error_39(Result, ____opt_result_38)
             end
             local ____try, ____hasReturned, ____returnValue = pcall(function()
                 CcFs:move(source, destination)
@@ -4137,9 +4132,9 @@ local ____ = "use strict";
         end
     end
     function _FileUtil.getFileSize(self, path)
-        local ____self_44 = _FileUtil:readText(path)
-        return ____self_44["then"](
-            ____self_44,
+        local ____self_40 = _FileUtil:readText(path)
+        return ____self_40["then"](
+            ____self_40,
             function(____, content) return content.length end
         )
     end
@@ -4171,12 +4166,12 @@ local ____ = "use strict";
     function _FileUtil.createDirectory(self, path)
         do
             local function ____catch(e)
-                local ____Result_error_48 = Result.error
-                local ____opt_result_47
+                local ____Result_error_44 = Result.error
+                local ____opt_result_43
                 if e ~= nil then
-                    ____opt_result_47 = e.message
+                    ____opt_result_43 = e.message
                 end
-                return true, ____Result_error_48(Result, ____opt_result_47)
+                return true, ____Result_error_44(Result, ____opt_result_43)
             end
             local ____try, ____hasReturned, ____returnValue = pcall(function()
                 CcFs:createDirectory(path)
@@ -4193,12 +4188,12 @@ local ____ = "use strict";
     function _FileUtil.copyDirectory(self, source, destination)
         do
             local function ____catch(e)
-                local ____Result_error_52 = Result.error
-                local ____opt_result_51
+                local ____Result_error_48 = Result.error
+                local ____opt_result_47
                 if e ~= nil then
-                    ____opt_result_51 = e.message
+                    ____opt_result_47 = e.message
                 end
-                return true, ____Result_error_52(Result, ____opt_result_51)
+                return true, ____Result_error_48(Result, ____opt_result_47)
             end
             local ____try, ____hasReturned, ____returnValue = pcall(function()
                 CcFs:copy(source, destination)
@@ -4249,12 +4244,12 @@ local ____ = "use strict";
     function _FileUtil.moveDirectory(self, source, destination)
         do
             local function ____catch(e)
-                local ____Result_error_56 = Result.error
-                local ____opt_result_55
+                local ____Result_error_52 = Result.error
+                local ____opt_result_51
                 if e ~= nil then
-                    ____opt_result_55 = e.message
+                    ____opt_result_51 = e.message
                 end
-                return true, ____Result_error_56(Result, ____opt_result_55)
+                return true, ____Result_error_52(Result, ____opt_result_51)
             end
             local ____try, ____hasReturned, ____returnValue = pcall(function()
                 CcFs:move(source, destination)
@@ -4271,12 +4266,12 @@ local ____ = "use strict";
     function _FileUtil.deleteDirectory(self, path)
         do
             local function ____catch(e)
-                local ____Result_error_60 = Result.error
-                local ____opt_result_59
+                local ____Result_error_56 = Result.error
+                local ____opt_result_55
                 if e ~= nil then
-                    ____opt_result_59 = e.message
+                    ____opt_result_55 = e.message
                 end
-                return true, ____Result_error_60(Result, ____opt_result_59)
+                return true, ____Result_error_56(Result, ____opt_result_55)
             end
             local ____try, ____hasReturned, ____returnValue = pcall(function()
                 CcFs:delete(path)
@@ -4322,33 +4317,33 @@ local ____ = "use strict";
         return self:writeText(path, newContent)
     end
     local FileUtil = _FileUtil
-    local ____class_61 = __TS__Class()
-    ____class_61.name = "CcTextUtils"
-    function ____class_61.prototype.____constructor(self)
+    local ____class_57 = __TS__Class()
+    ____class_57.name = "CcTextUtils"
+    function ____class_57.prototype.____constructor(self)
     end
-    function ____class_61.slowWrite(self, text, rate)
+    function ____class_57.slowWrite(self, text, rate)
         textutils.slowWrite(text, rate)
     end
-    function ____class_61.slowPrint(self, text, rate)
+    function ____class_57.slowPrint(self, text, rate)
         textutils.slowPrint(text, rate)
     end
-    function ____class_61.formatTime(self, time, twentyFourHour)
+    function ____class_57.formatTime(self, time, twentyFourHour)
         local result = ""
         result = textutils.formatTime(time, twentyFourHour)
         return result
     end
-    function ____class_61.pagedPrint(self, text, freeLines)
+    function ____class_57.pagedPrint(self, text, freeLines)
         local result = 0
         result = textutils.pagedPrint(text, freeLines)
         return result
     end
-    function ____class_61.tabulate(self, ...)
+    function ____class_57.tabulate(self, ...)
         textutils.tabulate(...)
     end
-    function ____class_61.pagedTabulate(self, ...)
+    function ____class_57.pagedTabulate(self, ...)
         textutils.pagedTabulate(...)
     end
-    function ____class_61.serialize(self, obj, opts)
+    function ____class_57.serialize(self, obj, opts)
         local result = nil
         local ____error = nil
         result, error = textutils.serialize(obj, opts)
@@ -4357,7 +4352,7 @@ local ____ = "use strict";
         end
         return Result:of(result)
     end
-    function ____class_61.unserialize(self, str)
+    function ____class_57.unserialize(self, str)
         local result = nil
         result = textutils.unserialize(str)
         if result == nil then
@@ -4365,7 +4360,7 @@ local ____ = "use strict";
         end
         return Result:of(result)
     end
-    function ____class_61.serializeJSON(self, obj, opts)
+    function ____class_57.serializeJSON(self, obj, opts)
         local result = nil
         local ____error = nil
         result, error = textutils.serializeJSON(obj, opts)
@@ -4374,7 +4369,7 @@ local ____ = "use strict";
         end
         return Result:of(result)
     end
-    function ____class_61.unserializeJSON(self, str, opts)
+    function ____class_57.unserializeJSON(self, str, opts)
         local result = nil
         local ____error = nil
         result, error = textutils.unserializeJSON(str, opts)
@@ -4383,19 +4378,19 @@ local ____ = "use strict";
         end
         return Result:of(result)
     end
-    function ____class_61.urlEncode(self, str)
+    function ____class_57.urlEncode(self, str)
         local result = ""
         result = textutils.urlEncode(str)
         return result
     end
-    function ____class_61.getCompletion(self, searchText, searchTable)
+    function ____class_57.getCompletion(self, searchText, searchTable)
         local result = {}
         result = textutils.complete(searchText, searchTable)
         return result
     end
-    ____class_61.empty_json_array = {}
-    ____class_61.json_null = {}
-    local CcTextUtils = ____class_61
+    ____class_57.empty_json_array = {}
+    ____class_57.json_null = {}
+    local CcTextUtils = ____class_57
     local _Config = __TS__Class()
     _Config.name = "_Config"
     function _Config.prototype.____constructor(self, data)
@@ -4452,18 +4447,18 @@ local ____ = "use strict";
     end
     _Config._configPath = "app/data/config.json"
     local Config = _Config
-    local ____class_62 = __TS__Class()
-    ____class_62.name = "ExecutionContext"
-    function ____class_62.prototype.____constructor(self)
+    local ____class_58 = __TS__Class()
+    ____class_58.name = "ExecutionContext"
+    function ____class_58.prototype.____constructor(self)
     end
-    ____class_62.commandLineArguments = LuaList:ofTable(COMMAND_LINE_ARGUMENTS)
-    local ExecutionContext = ____class_62
-    local ____class_63 = __TS__Class()
-    ____class_63.name = "Entrypoint"
-    function ____class_63.prototype.____constructor(self)
+    ____class_58.commandLineArguments = LuaList:ofTable(COMMAND_LINE_ARGUMENTS)
+    local ExecutionContext = ____class_58
+    local ____class_59 = __TS__Class()
+    ____class_59.name = "Entrypoint"
+    function ____class_59.prototype.____constructor(self)
         self._routes = LuaMap:empty()
     end
-    function ____class_63.prototype.run(self)
+    function ____class_59.prototype.run(self)
         self:registerRoutes()
         self:onStart()
         do
@@ -4479,10 +4474,10 @@ local ____ = "use strict";
         end
         self:onStop()
     end
-    function ____class_63.prototype.registerRoute(self, name, callback)
+    function ____class_59.prototype.registerRoute(self, name, callback)
         self._routes:set(name, callback)
     end
-    function ____class_63.prototype.dispatchRoute(self)
+    function ____class_59.prototype.dispatchRoute(self)
         local targetRouteName = ExecutionContext.commandLineArguments:first():getValueUnsafe("The first command line argument (route name) was not provided")
         self._routes:get(targetRouteName):ifEmpty(function()
             local validRouteNamesString = ("'" .. self._routes:keys():join("', '")) .. "'"
@@ -4495,21 +4490,21 @@ local ____ = "use strict";
             )
         end):ifPresent(function(____, routeFunction) return routeFunction(_G) end)
     end
-    function ____class_63.prototype.onCrash(self, cause)
+    function ____class_59.prototype.onCrash(self, cause)
         error(cause, 0)
     end
-    local Entrypoint = ____class_63
-    local ____class_64 = __TS__Class()
-    ____class_64.name = "GpsEntrypoint"
-    __TS__ClassExtends(____class_64, Entrypoint)
-    function ____class_64.prototype.registerRoutes(self)
+    local Entrypoint = ____class_59
+    local ____class_60 = __TS__Class()
+    ____class_60.name = "GpsEntrypoint"
+    __TS__ClassExtends(____class_60, Entrypoint)
+    function ____class_60.prototype.registerRoutes(self)
         self:registerRoute("run", self.routeRun)
     end
-    function ____class_64.prototype.onStart(self)
+    function ____class_60.prototype.onStart(self)
     end
-    function ____class_64.prototype.onStop(self)
+    function ____class_60.prototype.onStop(self)
     end
-    function ____class_64.prototype.routeRun(self)
+    function ____class_60.prototype.routeRun(self)
         local configResult = Config:load()
         if configResult:isError() then
             Logger:error(configResult:getErrorMessage())
@@ -4517,33 +4512,33 @@ local ____ = "use strict";
         end
         local config = configResult:getValueUnsafe("Failed to load config")
         Logger:debug(CcTextUtils:serializeJSON(config))
-        local ____opt_65 = config.data
-        if ____opt_65 ~= nil then
-            ____opt_65 = ____opt_65.x
+        local ____opt_61 = config.data
+        if ____opt_61 ~= nil then
+            ____opt_61 = ____opt_61.x
         end
-        local ____opt_65_67 = ____opt_65
-        if ____opt_65_67 == nil then
-            ____opt_65_67 = 0
+        local ____opt_61_63 = ____opt_61
+        if ____opt_61_63 == nil then
+            ____opt_61_63 = 0
         end
-        local x = ____opt_65_67
-        local ____opt_68 = config.data
-        if ____opt_68 ~= nil then
-            ____opt_68 = ____opt_68.y
+        local x = ____opt_61_63
+        local ____opt_64 = config.data
+        if ____opt_64 ~= nil then
+            ____opt_64 = ____opt_64.y
         end
-        local ____opt_68_70 = ____opt_68
-        if ____opt_68_70 == nil then
-            ____opt_68_70 = 0
+        local ____opt_64_66 = ____opt_64
+        if ____opt_64_66 == nil then
+            ____opt_64_66 = 0
         end
-        local y = ____opt_68_70
-        local ____opt_71 = config.data
-        if ____opt_71 ~= nil then
-            ____opt_71 = ____opt_71.z
+        local y = ____opt_64_66
+        local ____opt_67 = config.data
+        if ____opt_67 ~= nil then
+            ____opt_67 = ____opt_67.z
         end
-        local ____opt_71_73 = ____opt_71
-        if ____opt_71_73 == nil then
-            ____opt_71_73 = 0
+        local ____opt_67_69 = ____opt_67
+        if ____opt_67_69 == nil then
+            ____opt_67_69 = 0
         end
-        local z = ____opt_71_73
+        local z = ____opt_67_69
         CcShell:run(
             "gps",
             "host",
@@ -4552,7 +4547,7 @@ local ____ = "use strict";
             z
         )
     end
-    local GpsEntrypoint = ____class_64
+    local GpsEntrypoint = ____class_60
     __TS__New(GpsEntrypoint):run()
 end)(_G)
  end,
