@@ -2933,21 +2933,26 @@ local ____ = "use strict";
     function _Optional.prototype.isEmpty(self)
         return self.value == nil
     end
-    function _Optional.prototype.getValueUnsafe(self)
+    function _Optional.prototype.getValueUnsafe(self, message)
         if not self.value then
+            local ____Error_3 = Error
+            local ____message_2 = message
+            if ____message_2 == nil then
+                ____message_2 = "Cannot unwrap `Optional` value!"
+            end
             error(
-                __TS__New(Error, "Cannot unwrap undefined value"),
+                __TS__New(____Error_3, ____message_2),
                 0
             )
         end
         return self.value
     end
     function _Optional.prototype.getValueOrDefault(self, defaultValue)
-        local ____self_value_2 = self.value
-        if ____self_value_2 == nil then
-            ____self_value_2 = defaultValue
+        local ____self_value_4 = self.value
+        if ____self_value_4 == nil then
+            ____self_value_4 = defaultValue
         end
-        return ____self_value_2
+        return ____self_value_4
     end
     _Optional.prototype["then"] = function(self, callback)
         if not self.value then
@@ -2968,27 +2973,13 @@ local ____ = "use strict";
         return self
     end
     _Optional.prototype["or"] = function(self, other)
-        local ____table_value_3
+        local ____table_value_5
         if self.value then
-            ____table_value_3 = self
+            ____table_value_5 = self
         else
-            ____table_value_3 = other
+            ____table_value_5 = other
         end
-        return ____table_value_3
-    end
-    function _Optional.prototype.orElseThrow(self, message)
-        if not self.value then
-            local ____Error_5 = Error
-            local ____message_4 = message
-            if ____message_4 == nil then
-                ____message_4 = "Cannot unwrap undefined value!"
-            end
-            error(
-                __TS__New(____Error_5, ____message_4),
-                0
-            )
-        end
-        return self.value
+        return ____table_value_5
     end
     local Optional = _Optional
     local _LuaSet = __TS__Class()

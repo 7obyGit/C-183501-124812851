@@ -2834,21 +2834,26 @@ local ____ = "use strict";
     function _Optional.prototype.isEmpty(self)
         return self.value == nil
     end
-    function _Optional.prototype.getValueUnsafe(self)
+    function _Optional.prototype.getValueUnsafe(self, message)
         if not self.value then
+            local ____Error_2 = Error
+            local ____message_1 = message
+            if ____message_1 == nil then
+                ____message_1 = "Cannot unwrap `Optional` value!"
+            end
             error(
-                __TS__New(Error, "Cannot unwrap undefined value"),
+                __TS__New(____Error_2, ____message_1),
                 0
             )
         end
         return self.value
     end
     function _Optional.prototype.getValueOrDefault(self, defaultValue)
-        local ____self_value_1 = self.value
-        if ____self_value_1 == nil then
-            ____self_value_1 = defaultValue
+        local ____self_value_3 = self.value
+        if ____self_value_3 == nil then
+            ____self_value_3 = defaultValue
         end
-        return ____self_value_1
+        return ____self_value_3
     end
     _Optional.prototype["then"] = function(self, callback)
         if not self.value then
@@ -2869,27 +2874,13 @@ local ____ = "use strict";
         return self
     end
     _Optional.prototype["or"] = function(self, other)
-        local ____table_value_2
+        local ____table_value_4
         if self.value then
-            ____table_value_2 = self
+            ____table_value_4 = self
         else
-            ____table_value_2 = other
+            ____table_value_4 = other
         end
-        return ____table_value_2
-    end
-    function _Optional.prototype.orElseThrow(self, message)
-        if not self.value then
-            local ____Error_4 = Error
-            local ____message_3 = message
-            if ____message_3 == nil then
-                ____message_3 = "Cannot unwrap undefined value!"
-            end
-            error(
-                __TS__New(____Error_4, ____message_3),
-                0
-            )
-        end
-        return self.value
+        return ____table_value_4
     end
     local Optional = _Optional
     local _Result = __TS__Class()
@@ -2937,21 +2928,26 @@ local ____ = "use strict";
         end
         return self
     end
-    function _Result.prototype.getValueUnsafe(self)
+    function _Result.prototype.getValueUnsafe(self, message)
         if not self.value then
+            local ____Error_6 = Error
+            local ____message_5 = message
+            if ____message_5 == nil then
+                ____message_5 = "Cannot unwrap `Result` value"
+            end
             error(
-                __TS__New(Error, "Cannot unwrap undefined value"),
+                __TS__New(____Error_6, ____message_5),
                 0
             )
         end
         return self.value
     end
     function _Result.prototype.getValueOrDefault(self, defaultValue)
-        local ____self_value_5 = self.value
-        if ____self_value_5 == nil then
-            ____self_value_5 = defaultValue
+        local ____self_value_7 = self.value
+        if ____self_value_7 == nil then
+            ____self_value_7 = defaultValue
         end
-        return ____self_value_5
+        return ____self_value_7
     end
     function _Result.prototype.asOptional(self)
         return Optional:of(self.value)
@@ -2961,20 +2957,6 @@ local ____ = "use strict";
             return _Result:error(self.errorMessage)
         end
         return _Result:of(callback(_G, self.value))
-    end
-    function _Result.prototype.orElseThrow(self, message)
-        if not self.value then
-            local ____Error_7 = Error
-            local ____message_6 = message
-            if ____message_6 == nil then
-                ____message_6 = "Cannot unwrap undefined value"
-            end
-            error(
-                __TS__New(____Error_7, ____message_6),
-                0
-            )
-        end
-        return self.value
     end
     local Result = _Result
     local ____class_8 = __TS__Class()
@@ -3738,7 +3720,7 @@ local ____ = "use strict";
         self._routes:set(name, callback)
     end
     function ____class_16.prototype.dispatchRoute(self)
-        local targetRouteName = ExecutionContext.commandLineArguments:first():orElseThrow("The first command line argument (route name) was not provided")
+        local targetRouteName = ExecutionContext.commandLineArguments:first():getValueUnsafe("The first command line argument (route name) was not provided")
         self._routes:get(targetRouteName):ifEmpty(function()
             local validRouteNamesString = ("'" .. self._routes:keys():join("', '")) .. "'"
             error(
@@ -4466,8 +4448,8 @@ local ____ = "use strict";
         self.lifetime = model.lifetime
     end
     function _Info.load(self)
-        local contentString = FileUtil:readText(self._path):orElseThrow()
-        local content = CcTextUtils:unserialize(contentString):orElseThrow()
+        local contentString = FileUtil:readText(self._path):getValueUnsafe()
+        local content = CcTextUtils:unserialize(contentString):getValueUnsafe()
         return __TS__New(_Info, content)
     end
     _Info._path = "info.json"
