@@ -4449,6 +4449,7 @@ local ____ = "use strict";
     end
     function _Info.load(self)
         local contentString = FileUtil:readText(self._path):getValueUnsafe("Could not read info.json")
+        print(contentString)
         local content = CcTextUtils:unserialize(contentString):getValueUnsafe("Could not parse info.json")
         return __TS__New(_Info, content)
     end
