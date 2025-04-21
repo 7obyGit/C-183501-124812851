@@ -2905,7 +2905,12 @@ local ____ = "use strict";
         return __TS__New(_Result, nil, nil)
     end
     function _Result.error(self, errorMessage)
-        return __TS__New(_Result, nil, errorMessage)
+        local ____Result_6 = _Result
+        local ____errorMessage_5 = errorMessage
+        if ____errorMessage_5 == nil then
+            ____errorMessage_5 = "No error message given"
+        end
+        return __TS__New(____Result_6, nil, ____errorMessage_5)
     end
     function _Result.errorValue(self, value, errorMessage)
         return __TS__New(_Result, value, errorMessage)
@@ -2930,24 +2935,24 @@ local ____ = "use strict";
     end
     function _Result.prototype.getValueUnsafe(self, message)
         if not self.value then
-            local ____Error_6 = Error
-            local ____message_5 = message
-            if ____message_5 == nil then
-                ____message_5 = "Cannot unwrap `Result` value"
+            local ____Error_8 = Error
+            local ____message_7 = message
+            if ____message_7 == nil then
+                ____message_7 = "Cannot unwrap `Result` value"
             end
             error(
-                __TS__New(____Error_6, ____message_5),
+                __TS__New(____Error_8, ____message_7),
                 0
             )
         end
         return self.value
     end
     function _Result.prototype.getValueOrDefault(self, defaultValue)
-        local ____self_value_7 = self.value
-        if ____self_value_7 == nil then
-            ____self_value_7 = defaultValue
+        local ____self_value_9 = self.value
+        if ____self_value_9 == nil then
+            ____self_value_9 = defaultValue
         end
-        return ____self_value_7
+        return ____self_value_9
     end
     function _Result.prototype.getErrorMessage(self)
         return self.errorMessage
@@ -2962,11 +2967,11 @@ local ____ = "use strict";
         return _Result:of(callback(_G, self.value))
     end
     local Result = _Result
-    local ____class_8 = __TS__Class()
-    ____class_8.name = "TableUtil"
-    function ____class_8.prototype.____constructor(self)
+    local ____class_10 = __TS__Class()
+    ____class_10.name = "TableUtil"
+    function ____class_10.prototype.____constructor(self)
     end
-    function ____class_8.fromArray(self, elements)
+    function ____class_10.fromArray(self, elements)
         local result = {}
         if elements == nil then
             return result
@@ -2982,34 +2987,34 @@ local ____ = "use strict";
         end
         return result
     end
-    local TableUtil = ____class_8
-    local ____class_9 = __TS__Class()
-    ____class_9.name = "CcShell"
-    function ____class_9.prototype.____constructor(self)
+    local TableUtil = ____class_10
+    local ____class_11 = __TS__Class()
+    ____class_11.name = "CcShell"
+    function ____class_11.prototype.____constructor(self)
     end
-    function ____class_9.execute(self, command, ...)
+    function ____class_11.execute(self, command, ...)
         local args = {...}
         local argsTable = TableUtil:fromArray(args)
         local success = false
         success = shell.execute(command, table.unpack(argsTable))
         return Result:of(success)
     end
-    function ____class_9.run(self, command, ...)
+    function ____class_11.run(self, command, ...)
         local args = {...}
         local argsTable = TableUtil:fromArray(args)
         local success = false
         success = shell.run(command, table.unpack(argsTable))
         return Result:of(success)
     end
-    function ____class_9.exit(self)
+    function ____class_11.exit(self)
         shell.exit()
     end
-    function ____class_9.getCurrentWorkingDirectory(self)
+    function ____class_11.getCurrentWorkingDirectory(self)
         local currentDir = ""
         currentDir = shell.dir()
         return currentDir
     end
-    function ____class_9.setCurrentWorkingDirectory(self, dir)
+    function ____class_11.setCurrentWorkingDirectory(self, dir)
         local success = true
         local ____error = nil
         local ok, err = pcall(function()
@@ -3017,33 +3022,33 @@ local ____ = "use strict";
         end)
         success = ok
         error = err
-        local ____success_10
+        local ____success_12
         if success then
-            ____success_10 = Result:void()
+            ____success_12 = Result:void()
         else
-            ____success_10 = Result:error(____error or "Unknown error")
+            ____success_12 = Result:error(____error or "Unknown error")
         end
-        return ____success_10
+        return ____success_12
     end
-    function ____class_9.getPath(self)
+    function ____class_11.getPath(self)
         local currentPath = ""
         currentPath = shell.path()
         return currentPath
     end
-    function ____class_9.setPath(self, path)
+    function ____class_11.setPath(self, path)
         shell.setPath(path)
     end
-    function ____class_9.getAbsolutePath(self, path)
+    function ____class_11.getAbsolutePath(self, path)
         local resolvedPath = ""
         resolvedPath = shell.resolve(path)
         return resolvedPath
     end
-    function ____class_9.resolveProgramPath(self, command)
+    function ____class_11.resolveProgramPath(self, command)
         local programPath
         programPath = shell.resolveProgram(command)
         return Optional:ofNullable(programPath)
     end
-    function ____class_9.getProgramList(self, includeHidden)
+    function ____class_11.getProgramList(self, includeHidden)
         local programs = {}
         local progs = shell.programs(includeHidden)
         for i = 1, #progs do
@@ -3051,11 +3056,11 @@ local ____ = "use strict";
         end
         return programs
     end
-    function ____class_9.getCompletions(self, sLine)
+    function ____class_11.getCompletions(self, sLine)
         local completions = shell.complete(sLine)
         return Optional:ofNullable(completions):getValueOrDefault({})
     end
-    function ____class_9.getCompletionsForProgramName(self, program)
+    function ____class_11.getCompletionsForProgramName(self, program)
         local completions = {}
         local comps = shell.completeProgram(program)
         for i = 1, #comps do
@@ -3063,10 +3068,10 @@ local ____ = "use strict";
         end
         return completions
     end
-    function ____class_9.setCompletionFunction(self, program, complete)
+    function ____class_11.setCompletionFunction(self, program, complete)
         shell.setCompletionFunction(program, complete)
     end
-    function ____class_9.getCompletionInfo(self)
+    function ____class_11.getCompletionInfo(self)
         local info = {}
         local compInfo = shell.getCompletionInfo()
         for k,v in pairs(compInfo) do
@@ -3074,18 +3079,18 @@ local ____ = "use strict";
         end
         return info
     end
-    function ____class_9.getPathToRunningProgram(self)
+    function ____class_11.getPathToRunningProgram(self)
         local programPath = ""
         programPath = shell.getRunningProgram()
         return programPath
     end
-    function ____class_9.setAlias(self, command, program)
+    function ____class_11.setAlias(self, command, program)
         shell.setAlias(command, program)
     end
-    function ____class_9.clearAlias(self, command)
+    function ____class_11.clearAlias(self, command)
         shell.clearAlias(command)
     end
-    function ____class_9.aliases(self)
+    function ____class_11.aliases(self)
         local aliases = {}
         local als = shell.aliases()
         for k,v in pairs(als) do
@@ -3093,105 +3098,39 @@ local ____ = "use strict";
         end
         return aliases
     end
-    function ____class_9.openTab(self, command, ...)
+    function ____class_11.openTab(self, command, ...)
         local args = {...}
         local argsTable = TableUtil:fromArray(args)
         local tabId = nil
         tabId = shell.openTab(command, table.unpack(argsTable))
-        local ____temp_11
+        local ____temp_13
         if tabId ~= nil then
-            ____temp_11 = Result:of(tabId)
+            ____temp_13 = Result:of(tabId)
         else
-            ____temp_11 = Result:error("Failed to open tab")
+            ____temp_13 = Result:error("Failed to open tab")
         end
-        return ____temp_11
+        return ____temp_13
     end
-    function ____class_9.switchTab(self, id)
+    function ____class_11.switchTab(self, id)
         shell.switchTab(id)
     end
-    local CcShell = ____class_9
-    local ____class_12 = __TS__Class()
-    ____class_12.name = "FileReadHandle"
-    function ____class_12.prototype.____constructor(self, handle)
-        self.handle = handle
-    end
-    function ____class_12.prototype.readBytes(self, count)
-        return self.handle.read(count)
-    end
-    function ____class_12.prototype.readAllContent(self)
-        return self.handle.readAll()
-    end
-    function ____class_12.prototype.readLine(self, includeTrailingNewline)
-        if includeTrailingNewline == nil then
-            includeTrailingNewline = false
-        end
-        return self.handle.readLine(includeTrailingNewline)
-    end
-    function ____class_12.prototype.seekPosition(self, whence, offset)
-        if whence == nil then
-            whence = "cur"
-        end
-        if offset == nil then
-            offset = 0
-        end
-        return self.handle.seek(whence, offset)
-    end
-    function ____class_12.prototype.close(self)
-        self.handle.close()
-    end
-    local FileReadHandle = ____class_12
-    local ____class_13 = __TS__Class()
-    ____class_13.name = "FileReadWriteHandle"
-    function ____class_13.prototype.____constructor(self, handle)
-        self.handle = handle
-    end
-    function ____class_13.prototype.readBytes(self, count)
-        return self.handle.read(count)
-    end
-    function ____class_13.prototype.readAllContent(self)
-        return self.handle.readAll()
-    end
-    function ____class_13.prototype.readLine(self, includeTrailingNewline)
-        if includeTrailingNewline == nil then
-            includeTrailingNewline = false
-        end
-        return self.handle.readLine(includeTrailingNewline)
-    end
-    function ____class_13.prototype.writeContent(self, content)
-        self.handle.write(content)
-    end
-    function ____class_13.prototype.writeLine(self, text)
-        self.handle.writeLine(text)
-    end
-    function ____class_13.prototype.flushBuffers(self)
-        self.handle.flush()
-    end
-    function ____class_13.prototype.seekPosition(self, whence, offset)
-        if whence == nil then
-            whence = "cur"
-        end
-        if offset == nil then
-            offset = 0
-        end
-        return self.handle.seek(whence, offset)
-    end
-    function ____class_13.prototype.close(self)
-        self.handle.close()
-    end
-    local FileReadWriteHandle = ____class_13
+    local CcShell = ____class_11
     local ____class_14 = __TS__Class()
-    ____class_14.name = "FileWriteHandle"
+    ____class_14.name = "FileReadHandle"
     function ____class_14.prototype.____constructor(self, handle)
         self.handle = handle
     end
-    function ____class_14.prototype.writeContent(self, content)
-        self.handle.write(content)
+    function ____class_14.prototype.readBytes(self, count)
+        return self.handle.read(count)
     end
-    function ____class_14.prototype.writeLine(self, text)
-        self.handle.writeLine(text)
+    function ____class_14.prototype.readAllContent(self)
+        return self.handle.readAll()
     end
-    function ____class_14.prototype.flushBuffers(self)
-        self.handle.flush()
+    function ____class_14.prototype.readLine(self, includeTrailingNewline)
+        if includeTrailingNewline == nil then
+            includeTrailingNewline = false
+        end
+        return self.handle.readLine(includeTrailingNewline)
     end
     function ____class_14.prototype.seekPosition(self, whence, offset)
         if whence == nil then
@@ -3205,12 +3144,78 @@ local ____ = "use strict";
     function ____class_14.prototype.close(self)
         self.handle.close()
     end
-    local FileWriteHandle = ____class_14
+    local FileReadHandle = ____class_14
     local ____class_15 = __TS__Class()
-    ____class_15.name = "CcFs"
-    function ____class_15.prototype.____constructor(self)
+    ____class_15.name = "FileReadWriteHandle"
+    function ____class_15.prototype.____constructor(self, handle)
+        self.handle = handle
     end
-    function ____class_15.completeFileName(self, path, location, includeFiles, includeDirectories)
+    function ____class_15.prototype.readBytes(self, count)
+        return self.handle.read(count)
+    end
+    function ____class_15.prototype.readAllContent(self)
+        return self.handle.readAll()
+    end
+    function ____class_15.prototype.readLine(self, includeTrailingNewline)
+        if includeTrailingNewline == nil then
+            includeTrailingNewline = false
+        end
+        return self.handle.readLine(includeTrailingNewline)
+    end
+    function ____class_15.prototype.writeContent(self, content)
+        self.handle.write(content)
+    end
+    function ____class_15.prototype.writeLine(self, text)
+        self.handle.writeLine(text)
+    end
+    function ____class_15.prototype.flushBuffers(self)
+        self.handle.flush()
+    end
+    function ____class_15.prototype.seekPosition(self, whence, offset)
+        if whence == nil then
+            whence = "cur"
+        end
+        if offset == nil then
+            offset = 0
+        end
+        return self.handle.seek(whence, offset)
+    end
+    function ____class_15.prototype.close(self)
+        self.handle.close()
+    end
+    local FileReadWriteHandle = ____class_15
+    local ____class_16 = __TS__Class()
+    ____class_16.name = "FileWriteHandle"
+    function ____class_16.prototype.____constructor(self, handle)
+        self.handle = handle
+    end
+    function ____class_16.prototype.writeContent(self, content)
+        self.handle.write(content)
+    end
+    function ____class_16.prototype.writeLine(self, text)
+        self.handle.writeLine(text)
+    end
+    function ____class_16.prototype.flushBuffers(self)
+        self.handle.flush()
+    end
+    function ____class_16.prototype.seekPosition(self, whence, offset)
+        if whence == nil then
+            whence = "cur"
+        end
+        if offset == nil then
+            offset = 0
+        end
+        return self.handle.seek(whence, offset)
+    end
+    function ____class_16.prototype.close(self)
+        self.handle.close()
+    end
+    local FileWriteHandle = ____class_16
+    local ____class_17 = __TS__Class()
+    ____class_17.name = "CcFs"
+    function ____class_17.prototype.____constructor(self)
+    end
+    function ____class_17.completeFileName(self, path, location, includeFiles, includeDirectories)
         if includeFiles == nil then
             includeFiles = true
         end
@@ -3219,51 +3224,51 @@ local ____ = "use strict";
         end
         return fs.complete(path, location, includeFiles, includeDirectories)
     end
-    function ____class_15.findFiles(self, path)
+    function ____class_17.findFiles(self, path)
         return fs.find(path)
     end
-    function ____class_15.isDriveRootDirectory(self, path)
+    function ____class_17.isDriveRootDirectory(self, path)
         return fs.isDriveRoot(path)
     end
-    function ____class_15.listDirectory(self, path)
+    function ____class_17.listDirectory(self, path)
         return fs.list(path)
     end
-    function ____class_15.combinePath(self, ...)
+    function ____class_17.combinePath(self, ...)
         local paths = {...}
         local pathsTable = TableUtil:fromArray(paths)
         return fs.combine(table.unpack(pathsTable))
     end
-    function ____class_15.getFileName(self, path)
+    function ____class_17.getFileName(self, path)
         return fs.getName(path)
     end
-    function ____class_15.getDirectoryName(self, path)
+    function ____class_17.getDirectoryName(self, path)
         return fs.getDir(path)
     end
-    function ____class_15.getFileSize(self, path)
+    function ____class_17.getFileSize(self, path)
         return fs.getSize(path)
     end
-    function ____class_15.fileExists(self, path)
+    function ____class_17.fileExists(self, path)
         return fs.exists(path)
     end
-    function ____class_15.isDirectory(self, path)
+    function ____class_17.isDirectory(self, path)
         return fs.isDir(path)
     end
-    function ____class_15.isReadOnly(self, path)
+    function ____class_17.isReadOnly(self, path)
         return fs.isReadOnly(path)
     end
-    function ____class_15.createDirectory(self, path)
+    function ____class_17.createDirectory(self, path)
         fs.makeDir(path)
     end
-    function ____class_15.move(self, sourcePath, destinationPath)
+    function ____class_17.move(self, sourcePath, destinationPath)
         fs.move(sourcePath, destinationPath)
     end
-    function ____class_15.copy(self, sourcePath, destinationPath)
+    function ____class_17.copy(self, sourcePath, destinationPath)
         fs.copy(sourcePath, destinationPath)
     end
-    function ____class_15.delete(self, path)
+    function ____class_17.delete(self, path)
         fs.delete(path)
     end
-    function ____class_15.openFileForReading(self, path)
+    function ____class_17.openFileForReading(self, path)
         local fileHandle = nil
         local errorMessage = nil
         fileHandle, errorMessage = fs.open(path, 'r')
@@ -3272,7 +3277,7 @@ local ____ = "use strict";
         end
         return Result:of(__TS__New(FileReadHandle, fileHandle))
     end
-    function ____class_15.openFileForWriting(self, path)
+    function ____class_17.openFileForWriting(self, path)
         local fileHandle = nil
         local errorMessage = nil
         fileHandle, errorMessage = fs.open(path, 'w')
@@ -3281,7 +3286,7 @@ local ____ = "use strict";
         end
         return Result:of(__TS__New(FileWriteHandle, fileHandle))
     end
-    function ____class_15.openFileForReadAndWrite(self, path)
+    function ____class_17.openFileForReadAndWrite(self, path)
         local fileHandle = nil
         local errorMessage = nil
         fileHandle, errorMessage = fs.open(path, 'rw')
@@ -3290,7 +3295,7 @@ local ____ = "use strict";
         end
         return Result:of(__TS__New(FileReadWriteHandle, fileHandle))
     end
-    function ____class_15.openFileForAppending(self, path)
+    function ____class_17.openFileForAppending(self, path)
         local fileHandle = nil
         local errorMessage = nil
         fileHandle, errorMessage = fs.open(path, 'a')
@@ -3299,7 +3304,7 @@ local ____ = "use strict";
         end
         return Result:of(__TS__New(FileWriteHandle, fileHandle))
     end
-    function ____class_15.openFileForBinaryReading(self, path)
+    function ____class_17.openFileForBinaryReading(self, path)
         local fileHandle = nil
         local errorMessage = nil
         fileHandle, errorMessage = fs.open(path, 'rb')
@@ -3308,7 +3313,7 @@ local ____ = "use strict";
         end
         return Result:of(__TS__New(FileReadHandle, fileHandle))
     end
-    function ____class_15.openFileForBinaryWriting(self, path)
+    function ____class_17.openFileForBinaryWriting(self, path)
         local fileHandle = nil
         local errorMessage = nil
         fileHandle, errorMessage = fs.open(path, 'wb')
@@ -3317,19 +3322,19 @@ local ____ = "use strict";
         end
         return Result:of(__TS__New(FileWriteHandle, fileHandle))
     end
-    function ____class_15.getDriveName(self, path)
+    function ____class_17.getDriveName(self, path)
         return Optional:ofNullable(fs.getDrive(path))
     end
-    function ____class_15.getFreeSpaceOnDrive(self, path)
+    function ____class_17.getFreeSpaceOnDrive(self, path)
         return fs.getFreeSpace(path)
     end
-    function ____class_15.getDriveCapacity(self, path)
+    function ____class_17.getDriveCapacity(self, path)
         return Optional:ofNullable(fs.getCapacity(path))
     end
-    function ____class_15.getFileAttributes(self, path)
+    function ____class_17.getFileAttributes(self, path)
         return fs.attributes(path)
     end
-    local CcFs = ____class_15
+    local CcFs = ____class_17
     local _LuaSet = __TS__Class()
     _LuaSet.name = "_LuaSet"
     function _LuaSet.prototype.____constructor(self)
@@ -3472,8 +3477,8 @@ local ____ = "use strict";
         return self.elements[index]
     end
     function _LuaList.prototype.append(self, element)
-        local ____self_elements_16 = self.elements
-        ____self_elements_16[#____self_elements_16 + 1] = element
+        local ____self_elements_18 = self.elements
+        ____self_elements_18[#____self_elements_18 + 1] = element
         return self
     end
     function _LuaList.prototype.appendAll(self, elements)
@@ -3641,11 +3646,11 @@ local ____ = "use strict";
             while i < #self.elements do
                 local element = self.elements[i + 1]
                 local selectorValue = selector(_G, element)
-                local ____minSelectorValue_17 = minSelectorValue
-                if ____minSelectorValue_17 == nil then
-                    ____minSelectorValue_17 = 0
+                local ____minSelectorValue_19 = minSelectorValue
+                if ____minSelectorValue_19 == nil then
+                    ____minSelectorValue_19 = 0
                 end
-                if selectorValue < ____minSelectorValue_17 then
+                if selectorValue < ____minSelectorValue_19 then
                     minElement = element
                     minSelectorValue = selectorValue
                 end
@@ -3671,11 +3676,11 @@ local ____ = "use strict";
             while i < #self.elements do
                 local element = self.elements[i + 1]
                 local selectorValue = selector(_G, element)
-                local ____maxSelectorValue_18 = maxSelectorValue
-                if ____maxSelectorValue_18 == nil then
-                    ____maxSelectorValue_18 = 0
+                local ____maxSelectorValue_20 = maxSelectorValue
+                if ____maxSelectorValue_20 == nil then
+                    ____maxSelectorValue_20 = 0
                 end
-                if selectorValue > ____maxSelectorValue_18 then
+                if selectorValue > ____maxSelectorValue_20 then
                     maxElement = element
                     maxSelectorValue = selectorValue
                 end
@@ -3718,437 +3723,21 @@ local ____ = "use strict";
         return TableUtil:fromArray(self:toArray())
     end
     LuaList = _LuaList
-    local _FileUtil = __TS__Class()
-    _FileUtil.name = "_FileUtil"
-    function _FileUtil.prototype.____constructor(self)
+    local ____class_21 = __TS__Class()
+    ____class_21.name = "LogListener"
+    function ____class_21.prototype.____constructor(self)
     end
-    function _FileUtil.joinPath(self, ...)
-        return CcFs:combinePath(...)
-    end
-    function _FileUtil.getParentDirectoryPath(self, path)
-        return CcFs:getDirectoryName(path)
-    end
-    function _FileUtil.readText(self, path)
-        local file = CcFs:openFileForReading(path)
-        if file:isError() then
-            return Result:error(file:getErrorMessage())
-        end
-        local content = file:getValueUnsafe("No file"):readAllContent()
-        if content == nil then
-            return Result:error("Could not read file")
-        end
-        return Result:of(content)
-    end
-    function _FileUtil.writeText(self, path, content)
-        local directory = self:getParentDirectoryPath(path)
-        if not self:exists(directory) then
-            self:createDirectory(directory)
-        end
-        local file = CcFs:openFileForWriting(path)
-        if file:isError() then
-            return Result:error(file:getErrorMessage())
-        end
-        do
-            local function ____catch(e)
-                local ____Result_error_22 = Result.error
-                local ____opt_result_21
-                if e ~= nil then
-                    ____opt_result_21 = e.message
-                end
-                return true, ____Result_error_22(Result, ____opt_result_21)
-            end
-            local ____try, ____hasReturned, ____returnValue = pcall(function()
-                file:getValueUnsafe("No file"):writeContent(content)
-            end)
-            if not ____try then
-                ____hasReturned, ____returnValue = ____catch(____hasReturned)
-            end
-            if ____hasReturned then
-                return ____returnValue
-            end
-        end
-        return Result:of(nil)
-    end
-    function _FileUtil.appendText(self, path, content)
-        if not _FileUtil:exists(path) then
-            _FileUtil:writeText(path, content)
-            return Result:of(nil)
-        end
-        local file = CcFs:openFileForAppending(path)
-        if file:isError() then
-            return Result:error(file:getErrorMessage())
-        end
-        do
-            local function ____catch(e)
-                local ____Result_error_26 = Result.error
-                local ____opt_result_25
-                if e ~= nil then
-                    ____opt_result_25 = e.message
-                end
-                return true, ____Result_error_26(Result, ____opt_result_25)
-            end
-            local ____try, ____hasReturned, ____returnValue = pcall(function()
-                file:getValueUnsafe("No file"):writeContent(content)
-            end)
-            if not ____try then
-                ____hasReturned, ____returnValue = ____catch(____hasReturned)
-            end
-            if ____hasReturned then
-                return ____returnValue
-            end
-        end
-        return Result:of(nil)
-    end
-    function _FileUtil.exists(self, path)
-        return CcFs:fileExists(path)
-    end
-    function _FileUtil.isFile(self, path)
-        return self:exists(path) and not CcFs:isDirectory(path)
-    end
-    function _FileUtil.isDirectory(self, path)
-        return self:exists(path) and CcFs:isDirectory(path)
-    end
-    function _FileUtil.deleteFile(self, path)
-        do
-            local function ____catch(e)
-                local ____Result_error_30 = Result.error
-                local ____opt_result_29
-                if e ~= nil then
-                    ____opt_result_29 = e.message
-                end
-                return true, ____Result_error_30(Result, ____opt_result_29)
-            end
-            local ____try, ____hasReturned, ____returnValue = pcall(function()
-                CcFs:delete(path)
-                return true, Result:void()
-            end)
-            if not ____try then
-                ____hasReturned, ____returnValue = ____catch(____hasReturned)
-            end
-            if ____hasReturned then
-                return ____returnValue
-            end
-        end
-    end
-    function _FileUtil.copyFile(self, source, destination)
-        do
-            local function ____catch(e)
-                local ____Result_error_34 = Result.error
-                local ____opt_result_33
-                if e ~= nil then
-                    ____opt_result_33 = e.message
-                end
-                return true, ____Result_error_34(Result, ____opt_result_33)
-            end
-            local ____try, ____hasReturned, ____returnValue = pcall(function()
-                CcFs:copy(source, destination)
-                return true, Result:void()
-            end)
-            if not ____try then
-                ____hasReturned, ____returnValue = ____catch(____hasReturned)
-            end
-            if ____hasReturned then
-                return ____returnValue
-            end
-        end
-    end
-    function _FileUtil.moveFile(self, source, destination)
-        do
-            local function ____catch(e)
-                local ____Result_error_38 = Result.error
-                local ____opt_result_37
-                if e ~= nil then
-                    ____opt_result_37 = e.message
-                end
-                return true, ____Result_error_38(Result, ____opt_result_37)
-            end
-            local ____try, ____hasReturned, ____returnValue = pcall(function()
-                CcFs:move(source, destination)
-                return true, Result:void()
-            end)
-            if not ____try then
-                ____hasReturned, ____returnValue = ____catch(____hasReturned)
-            end
-            if ____hasReturned then
-                return ____returnValue
-            end
-        end
-    end
-    function _FileUtil.getFileSize(self, path)
-        local ____self_39 = _FileUtil:readText(path)
-        return ____self_39["then"](
-            ____self_39,
-            function(____, content) return content.length end
-        )
-    end
-    function _FileUtil.getFiles(self, path)
-        return LuaList:ofTable(CcFs:listDirectory(path)):where(function(____, path2) return _FileUtil:isFile(path2) end)
-    end
-    function _FileUtil.getDirectories(self, path)
-        return LuaList:ofTable(CcFs:listDirectory(path)):where(function(____, path2) return _FileUtil:isDirectory(path2) end)
-    end
-    function _FileUtil.getAllFilesRecursively(self, path)
-        if not self:isDirectory(path) then
-            return LuaList:ofSingleton(path)
-        end
-        local files = LuaList:empty()
-        files:appendAll(_FileUtil:getFiles(path))
-        _FileUtil:getDirectories(path):forEach(function(____, directory) return files:appendAll(_FileUtil:getAllFilesRecursively(directory)) end)
-        return files
-    end
-    function _FileUtil.getAllDirectoriesRecursively(self, path)
-        if not self:isDirectory(path) then
-            return LuaList:empty()
-        end
-        local directories = LuaList:empty()
-        _FileUtil:getDirectories(path):forEach(function(____, directory)
-            directories:append(directory):appendAll(_FileUtil:getAllDirectoriesRecursively(directory))
-        end)
-        return directories
-    end
-    function _FileUtil.createDirectory(self, path)
-        do
-            local function ____catch(e)
-                local ____Result_error_43 = Result.error
-                local ____opt_result_42
-                if e ~= nil then
-                    ____opt_result_42 = e.message
-                end
-                return true, ____Result_error_43(Result, ____opt_result_42)
-            end
-            local ____try, ____hasReturned, ____returnValue = pcall(function()
-                CcFs:createDirectory(path)
-                return true, Result:void()
-            end)
-            if not ____try then
-                ____hasReturned, ____returnValue = ____catch(____hasReturned)
-            end
-            if ____hasReturned then
-                return ____returnValue
-            end
-        end
-    end
-    function _FileUtil.copyDirectory(self, source, destination)
-        do
-            local function ____catch(e)
-                local ____Result_error_47 = Result.error
-                local ____opt_result_46
-                if e ~= nil then
-                    ____opt_result_46 = e.message
-                end
-                return true, ____Result_error_47(Result, ____opt_result_46)
-            end
-            local ____try, ____hasReturned, ____returnValue = pcall(function()
-                CcFs:copy(source, destination)
-                return true, Result:void()
-            end)
-            if not ____try then
-                ____hasReturned, ____returnValue = ____catch(____hasReturned)
-            end
-            if ____hasReturned then
-                return ____returnValue
-            end
-        end
-    end
-    function _FileUtil.copyDirectoryContent(self, source, destination)
-        if not self:isDirectory(source) then
-            return Result:error("Source is not a directory")
-        end
-        if not self:isDirectory(destination) then
-            self:createDirectory(destination)
-        end
-        local errorMessage = nil
-        self:getFiles(source):forEach(function(____, file)
-            self:copyFile(
-                file,
-                self:joinPath(
-                    destination,
-                    file:replace(source, "")
-                )
-            ):ifError(function(____, newMessage)
-                errorMessage = newMessage
-                return errorMessage
-            end)
-        end)
-        self:getDirectories(source):forEach(function(____, directory)
-            self:copyDirectory(
-                directory,
-                self:joinPath(
-                    destination,
-                    directory:replace(source, "")
-                )
-            ):ifError(function(____, newMessage)
-                errorMessage = newMessage
-                return errorMessage
-            end)
-        end)
-        return Result:ofError(nil, errorMessage)
-    end
-    function _FileUtil.moveDirectory(self, source, destination)
-        do
-            local function ____catch(e)
-                local ____Result_error_51 = Result.error
-                local ____opt_result_50
-                if e ~= nil then
-                    ____opt_result_50 = e.message
-                end
-                return true, ____Result_error_51(Result, ____opt_result_50)
-            end
-            local ____try, ____hasReturned, ____returnValue = pcall(function()
-                CcFs:move(source, destination)
-                return true, Result:void()
-            end)
-            if not ____try then
-                ____hasReturned, ____returnValue = ____catch(____hasReturned)
-            end
-            if ____hasReturned then
-                return ____returnValue
-            end
-        end
-    end
-    function _FileUtil.deleteDirectory(self, path)
-        do
-            local function ____catch(e)
-                local ____Result_error_55 = Result.error
-                local ____opt_result_54
-                if e ~= nil then
-                    ____opt_result_54 = e.message
-                end
-                return true, ____Result_error_55(Result, ____opt_result_54)
-            end
-            local ____try, ____hasReturned, ____returnValue = pcall(function()
-                CcFs:delete(path)
-                return true, Result:void()
-            end)
-            if not ____try then
-                ____hasReturned, ____returnValue = ____catch(____hasReturned)
-            end
-            if ____hasReturned then
-                return ____returnValue
-            end
-        end
-    end
-    function _FileUtil.deleteDirectoryContent(self, path)
-        if not self:isDirectory(path) then
-            return Result:error("Path is not a directory")
-        end
-        local errorMessage = nil
-        self:getFiles(path):forEach(function(____, file)
-            self:deleteFile(file):ifError(function(____, newMessage)
-                errorMessage = newMessage
-                return errorMessage
-            end)
-        end)
-        self:getDirectories(path):forEach(function(____, directory)
-            self:deleteDirectory(directory):ifError(function(____, newMessage)
-                errorMessage = newMessage
-                return errorMessage
-            end)
-        end)
-        return Result:ofError(nil, errorMessage)
-    end
-    function _FileUtil.removeByteOrderMark(self, path)
-        local contentResult = self:readText(path)
-        if contentResult:isError() then
-            return Result:error(contentResult:getErrorMessage())
-        end
-        local content = contentResult:getValueUnsafe("No file")
-        if not content:startsWith("?") then
-            return Result:void()
-        end
-        local newContent = content:substring(1)
-        return self:writeText(path, newContent)
-    end
-    local FileUtil = _FileUtil
-    local ____class_56 = __TS__Class()
-    ____class_56.name = "CcTextUtils"
-    function ____class_56.prototype.____constructor(self)
-    end
-    function ____class_56.slowWrite(self, text, rate)
-        textutils.slowWrite(text, rate)
-    end
-    function ____class_56.slowPrint(self, text, rate)
-        textutils.slowPrint(text, rate)
-    end
-    function ____class_56.formatTime(self, time, twentyFourHour)
-        local result = ""
-        result = textutils.formatTime(time, twentyFourHour)
-        return result
-    end
-    function ____class_56.pagedPrint(self, text, freeLines)
-        local result = 0
-        result = textutils.pagedPrint(text, freeLines)
-        return result
-    end
-    function ____class_56.tabulate(self, ...)
-        textutils.tabulate(...)
-    end
-    function ____class_56.pagedTabulate(self, ...)
-        textutils.pagedTabulate(...)
-    end
-    function ____class_56.serialize(self, obj, opts)
-        local result = nil
-        local ____error = nil
-        result, error = textutils.serialize(obj, opts)
-        if ____error ~= nil then
-            return Result:error(____error)
-        end
-        return Result:of(result)
-    end
-    function ____class_56.unserialize(self, str)
-        local result = nil
-        result = textutils.unserialize(str)
-        if result == nil then
-            return Result:error("Failed to unserialize")
-        end
-        return Result:of(result)
-    end
-    function ____class_56.serializeJSON(self, obj, opts)
-        local result = nil
-        local ____error = nil
-        result, error = textutils.serializeJSON(obj, opts)
-        if ____error ~= nil then
-            return Result:error(____error)
-        end
-        return Result:of(result)
-    end
-    function ____class_56.unserializeJSON(self, str, opts)
-        local result = nil
-        local ____error = nil
-        result, error = textutils.unserializeJSON(str, opts)
-        if ____error ~= nil then
-            return Result:error(____error)
-        end
-        return Result:of(result)
-    end
-    function ____class_56.urlEncode(self, str)
-        local result = ""
-        result = textutils.urlEncode(str)
-        return result
-    end
-    function ____class_56.getCompletion(self, searchText, searchTable)
-        local result = {}
-        result = textutils.complete(searchText, searchTable)
-        return result
-    end
-    ____class_56.empty_json_array = {}
-    ____class_56.json_null = {}
-    local CcTextUtils = ____class_56
-    local ____class_57 = __TS__Class()
-    ____class_57.name = "LogListener"
-    function ____class_57.prototype.____constructor(self)
-    end
-    local LogListener = ____class_57
-    local ____class_58 = __TS__Class()
-    ____class_58.name = "ConsoleLogListener"
-    __TS__ClassExtends(____class_58, LogListener)
-    function ____class_58.prototype.getName(self)
+    local LogListener = ____class_21
+    local ____class_22 = __TS__Class()
+    ____class_22.name = "ConsoleLogListener"
+    __TS__ClassExtends(____class_22, LogListener)
+    function ____class_22.prototype.getName(self)
         return "ConsoleLogListener"
     end
-    function ____class_58.prototype.onLog(self, level, message)
+    function ____class_22.prototype.onLog(self, level, message)
         print((("[" .. tostring(level)) .. "] ") .. tostring(message))
     end
-    local ConsoleLogListener = ____class_58
+    local ConsoleLogListener = ____class_22
     local _LuaMapEntry = __TS__Class()
     _LuaMapEntry.name = "_LuaMapEntry"
     function _LuaMapEntry.prototype.____constructor(self, key, value)
@@ -4343,20 +3932,20 @@ local ____ = "use strict";
         return newMap
     end
     local LuaMap = _LuaMap
-    local ____class_59 = __TS__Class()
-    ____class_59.name = "Logger"
-    function ____class_59.prototype.____constructor(self)
+    local ____class_23 = __TS__Class()
+    ____class_23.name = "Logger"
+    function ____class_23.prototype.____constructor(self)
     end
-    function ____class_59.addListener(self, listener)
+    function ____class_23.addListener(self, listener)
         self.listeners:set(
             listener:getName(),
             listener
         )
     end
-    function ____class_59.clearListeners(self)
+    function ____class_23.clearListeners(self)
         self.listeners:clear()
     end
-    function ____class_59.log(self, level, ...)
+    function ____class_23.log(self, level, ...)
         local args = {...}
         local message = table.concat(
             __TS__ArrayMap(
@@ -4369,23 +3958,443 @@ local ____ = "use strict";
             listener:onLog(level, message)
         end)
     end
-    function ____class_59.debug(self, ...)
+    function ____class_23.debug(self, ...)
         self:log("DEBUG", ...)
     end
-    function ____class_59.info(self, ...)
+    function ____class_23.info(self, ...)
         self:log("INFO", ...)
     end
-    function ____class_59.warn(self, ...)
+    function ____class_23.warn(self, ...)
         self:log("WARN", ...)
     end
-    function ____class_59.error(self, ...)
+    function ____class_23.error(self, ...)
         self:log("ERROR", ...)
     end
-    ____class_59.listeners = LuaMap:ofSingleton(
+    ____class_23.listeners = LuaMap:ofSingleton(
         __TS__New(ConsoleLogListener):getName(),
         __TS__New(ConsoleLogListener)
     )
-    local Logger = ____class_59
+    local Logger = ____class_23
+    local _FileUtil = __TS__Class()
+    _FileUtil.name = "_FileUtil"
+    function _FileUtil.prototype.____constructor(self)
+    end
+    function _FileUtil.joinPath(self, ...)
+        return CcFs:combinePath(...)
+    end
+    function _FileUtil.getParentDirectoryPath(self, path)
+        return CcFs:getDirectoryName(path)
+    end
+    function _FileUtil.readText(self, path)
+        local file = CcFs:openFileForReading(path)
+        if file:isError() then
+            return Result:error(file:getErrorMessage())
+        end
+        local content = file:getValueUnsafe("No file"):readAllContent()
+        if content == nil then
+            return Result:error("Could not read file")
+        end
+        return Result:of(content)
+    end
+    function _FileUtil.writeText(self, path, content)
+        Logger:debug("Writing text to file", path, content)
+        local directory = self:getParentDirectoryPath(path)
+        Logger:debug("Directory", directory)
+        if not self:exists(directory) then
+            Logger:debug("Directory does not exist, creating it")
+            self:createDirectory(directory)
+        end
+        Logger:debug("Directory exists, creating file")
+        local file = CcFs:openFileForWriting(path)
+        if file:isError() then
+            return Result:error(file:getErrorMessage())
+        end
+        do
+            local function ____catch(e)
+                local ____Result_error_27 = Result.error
+                local ____opt_result_26
+                if e ~= nil then
+                    ____opt_result_26 = e.message
+                end
+                return true, ____Result_error_27(Result, ____opt_result_26)
+            end
+            local ____try, ____hasReturned, ____returnValue = pcall(function()
+                file:getValueUnsafe("No file"):writeContent(content)
+            end)
+            if not ____try then
+                ____hasReturned, ____returnValue = ____catch(____hasReturned)
+            end
+            if ____hasReturned then
+                return ____returnValue
+            end
+        end
+        return Result:of(nil)
+    end
+    function _FileUtil.appendText(self, path, content)
+        if not _FileUtil:exists(path) then
+            _FileUtil:writeText(path, content)
+            return Result:of(nil)
+        end
+        local file = CcFs:openFileForAppending(path)
+        if file:isError() then
+            return Result:error(file:getErrorMessage())
+        end
+        do
+            local function ____catch(e)
+                local ____Result_error_31 = Result.error
+                local ____opt_result_30
+                if e ~= nil then
+                    ____opt_result_30 = e.message
+                end
+                return true, ____Result_error_31(Result, ____opt_result_30)
+            end
+            local ____try, ____hasReturned, ____returnValue = pcall(function()
+                file:getValueUnsafe("No file"):writeContent(content)
+            end)
+            if not ____try then
+                ____hasReturned, ____returnValue = ____catch(____hasReturned)
+            end
+            if ____hasReturned then
+                return ____returnValue
+            end
+        end
+        return Result:of(nil)
+    end
+    function _FileUtil.exists(self, path)
+        return CcFs:fileExists(path)
+    end
+    function _FileUtil.isFile(self, path)
+        return self:exists(path) and not CcFs:isDirectory(path)
+    end
+    function _FileUtil.isDirectory(self, path)
+        return self:exists(path) and CcFs:isDirectory(path)
+    end
+    function _FileUtil.deleteFile(self, path)
+        do
+            local function ____catch(e)
+                local ____Result_error_35 = Result.error
+                local ____opt_result_34
+                if e ~= nil then
+                    ____opt_result_34 = e.message
+                end
+                return true, ____Result_error_35(Result, ____opt_result_34)
+            end
+            local ____try, ____hasReturned, ____returnValue = pcall(function()
+                CcFs:delete(path)
+                return true, Result:void()
+            end)
+            if not ____try then
+                ____hasReturned, ____returnValue = ____catch(____hasReturned)
+            end
+            if ____hasReturned then
+                return ____returnValue
+            end
+        end
+    end
+    function _FileUtil.copyFile(self, source, destination)
+        do
+            local function ____catch(e)
+                local ____Result_error_39 = Result.error
+                local ____opt_result_38
+                if e ~= nil then
+                    ____opt_result_38 = e.message
+                end
+                return true, ____Result_error_39(Result, ____opt_result_38)
+            end
+            local ____try, ____hasReturned, ____returnValue = pcall(function()
+                CcFs:copy(source, destination)
+                return true, Result:void()
+            end)
+            if not ____try then
+                ____hasReturned, ____returnValue = ____catch(____hasReturned)
+            end
+            if ____hasReturned then
+                return ____returnValue
+            end
+        end
+    end
+    function _FileUtil.moveFile(self, source, destination)
+        do
+            local function ____catch(e)
+                local ____Result_error_43 = Result.error
+                local ____opt_result_42
+                if e ~= nil then
+                    ____opt_result_42 = e.message
+                end
+                return true, ____Result_error_43(Result, ____opt_result_42)
+            end
+            local ____try, ____hasReturned, ____returnValue = pcall(function()
+                CcFs:move(source, destination)
+                return true, Result:void()
+            end)
+            if not ____try then
+                ____hasReturned, ____returnValue = ____catch(____hasReturned)
+            end
+            if ____hasReturned then
+                return ____returnValue
+            end
+        end
+    end
+    function _FileUtil.getFileSize(self, path)
+        local ____self_44 = _FileUtil:readText(path)
+        return ____self_44["then"](
+            ____self_44,
+            function(____, content) return content.length end
+        )
+    end
+    function _FileUtil.getFiles(self, path)
+        return LuaList:ofTable(CcFs:listDirectory(path)):where(function(____, path2) return _FileUtil:isFile(path2) end)
+    end
+    function _FileUtil.getDirectories(self, path)
+        return LuaList:ofTable(CcFs:listDirectory(path)):where(function(____, path2) return _FileUtil:isDirectory(path2) end)
+    end
+    function _FileUtil.getAllFilesRecursively(self, path)
+        if not self:isDirectory(path) then
+            return LuaList:ofSingleton(path)
+        end
+        local files = LuaList:empty()
+        files:appendAll(_FileUtil:getFiles(path))
+        _FileUtil:getDirectories(path):forEach(function(____, directory) return files:appendAll(_FileUtil:getAllFilesRecursively(directory)) end)
+        return files
+    end
+    function _FileUtil.getAllDirectoriesRecursively(self, path)
+        if not self:isDirectory(path) then
+            return LuaList:empty()
+        end
+        local directories = LuaList:empty()
+        _FileUtil:getDirectories(path):forEach(function(____, directory)
+            directories:append(directory):appendAll(_FileUtil:getAllDirectoriesRecursively(directory))
+        end)
+        return directories
+    end
+    function _FileUtil.createDirectory(self, path)
+        do
+            local function ____catch(e)
+                local ____Result_error_48 = Result.error
+                local ____opt_result_47
+                if e ~= nil then
+                    ____opt_result_47 = e.message
+                end
+                return true, ____Result_error_48(Result, ____opt_result_47)
+            end
+            local ____try, ____hasReturned, ____returnValue = pcall(function()
+                CcFs:createDirectory(path)
+                return true, Result:void()
+            end)
+            if not ____try then
+                ____hasReturned, ____returnValue = ____catch(____hasReturned)
+            end
+            if ____hasReturned then
+                return ____returnValue
+            end
+        end
+    end
+    function _FileUtil.copyDirectory(self, source, destination)
+        do
+            local function ____catch(e)
+                local ____Result_error_52 = Result.error
+                local ____opt_result_51
+                if e ~= nil then
+                    ____opt_result_51 = e.message
+                end
+                return true, ____Result_error_52(Result, ____opt_result_51)
+            end
+            local ____try, ____hasReturned, ____returnValue = pcall(function()
+                CcFs:copy(source, destination)
+                return true, Result:void()
+            end)
+            if not ____try then
+                ____hasReturned, ____returnValue = ____catch(____hasReturned)
+            end
+            if ____hasReturned then
+                return ____returnValue
+            end
+        end
+    end
+    function _FileUtil.copyDirectoryContent(self, source, destination)
+        if not self:isDirectory(source) then
+            return Result:error("Source is not a directory")
+        end
+        if not self:isDirectory(destination) then
+            self:createDirectory(destination)
+        end
+        local errorMessage = nil
+        self:getFiles(source):forEach(function(____, file)
+            self:copyFile(
+                file,
+                self:joinPath(
+                    destination,
+                    file:replace(source, "")
+                )
+            ):ifError(function(____, newMessage)
+                errorMessage = newMessage
+                return errorMessage
+            end)
+        end)
+        self:getDirectories(source):forEach(function(____, directory)
+            self:copyDirectory(
+                directory,
+                self:joinPath(
+                    destination,
+                    directory:replace(source, "")
+                )
+            ):ifError(function(____, newMessage)
+                errorMessage = newMessage
+                return errorMessage
+            end)
+        end)
+        return Result:ofError(nil, errorMessage)
+    end
+    function _FileUtil.moveDirectory(self, source, destination)
+        do
+            local function ____catch(e)
+                local ____Result_error_56 = Result.error
+                local ____opt_result_55
+                if e ~= nil then
+                    ____opt_result_55 = e.message
+                end
+                return true, ____Result_error_56(Result, ____opt_result_55)
+            end
+            local ____try, ____hasReturned, ____returnValue = pcall(function()
+                CcFs:move(source, destination)
+                return true, Result:void()
+            end)
+            if not ____try then
+                ____hasReturned, ____returnValue = ____catch(____hasReturned)
+            end
+            if ____hasReturned then
+                return ____returnValue
+            end
+        end
+    end
+    function _FileUtil.deleteDirectory(self, path)
+        do
+            local function ____catch(e)
+                local ____Result_error_60 = Result.error
+                local ____opt_result_59
+                if e ~= nil then
+                    ____opt_result_59 = e.message
+                end
+                return true, ____Result_error_60(Result, ____opt_result_59)
+            end
+            local ____try, ____hasReturned, ____returnValue = pcall(function()
+                CcFs:delete(path)
+                return true, Result:void()
+            end)
+            if not ____try then
+                ____hasReturned, ____returnValue = ____catch(____hasReturned)
+            end
+            if ____hasReturned then
+                return ____returnValue
+            end
+        end
+    end
+    function _FileUtil.deleteDirectoryContent(self, path)
+        if not self:isDirectory(path) then
+            return Result:error("Path is not a directory")
+        end
+        local errorMessage = nil
+        self:getFiles(path):forEach(function(____, file)
+            self:deleteFile(file):ifError(function(____, newMessage)
+                errorMessage = newMessage
+                return errorMessage
+            end)
+        end)
+        self:getDirectories(path):forEach(function(____, directory)
+            self:deleteDirectory(directory):ifError(function(____, newMessage)
+                errorMessage = newMessage
+                return errorMessage
+            end)
+        end)
+        return Result:ofError(nil, errorMessage)
+    end
+    function _FileUtil.removeByteOrderMark(self, path)
+        local contentResult = self:readText(path)
+        if contentResult:isError() then
+            return Result:error(contentResult:getErrorMessage())
+        end
+        local content = contentResult:getValueUnsafe("No file")
+        if not content:startsWith("?") then
+            return Result:void()
+        end
+        local newContent = content:substring(1)
+        return self:writeText(path, newContent)
+    end
+    local FileUtil = _FileUtil
+    local ____class_61 = __TS__Class()
+    ____class_61.name = "CcTextUtils"
+    function ____class_61.prototype.____constructor(self)
+    end
+    function ____class_61.slowWrite(self, text, rate)
+        textutils.slowWrite(text, rate)
+    end
+    function ____class_61.slowPrint(self, text, rate)
+        textutils.slowPrint(text, rate)
+    end
+    function ____class_61.formatTime(self, time, twentyFourHour)
+        local result = ""
+        result = textutils.formatTime(time, twentyFourHour)
+        return result
+    end
+    function ____class_61.pagedPrint(self, text, freeLines)
+        local result = 0
+        result = textutils.pagedPrint(text, freeLines)
+        return result
+    end
+    function ____class_61.tabulate(self, ...)
+        textutils.tabulate(...)
+    end
+    function ____class_61.pagedTabulate(self, ...)
+        textutils.pagedTabulate(...)
+    end
+    function ____class_61.serialize(self, obj, opts)
+        local result = nil
+        local ____error = nil
+        result, error = textutils.serialize(obj, opts)
+        if ____error ~= nil then
+            return Result:error(____error)
+        end
+        return Result:of(result)
+    end
+    function ____class_61.unserialize(self, str)
+        local result = nil
+        result = textutils.unserialize(str)
+        if result == nil then
+            return Result:error("Failed to unserialize")
+        end
+        return Result:of(result)
+    end
+    function ____class_61.serializeJSON(self, obj, opts)
+        local result = nil
+        local ____error = nil
+        result, error = textutils.serializeJSON(obj, opts)
+        if ____error ~= nil then
+            return Result:error(____error)
+        end
+        return Result:of(result)
+    end
+    function ____class_61.unserializeJSON(self, str, opts)
+        local result = nil
+        local ____error = nil
+        result, error = textutils.unserializeJSON(str, opts)
+        if ____error ~= nil then
+            return Result:error(____error)
+        end
+        return Result:of(result)
+    end
+    function ____class_61.urlEncode(self, str)
+        local result = ""
+        result = textutils.urlEncode(str)
+        return result
+    end
+    function ____class_61.getCompletion(self, searchText, searchTable)
+        local result = {}
+        result = textutils.complete(searchText, searchTable)
+        return result
+    end
+    ____class_61.empty_json_array = {}
+    ____class_61.json_null = {}
+    local CcTextUtils = ____class_61
     local _Config = __TS__Class()
     _Config.name = "_Config"
     function _Config.prototype.____constructor(self, data)
@@ -4442,18 +4451,18 @@ local ____ = "use strict";
     end
     _Config._configPath = "app/data/config.json"
     local Config = _Config
-    local ____class_60 = __TS__Class()
-    ____class_60.name = "ExecutionContext"
-    function ____class_60.prototype.____constructor(self)
+    local ____class_62 = __TS__Class()
+    ____class_62.name = "ExecutionContext"
+    function ____class_62.prototype.____constructor(self)
     end
-    ____class_60.commandLineArguments = LuaList:ofTable(COMMAND_LINE_ARGUMENTS)
-    local ExecutionContext = ____class_60
-    local ____class_61 = __TS__Class()
-    ____class_61.name = "Entrypoint"
-    function ____class_61.prototype.____constructor(self)
+    ____class_62.commandLineArguments = LuaList:ofTable(COMMAND_LINE_ARGUMENTS)
+    local ExecutionContext = ____class_62
+    local ____class_63 = __TS__Class()
+    ____class_63.name = "Entrypoint"
+    function ____class_63.prototype.____constructor(self)
         self._routes = LuaMap:empty()
     end
-    function ____class_61.prototype.run(self)
+    function ____class_63.prototype.run(self)
         self:registerRoutes()
         self:onStart()
         do
@@ -4469,10 +4478,10 @@ local ____ = "use strict";
         end
         self:onStop()
     end
-    function ____class_61.prototype.registerRoute(self, name, callback)
+    function ____class_63.prototype.registerRoute(self, name, callback)
         self._routes:set(name, callback)
     end
-    function ____class_61.prototype.dispatchRoute(self)
+    function ____class_63.prototype.dispatchRoute(self)
         local targetRouteName = ExecutionContext.commandLineArguments:first():getValueUnsafe("The first command line argument (route name) was not provided")
         self._routes:get(targetRouteName):ifEmpty(function()
             local validRouteNamesString = ("'" .. self._routes:keys():join("', '")) .. "'"
@@ -4485,21 +4494,21 @@ local ____ = "use strict";
             )
         end):ifPresent(function(____, routeFunction) return routeFunction(_G) end)
     end
-    function ____class_61.prototype.onCrash(self, cause)
+    function ____class_63.prototype.onCrash(self, cause)
         error(cause, 0)
     end
-    local Entrypoint = ____class_61
-    local ____class_62 = __TS__Class()
-    ____class_62.name = "GpsEntrypoint"
-    __TS__ClassExtends(____class_62, Entrypoint)
-    function ____class_62.prototype.registerRoutes(self)
+    local Entrypoint = ____class_63
+    local ____class_64 = __TS__Class()
+    ____class_64.name = "GpsEntrypoint"
+    __TS__ClassExtends(____class_64, Entrypoint)
+    function ____class_64.prototype.registerRoutes(self)
         self:registerRoute("run", self.routeRun)
     end
-    function ____class_62.prototype.onStart(self)
+    function ____class_64.prototype.onStart(self)
     end
-    function ____class_62.prototype.onStop(self)
+    function ____class_64.prototype.onStop(self)
     end
-    function ____class_62.prototype.routeRun(self)
+    function ____class_64.prototype.routeRun(self)
         local configResult = Config:load()
         if configResult:isError() then
             Logger:error(configResult:getErrorMessage())
@@ -4507,33 +4516,33 @@ local ____ = "use strict";
         end
         local config = configResult:getValueUnsafe("Failed to load config")
         Logger:debug(CcTextUtils:serializeJSON(config))
-        local ____opt_63 = config.data
-        if ____opt_63 ~= nil then
-            ____opt_63 = ____opt_63.x
+        local ____opt_65 = config.data
+        if ____opt_65 ~= nil then
+            ____opt_65 = ____opt_65.x
         end
-        local ____opt_63_65 = ____opt_63
-        if ____opt_63_65 == nil then
-            ____opt_63_65 = 0
+        local ____opt_65_67 = ____opt_65
+        if ____opt_65_67 == nil then
+            ____opt_65_67 = 0
         end
-        local x = ____opt_63_65
-        local ____opt_66 = config.data
-        if ____opt_66 ~= nil then
-            ____opt_66 = ____opt_66.y
+        local x = ____opt_65_67
+        local ____opt_68 = config.data
+        if ____opt_68 ~= nil then
+            ____opt_68 = ____opt_68.y
         end
-        local ____opt_66_68 = ____opt_66
-        if ____opt_66_68 == nil then
-            ____opt_66_68 = 0
+        local ____opt_68_70 = ____opt_68
+        if ____opt_68_70 == nil then
+            ____opt_68_70 = 0
         end
-        local y = ____opt_66_68
-        local ____opt_69 = config.data
-        if ____opt_69 ~= nil then
-            ____opt_69 = ____opt_69.z
+        local y = ____opt_68_70
+        local ____opt_71 = config.data
+        if ____opt_71 ~= nil then
+            ____opt_71 = ____opt_71.z
         end
-        local ____opt_69_71 = ____opt_69
-        if ____opt_69_71 == nil then
-            ____opt_69_71 = 0
+        local ____opt_71_73 = ____opt_71
+        if ____opt_71_73 == nil then
+            ____opt_71_73 = 0
         end
-        local z = ____opt_69_71
+        local z = ____opt_71_73
         CcShell:run(
             "gps",
             "host",
@@ -4542,7 +4551,7 @@ local ____ = "use strict";
             z
         )
     end
-    local GpsEntrypoint = ____class_62
+    local GpsEntrypoint = ____class_64
     __TS__New(GpsEntrypoint):run()
 end)(_G)
  end,
