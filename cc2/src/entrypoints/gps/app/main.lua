@@ -2955,11 +2955,13 @@ local ____ = "use strict";
         if elements == nil then
             return result
         end
+        print(elements)
+        print(elements.length)
         do
             local i = 0
             while i <= elements.length do
                 local luaIndex = i + 1
-                Lua:literal(((("result[" .. tostring(luaIndex)) .. "] = elements[") .. tostring(luaIndex)) .. "]")
+                result[luaIndex] = elements[luaIndex]
                 i = i + 1
             end
         end
