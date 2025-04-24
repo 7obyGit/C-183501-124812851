@@ -2793,7 +2793,7 @@ local __TS__Unpack = ____lualib.__TS__Unpack
 local __TS__ArraySlice = ____lualib.__TS__ArraySlice
 local ____ = "use strict";
 (function()
-    local LuaList
+    local Optional, LuaList
     local ____class_0 = __TS__Class()
     ____class_0.name = "Lua"
     function ____class_0.prototype.____constructor(self)
@@ -2910,6 +2910,94 @@ local ____ = "use strict";
     end
     ____class_1._internalChatBox = CcPeripheral:find("chatBox")
     local ChatBox = ____class_1
+    local _Result = __TS__Class()
+    _Result.name = "_Result"
+    function _Result.prototype.____constructor(self, value, errorMessage)
+        if value == nil and errorMessage == nil then
+            error(
+                __TS__New(Error, "Cannot create a result with both undefined values"),
+                0
+            )
+        end
+        self.value = value
+        self.errorMessage = errorMessage
+    end
+    function _Result.of(self, value)
+        return __TS__New(_Result, value, nil)
+    end
+    function _Result.ofError(self, value, errorMessage)
+        return __TS__New(_Result, value, errorMessage)
+    end
+    function _Result.void(self)
+        return __TS__New(_Result, "No value", nil)
+    end
+    function _Result.error(self, errorMessage)
+        local ____Result_3 = _Result
+        local ____errorMessage_2 = errorMessage
+        if ____errorMessage_2 == nil then
+            ____errorMessage_2 = "No error message given"
+        end
+        return __TS__New(____Result_3, nil, ____errorMessage_2)
+    end
+    function _Result.errorValue(self, value, errorMessage)
+        return __TS__New(_Result, value, errorMessage)
+    end
+    function _Result.prototype.isSuccess(self)
+        return self.errorMessage == nil
+    end
+    function _Result.prototype.isError(self)
+        return not self:isSuccess()
+    end
+    function _Result.prototype.ifSuccess(self, callback)
+        if self:isSuccess() then
+            callback(_G, self.value)
+        end
+        return self
+    end
+    function _Result.prototype.ifError(self, callback)
+        if self:isError() then
+            callback(_G, self.errorMessage)
+        end
+        return self
+    end
+    function _Result.prototype.getValueUnsafe(self, message)
+        if not self.value then
+            local ____Error_6 = Error
+            local ____message_4 = message
+            if ____message_4 == nil then
+                ____message_4 = self.errorMessage
+            end
+            local ____message_4_5 = ____message_4
+            if ____message_4_5 == nil then
+                ____message_4_5 = "Cannot unwrap `Result` value"
+            end
+            error(
+                __TS__New(____Error_6, ____message_4_5),
+                0
+            )
+        end
+        return self.value
+    end
+    function _Result.prototype.getValueOrDefault(self, defaultValue)
+        local ____self_value_7 = self.value
+        if ____self_value_7 == nil then
+            ____self_value_7 = defaultValue
+        end
+        return ____self_value_7
+    end
+    function _Result.prototype.getErrorMessage(self)
+        return self.errorMessage
+    end
+    function _Result.prototype.asOptional(self)
+        return Optional:of(self.value)
+    end
+    _Result.prototype["then"] = function(self, callback)
+        if not self.value then
+            return _Result:error(self.errorMessage)
+        end
+        return _Result:of(callback(_G, self.value))
+    end
+    local Result = _Result
     local _Optional = __TS__Class()
     _Optional.name = "_Optional"
     function _Optional.prototype.____constructor(self, value)
@@ -2935,24 +3023,24 @@ local ____ = "use strict";
     end
     function _Optional.prototype.getValueUnsafe(self, message)
         if not self.value then
-            local ____Error_3 = Error
-            local ____message_2 = message
-            if ____message_2 == nil then
-                ____message_2 = "Cannot unwrap `Optional` value!"
+            local ____Error_9 = Error
+            local ____message_8 = message
+            if ____message_8 == nil then
+                ____message_8 = "Cannot unwrap `Optional` value!"
             end
             error(
-                __TS__New(____Error_3, ____message_2),
+                __TS__New(____Error_9, ____message_8),
                 0
             )
         end
         return self.value
     end
     function _Optional.prototype.getValueOrDefault(self, defaultValue)
-        local ____self_value_4 = self.value
-        if ____self_value_4 == nil then
-            ____self_value_4 = defaultValue
+        local ____self_value_10 = self.value
+        if ____self_value_10 == nil then
+            ____self_value_10 = defaultValue
         end
-        return ____self_value_4
+        return ____self_value_10
     end
     _Optional.prototype["then"] = function(self, callback)
         if not self.value then
@@ -2973,15 +3061,21 @@ local ____ = "use strict";
         return self
     end
     _Optional.prototype["or"] = function(self, other)
-        local ____table_value_5
+        local ____table_value_11
         if self.value then
-            ____table_value_5 = self
+            ____table_value_11 = self
         else
-            ____table_value_5 = other
+            ____table_value_11 = other
         end
-        return ____table_value_5
+        return ____table_value_11
     end
-    local Optional = _Optional
+    function _Optional.prototype.toResult(self, errorMessage)
+        if self.value then
+            return Result:of(self.value)
+        end
+        return Result:ofError(self.value, errorMessage)
+    end
+    Optional = _Optional
     local _LuaSet = __TS__Class()
     _LuaSet.name = "_LuaSet"
     function _LuaSet.prototype.____constructor(self)
@@ -3080,11 +3174,11 @@ local ____ = "use strict";
         return {__TS__Spread(self.elements)}
     end
     local LuaSet = _LuaSet
-    local ____class_6 = __TS__Class()
-    ____class_6.name = "TableUtil"
-    function ____class_6.prototype.____constructor(self)
+    local ____class_12 = __TS__Class()
+    ____class_12.name = "TableUtil"
+    function ____class_12.prototype.____constructor(self)
     end
-    function ____class_6.fromArray(self, elements)
+    function ____class_12.fromArray(self, elements)
         local result = {}
         if elements == nil then
             return result
@@ -3100,7 +3194,7 @@ local ____ = "use strict";
         end
         return result
     end
-    local TableUtil = ____class_6
+    local TableUtil = ____class_12
     local _LuaList = __TS__Class()
     _LuaList.name = "_LuaList"
     function _LuaList.prototype.____constructor(self, elements)
@@ -3145,8 +3239,8 @@ local ____ = "use strict";
         return self.elements[index]
     end
     function _LuaList.prototype.append(self, element)
-        local ____self_elements_7 = self.elements
-        ____self_elements_7[#____self_elements_7 + 1] = element
+        local ____self_elements_13 = self.elements
+        ____self_elements_13[#____self_elements_13 + 1] = element
         return self
     end
     function _LuaList.prototype.appendAll(self, elements)
@@ -3314,11 +3408,11 @@ local ____ = "use strict";
             while i < #self.elements do
                 local element = self.elements[i + 1]
                 local selectorValue = selector(_G, element)
-                local ____minSelectorValue_8 = minSelectorValue
-                if ____minSelectorValue_8 == nil then
-                    ____minSelectorValue_8 = 0
+                local ____minSelectorValue_14 = minSelectorValue
+                if ____minSelectorValue_14 == nil then
+                    ____minSelectorValue_14 = 0
                 end
-                if selectorValue < ____minSelectorValue_8 then
+                if selectorValue < ____minSelectorValue_14 then
                     minElement = element
                     minSelectorValue = selectorValue
                 end
@@ -3344,11 +3438,11 @@ local ____ = "use strict";
             while i < #self.elements do
                 local element = self.elements[i + 1]
                 local selectorValue = selector(_G, element)
-                local ____maxSelectorValue_9 = maxSelectorValue
-                if ____maxSelectorValue_9 == nil then
-                    ____maxSelectorValue_9 = 0
+                local ____maxSelectorValue_15 = maxSelectorValue
+                if ____maxSelectorValue_15 == nil then
+                    ____maxSelectorValue_15 = 0
                 end
-                if selectorValue > ____maxSelectorValue_9 then
+                if selectorValue > ____maxSelectorValue_15 then
                     maxElement = element
                     maxSelectorValue = selectorValue
                 end

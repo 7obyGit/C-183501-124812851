@@ -2796,7 +2796,7 @@ local __TS__Iterator = ____lualib.__TS__Iterator
 local __TS__ClassExtends = ____lualib.__TS__ClassExtends
 local ____ = "use strict";
 (function()
-    local LuaList
+    local Result, LuaList
     local ____class_0 = __TS__Class()
     ____class_0.name = "Lua"
     function ____class_0.prototype.____constructor(self)
@@ -2881,6 +2881,12 @@ local ____ = "use strict";
             ____table_value_4 = other
         end
         return ____table_value_4
+    end
+    function _Optional.prototype.toResult(self, errorMessage)
+        if self.value then
+            return Result:of(self.value)
+        end
+        return Result:ofError(self.value, errorMessage)
     end
     local Optional = _Optional
     local _Result = __TS__Class()
@@ -2970,7 +2976,7 @@ local ____ = "use strict";
         end
         return _Result:of(callback(_G, self.value))
     end
-    local Result = _Result
+    Result = _Result
     local ____class_11 = __TS__Class()
     ____class_11.name = "TableUtil"
     function ____class_11.prototype.____constructor(self)
@@ -4338,7 +4344,20 @@ local ____ = "use strict";
         end)
         return result
     end
-    function _LuaMap.prototype.selectEntry(self, transformer)
+    function _LuaMap.prototype.selectKeys(self, transformer)
+        local result = __TS__New(_LuaMap)
+        self:forEachEntry(function(____, entry)
+            result:set(
+                transformer(
+                    _G,
+                    entry:getKey()
+                ),
+                entry:getValue()
+            )
+        end)
+        return result
+    end
+    function _LuaMap.prototype.selectValues(self, transformer)
         local result = __TS__New(_LuaMap)
         self:forEachEntry(function(____, entry)
             result:set(
@@ -4357,7 +4376,7 @@ local ____ = "use strict";
         end)
         return result
     end
-    function _LuaMap.prototype.whereEntry(self, predicate)
+    function _LuaMap.prototype.whereEntries(self, predicate)
         local result = __TS__New(_LuaMap)
         self:forEachEntry(function(____, entry)
             if predicate(_G, entry) then
@@ -4366,7 +4385,7 @@ local ____ = "use strict";
         end)
         return result
     end
-    function _LuaMap.prototype.whereKey(self, predicate)
+    function _LuaMap.prototype.whereKeys(self, predicate)
         local result = __TS__New(_LuaMap)
         self.map:forEach(function(____, value, key)
             if predicate(_G, key) then
@@ -4375,7 +4394,7 @@ local ____ = "use strict";
         end)
         return result
     end
-    function _LuaMap.prototype.whereValue(self, predicate)
+    function _LuaMap.prototype.whereValues(self, predicate)
         local result = __TS__New(_LuaMap)
         self.map:forEach(function(____, value, key)
             if predicate(_G, value) then
@@ -4499,11 +4518,55 @@ local ____ = "use strict";
     _FileLogListener.LOG_PATH = "app/logs/main.log"
     local FileLogListener = _FileLogListener
     local ____class_64 = __TS__Class()
-    ____class_64.name = "Entrypoint"
+    ____class_64.name = "Reflection"
     function ____class_64.prototype.____constructor(self)
+    end
+    function ____class_64.getFields(self, ____table)
+        local fields = LuaMap:empty()
+        local k = ""
+        local v = nil
+        for k, v in pairs(table) do
+            if type(v) ~= 'function' then
+                fields[k] = v
+            end
+        end
+        return fields
+    end
+    function ____class_64.getField(self, ____table, name)
+        if type(table) ~= 'table' then
+            return Result:error(("'" .. tostring(____table)) .. "' is not a table")
+        end
+        local value = table[name]
+        if value == nil or value == nil then
+            return Result:error(((("'" .. tostring(name)) .. "' is not a field of '") .. tostring(____table)) .. "'")
+        end
+        return Result:of(value)
+    end
+    function ____class_64.getMethod(self, ____table, name)
+        return self:getMethods(____table):get(name):toResult(((("'" .. tostring(name)) .. "' is not a method of '") .. tostring(____table)) .. "'")
+    end
+    function ____class_64.getMethods(self, ____table)
+        local methods = LuaMap:empty()
+        local k = ""
+        local function v()
+        end
+        for k, v in pairs(table) do
+            if type(v) == 'function' then
+        methods:set(
+            k,
+            function(____, ...) return v(_G, ____table, ...) end
+        )
+            end
+        end
+        return methods
+    end
+    local Reflection = ____class_64
+    local ____class_65 = __TS__Class()
+    ____class_65.name = "Entrypoint"
+    function ____class_65.prototype.____constructor(self)
         self._routes = LuaMap:empty()
     end
-    function ____class_64.prototype.run(self)
+    function ____class_65.prototype.run(self)
         self:applyInfoConfig()
         self:registerRoutes()
         self:onStart()
@@ -4520,27 +4583,30 @@ local ____ = "use strict";
         end
         self:onStop()
     end
-    function ____class_64.prototype.applyInfoConfig(self)
+    function ____class_65.prototype.applyInfoConfig(self)
         local info = Info:load()
-        local ____opt_65 = info.logging
-        if ____opt_65 ~= nil then
-            ____opt_65 = ____opt_65.level
+        local ____opt_66 = info.logging
+        if ____opt_66 ~= nil then
+            ____opt_66 = ____opt_66.level
         end
-        if ____opt_65 then
+        if ____opt_66 then
             Logger.level = info.logging.level
         end
-        local ____opt_67 = info.logging
-        if ____opt_67 ~= nil then
-            ____opt_67 = ____opt_67.writeToFile
+        local ____opt_68 = info.logging
+        if ____opt_68 ~= nil then
+            ____opt_68 = ____opt_68.writeToFile
         end
-        if ____opt_67 then
+        if ____opt_68 then
             Logger:addListener(__TS__New(FileLogListener))
         end
     end
-    function ____class_64.prototype.registerRoute(self, name, callback)
+    function ____class_65.prototype.registerRoutes(self)
+        Reflection:getMethods(self):whereKeys(function(____, key) return key:startsWith("route") end):selectKeys(function(____, key) return key:replace("route", ""):toLowerCase() end):forEach(function(____, name, route) return self:registerRoute(name, route) end)
+    end
+    function ____class_65.prototype.registerRoute(self, name, callback)
         self._routes:set(name, callback)
     end
-    function ____class_64.prototype.dispatchRoute(self)
+    function ____class_65.prototype.dispatchRoute(self)
         local targetRouteName = ExecutionContext.commandLineArguments:first():getValueUnsafe("The first command line argument (route name) was not provided")
         self._routes:get(targetRouteName):ifEmpty(function()
             local validRouteNamesString = ("'" .. self._routes:keys():join("', '")) .. "'"
@@ -4553,51 +4619,48 @@ local ____ = "use strict";
             )
         end):ifPresent(function(____, routeFunction) return routeFunction(_G) end)
     end
-    function ____class_64.prototype.onCrash(self, cause)
+    function ____class_65.prototype.onCrash(self, cause)
         error(cause, 0)
     end
-    local Entrypoint = ____class_64
-    local ____class_69 = __TS__Class()
-    ____class_69.name = "GpsEntrypoint"
-    __TS__ClassExtends(____class_69, Entrypoint)
-    function ____class_69.prototype.registerRoutes(self)
-        self:registerRoute("run", self.routeRun)
+    local Entrypoint = ____class_65
+    local ____class_70 = __TS__Class()
+    ____class_70.name = "GpsEntrypoint"
+    __TS__ClassExtends(____class_70, Entrypoint)
+    function ____class_70.prototype.onStart(self)
     end
-    function ____class_69.prototype.onStart(self)
+    function ____class_70.prototype.onStop(self)
     end
-    function ____class_69.prototype.onStop(self)
-    end
-    function ____class_69.prototype.routeRun(self)
+    function ____class_70.prototype.routeRun(self)
         Logger:debug("Running GPS entrypoint 'run' route")
         local config = Config:load():getValueUnsafe()
         Logger:debug("Extracting key values from config")
-        local ____opt_70 = config.data
-        if ____opt_70 ~= nil then
-            ____opt_70 = ____opt_70.x
+        local ____opt_71 = config.data
+        if ____opt_71 ~= nil then
+            ____opt_71 = ____opt_71.x
         end
-        local ____opt_70_72 = ____opt_70
-        if ____opt_70_72 == nil then
-            ____opt_70_72 = 0
+        local ____opt_71_73 = ____opt_71
+        if ____opt_71_73 == nil then
+            ____opt_71_73 = 0
         end
-        local x = ____opt_70_72
-        local ____opt_73 = config.data
-        if ____opt_73 ~= nil then
-            ____opt_73 = ____opt_73.y
+        local x = ____opt_71_73
+        local ____opt_74 = config.data
+        if ____opt_74 ~= nil then
+            ____opt_74 = ____opt_74.y
         end
-        local ____opt_73_75 = ____opt_73
-        if ____opt_73_75 == nil then
-            ____opt_73_75 = 0
+        local ____opt_74_76 = ____opt_74
+        if ____opt_74_76 == nil then
+            ____opt_74_76 = 0
         end
-        local y = ____opt_73_75
-        local ____opt_76 = config.data
-        if ____opt_76 ~= nil then
-            ____opt_76 = ____opt_76.z
+        local y = ____opt_74_76
+        local ____opt_77 = config.data
+        if ____opt_77 ~= nil then
+            ____opt_77 = ____opt_77.z
         end
-        local ____opt_76_78 = ____opt_76
-        if ____opt_76_78 == nil then
-            ____opt_76_78 = 0
+        local ____opt_77_79 = ____opt_77
+        if ____opt_77_79 == nil then
+            ____opt_77_79 = 0
         end
-        local z = ____opt_76_78
+        local z = ____opt_77_79
         Logger:debug((((("Config for 'run' route: x=" .. tostring(x)) .. ", y=") .. tostring(y)) .. ", z=") .. tostring(z))
         CcShell:run(
             "gps",
@@ -4608,7 +4671,7 @@ local ____ = "use strict";
         )
         Logger:debug("GPS entrypoint 'run' route finished")
     end
-    local GpsEntrypoint = ____class_69
+    local GpsEntrypoint = ____class_70
     __TS__New(GpsEntrypoint):run()
 end)(_G)
  end,
