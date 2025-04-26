@@ -2796,6 +2796,7 @@ local Map = ____lualib.Map
 local __TS__Iterator = ____lualib.__TS__Iterator
 local __TS__ClassExtends = ____lualib.__TS__ClassExtends
 local __TS__ArrayIsArray = ____lualib.__TS__ArrayIsArray
+local __TS__StringSplit = ____lualib.__TS__StringSplit
 local ____ = "use strict";
 (function()
     local Optional, LuaList
@@ -4637,8 +4638,8 @@ local ____ = "use strict";
         if not FileUtil:exists(self._path) then
             FileUtil:writeText(self._path, ""):getValueUnsafe("EC13")
         end
-        local content = FileUtil:readText(self._path):getStringUnsafe("Could not read from .env file")
-        local lines = content:split("\n")
+        local content = tostring(FileUtil:readText(self._path):getStringUnsafe("Could not read from .env file"))
+        local lines = __TS__StringSplit(content, "\n")
     end
     ____class_70._path = "app/data/.env"
     local Environment = ____class_70
