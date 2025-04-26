@@ -6203,7 +6203,7 @@ function CcGlobals.getHost(self)
     return {computerCraftVersion = computerCraftVersion, minecraftVersion = minecraftVersion}
 end
 function CcGlobals.getDefaultSettings(self)
-    local settingsString = return _CC_DEFAULT_SETTINGS
+    local settingsString = _CC_DEFAULT_SETTINGS
     local settingsParts = __TS__StringSplit(settingsString, ",")
     local settings = __TS__New(Map)
     for ____, setting in ipairs(settingsParts) do
