@@ -1,35 +1,35 @@
 {
-  "version": "0.0.140",
-  "name": "Example Application",
-  "description": "This is an example application.\nIt can have a long description.",
-  "startup": {
-    "delaySeconds": 5,
-    "autoUpdate": true,
-    "clearLogs": false
-  },
-  "deployment": {
-    "manifest": [
-      "/data/config.json"
-    ],
-    "configScript": [
-      "echo 'Test Message'",
-      "ls"
-    ],
-    "completeScript": [
-      "startup.lua"
-    ],
-    "completeMessage": "This message is displayed when the app has finished deploying.\nIt will always appear before any completion script runs."
-  },
-  "update": {
-    "clean": true
-  },
-  "logging": {
-    "level": "DEBUG",
-    "writeToFile": true,
-    "maxFileLines": 1000
-  },
-  "lifetime": {
-    "onCrash": "ROLLBACK",
-    "restartDelaySeconds": 5
-  }
+    "version": "0.0.141",
+    "name": "Example Application",
+    "description": "This is an example application.\nIt can have a long description.",
+    "startup": {
+        "delaySeconds": 5,
+        "autoUpdate": true,
+        "clearLogs": false
+    },
+    "deployment": {
+        "manifest": [
+            "/data/config.json"
+        ],
+        "configScript": [
+            "echo 'Test Message'",
+            "ls"
+        ],
+        "completeScript": [
+            "startup.lua"
+        ],
+        "completeMessage": "This message is displayed when the app has finished deploying.\nIt will always appear before any completion script runs."
+    },
+    "update": {
+        "clean": true
+    },
+    "logging": {
+        "level": "DEBUG",
+        "writeToFile": true,
+        "maxFileLines": 1000
+    },
+    "lifetime": {
+        "onCrash": "ROLLBACK",
+        "restartDelaySeconds": 5
+    }
 }
