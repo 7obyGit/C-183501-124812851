@@ -8365,10 +8365,10 @@ function CcRedstoneRelay.setOutput(self, side, on)
     self._internalRelay:get().setOutput(side, on)
 end
 function CcRedstoneRelay.getOutput(self, side)
-    return return self._internalRelay:get().getOutput(side)
+    return self._internalRelay:get().getOutput(side)
 end
 function CcRedstoneRelay.getInput(self, side)
-    return return self._internalRelay:get().getInput(side)
+    return self._internalRelay:get().getInput(side)
 end
 function CcRedstoneRelay.setAnalogOutput(self, side, value)
     self._internalRelay:get().setAnalogOutput(side, value)
@@ -8377,28 +8377,28 @@ function CcRedstoneRelay.setAnalogueOutput(self, side, value)
     self._internalRelay:get().setAnalogueOutput(side, value)
 end
 function CcRedstoneRelay.getAnalogOutput(self, side)
-    return return self._internalRelay:get().getAnalogOutput(side)
+    return self._internalRelay:get().getAnalogOutput(side)
 end
 function CcRedstoneRelay.getAnalogueOutput(self, side)
-    return return self._internalRelay:get().getAnalogueOutput(side)
+    return self._internalRelay:get().getAnalogueOutput(side)
 end
 function CcRedstoneRelay.getAnalogInput(self, side)
-    return return self._internalRelay:get().getAnalogInput(side)
+    return self._internalRelay:get().getAnalogInput(side)
 end
 function CcRedstoneRelay.getAnalogueInput(self, side)
-    return return self._internalRelay:get().getAnalogueInput(side)
+    return self._internalRelay:get().getAnalogueInput(side)
 end
 function CcRedstoneRelay.setBundledOutput(self, side, output)
     self._internalRelay:get().setBundledOutput(side, output)
 end
 function CcRedstoneRelay.getBundledOutput(self, side)
-    return return self._internalRelay:get().getBundledOutput(side)
+    return self._internalRelay:get().getBundledOutput(side)
 end
 function CcRedstoneRelay.getBundledInput(self, side)
-    return return self._internalRelay:get().getBundledInput(side)
+    return self._internalRelay:get().getBundledInput(side)
 end
 function CcRedstoneRelay.testBundledInput(self, side, mask)
-    return return self._internalRelay:get().testBundledInput(side, mask)
+    return self._internalRelay:get().testBundledInput(side, mask)
 end
 CcRedstoneRelay._internalRelay = CcPeripheral:find("redstone_relay")
 return ____exports
