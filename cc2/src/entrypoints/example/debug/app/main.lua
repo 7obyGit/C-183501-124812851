@@ -4669,7 +4669,7 @@ local ____ = "use strict";
         return Optional:ofNullable(label)
     end
     function ____class_70.computerLabel(self)
-        local label = label = os.computerLabel()
+        local label = os.computerLabel()
         return Optional:ofNullable(label)
     end
     function ____class_70.setComputerLabel(self, label)
