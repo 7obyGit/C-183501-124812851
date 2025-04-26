@@ -54,13 +54,13 @@ local __TS__New = ____lualib.__TS__New
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
 __TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["8"] = 1,["9"] = 1,["10"] = 2,["11"] = 2,["12"] = 3,["13"] = 3,["14"] = 4,["15"] = 4,["16"] = 6,["17"] = 6,["18"] = 6,["19"] = 6,["20"] = 7,["21"] = 7,["22"] = 8,["23"] = 8,["24"] = 10,["25"] = 11,["26"] = 12,["27"] = 13,["28"] = 14,["29"] = 15,["30"] = 10,["31"] = 19});
 local ____exports = {}
-local ____chatBox = require("preBuild.src.util.computer.api.tier1.advancedPeripherals.chatBox")
+local ____chatBox = require("src.util.computer.api.tier1.advancedPeripherals.chatBox")
 local ChatBox = ____chatBox.ChatBox
-local ____luaList = require("preBuild.src.util.types.collection.luaList")
+local ____luaList = require("src.util.types.collection.luaList")
 local LuaList = ____luaList.LuaList
-local ____entrypoint = require("preBuild.src.util.computer.entrypoint.entrypoint")
+local ____entrypoint = require("src.util.computer.entrypoint.entrypoint")
 local Entrypoint = ____entrypoint.Entrypoint
-local ____logger = require("preBuild.src.util.computer.api.tier2.logging.logger")
+local ____logger = require("src.util.computer.api.tier2.logging.logger")
 local Logger = ____logger.Logger
 ____exports.ExampleEntrypoint = __TS__Class()
 local ExampleEntrypoint = ____exports.ExampleEntrypoint
@@ -81,7 +81,7 @@ __TS__New(____exports.ExampleEntrypoint):run()
 return ____exports
 
 end)
-__bundle_register("preBuild.src.util.computer.api.tier2.logging.logger", function(require, _LOADED, __bundle_register, __bundle_modules)
+__bundle_register("src.util.computer.api.tier2.logging.logger", function(require, _LOADED, __bundle_register, __bundle_modules)
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
 local __TS__ArrayMap = ____lualib.__TS__ArrayMap
@@ -90,11 +90,11 @@ local __TS__New = ____lualib.__TS__New
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
 __TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["9"] = 1,["10"] = 1,["11"] = 3,["12"] = 3,["13"] = 4,["14"] = 4,["15"] = 6,["16"] = 6,["17"] = 6,["19"] = 6,["20"] = 22,["21"] = 23,["22"] = 23,["23"] = 23,["24"] = 23,["25"] = 22,["26"] = 26,["27"] = 27,["28"] = 26,["29"] = 30,["30"] = 30,["31"] = 33,["34"] = 39,["35"] = 39,["36"] = 39,["37"] = 39,["38"] = 39,["39"] = 39,["40"] = 39,["41"] = 41,["42"] = 42,["43"] = 41,["44"] = 30,["45"] = 46,["46"] = 47,["47"] = 46,["48"] = 50,["49"] = 51,["50"] = 50,["51"] = 54,["52"] = 55,["53"] = 54,["54"] = 58,["55"] = 59,["56"] = 58,["57"] = 7,["58"] = 9,["59"] = 17,["60"] = 17,["61"] = 17,["62"] = 17});
 local ____exports = {}
-local ____logLevel = require("preBuild.src.util.computer.api.tier2.logging.logLevel")
+local ____logLevel = require("src.util.computer.api.tier2.logging.logLevel")
 local LogLevel = ____logLevel.LogLevel
-local ____consoleLogListener = require("preBuild.src.util.computer.api.tier2.logging.listeners.consoleLogListener")
+local ____consoleLogListener = require("src.util.computer.api.tier2.logging.listeners.consoleLogListener")
 local ConsoleLogListener = ____consoleLogListener.ConsoleLogListener
-local ____luaMap = require("preBuild.src.util.types.collection.luaMap")
+local ____luaMap = require("src.util.types.collection.luaMap")
 local LuaMap = ____luaMap.LuaMap
 ____exports.Logger = __TS__Class()
 local Logger = ____exports.Logger
@@ -147,7 +147,7 @@ Logger.listeners = LuaMap:ofSingleton(
 return ____exports
 
 end)
-__bundle_register("preBuild.src.util.types.collection.luaMap", function(require, _LOADED, __bundle_register, __bundle_modules)
+__bundle_register("src.util.types.collection.luaMap", function(require, _LOADED, __bundle_register, __bundle_modules)
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
 local Map = ____lualib.Map
@@ -159,11 +159,11 @@ local __TS__ArrayMap = ____lualib.__TS__ArrayMap
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
 __TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["12"] = 1,["13"] = 1,["14"] = 2,["15"] = 2,["16"] = 3,["17"] = 3,["18"] = 5,["19"] = 5,["20"] = 5,["22"] = 9,["23"] = 8,["24"] = 12,["25"] = 17,["26"] = 12,["27"] = 20,["28"] = 24,["29"] = 20,["30"] = 27,["31"] = 30,["32"] = 27,["33"] = 33,["34"] = 34,["35"] = 33,["36"] = 37,["37"] = 38,["38"] = 38,["40"] = 39,["41"] = 37,["42"] = 42,["43"] = 43,["44"] = 43,["46"] = 44,["47"] = 42,["48"] = 47,["49"] = 48,["50"] = 49,["51"] = 47,["52"] = 52,["53"] = 53,["54"] = 53,["55"] = 53,["56"] = 53,["57"] = 52,["58"] = 56,["59"] = 61,["60"] = 62,["61"] = 56,["62"] = 65,["63"] = 66,["64"] = 66,["66"] = 67,["67"] = 68,["68"] = 69,["69"] = 65,["70"] = 72,["71"] = 73,["72"] = 74,["73"] = 72,["74"] = 77,["75"] = 78,["76"] = 77,["77"] = 81,["78"] = 82,["79"] = 83,["80"] = 83,["83"] = 85,["84"] = 81,["85"] = 88,["86"] = 89,["87"] = 88,["88"] = 92,["89"] = 93,["90"] = 92,["91"] = 96,["92"] = 97,["93"] = 98,["94"] = 98,["95"] = 98,["96"] = 98,["97"] = 98,["98"] = 98,["99"] = 99,["100"] = 98,["101"] = 97,["102"] = 96,["103"] = 104,["104"] = 105,["105"] = 104,["106"] = 108,["107"] = 109,["108"] = 108,["109"] = 112,["110"] = 113,["111"] = 112,["112"] = 116,["113"] = 119,["114"] = 120,["115"] = 116,["116"] = 123,["117"] = 126,["118"] = 127,["119"] = 123,["120"] = 130,["121"] = 131,["122"] = 132,["123"] = 130,["124"] = 135,["125"] = 136,["126"] = 137,["127"] = 135,["128"] = 140,["129"] = 143,["130"] = 144,["131"] = 145,["132"] = 145,["133"] = 145,["134"] = 145,["135"] = 144,["136"] = 147,["137"] = 140,["138"] = 150,["139"] = 153,["140"] = 154,["141"] = 155,["142"] = 155,["143"] = 155,["144"] = 155,["145"] = 155,["146"] = 155,["147"] = 155,["148"] = 154,["149"] = 157,["150"] = 150,["151"] = 160,["152"] = 163,["153"] = 164,["154"] = 165,["155"] = 165,["156"] = 165,["157"] = 165,["158"] = 164,["159"] = 167,["160"] = 160,["161"] = 170,["162"] = 173,["163"] = 174,["164"] = 175,["165"] = 176,["167"] = 174,["168"] = 179,["169"] = 170,["170"] = 182,["171"] = 185,["172"] = 186,["173"] = 187,["174"] = 188,["176"] = 186,["177"] = 191,["178"] = 182,["179"] = 194,["180"] = 195,["181"] = 196,["182"] = 197,["183"] = 198,["185"] = 196,["186"] = 201,["187"] = 194,["188"] = 204,["189"] = 207,["190"] = 208,["191"] = 209,["192"] = 210,["194"] = 208,["195"] = 213,["196"] = 204,["197"] = 216,["198"] = 217,["199"] = 218,["200"] = 219,["201"] = 218,["202"] = 221,["203"] = 216,["204"] = 224,["205"] = 225,["206"] = 226,["207"] = 227,["208"] = 224});
 local ____exports = {}
-local ____optional = require("preBuild.src.util.types.optional")
+local ____optional = require("src.util.types.optional")
 local Optional = ____optional.Optional
-local ____luaList = require("preBuild.src.util.types.collection.luaList")
+local ____luaList = require("src.util.types.collection.luaList")
 local LuaList = ____luaList.LuaList
-local ____luaMapEntry = require("preBuild.src.util.types.collection.luaMapEntry")
+local ____luaMapEntry = require("src.util.types.collection.luaMapEntry")
 local LuaMapEntry = ____luaMapEntry.LuaMapEntry
 ____exports.LuaMap = __TS__Class()
 local LuaMap = ____exports.LuaMap
@@ -359,7 +359,7 @@ end
 return ____exports
 
 end)
-__bundle_register("preBuild.src.util.types.collection.luaMapEntry", function(require, _LOADED, __bundle_register, __bundle_modules)
+__bundle_register("src.util.types.collection.luaMapEntry", function(require, _LOADED, __bundle_register, __bundle_modules)
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
 local __TS__New = ____lualib.__TS__New
@@ -3121,7 +3121,7 @@ return {
 }
 
 end)
-__bundle_register("preBuild.src.util.types.collection.luaList", function(require, _LOADED, __bundle_register, __bundle_modules)
+__bundle_register("src.util.types.collection.luaList", function(require, _LOADED, __bundle_register, __bundle_modules)
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
 local __TS__New = ____lualib.__TS__New
@@ -3153,13 +3153,13 @@ local __TS__Spread = ____lualib.__TS__Spread
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
 __TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["32"] = 1,["33"] = 1,["34"] = 2,["35"] = 2,["36"] = 3,["37"] = 3,["38"] = 5,["39"] = 5,["40"] = 7,["41"] = 7,["42"] = 7,["43"] = 10,["44"] = 8,["45"] = 11,["46"] = 10,["47"] = 14,["48"] = 15,["49"] = 14,["50"] = 18,["51"] = 19,["52"] = 20,["53"] = 21,["54"] = 22,["55"] = 23,["56"] = 18,["57"] = 26,["58"] = 27,["59"] = 26,["60"] = 30,["61"] = 31,["62"] = 31,["63"] = 31,["64"] = 31,["65"] = 31,["66"] = 31,["67"] = 31,["68"] = 30,["69"] = 34,["70"] = 35,["71"] = 35,["72"] = 35,["73"] = 35,["74"] = 34,["75"] = 38,["76"] = 39,["77"] = 38,["78"] = 42,["79"] = 43,["80"] = 42,["81"] = 46,["82"] = 47,["83"] = 46,["84"] = 50,["85"] = 51,["86"] = 51,["87"] = 52,["88"] = 50,["89"] = 55,["90"] = 58,["91"] = 59,["92"] = 55,["93"] = 62,["94"] = 63,["95"] = 64,["96"] = 62,["97"] = 67,["98"] = 68,["99"] = 69,["100"] = 67,["101"] = 72,["102"] = 73,["103"] = 73,["105"] = 74,["106"] = 72,["107"] = 77,["108"] = 78,["109"] = 78,["111"] = 79,["112"] = 77,["113"] = 82,["114"] = 83,["116"] = 84,["120"] = 85,["121"] = 82,["122"] = 88,["123"] = 89,["124"] = 90,["125"] = 90,["127"] = 91,["128"] = 92,["129"] = 88,["130"] = 95,["131"] = 96,["132"] = 97,["133"] = 95,["134"] = 100,["135"] = 101,["136"] = 100,["137"] = 104,["138"] = 105,["139"] = 105,["140"] = 105,["141"] = 105,["142"] = 104,["143"] = 108,["144"] = 109,["145"] = 109,["146"] = 109,["147"] = 109,["148"] = 108,["149"] = 112,["150"] = 113,["151"] = 112,["152"] = 116,["153"] = 117,["154"] = 116,["155"] = 120,["156"] = 121,["157"] = 120,["158"] = 124,["159"] = 125,["160"] = 125,["161"] = 125,["162"] = 125,["163"] = 124,["164"] = 128,["165"] = 131,["166"] = 131,["167"] = 131,["168"] = 131,["169"] = 128,["170"] = 134,["171"] = 135,["172"] = 134,["173"] = 138,["174"] = 139,["175"] = 139,["176"] = 139,["177"] = 139,["178"] = 138,["179"] = 144,["180"] = 145,["181"] = 144,["182"] = 148,["183"] = 149,["184"] = 150,["185"] = 148,["186"] = 153,["187"] = 156,["188"] = 156,["189"] = 156,["190"] = 156,["191"] = 153,["192"] = 159,["193"] = 160,["194"] = 160,["195"] = 160,["196"] = 160,["197"] = 159,["198"] = 163,["199"] = 167,["200"] = 163,["201"] = 170,["202"] = 171,["203"] = 171,["205"] = 172,["206"] = 170,["207"] = 175,["208"] = 176,["209"] = 176,["211"] = 177,["212"] = 175,["213"] = 180,["214"] = 181,["215"] = 181,["217"] = 182,["218"] = 180,["219"] = 185,["220"] = 186,["221"] = 186,["223"] = 187,["224"] = 185,["225"] = 190,["226"] = 191,["227"] = 190,["228"] = 194,["229"] = 195,["230"] = 194,["231"] = 198,["232"] = 199,["233"] = 199,["234"] = 199,["235"] = 199,["236"] = 198,["237"] = 205,["238"] = 206,["239"] = 206,["241"] = 207,["242"] = 205,["243"] = 210,["244"] = 211,["245"] = 211,["247"] = 212,["248"] = 210,["249"] = 215,["250"] = 216,["251"] = 216,["253"] = 218,["254"] = 219,["256"] = 221,["257"] = 221,["258"] = 222,["259"] = 223,["260"] = 225,["261"] = 226,["262"] = 227,["264"] = 221,["267"] = 231,["268"] = 215,["269"] = 234,["270"] = 235,["271"] = 235,["273"] = 236,["274"] = 234,["275"] = 239,["276"] = 240,["277"] = 240,["279"] = 242,["280"] = 243,["282"] = 245,["283"] = 245,["284"] = 246,["285"] = 247,["286"] = 249,["287"] = 250,["288"] = 251,["290"] = 245,["293"] = 255,["294"] = 239,["295"] = 258,["296"] = 259,["297"] = 259,["298"] = 259,["299"] = 259,["300"] = 258,["301"] = 262,["302"] = 263,["303"] = 263,["304"] = 263,["305"] = 263,["306"] = 262,["307"] = 266,["308"] = 267,["309"] = 267,["310"] = 267,["311"] = 267,["312"] = 266,["313"] = 270,["314"] = 271,["315"] = 271,["316"] = 271,["317"] = 271,["318"] = 270,["319"] = 274,["320"] = 275,["321"] = 274,["322"] = 278,["323"] = 279,["324"] = 278,["325"] = 282,["326"] = 283,["327"] = 282});
 local ____exports = {}
-local ____optional = require("preBuild.src.util.types.optional")
+local ____optional = require("src.util.types.optional")
 local Optional = ____optional.Optional
-local ____luaSet = require("preBuild.src.util.types.collection.luaSet")
+local ____luaSet = require("src.util.types.collection.luaSet")
 local LuaSet = ____luaSet.LuaSet
-local ____lua = require("preBuild.src.lua.lua")
+local ____lua = require("src.lua.lua")
 local Lua = ____lua.Lua
-local ____tableUtil = require("preBuild.src.util.computer.api.tier1.lua.tableUtil")
+local ____tableUtil = require("src.util.computer.api.tier1.lua.tableUtil")
 local TableUtil = ____tableUtil.TableUtil
 ____exports.LuaList = __TS__Class()
 local LuaList = ____exports.LuaList
@@ -3452,13 +3452,13 @@ end
 return ____exports
 
 end)
-__bundle_register("preBuild.src.util.computer.api.tier1.lua.tableUtil", function(require, _LOADED, __bundle_register, __bundle_modules)
+__bundle_register("src.util.computer.api.tier1.lua.tableUtil", function(require, _LOADED, __bundle_register, __bundle_modules)
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
 __TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["6"] = 2,["7"] = 2,["8"] = 4,["9"] = 4,["10"] = 4,["12"] = 4,["13"] = 5,["14"] = 6,["15"] = 8,["16"] = 9,["18"] = 12,["20"] = 13,["21"] = 13,["22"] = 14,["23"] = 15,["24"] = 13,["27"] = 17,["28"] = 5});
 local ____exports = {}
-local ____lua = require("preBuild.src.lua.lua")
+local ____lua = require("src.lua.lua")
 local Lua = ____lua.Lua
 ____exports.TableUtil = __TS__Class()
 local TableUtil = ____exports.TableUtil
@@ -3484,7 +3484,7 @@ end
 return ____exports
 
 end)
-__bundle_register("preBuild.src.lua.lua", function(require, _LOADED, __bundle_register, __bundle_modules)
+__bundle_register("src.lua.lua", function(require, _LOADED, __bundle_register, __bundle_modules)
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
 local Error = ____lualib.Error
@@ -3511,7 +3511,7 @@ end
 return ____exports
 
 end)
-__bundle_register("preBuild.src.util.types.collection.luaSet", function(require, _LOADED, __bundle_register, __bundle_modules)
+__bundle_register("src.util.types.collection.luaSet", function(require, _LOADED, __bundle_register, __bundle_modules)
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
 local Set = ____lualib.Set
@@ -3521,7 +3521,7 @@ local __TS__Spread = ____lualib.__TS__Spread
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
 __TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["10"] = 1,["11"] = 1,["12"] = 3,["13"] = 3,["14"] = 3,["16"] = 7,["17"] = 6,["18"] = 10,["19"] = 11,["20"] = 10,["21"] = 14,["22"] = 17,["23"] = 14,["24"] = 23,["25"] = 24,["26"] = 23,["27"] = 30,["28"] = 31,["29"] = 30,["30"] = 38,["31"] = 41,["32"] = 41,["33"] = 41,["34"] = 41,["35"] = 42,["36"] = 38,["37"] = 49,["38"] = 52,["39"] = 52,["40"] = 52,["41"] = 52,["42"] = 53,["43"] = 49,["44"] = 61,["45"] = 62,["46"] = 63,["47"] = 61,["48"] = 71,["49"] = 72,["50"] = 73,["51"] = 71,["52"] = 79,["53"] = 80,["54"] = 79,["55"] = 86,["56"] = 89,["57"] = 90,["58"] = 91,["59"] = 86,["60"] = 97,["61"] = 98,["62"] = 99,["63"] = 100,["64"] = 101,["66"] = 99,["67"] = 104,["68"] = 97,["69"] = 111,["70"] = 112,["71"] = 113,["72"] = 111,["73"] = 119,["74"] = 120,["75"] = 119,["76"] = 126,["77"] = 127,["78"] = 126,["79"] = 133,["80"] = 134,["81"] = 133,["82"] = 141,["83"] = 142,["84"] = 143,["85"] = 141,["86"] = 149,["87"] = 150,["88"] = 149,["89"] = 156,["90"] = 157,["91"] = 156,["92"] = 163,["93"] = 164,["94"] = 163,["95"] = 170,["96"] = 171,["97"] = 170,["98"] = 177,["99"] = 178,["100"] = 177,["101"] = 184,["102"] = 185,["103"] = 184,["104"] = 191,["105"] = 192,["106"] = 191,["107"] = 199,["108"] = 200,["109"] = 199,["110"] = 207,["111"] = 208,["112"] = 207,["113"] = 211,["114"] = 212,["115"] = 211});
 local ____exports = {}
-local ____luaList = require("preBuild.src.util.types.collection.luaList")
+local ____luaList = require("src.util.types.collection.luaList")
 local LuaList = ____luaList.LuaList
 ____exports.LuaSet = __TS__Class()
 local LuaSet = ____exports.LuaSet
@@ -3630,7 +3630,7 @@ end
 return ____exports
 
 end)
-__bundle_register("preBuild.src.util.types.optional", function(require, _LOADED, __bundle_register, __bundle_modules)
+__bundle_register("src.util.types.optional", function(require, _LOADED, __bundle_register, __bundle_modules)
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
 local __TS__New = ____lualib.__TS__New
@@ -3643,7 +3643,7 @@ local URIError = ____lualib.URIError
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
 __TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["13"] = 1,["14"] = 1,["15"] = 3,["16"] = 3,["17"] = 3,["18"] = 6,["19"] = 7,["20"] = 6,["21"] = 10,["22"] = 11,["23"] = 10,["24"] = 14,["25"] = 17,["26"] = 18,["28"] = 19,["29"] = 14,["30"] = 22,["31"] = 23,["32"] = 22,["33"] = 26,["34"] = 27,["35"] = 26,["36"] = 30,["37"] = 31,["38"] = 30,["39"] = 34,["40"] = 35,["42"] = 36,["46"] = 37,["47"] = 34,["48"] = 40,["49"] = 41,["50"] = 41,["51"] = 41,["53"] = 41,["54"] = 40,["55"] = 44,["56"] = 47,["57"] = 47,["59"] = 48,["60"] = 44,["61"] = 51,["62"] = 52,["63"] = 52,["65"] = 53,["66"] = 51,["67"] = 56,["68"] = 57,["69"] = 57,["71"] = 58,["72"] = 56,["73"] = 61,["74"] = 62,["75"] = 62,["76"] = 62,["78"] = 62,["80"] = 62,["81"] = 61,["82"] = 65,["83"] = 66,["84"] = 66,["86"] = 67,["87"] = 65});
 local ____exports = {}
-local ____result = require("preBuild.src.util.types.result")
+local ____result = require("src.util.types.result")
 local Result = ____result.Result
 ____exports.Optional = __TS__Class()
 local Optional = ____exports.Optional
@@ -3721,7 +3721,7 @@ end
 return ____exports
 
 end)
-__bundle_register("preBuild.src.util.types.result", function(require, _LOADED, __bundle_register, __bundle_modules)
+__bundle_register("src.util.types.result", function(require, _LOADED, __bundle_register, __bundle_modules)
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
 local Error = ____lualib.Error
@@ -3734,7 +3734,7 @@ local __TS__New = ____lualib.__TS__New
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
 __TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["13"] = 1,["14"] = 1,["15"] = 3,["16"] = 3,["17"] = 3,["18"] = 8,["19"] = 11,["21"] = 12,["25"] = 16,["26"] = 17,["27"] = 7,["28"] = 20,["29"] = 21,["30"] = 20,["31"] = 24,["32"] = 28,["33"] = 24,["34"] = 31,["35"] = 32,["36"] = 31,["37"] = 35,["38"] = 36,["39"] = 35,["40"] = 42,["41"] = 46,["42"] = 42,["43"] = 49,["44"] = 50,["45"] = 49,["46"] = 53,["47"] = 54,["48"] = 53,["49"] = 57,["50"] = 58,["51"] = 58,["53"] = 59,["54"] = 57,["55"] = 62,["56"] = 63,["57"] = 63,["59"] = 64,["60"] = 62,["61"] = 67,["62"] = 68,["64"] = 69,["68"] = 72,["69"] = 67,["70"] = 75,["71"] = 76,["72"] = 76,["73"] = 76,["75"] = 76,["76"] = 75,["77"] = 79,["78"] = 80,["79"] = 79,["80"] = 83,["81"] = 84,["82"] = 83,["83"] = 87,["84"] = 90,["85"] = 90,["87"] = 91,["88"] = 87});
 local ____exports = {}
-local ____optional = require("preBuild.src.util.types.optional")
+local ____optional = require("src.util.types.optional")
 local Optional = ____optional.Optional
 ____exports.Result = __TS__Class()
 local Result = ____exports.Result
@@ -3813,14 +3813,14 @@ end
 return ____exports
 
 end)
-__bundle_register("preBuild.src.util.computer.api.tier2.logging.listeners.consoleLogListener", function(require, _LOADED, __bundle_register, __bundle_modules)
+__bundle_register("src.util.computer.api.tier2.logging.listeners.consoleLogListener", function(require, _LOADED, __bundle_register, __bundle_modules)
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
 local __TS__ClassExtends = ____lualib.__TS__ClassExtends
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
 __TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["7"] = 2,["8"] = 2,["9"] = 4,["10"] = 4,["11"] = 4,["12"] = 4,["13"] = 5,["14"] = 6,["15"] = 5,["16"] = 9,["17"] = 10,["18"] = 9});
 local ____exports = {}
-local ____logListener = require("preBuild.src.util.computer.api.tier2.logging.logListener")
+local ____logListener = require("src.util.computer.api.tier2.logging.logListener")
 local LogListener = ____logListener.LogListener
 ____exports.ConsoleLogListener = __TS__Class()
 local ConsoleLogListener = ____exports.ConsoleLogListener
@@ -3835,7 +3835,7 @@ end
 return ____exports
 
 end)
-__bundle_register("preBuild.src.util.computer.api.tier2.logging.logListener", function(require, _LOADED, __bundle_register, __bundle_modules)
+__bundle_register("src.util.computer.api.tier2.logging.logListener", function(require, _LOADED, __bundle_register, __bundle_modules)
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
@@ -3849,7 +3849,7 @@ end
 return ____exports
 
 end)
-__bundle_register("preBuild.src.util.computer.api.tier2.logging.logLevel", function(require, _LOADED, __bundle_register, __bundle_modules)
+__bundle_register("src.util.computer.api.tier2.logging.logLevel", function(require, _LOADED, __bundle_register, __bundle_modules)
 local ____lualib = require("lualib_bundle")
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
 __TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["13"] = 11,["14"] = 12,["15"] = 13,["16"] = 14,["17"] = 15});
@@ -3870,7 +3870,7 @@ ____exports.LogLevel.ERROR = "ERROR"
 return ____exports
 
 end)
-__bundle_register("preBuild.src.util.computer.entrypoint.entrypoint", function(require, _LOADED, __bundle_register, __bundle_modules)
+__bundle_register("src.util.computer.entrypoint.entrypoint", function(require, _LOADED, __bundle_register, __bundle_modules)
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
 local __TS__New = ____lualib.__TS__New
@@ -3885,19 +3885,19 @@ local URIError = ____lualib.URIError
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
 __TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["15"] = 1,["16"] = 1,["17"] = 2,["18"] = 2,["19"] = 3,["20"] = 3,["21"] = 4,["22"] = 4,["23"] = 5,["24"] = 5,["25"] = 7,["26"] = 7,["27"] = 8,["28"] = 8,["32"] = 15,["33"] = 15,["34"] = 15,["36"] = 24,["37"] = 15,["38"] = 31,["39"] = 32,["40"] = 33,["41"] = 34,["44"] = 39,["47"] = 37,["53"] = 42,["54"] = 31,["55"] = 50,["56"] = 51,["57"] = 53,["58"] = 53,["59"] = 54,["61"] = 57,["62"] = 57,["63"] = 58,["65"] = 61,["66"] = 61,["67"] = 62,["69"] = 50,["70"] = 71,["71"] = 72,["72"] = 71,["73"] = 87,["74"] = 88,["75"] = 87,["76"] = 107,["77"] = 108,["78"] = 114,["79"] = 117,["81"] = 119,["84"] = 114,["85"] = 107,["86"] = 142,["87"] = 143,["88"] = 142});
 local ____exports = {}
-local ____luaMap = require("preBuild.src.util.types.collection.luaMap")
+local ____luaMap = require("src.util.types.collection.luaMap")
 local LuaMap = ____luaMap.LuaMap
-local ____logger = require("preBuild.src.util.computer.api.tier2.logging.logger")
+local ____logger = require("src.util.computer.api.tier2.logging.logger")
 local Logger = ____logger.Logger
-local ____executionContext = require("preBuild.src.util.computer.executionContext")
+local ____executionContext = require("src.util.computer.executionContext")
 local ExecutionContext = ____executionContext.ExecutionContext
-local ____info = require("preBuild.src.util.computer.api.tier2.config.info")
+local ____info = require("src.util.computer.api.tier2.config.info")
 local Info = ____info.Info
-local ____fileLogListener = require("preBuild.src.util.computer.api.tier2.logging.listeners.fileLogListener")
+local ____fileLogListener = require("src.util.computer.api.tier2.logging.listeners.fileLogListener")
 local FileLogListener = ____fileLogListener.FileLogListener
-local ____reflection = require("preBuild.src.util.reflection")
+local ____reflection = require("src.util.reflection")
 local Reflection = ____reflection.Reflection
-local ____discordWebhookLogListener = require("preBuild.src.util.computer.api.tier2.logging.listeners.discordWebhookLogListener")
+local ____discordWebhookLogListener = require("src.util.computer.api.tier2.logging.listeners.discordWebhookLogListener")
 local DiscordWebhookLogListener = ____discordWebhookLogListener.DiscordWebhookLogListener
 --- Abstract base class representing an application entry point.
 -- Provides functionality for registering and dispatching routes, as well as lifecycle hooks for application startup, shutdown, and error handling.
@@ -3962,18 +3962,18 @@ end
 return ____exports
 
 end)
-__bundle_register("preBuild.src.util.computer.api.tier2.logging.listeners.discordWebhookLogListener", function(require, _LOADED, __bundle_register, __bundle_modules)
+__bundle_register("src.util.computer.api.tier2.logging.listeners.discordWebhookLogListener", function(require, _LOADED, __bundle_register, __bundle_modules)
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
 local __TS__ClassExtends = ____lualib.__TS__ClassExtends
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
 __TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["7"] = 1,["8"] = 1,["9"] = 2,["10"] = 2,["11"] = 3,["12"] = 3,["13"] = 5,["14"] = 5,["15"] = 5,["16"] = 5,["17"] = 14,["18"] = 15,["19"] = 14,["20"] = 18,["21"] = 19,["22"] = 18,["23"] = 7,["24"] = 7,["25"] = 7,["26"] = 7});
 local ____exports = {}
-local ____logListener = require("preBuild.src.util.computer.api.tier2.logging.logListener")
+local ____logListener = require("src.util.computer.api.tier2.logging.logListener")
 local LogListener = ____logListener.LogListener
-local ____discordWebhook = require("preBuild.src.util.computer.api.tier2.externalApi.discord.discordWebhook")
+local ____discordWebhook = require("src.util.computer.api.tier2.externalApi.discord.discordWebhook")
 local DiscordWebhook = ____discordWebhook.DiscordWebhook
-local ____environment = require("preBuild.src.util.computer.api.tier2.environment")
+local ____environment = require("src.util.computer.api.tier2.environment")
 local Environment = ____environment.Environment
 ____exports.DiscordWebhookLogListener = __TS__Class()
 local DiscordWebhookLogListener = ____exports.DiscordWebhookLogListener
@@ -3992,7 +3992,7 @@ DiscordWebhookLogListener._webhook = DiscordWebhook:fromUrl(
 return ____exports
 
 end)
-__bundle_register("preBuild.src.util.computer.api.tier2.environment", function(require, _LOADED, __bundle_register, __bundle_modules)
+__bundle_register("src.util.computer.api.tier2.environment", function(require, _LOADED, __bundle_register, __bundle_modules)
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
 local __TS__StringSplit = ____lualib.__TS__StringSplit
@@ -4004,9 +4004,9 @@ local __TS__ArrayForEach = ____lualib.__TS__ArrayForEach
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
 __TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["12"] = 2,["13"] = 2,["14"] = 3,["15"] = 3,["20"] = 11,["21"] = 11,["22"] = 11,["24"] = 11,["25"] = 14,["26"] = 15,["27"] = 17,["28"] = 19,["30"] = 22,["31"] = 14,["32"] = 25,["33"] = 26,["34"] = 27,["36"] = 30,["37"] = 34,["38"] = 36,["39"] = 25,["40"] = 41,["41"] = 42,["42"] = 43,["44"] = 46,["45"] = 50,["46"] = 52,["47"] = 53,["48"] = 53,["49"] = 53,["50"] = 54,["53"] = 58,["56"] = 62,["59"] = 66,["60"] = 67,["61"] = 53,["62"] = 53,["63"] = 70,["64"] = 41,["65"] = 12});
 local ____exports = {}
-local ____luaMap = require("preBuild.src.util.types.collection.luaMap")
+local ____luaMap = require("src.util.types.collection.luaMap")
 local LuaMap = ____luaMap.LuaMap
-local ____fileUtil = require("preBuild.src.util.computer.api.tier2.fileUtil")
+local ____fileUtil = require("src.util.computer.api.tier2.fileUtil")
 local FileUtil = ____fileUtil.FileUtil
 --- Represents an environment that manages and interacts with environment
 -- variables in ComputerCraft. This utility can be used to
@@ -4061,7 +4061,7 @@ Environment._path = "app/data/.env"
 return ____exports
 
 end)
-__bundle_register("preBuild.src.util.computer.api.tier2.fileUtil", function(require, _LOADED, __bundle_register, __bundle_modules)
+__bundle_register("src.util.computer.api.tier2.fileUtil", function(require, _LOADED, __bundle_register, __bundle_modules)
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
 local __TS__StringReplace = ____lualib.__TS__StringReplace
@@ -4070,11 +4070,11 @@ local __TS__StringSubstring = ____lualib.__TS__StringSubstring
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
 __TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["9"] = 1,["10"] = 1,["11"] = 2,["12"] = 2,["13"] = 5,["14"] = 5,["15"] = 7,["16"] = 7,["17"] = 7,["19"] = 7,["20"] = 8,["21"] = 9,["22"] = 8,["23"] = 12,["24"] = 13,["25"] = 12,["26"] = 23,["27"] = 24,["28"] = 26,["29"] = 27,["31"] = 30,["32"] = 31,["33"] = 32,["34"] = 33,["35"] = 34,["37"] = 37,["38"] = 23,["39"] = 49,["40"] = 50,["41"] = 52,["42"] = 53,["44"] = 56,["45"] = 58,["46"] = 59,["48"] = 62,["51"] = 66,["52"] = 66,["54"] = 66,["55"] = 66,["57"] = 66,["60"] = 64,["66"] = 68,["69"] = 63,["72"] = 71,["73"] = 49,["74"] = 83,["75"] = 85,["76"] = 86,["77"] = 87,["79"] = 91,["80"] = 93,["81"] = 94,["83"] = 97,["86"] = 101,["87"] = 101,["89"] = 101,["90"] = 101,["92"] = 101,["95"] = 99,["101"] = 103,["104"] = 98,["107"] = 106,["108"] = 83,["109"] = 109,["110"] = 110,["111"] = 109,["112"] = 113,["113"] = 114,["114"] = 113,["115"] = 117,["116"] = 118,["117"] = 117,["118"] = 121,["121"] = 126,["122"] = 126,["124"] = 126,["125"] = 126,["127"] = 126,["130"] = 123,["131"] = 124,["137"] = 122,["140"] = 121,["141"] = 130,["144"] = 135,["145"] = 135,["147"] = 135,["148"] = 135,["150"] = 135,["153"] = 132,["154"] = 133,["160"] = 131,["163"] = 130,["164"] = 139,["167"] = 144,["168"] = 144,["170"] = 144,["171"] = 144,["173"] = 144,["176"] = 141,["177"] = 142,["183"] = 140,["186"] = 139,["187"] = 148,["188"] = 149,["189"] = 149,["191"] = 149,["193"] = 148,["194"] = 152,["195"] = 153,["196"] = 152,["197"] = 158,["198"] = 159,["199"] = 158,["200"] = 164,["201"] = 165,["202"] = 166,["204"] = 169,["205"] = 171,["206"] = 173,["207"] = 177,["208"] = 164,["209"] = 180,["210"] = 181,["211"] = 182,["213"] = 185,["214"] = 187,["215"] = 188,["216"] = 187,["217"] = 193,["218"] = 180,["219"] = 196,["222"] = 201,["223"] = 201,["225"] = 201,["226"] = 201,["228"] = 201,["231"] = 198,["232"] = 199,["238"] = 197,["241"] = 196,["242"] = 205,["245"] = 213,["246"] = 213,["248"] = 213,["249"] = 213,["251"] = 213,["254"] = 210,["255"] = 211,["261"] = 209,["264"] = 205,["265"] = 217,["266"] = 221,["267"] = 222,["269"] = 225,["270"] = 226,["272"] = 229,["273"] = 231,["274"] = 232,["275"] = 232,["276"] = 234,["277"] = 234,["278"] = 234,["279"] = 232,["280"] = 232,["281"] = 235,["282"] = 235,["283"] = 232,["284"] = 231,["285"] = 238,["286"] = 239,["287"] = 239,["288"] = 241,["289"] = 241,["290"] = 241,["291"] = 239,["292"] = 239,["293"] = 242,["294"] = 242,["295"] = 239,["296"] = 238,["297"] = 245,["298"] = 217,["299"] = 248,["302"] = 256,["303"] = 256,["305"] = 256,["306"] = 256,["308"] = 256,["311"] = 253,["312"] = 254,["318"] = 252,["321"] = 248,["322"] = 260,["325"] = 265,["326"] = 265,["328"] = 265,["329"] = 265,["331"] = 265,["334"] = 262,["335"] = 263,["341"] = 261,["344"] = 260,["345"] = 269,["346"] = 270,["347"] = 271,["349"] = 274,["350"] = 276,["351"] = 277,["352"] = 278,["353"] = 278,["354"] = 277,["355"] = 276,["356"] = 282,["357"] = 283,["358"] = 284,["359"] = 284,["360"] = 283,["361"] = 282,["362"] = 288,["363"] = 269,["364"] = 291,["365"] = 292,["366"] = 293,["367"] = 294,["369"] = 297,["370"] = 298,["371"] = 299,["373"] = 302,["374"] = 303,["375"] = 291});
 local ____exports = {}
-local ____ccFs = require("preBuild.src.util.computer.api.tier1.globals.ccFs")
+local ____ccFs = require("src.util.computer.api.tier1.globals.ccFs")
 local CcFs = ____ccFs.CcFs
-local ____result = require("preBuild.src.util.types.result")
+local ____result = require("src.util.types.result")
 local Result = ____result.Result
-local ____luaList = require("preBuild.src.util.types.collection.luaList")
+local ____luaList = require("src.util.types.collection.luaList")
 local LuaList = ____luaList.LuaList
 ____exports.FileUtil = __TS__Class()
 local FileUtil = ____exports.FileUtil
@@ -4440,26 +4440,26 @@ end
 return ____exports
 
 end)
-__bundle_register("preBuild.src.util.computer.api.tier1.globals.ccFs", function(require, _LOADED, __bundle_register, __bundle_modules)
+__bundle_register("src.util.computer.api.tier1.globals.ccFs", function(require, _LOADED, __bundle_register, __bundle_modules)
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
 local __TS__New = ____lualib.__TS__New
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
 __TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["7"] = 1,["8"] = 1,["9"] = 2,["10"] = 2,["11"] = 3,["12"] = 3,["13"] = 4,["14"] = 4,["15"] = 5,["16"] = 5,["17"] = 6,["18"] = 6,["19"] = 9,["20"] = 9,["28"] = 37,["29"] = 37,["30"] = 37,["32"] = 37,["33"] = 41,["34"] = 44,["35"] = 44,["37"] = 45,["38"] = 45,["40"] = 47,["41"] = 41,["42"] = 55,["43"] = 56,["44"] = 55,["45"] = 62,["46"] = 63,["47"] = 62,["48"] = 69,["49"] = 70,["50"] = 69,["51"] = 76,["52"] = 76,["53"] = 77,["54"] = 78,["55"] = 76,["56"] = 84,["57"] = 85,["58"] = 84,["59"] = 91,["60"] = 92,["61"] = 91,["62"] = 98,["63"] = 99,["64"] = 98,["65"] = 105,["66"] = 106,["67"] = 105,["68"] = 112,["69"] = 113,["70"] = 112,["71"] = 119,["72"] = 120,["73"] = 119,["74"] = 126,["75"] = 127,["76"] = 126,["77"] = 133,["78"] = 134,["79"] = 133,["80"] = 140,["81"] = 141,["82"] = 140,["83"] = 147,["84"] = 148,["85"] = 147,["86"] = 154,["87"] = 155,["88"] = 156,["89"] = 158,["90"] = 160,["91"] = 161,["93"] = 164,["94"] = 154,["95"] = 170,["96"] = 171,["97"] = 172,["98"] = 174,["99"] = 176,["100"] = 177,["102"] = 180,["103"] = 170,["104"] = 186,["105"] = 189,["106"] = 190,["107"] = 192,["108"] = 194,["109"] = 195,["111"] = 198,["112"] = 186,["113"] = 204,["114"] = 205,["115"] = 206,["116"] = 208,["117"] = 210,["118"] = 211,["120"] = 214,["121"] = 204,["122"] = 220,["123"] = 223,["124"] = 224,["125"] = 226,["126"] = 228,["127"] = 229,["129"] = 232,["130"] = 220,["131"] = 238,["132"] = 241,["133"] = 242,["134"] = 244,["135"] = 246,["136"] = 247,["138"] = 250,["139"] = 238,["140"] = 256,["141"] = 257,["142"] = 256,["143"] = 263,["144"] = 264,["145"] = 263,["146"] = 270,["147"] = 271,["148"] = 270,["149"] = 277,["150"] = 278,["151"] = 277});
 local ____exports = {}
-local ____lua = require("preBuild.src.lua.lua")
+local ____lua = require("src.lua.lua")
 local Lua = ____lua.Lua
-local ____fileReadHandle = require("preBuild.src.util.computer.api.tier1.types.files.fileReadHandle")
+local ____fileReadHandle = require("src.util.computer.api.tier1.types.files.fileReadHandle")
 local FileReadHandle = ____fileReadHandle.FileReadHandle
-local ____fileReadWriteHandle = require("preBuild.src.util.computer.api.tier1.types.files.fileReadWriteHandle")
+local ____fileReadWriteHandle = require("src.util.computer.api.tier1.types.files.fileReadWriteHandle")
 local FileReadWriteHandle = ____fileReadWriteHandle.FileReadWriteHandle
-local ____fileWriteHandle = require("preBuild.src.util.computer.api.tier1.types.files.fileWriteHandle")
+local ____fileWriteHandle = require("src.util.computer.api.tier1.types.files.fileWriteHandle")
 local FileWriteHandle = ____fileWriteHandle.FileWriteHandle
-local ____optional = require("preBuild.src.util.types.optional")
+local ____optional = require("src.util.types.optional")
 local Optional = ____optional.Optional
-local ____result = require("preBuild.src.util.types.result")
+local ____result = require("src.util.types.result")
 local Result = ____result.Result
-local ____tableUtil = require("preBuild.src.util.computer.api.tier1.lua.tableUtil")
+local ____tableUtil = require("src.util.computer.api.tier1.lua.tableUtil")
 local TableUtil = ____tableUtil.TableUtil
 --- Types for the `fs` api in ComputerCraft
 -- Based on the documentation: https://tweaked.cc/module/fs.html
@@ -4595,13 +4595,13 @@ end
 return ____exports
 
 end)
-__bundle_register("preBuild.src.util.computer.api.tier1.types.files.fileWriteHandle", function(require, _LOADED, __bundle_register, __bundle_modules)
+__bundle_register("src.util.computer.api.tier1.types.files.fileWriteHandle", function(require, _LOADED, __bundle_register, __bundle_modules)
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
 __TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["6"] = 1,["7"] = 1,["10"] = 7,["11"] = 7,["12"] = 7,["13"] = 10,["14"] = 11,["15"] = 10,["16"] = 14,["17"] = 15,["18"] = 14,["19"] = 18,["20"] = 19,["21"] = 18,["22"] = 22,["23"] = 23,["24"] = 22,["25"] = 26,["26"] = 27,["27"] = 27,["29"] = 28,["30"] = 28,["32"] = 30,["33"] = 26,["34"] = 33,["35"] = 34,["36"] = 33});
 local ____exports = {}
-local ____lua = require("preBuild.src.lua.lua")
+local ____lua = require("src.lua.lua")
 local Lua = ____lua.Lua
 --- A utility class for write-handle operations
 -- Based on the documentation: https://tweaked.cc/module/fs.html#ty:WriteHandle
@@ -4635,13 +4635,13 @@ end
 return ____exports
 
 end)
-__bundle_register("preBuild.src.util.computer.api.tier1.types.files.fileReadWriteHandle", function(require, _LOADED, __bundle_register, __bundle_modules)
+__bundle_register("src.util.computer.api.tier1.types.files.fileReadWriteHandle", function(require, _LOADED, __bundle_register, __bundle_modules)
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
 __TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["6"] = 1,["7"] = 1,["10"] = 7,["11"] = 7,["12"] = 7,["13"] = 10,["14"] = 11,["15"] = 10,["16"] = 14,["17"] = 15,["18"] = 14,["19"] = 18,["20"] = 19,["21"] = 18,["22"] = 22,["23"] = 22,["24"] = 22,["26"] = 23,["27"] = 22,["28"] = 26,["29"] = 27,["30"] = 26,["31"] = 30,["32"] = 31,["33"] = 30,["34"] = 34,["35"] = 35,["36"] = 34,["37"] = 38,["38"] = 39,["39"] = 39,["41"] = 40,["42"] = 40,["44"] = 42,["45"] = 38,["46"] = 45,["47"] = 46,["48"] = 45});
 local ____exports = {}
-local ____lua = require("preBuild.src.lua.lua")
+local ____lua = require("src.lua.lua")
 local Lua = ____lua.Lua
 --- A utility class for read-write handle operations
 -- Based on the documentation: https://tweaked.cc/module/fs.html#ty:ReadWriteHandle
@@ -4687,13 +4687,13 @@ end
 return ____exports
 
 end)
-__bundle_register("preBuild.src.util.computer.api.tier1.types.files.fileReadHandle", function(require, _LOADED, __bundle_register, __bundle_modules)
+__bundle_register("src.util.computer.api.tier1.types.files.fileReadHandle", function(require, _LOADED, __bundle_register, __bundle_modules)
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
 __TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["6"] = 1,["7"] = 1,["10"] = 7,["11"] = 7,["12"] = 7,["13"] = 10,["14"] = 11,["15"] = 10,["16"] = 14,["17"] = 15,["18"] = 14,["19"] = 18,["20"] = 19,["21"] = 18,["22"] = 22,["23"] = 22,["24"] = 22,["26"] = 23,["27"] = 22,["28"] = 26,["29"] = 27,["30"] = 27,["32"] = 28,["33"] = 28,["35"] = 30,["36"] = 26,["37"] = 33,["38"] = 34,["39"] = 33});
 local ____exports = {}
-local ____lua = require("preBuild.src.lua.lua")
+local ____lua = require("src.lua.lua")
 local Lua = ____lua.Lua
 --- A utility class for read-handle operations
 -- Based on the documentation: https://tweaked.cc/module/fs.html#ty:ReadHandle
@@ -4730,7 +4730,7 @@ end
 return ____exports
 
 end)
-__bundle_register("preBuild.src.util.computer.api.tier2.externalApi.discord.discordWebhook", function(require, _LOADED, __bundle_register, __bundle_modules)
+__bundle_register("src.util.computer.api.tier2.externalApi.discord.discordWebhook", function(require, _LOADED, __bundle_register, __bundle_modules)
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
 local __TS__New = ____lualib.__TS__New
@@ -4738,9 +4738,9 @@ local __TS__ArrayIsArray = ____lualib.__TS__ArrayIsArray
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
 __TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["8"] = 1,["9"] = 1,["10"] = 2,["11"] = 2,["12"] = 32,["13"] = 32,["14"] = 32,["15"] = 38,["16"] = 39,["17"] = 40,["18"] = 38,["19"] = 43,["20"] = 44,["21"] = 43,["22"] = 47,["23"] = 52,["24"] = 52,["25"] = 52,["26"] = 52,["27"] = 47,["28"] = 60,["29"] = 60,["30"] = 77,["31"] = 78,["32"] = 79,["33"] = 80,["34"] = 80,["35"] = 80,["37"] = 80,["39"] = 78,["40"] = 77,["41"] = 33});
 local ____exports = {}
-local ____ccHttp = require("preBuild.src.util.computer.api.tier1.globals.ccHttp")
+local ____ccHttp = require("src.util.computer.api.tier1.globals.ccHttp")
 local CcHttp = ____ccHttp.CcHttp
-local ____ccTextUtils = require("preBuild.src.util.computer.api.tier1.globals.ccTextUtils")
+local ____ccTextUtils = require("src.util.computer.api.tier1.globals.ccTextUtils")
 local CcTextUtils = ____ccTextUtils.CcTextUtils
 ____exports.DiscordWebhook = __TS__Class()
 local DiscordWebhook = ____exports.DiscordWebhook
@@ -4775,15 +4775,15 @@ DiscordWebhook.DISCORD_MESSAGE_LENGTH_LIMIT = 2000
 return ____exports
 
 end)
-__bundle_register("preBuild.src.util.computer.api.tier1.globals.ccTextUtils", function(require, _LOADED, __bundle_register, __bundle_modules)
+__bundle_register("src.util.computer.api.tier1.globals.ccTextUtils", function(require, _LOADED, __bundle_register, __bundle_modules)
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
 __TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["6"] = 1,["7"] = 1,["8"] = 2,["9"] = 2,["13"] = 35,["14"] = 35,["15"] = 35,["17"] = 35,["18"] = 54,["19"] = 55,["20"] = 54,["21"] = 63,["22"] = 64,["23"] = 63,["24"] = 73,["25"] = 74,["26"] = 75,["27"] = 76,["28"] = 73,["29"] = 85,["30"] = 86,["31"] = 87,["32"] = 88,["33"] = 85,["34"] = 95,["35"] = 96,["36"] = 95,["37"] = 103,["38"] = 104,["39"] = 103,["40"] = 118,["41"] = 119,["42"] = 120,["43"] = 121,["44"] = 123,["45"] = 124,["47"] = 127,["48"] = 118,["49"] = 137,["50"] = 138,["51"] = 139,["52"] = 141,["53"] = 142,["55"] = 145,["56"] = 137,["57"] = 154,["58"] = 158,["59"] = 159,["60"] = 160,["61"] = 164,["62"] = 165,["64"] = 168,["65"] = 154,["66"] = 177,["67"] = 181,["68"] = 182,["69"] = 183,["70"] = 187,["71"] = 188,["73"] = 190,["74"] = 177,["75"] = 200,["76"] = 201,["77"] = 202,["78"] = 203,["79"] = 200,["80"] = 214,["81"] = 218,["82"] = 219,["83"] = 220,["84"] = 214,["85"] = 39,["86"] = 44});
 local ____exports = {}
-local ____lua = require("preBuild.src.lua.lua")
+local ____lua = require("src.lua.lua")
 local Lua = ____lua.Lua
-local ____result = require("preBuild.src.util.types.result")
+local ____result = require("src.util.types.result")
 local Result = ____result.Result
 --- Adapter for the textutils module, providing text manipulation and formatting utilities.
 -- This includes functions for serialization, JSON handling, text formatting, and tabulated output.
@@ -4865,18 +4865,18 @@ CcTextUtils.json_null = {}
 return ____exports
 
 end)
-__bundle_register("preBuild.src.util.computer.api.tier1.globals.ccHttp", function(require, _LOADED, __bundle_register, __bundle_modules)
+__bundle_register("src.util.computer.api.tier1.globals.ccHttp", function(require, _LOADED, __bundle_register, __bundle_modules)
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
 local __TS__New = ____lualib.__TS__New
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
 __TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["7"] = 1,["8"] = 1,["9"] = 2,["10"] = 2,["11"] = 6,["12"] = 6,["18"] = 16,["19"] = 16,["20"] = 16,["22"] = 16,["23"] = 24,["24"] = 31,["25"] = 32,["26"] = 33,["27"] = 35,["28"] = 39,["29"] = 40,["30"] = 40,["31"] = 40,["32"] = 40,["34"] = 46,["35"] = 24,["36"] = 57,["37"] = 65,["38"] = 66,["39"] = 67,["40"] = 69,["41"] = 73,["42"] = 75,["43"] = 75,["44"] = 75,["45"] = 75,["47"] = 81,["48"] = 57,["49"] = 92,["50"] = 100,["51"] = 92,["52"] = 108,["53"] = 109,["54"] = 108,["55"] = 117,["56"] = 118,["57"] = 119,["58"] = 121,["59"] = 123,["60"] = 117,["61"] = 134,["62"] = 135,["63"] = 136,["64"] = 138,["65"] = 140,["66"] = 134,["67"] = 152,["68"] = 162,["69"] = 152,["70"] = 171,["71"] = 182,["72"] = 183,["73"] = 185,["74"] = 189,["75"] = 190,["77"] = 193,["78"] = 171});
 local ____exports = {}
-local ____lua = require("preBuild.src.lua.lua")
+local ____lua = require("src.lua.lua")
 local Lua = ____lua.Lua
-local ____result = require("preBuild.src.util.types.result")
+local ____result = require("src.util.types.result")
 local Result = ____result.Result
-local ____httpResponse = require("preBuild.src.util.computer.api.tier1.types.http.response.httpResponse")
+local ____httpResponse = require("src.util.computer.api.tier1.types.http.response.httpResponse")
 local HttpResponse = ____httpResponse.HttpResponse
 --- Adapter for the http module
 -- 
@@ -4947,16 +4947,16 @@ end
 return ____exports
 
 end)
-__bundle_register("preBuild.src.util.computer.api.tier1.types.http.response.httpResponse", function(require, _LOADED, __bundle_register, __bundle_modules)
+__bundle_register("src.util.computer.api.tier1.types.http.response.httpResponse", function(require, _LOADED, __bundle_register, __bundle_modules)
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
 local __TS__ClassExtends = ____lualib.__TS__ClassExtends
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
 __TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["7"] = 1,["8"] = 1,["9"] = 2,["10"] = 2,["13"] = 10,["14"] = 10,["15"] = 10,["16"] = 10,["17"] = 15,["18"] = 16,["19"] = 15,["20"] = 23,["21"] = 24,["22"] = 23});
 local ____exports = {}
-local ____lua = require("preBuild.src.lua.lua")
+local ____lua = require("src.lua.lua")
 local Lua = ____lua.Lua
-local ____fileReadHandle = require("preBuild.src.util.computer.api.tier1.types.files.fileReadHandle")
+local ____fileReadHandle = require("src.util.computer.api.tier1.types.files.fileReadHandle")
 local FileReadHandle = ____fileReadHandle.FileReadHandle
 --- Represents an HTTP response in ComputerCraft.
 -- Extends FileReadHandle to provide access to the response body data.
@@ -4973,17 +4973,17 @@ end
 return ____exports
 
 end)
-__bundle_register("preBuild.src.util.reflection", function(require, _LOADED, __bundle_register, __bundle_modules)
+__bundle_register("src.util.reflection", function(require, _LOADED, __bundle_register, __bundle_modules)
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
 __TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["6"] = 1,["7"] = 1,["8"] = 2,["9"] = 2,["10"] = 3,["11"] = 3,["12"] = 5,["13"] = 5,["14"] = 5,["16"] = 5,["17"] = 6,["18"] = 7,["19"] = 9,["20"] = 10,["21"] = 12,["22"] = 13,["23"] = 14,["24"] = 15,["25"] = 16,["26"] = 18,["27"] = 6,["28"] = 21,["29"] = 22,["30"] = 23,["32"] = 26,["33"] = 27,["34"] = 28,["36"] = 31,["37"] = 21,["38"] = 34,["39"] = 38,["40"] = 34,["41"] = 45,["42"] = 46,["43"] = 48,["44"] = 49,["45"] = 49,["46"] = 53,["47"] = 54,["48"] = 55,["49"] = 55,["50"] = 55,["51"] = 55,["52"] = 56,["53"] = 57,["54"] = 59,["55"] = 45});
 local ____exports = {}
-local ____lua = require("preBuild.src.lua.lua")
+local ____lua = require("src.lua.lua")
 local Lua = ____lua.Lua
-local ____result = require("preBuild.src.util.types.result")
+local ____result = require("src.util.types.result")
 local Result = ____result.Result
-local ____luaMap = require("preBuild.src.util.types.collection.luaMap")
+local ____luaMap = require("src.util.types.collection.luaMap")
 local LuaMap = ____luaMap.LuaMap
 ____exports.Reflection = __TS__Class()
 local Reflection = ____exports.Reflection
@@ -5032,16 +5032,16 @@ end
 return ____exports
 
 end)
-__bundle_register("preBuild.src.util.computer.api.tier2.logging.listeners.fileLogListener", function(require, _LOADED, __bundle_register, __bundle_modules)
+__bundle_register("src.util.computer.api.tier2.logging.listeners.fileLogListener", function(require, _LOADED, __bundle_register, __bundle_modules)
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
 local __TS__ClassExtends = ____lualib.__TS__ClassExtends
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
 __TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["7"] = 1,["8"] = 1,["9"] = 2,["10"] = 2,["11"] = 4,["12"] = 4,["13"] = 4,["14"] = 4,["15"] = 7,["16"] = 8,["17"] = 7,["18"] = 11,["19"] = 12,["20"] = 11,["21"] = 5});
 local ____exports = {}
-local ____fileUtil = require("preBuild.src.util.computer.api.tier2.fileUtil")
+local ____fileUtil = require("src.util.computer.api.tier2.fileUtil")
 local FileUtil = ____fileUtil.FileUtil
-local ____logListener = require("preBuild.src.util.computer.api.tier2.logging.logListener")
+local ____logListener = require("src.util.computer.api.tier2.logging.logListener")
 local LogListener = ____logListener.LogListener
 ____exports.FileLogListener = __TS__Class()
 local FileLogListener = ____exports.FileLogListener
@@ -5057,16 +5057,16 @@ FileLogListener.LOG_PATH = "app/logs/main.log"
 return ____exports
 
 end)
-__bundle_register("preBuild.src.util.computer.api.tier2.config.info", function(require, _LOADED, __bundle_register, __bundle_modules)
+__bundle_register("src.util.computer.api.tier2.config.info", function(require, _LOADED, __bundle_register, __bundle_modules)
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
 local __TS__New = ____lualib.__TS__New
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
 __TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["7"] = 8,["8"] = 8,["9"] = 9,["10"] = 9,["12"] = 14,["13"] = 14,["14"] = 14,["15"] = 25,["16"] = 26,["17"] = 27,["18"] = 28,["19"] = 29,["20"] = 30,["21"] = 31,["22"] = 32,["23"] = 25,["24"] = 35,["25"] = 36,["26"] = 40,["27"] = 44,["28"] = 35,["29"] = 15});
 local ____exports = {}
-local ____fileUtil = require("preBuild.src.util.computer.api.tier2.fileUtil")
+local ____fileUtil = require("src.util.computer.api.tier2.fileUtil")
 local FileUtil = ____fileUtil.FileUtil
-local ____ccTextUtils = require("preBuild.src.util.computer.api.tier1.globals.ccTextUtils")
+local ____ccTextUtils = require("src.util.computer.api.tier1.globals.ccTextUtils")
 local CcTextUtils = ____ccTextUtils.CcTextUtils
 --- This allows access to the readonly information stored in `info.json`
 ____exports.Info = __TS__Class()
@@ -5090,15 +5090,15 @@ Info._path = "info.json"
 return ____exports
 
 end)
-__bundle_register("preBuild.src.util.computer.executionContext", function(require, _LOADED, __bundle_register, __bundle_modules)
+__bundle_register("src.util.computer.executionContext", function(require, _LOADED, __bundle_register, __bundle_modules)
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
 __TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["6"] = 1,["7"] = 1,["8"] = 2,["9"] = 2,["15"] = 11,["16"] = 11,["17"] = 11,["19"] = 11,["20"] = 16});
 local ____exports = {}
-local ____lua = require("preBuild.src.lua.lua")
+local ____lua = require("src.lua.lua")
 local Lua = ____lua.Lua
-local ____luaList = require("preBuild.src.util.types.collection.luaList")
+local ____luaList = require("src.util.types.collection.luaList")
 local LuaList = ____luaList.LuaList
 --- Represents the execution context for a script or program, including relevant
 -- properties and methods for managing its state and resources.
@@ -5114,15 +5114,15 @@ ExecutionContext.commandLineArguments = LuaList:ofTable(COMMAND_LINE_ARGUMENTS)
 return ____exports
 
 end)
-__bundle_register("preBuild.src.util.computer.api.tier1.advancedPeripherals.chatBox", function(require, _LOADED, __bundle_register, __bundle_modules)
+__bundle_register("src.util.computer.api.tier1.advancedPeripherals.chatBox", function(require, _LOADED, __bundle_register, __bundle_modules)
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
 __TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["6"] = 1,["7"] = 1,["8"] = 2,["9"] = 2,["13"] = 27,["14"] = 27,["15"] = 27,["17"] = 27,["18"] = 43,["19"] = 44,["20"] = 45,["21"] = 46,["22"] = 47,["23"] = 48,["24"] = 51,["25"] = 52,["26"] = 56,["27"] = 56,["28"] = 56,["29"] = 56,["30"] = 56,["31"] = 56,["32"] = 56,["34"] = 43,["35"] = 74,["36"] = 81,["37"] = 74,["38"] = 95,["39"] = 103,["40"] = 95,["41"] = 118,["42"] = 127,["43"] = 118,["44"] = 140,["45"] = 147,["46"] = 140,["47"] = 161,["48"] = 169,["49"] = 161,["50"] = 184,["51"] = 193,["52"] = 184,["53"] = 28});
 local ____exports = {}
-local ____ccPeripheral = require("preBuild.src.util.computer.api.tier1.globals.ccPeripheral")
+local ____ccPeripheral = require("src.util.computer.api.tier1.globals.ccPeripheral")
 local CcPeripheral = ____ccPeripheral.CcPeripheral
-local ____lua = require("preBuild.src.lua.lua")
+local ____lua = require("src.lua.lua")
 local Lua = ____lua.Lua
 --- A class representing the ChatBox peripheral from the Advanced Peripherals mod.
 -- Allows reading and writing to the Minecraft in-game chat, including sending messages,
@@ -5171,7 +5171,7 @@ ChatBox._internalChatBox = CcPeripheral:find("chatBox")
 return ____exports
 
 end)
-__bundle_register("preBuild.src.util.computer.api.tier1.globals.ccPeripheral", function(require, _LOADED, __bundle_register, __bundle_modules)
+__bundle_register("src.util.computer.api.tier1.globals.ccPeripheral", function(require, _LOADED, __bundle_register, __bundle_modules)
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
 local Error = ____lualib.Error
@@ -5184,7 +5184,7 @@ local __TS__New = ____lualib.__TS__New
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
 __TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["13"] = 1,["14"] = 1,["18"] = 8,["19"] = 8,["20"] = 8,["21"] = 11,["22"] = 12,["23"] = 11,["24"] = 20,["25"] = 21,["26"] = 20,["27"] = 31,["28"] = 35,["29"] = 38,["31"] = 39,["35"] = 42,["36"] = 31,["37"] = 50,["38"] = 51,["39"] = 50,["40"] = 60,["41"] = 61,["42"] = 60,["43"] = 70,["44"] = 71,["45"] = 70,["46"] = 81,["47"] = 85,["48"] = 81,["49"] = 94,["50"] = 95,["51"] = 94,["52"] = 104,["53"] = 105,["54"] = 104,["55"] = 116,["56"] = 117,["57"] = 116,["58"] = 126,["59"] = 127,["60"] = 126,["61"] = 136,["62"] = 137,["63"] = 136,["64"] = 147,["65"] = 148,["66"] = 147,["67"] = 156,["68"] = 157,["69"] = 156,["70"] = 167,["71"] = 168,["72"] = 167,["73"] = 178,["74"] = 179,["75"] = 178});
 local ____exports = {}
-local ____lua = require("preBuild.src.lua.lua")
+local ____lua = require("src.lua.lua")
 local Lua = ____lua.Lua
 --- A wrapper for the ComputerCraft `peripheral` API.
 -- Provides utilities to find, call, and inspect peripherals attached to a computer.
