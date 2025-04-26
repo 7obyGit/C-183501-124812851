@@ -4614,7 +4614,9 @@ local ____ = "use strict";
         return self._value
     end
     function _LuaString.prototype.split(self, separator, limit)
-        local tests = __TS__StringSplit("", "test")
+        if false then
+            __TS__StringSplit("", "")
+        end
         local values = __TS__StringSplit(self._value, separator, limit)
         return LuaList:of(values)
     end
