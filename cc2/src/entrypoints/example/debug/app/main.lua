@@ -3,40 +3,389 @@
 --- would not return command line arguments when used elsewhere
 COMMAND_LINE_ARGUMENTS = {...}
 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
+-- Bundled by luabundle {"version":"1.7.0"}
+local __bundle_require, __bundle_loaded, __bundle_register, __bundle_modules = (function(superRequire)
+	local loadingPlaceholder = {[{}] = true}
 
-local ____modules = {}
-local ____moduleCache = {}
-local ____originalRequire = require
-local function require(file, ...)
-    if ____moduleCache[file] then
-        return ____moduleCache[file].value
-    end
+	local register
+	local modules = {}
 
-    if ____modules[file] then
-        local module = ____modules[file]
+	local require
+	local loaded = {}
 
-        ____moduleCache[file] = { value = {} }
+	register = function(name, body)
+		if not modules[name] then
+			modules[name] = body
+		end
+	end
 
-        local value
-        if select("#", ...) > 0 then
-            value = module(...)
-        else
-            value = module(file)
-        end
+	require = function(name)
+		local loadedModule = loaded[name]
 
-        ____moduleCache[file].value = value
-        return value
-    else
-        if ____originalRequire then
-            return ____originalRequire(file)
-        else
-            error("module '" .. file .. "' not found")
-        end
-    end
+		if loadedModule then
+			if loadedModule == loadingPlaceholder then
+				return nil
+			end
+		else
+			if not modules[name] then
+				if not superRequire then
+					local identifier = type(name) == 'string' and '\"' .. name .. '\"' or tostring(name)
+					error('Tried to require ' .. identifier .. ', but no such module has been registered')
+				else
+					return superRequire(name)
+				end
+			end
+
+			loaded[name] = loadingPlaceholder
+			loadedModule = modules[name](require, loaded, register, modules)
+			loaded[name] = loadedModule
+		end
+
+		return loadedModule
+	end
+
+	return require, loaded, register, modules
+end)(require)
+__bundle_register("__root", function(require, _LOADED, __bundle_register, __bundle_modules)
+local ____lualib = require("lualib_bundle")
+local __TS__Class = ____lualib.__TS__Class
+local __TS__ClassExtends = ____lualib.__TS__ClassExtends
+local __TS__New = ____lualib.__TS__New
+local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["8"] = 1,["9"] = 1,["10"] = 2,["11"] = 2,["12"] = 3,["13"] = 3,["14"] = 4,["15"] = 4,["16"] = 6,["17"] = 6,["18"] = 6,["19"] = 6,["20"] = 7,["21"] = 7,["22"] = 8,["23"] = 8,["24"] = 10,["25"] = 11,["26"] = 12,["27"] = 13,["28"] = 14,["29"] = 15,["30"] = 10,["31"] = 19});
+local ____exports = {}
+local ____chatBox = require("preBuild.src.util.computer.api.tier1.advancedPeripherals.chatBox")
+local ChatBox = ____chatBox.ChatBox
+local ____luaList = require("preBuild.src.util.types.collection.luaList")
+local LuaList = ____luaList.LuaList
+local ____entrypoint = require("preBuild.src.util.computer.entrypoint.entrypoint")
+local Entrypoint = ____entrypoint.Entrypoint
+local ____logger = require("preBuild.src.util.computer.api.tier2.logging.logger")
+local Logger = ____logger.Logger
+____exports.ExampleEntrypoint = __TS__Class()
+local ExampleEntrypoint = ____exports.ExampleEntrypoint
+ExampleEntrypoint.name = "ExampleEntrypoint"
+__TS__ClassExtends(ExampleEntrypoint, Entrypoint)
+function ExampleEntrypoint.prototype.onStart(self)
 end
-____modules = {
-["lualib_bundle"] = function(...) 
+function ExampleEntrypoint.prototype.onStop(self)
+end
+function ExampleEntrypoint.prototype.routeRun(self)
+    Logger:info("First")
+    local list = LuaList:ofSingleton(11):append(22):append(44):append(33)
+    Logger:debug(list)
+    ChatBox:sendMessage("Hello World!")
+    Logger:warn("Last")
+end
+__TS__New(____exports.ExampleEntrypoint):run()
+return ____exports
+
+end)
+__bundle_register("preBuild.src.util.computer.api.tier2.logging.logger", function(require, _LOADED, __bundle_register, __bundle_modules)
+local ____lualib = require("lualib_bundle")
+local __TS__Class = ____lualib.__TS__Class
+local __TS__ArrayMap = ____lualib.__TS__ArrayMap
+local Map = ____lualib.Map
+local __TS__New = ____lualib.__TS__New
+local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["9"] = 1,["10"] = 1,["11"] = 3,["12"] = 3,["13"] = 4,["14"] = 4,["15"] = 6,["16"] = 6,["17"] = 6,["19"] = 6,["20"] = 22,["21"] = 23,["22"] = 23,["23"] = 23,["24"] = 23,["25"] = 22,["26"] = 26,["27"] = 27,["28"] = 26,["29"] = 30,["30"] = 30,["31"] = 33,["34"] = 39,["35"] = 39,["36"] = 39,["37"] = 39,["38"] = 39,["39"] = 39,["40"] = 39,["41"] = 41,["42"] = 42,["43"] = 41,["44"] = 30,["45"] = 46,["46"] = 47,["47"] = 46,["48"] = 50,["49"] = 51,["50"] = 50,["51"] = 54,["52"] = 55,["53"] = 54,["54"] = 58,["55"] = 59,["56"] = 58,["57"] = 7,["58"] = 9,["59"] = 17,["60"] = 17,["61"] = 17,["62"] = 17});
+local ____exports = {}
+local ____logLevel = require("preBuild.src.util.computer.api.tier2.logging.logLevel")
+local LogLevel = ____logLevel.LogLevel
+local ____consoleLogListener = require("preBuild.src.util.computer.api.tier2.logging.listeners.consoleLogListener")
+local ConsoleLogListener = ____consoleLogListener.ConsoleLogListener
+local ____luaMap = require("preBuild.src.util.types.collection.luaMap")
+local LuaMap = ____luaMap.LuaMap
+____exports.Logger = __TS__Class()
+local Logger = ____exports.Logger
+Logger.name = "Logger"
+function Logger.prototype.____constructor(self)
+end
+function Logger.addListener(self, listener)
+    self.listeners:set(
+        listener:getName(),
+        listener
+    )
+end
+function Logger.clearListeners(self)
+    self.listeners:clear()
+end
+function Logger.log(self, level, ...)
+    local args = {...}
+    if (self.levelMap:get(level) or 0) < (self.levelMap:get(self.level) or 0) then
+        return
+    end
+    local message = table.concat(
+        __TS__ArrayMap(
+            args,
+            function(____, arg) return tostring(arg) end
+        ),
+        " "
+    )
+    self.listeners:forEachValue(function(____, listener)
+        listener:onLog(level, message)
+    end)
+end
+function Logger.debug(self, ...)
+    self:log(LogLevel.DEBUG, ...)
+end
+function Logger.info(self, ...)
+    self:log(LogLevel.INFO, ...)
+end
+function Logger.warn(self, ...)
+    self:log(LogLevel.WARN, ...)
+end
+function Logger.error(self, ...)
+    self:log(LogLevel.ERROR, ...)
+end
+Logger.level = LogLevel.DEBUG
+Logger.levelMap = __TS__New(Map, {{LogLevel.DEBUG, 0}, {LogLevel.INFO, 1}, {LogLevel.WARN, 2}, {LogLevel.ERROR, 3}})
+Logger.listeners = LuaMap:ofSingleton(
+    __TS__New(ConsoleLogListener):getName(),
+    __TS__New(ConsoleLogListener)
+)
+return ____exports
+
+end)
+__bundle_register("preBuild.src.util.types.collection.luaMap", function(require, _LOADED, __bundle_register, __bundle_modules)
+local ____lualib = require("lualib_bundle")
+local __TS__Class = ____lualib.__TS__Class
+local Map = ____lualib.Map
+local __TS__New = ____lualib.__TS__New
+local __TS__ArrayForEach = ____lualib.__TS__ArrayForEach
+local __TS__Iterator = ____lualib.__TS__Iterator
+local __TS__Spread = ____lualib.__TS__Spread
+local __TS__ArrayMap = ____lualib.__TS__ArrayMap
+local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["12"] = 1,["13"] = 1,["14"] = 2,["15"] = 2,["16"] = 3,["17"] = 3,["18"] = 5,["19"] = 5,["20"] = 5,["22"] = 9,["23"] = 8,["24"] = 12,["25"] = 17,["26"] = 12,["27"] = 20,["28"] = 24,["29"] = 20,["30"] = 27,["31"] = 30,["32"] = 27,["33"] = 33,["34"] = 34,["35"] = 33,["36"] = 37,["37"] = 38,["38"] = 38,["40"] = 39,["41"] = 37,["42"] = 42,["43"] = 43,["44"] = 43,["46"] = 44,["47"] = 42,["48"] = 47,["49"] = 48,["50"] = 49,["51"] = 47,["52"] = 52,["53"] = 53,["54"] = 53,["55"] = 53,["56"] = 53,["57"] = 52,["58"] = 56,["59"] = 61,["60"] = 62,["61"] = 56,["62"] = 65,["63"] = 66,["64"] = 66,["66"] = 67,["67"] = 68,["68"] = 69,["69"] = 65,["70"] = 72,["71"] = 73,["72"] = 74,["73"] = 72,["74"] = 77,["75"] = 78,["76"] = 77,["77"] = 81,["78"] = 82,["79"] = 83,["80"] = 83,["83"] = 85,["84"] = 81,["85"] = 88,["86"] = 89,["87"] = 88,["88"] = 92,["89"] = 93,["90"] = 92,["91"] = 96,["92"] = 97,["93"] = 98,["94"] = 98,["95"] = 98,["96"] = 98,["97"] = 98,["98"] = 98,["99"] = 99,["100"] = 98,["101"] = 97,["102"] = 96,["103"] = 104,["104"] = 105,["105"] = 104,["106"] = 108,["107"] = 109,["108"] = 108,["109"] = 112,["110"] = 113,["111"] = 112,["112"] = 116,["113"] = 119,["114"] = 120,["115"] = 116,["116"] = 123,["117"] = 126,["118"] = 127,["119"] = 123,["120"] = 130,["121"] = 131,["122"] = 132,["123"] = 130,["124"] = 135,["125"] = 136,["126"] = 137,["127"] = 135,["128"] = 140,["129"] = 143,["130"] = 144,["131"] = 145,["132"] = 145,["133"] = 145,["134"] = 145,["135"] = 144,["136"] = 147,["137"] = 140,["138"] = 150,["139"] = 153,["140"] = 154,["141"] = 155,["142"] = 155,["143"] = 155,["144"] = 155,["145"] = 155,["146"] = 155,["147"] = 155,["148"] = 154,["149"] = 157,["150"] = 150,["151"] = 160,["152"] = 163,["153"] = 164,["154"] = 165,["155"] = 165,["156"] = 165,["157"] = 165,["158"] = 164,["159"] = 167,["160"] = 160,["161"] = 170,["162"] = 173,["163"] = 174,["164"] = 175,["165"] = 176,["167"] = 174,["168"] = 179,["169"] = 170,["170"] = 182,["171"] = 185,["172"] = 186,["173"] = 187,["174"] = 188,["176"] = 186,["177"] = 191,["178"] = 182,["179"] = 194,["180"] = 195,["181"] = 196,["182"] = 197,["183"] = 198,["185"] = 196,["186"] = 201,["187"] = 194,["188"] = 204,["189"] = 207,["190"] = 208,["191"] = 209,["192"] = 210,["194"] = 208,["195"] = 213,["196"] = 204,["197"] = 216,["198"] = 217,["199"] = 218,["200"] = 219,["201"] = 218,["202"] = 221,["203"] = 216,["204"] = 224,["205"] = 225,["206"] = 226,["207"] = 227,["208"] = 224});
+local ____exports = {}
+local ____optional = require("preBuild.src.util.types.optional")
+local Optional = ____optional.Optional
+local ____luaList = require("preBuild.src.util.types.collection.luaList")
+local LuaList = ____luaList.LuaList
+local ____luaMapEntry = require("preBuild.src.util.types.collection.luaMapEntry")
+local LuaMapEntry = ____luaMapEntry.LuaMapEntry
+____exports.LuaMap = __TS__Class()
+local LuaMap = ____exports.LuaMap
+LuaMap.name = "LuaMap"
+function LuaMap.prototype.____constructor(self)
+    self.map = __TS__New(Map)
+end
+function LuaMap.ofEntries(self, entries)
+    return __TS__New(____exports.LuaMap):setAllEntries(entries)
+end
+function LuaMap.ofSingleton(self, key, value)
+    return __TS__New(____exports.LuaMap):set(key, value)
+end
+function LuaMap.ofSingletonEntry(self, entry)
+    return __TS__New(____exports.LuaMap):setEntry(entry)
+end
+function LuaMap.empty(self)
+    return __TS__New(____exports.LuaMap)
+end
+function LuaMap.prototype.get(self, key)
+    if not self.map:has(key) then
+        return Optional:empty()
+    end
+    return Optional:of(self.map:get(key))
+end
+function LuaMap.prototype.getOrDefault(self, key, defaultValue)
+    if not self.map:has(key) then
+        return defaultValue
+    end
+    return self.map:get(key)
+end
+function LuaMap.prototype.set(self, key, value)
+    self.map:set(key, value)
+    return self
+end
+function LuaMap.prototype.setEntry(self, entry)
+    return self:set(
+        entry:getKey(),
+        entry:getValue()
+    )
+end
+function LuaMap.prototype.setAllEntries(self, entries)
+    __TS__ArrayForEach(entries, self.setEntry)
+    return self
+end
+function LuaMap.prototype.remove(self, key)
+    if not self.map:has(key) then
+        return Optional:empty()
+    end
+    local value = self.map:get(key)
+    self.map:delete(key)
+    return Optional:of(value)
+end
+function LuaMap.prototype.clear(self)
+    self.map:clear()
+    return self
+end
+function LuaMap.prototype.containsKey(self, key)
+    return self.map:has(key)
+end
+function LuaMap.prototype.containsValue(self, value)
+    for ____, v in __TS__Iterator(self.map:values()) do
+        if v == value then
+            return true
+        end
+    end
+    return false
+end
+function LuaMap.prototype.keys(self)
+    return LuaList:of({__TS__Spread(self.map:keys())})
+end
+function LuaMap.prototype.values(self)
+    return LuaList:of({__TS__Spread(self.map:values())})
+end
+function LuaMap.prototype.entries(self)
+    return LuaList:of(__TS__ArrayMap(
+        {__TS__Spread(self.map:entries())},
+        function(____, ____bindingPattern0)
+            local value
+            local key
+            key = ____bindingPattern0[1]
+            value = ____bindingPattern0[2]
+            return LuaMapEntry:of(key, value)
+        end
+    ))
+end
+function LuaMap.prototype.isEmpty(self)
+    return self.map.size == 0
+end
+function LuaMap.prototype.isNotEmpty(self)
+    return self.map.size > 0
+end
+function LuaMap.prototype.size(self)
+    return self.map.size
+end
+function LuaMap.prototype.forEach(self, action)
+    self.map:forEach(function(____, value, key) return action(nil, key, value) end)
+    return self
+end
+function LuaMap.prototype.forEachEntry(self, action)
+    self:entries():forEach(action)
+    return self
+end
+function LuaMap.prototype.forEachKey(self, action)
+    self:keys():forEach(action)
+    return self
+end
+function LuaMap.prototype.forEachValue(self, action)
+    self:values():forEach(action)
+    return self
+end
+function LuaMap.prototype.select(self, transformer)
+    local result = __TS__New(____exports.LuaMap)
+    self.map:forEach(function(____, value, key)
+        result:set(
+            key,
+            transformer(nil, key, value)
+        )
+    end)
+    return result
+end
+function LuaMap.prototype.selectKeys(self, transformer)
+    local result = __TS__New(____exports.LuaMap)
+    self:forEachEntry(function(____, entry)
+        result:set(
+            transformer(
+                nil,
+                entry:getKey()
+            ),
+            entry:getValue()
+        )
+    end)
+    return result
+end
+function LuaMap.prototype.selectValues(self, transformer)
+    local result = __TS__New(____exports.LuaMap)
+    self:forEachEntry(function(____, entry)
+        result:set(
+            entry:getKey(),
+            transformer(nil, entry)
+        )
+    end)
+    return result
+end
+function LuaMap.prototype.where(self, predicate)
+    local result = __TS__New(____exports.LuaMap)
+    self.map:forEach(function(____, value, key)
+        if predicate(nil, key, value) then
+            result:set(key, value)
+        end
+    end)
+    return result
+end
+function LuaMap.prototype.whereEntries(self, predicate)
+    local result = __TS__New(____exports.LuaMap)
+    self:forEachEntry(function(____, entry)
+        if predicate(nil, entry) then
+            result:setEntry(entry)
+        end
+    end)
+    return result
+end
+function LuaMap.prototype.whereKeys(self, predicate)
+    local result = __TS__New(____exports.LuaMap)
+    self.map:forEach(function(____, value, key)
+        if predicate(nil, key) then
+            result:set(key, value)
+        end
+    end)
+    return result
+end
+function LuaMap.prototype.whereValues(self, predicate)
+    local result = __TS__New(____exports.LuaMap)
+    self.map:forEach(function(____, value, key)
+        if predicate(nil, value) then
+            result:set(key, value)
+        end
+    end)
+    return result
+end
+function LuaMap.prototype.merge(self, other)
+    local result = self:copy()
+    other:forEach(function(____, key, value)
+        result:set(key, value)
+    end)
+    return result
+end
+function LuaMap.prototype.copy(self)
+    local newMap = __TS__New(____exports.LuaMap)
+    self:forEachEntry(newMap.setEntry)
+    return newMap
+end
+return ____exports
+
+end)
+__bundle_register("preBuild.src.util.types.collection.luaMapEntry", function(require, _LOADED, __bundle_register, __bundle_modules)
+local ____lualib = require("lualib_bundle")
+local __TS__Class = ____lualib.__TS__Class
+local __TS__New = ____lualib.__TS__New
+local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["7"] = 1,["8"] = 1,["9"] = 1,["10"] = 5,["11"] = 6,["12"] = 7,["13"] = 5,["14"] = 10,["15"] = 14,["16"] = 10,["17"] = 17,["18"] = 18,["19"] = 17,["20"] = 21,["21"] = 22,["22"] = 21});
+local ____exports = {}
+____exports.LuaMapEntry = __TS__Class()
+local LuaMapEntry = ____exports.LuaMapEntry
+LuaMapEntry.name = "LuaMapEntry"
+function LuaMapEntry.prototype.____constructor(self, key, value)
+    self.key = key
+    self.value = value
+end
+function LuaMapEntry.of(self, key, value)
+    return __TS__New(____exports.LuaMapEntry, key, value)
+end
+function LuaMapEntry.prototype.getKey(self)
+    return self.key
+end
+function LuaMapEntry.prototype.getValue(self)
+    return self.value
+end
+return ____exports
+
+end)
+__bundle_register("lualib_bundle", function(require, _LOADED, __bundle_register, __bundle_modules)
 local function __TS__ArrayAt(self, relativeIndex)
     local absoluteIndex = relativeIndex < 0 and #self + relativeIndex or relativeIndex
     if absoluteIndex >= 0 and absoluteIndex < #self then
@@ -2770,489 +3119,9 @@ return {
   __TS__Using = __TS__Using,
   __TS__UsingAsync = __TS__UsingAsync
 }
- end,
-["preBuild.src.lua.lua"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local Error = ____lualib.Error
-local RangeError = ____lualib.RangeError
-local ReferenceError = ____lualib.ReferenceError
-local SyntaxError = ____lualib.SyntaxError
-local TypeError = ____lualib.TypeError
-local URIError = ____lualib.URIError
-local __TS__New = ____lualib.__TS__New
-local ____exports = {}
-____exports.Lua = __TS__Class()
-local Lua = ____exports.Lua
-Lua.name = "Lua"
-function Lua.prototype.____constructor(self)
-end
-function Lua.literal(self, luaVersion)
-    error(
-        __TS__New(Error, ("Lua.literal(" .. luaVersion) .. ") has no Typescript alternative"),
-        0
-    )
-end
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.globals.ccPeripheral"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local Error = ____lualib.Error
-local RangeError = ____lualib.RangeError
-local ReferenceError = ____lualib.ReferenceError
-local SyntaxError = ____lualib.SyntaxError
-local TypeError = ____lualib.TypeError
-local URIError = ____lualib.URIError
-local __TS__New = ____lualib.__TS__New
-local ____exports = {}
-local ____lua = require("preBuild.src.lua.lua")
-local Lua = ____lua.Lua
---- A wrapper for the ComputerCraft `peripheral` API.
--- Provides utilities to find, call, and inspect peripherals attached to a computer.
--- Based on documentation from: https://tweaked.cc/module/peripheral.html
-____exports.CcPeripheral = __TS__Class()
-local CcPeripheral = ____exports.CcPeripheral
-CcPeripheral.name = "CcPeripheral"
-function CcPeripheral.prototype.____constructor(self, internalPeripheral)
-    self.internalPeripheral = internalPeripheral
-end
-function CcPeripheral.prototype.get(self)
-    return self.internalPeripheral
-end
-function CcPeripheral.find(self, peripheralName, filter)
-    local internalPeripheral = peripheral.find(peripheralName, filter)
-    if internalPeripheral == nil then
-        error(
-            __TS__New(Error, ("No peripheral of type \"" .. peripheralName) .. "\" found."),
-            0
-        )
-    end
-    return __TS__New(____exports.CcPeripheral, internalPeripheral)
-end
-function CcPeripheral.getNames(self)
-    return peripheral.getNames()
-end
-function CcPeripheral.isPresent(self, name)
-    return peripheral.isPresent(name)
-end
-function CcPeripheral.getType(self, peripheral)
-    return peripheral.getType(peripheral)
-end
-function CcPeripheral.hasType(self, peripheral, peripheralType)
-    return peripheral.hasType(peripheral, peripheralType)
-end
-function CcPeripheral.getMethods(self, name)
-    return peripheral.getMethods(name)
-end
-function CcPeripheral.getName(self, peripheral)
-    return peripheral.getName(peripheral)
-end
-function CcPeripheral.call(self, name, method, ...)
-    return peripheral.call(name, method, ...)
-end
-function CcPeripheral.wrap(self, name)
-    return peripheral.wrap(name)
-end
-function CcPeripheral.prototype.hasType(self, peripheralType)
-    return peripheral.hasType(self.internalPeripheral, peripheralType)
-end
-function CcPeripheral.prototype.getType(self)
-    return peripheral.getType(self.internalPeripheral)
-end
-function CcPeripheral.prototype.getName(self)
-    return peripheral.getName(self.internalPeripheral)
-end
-function CcPeripheral.prototype.call(self, method, ...)
-    return peripheral.call(self.internalPeripheral, method, ...)
-end
-function CcPeripheral.prototype.getMethods(self)
-    return peripheral.getMethods(self.internalPeripheral)
-end
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.advancedPeripherals.chatBox"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local ____exports = {}
-local ____ccPeripheral = require("preBuild.src.util.computer.api.tier1.globals.ccPeripheral")
-local CcPeripheral = ____ccPeripheral.CcPeripheral
-local ____lua = require("preBuild.src.lua.lua")
-local Lua = ____lua.Lua
---- A class representing the ChatBox peripheral from the Advanced Peripherals mod.
--- Allows reading and writing to the Minecraft in-game chat, including sending messages,
--- toasts, and formatted components globally or to specific players.
-____exports.ChatBox = __TS__Class()
-local ChatBox = ____exports.ChatBox
-ChatBox.name = "ChatBox"
-function ChatBox.prototype.____constructor(self)
-end
-function ChatBox.onMessage(self, listener)
-    local event = ""
-    local username = ""
-    local message = ""
-    local uuid = ""
-    local isHidden = true
-    while true do
-        local event, username, message, uuid, isHidden = os.pullEvent("chat")
-        listener(nil, {
-            event = event,
-            username = username,
-            message = message,
-            uuid = uuid,
-            isHidden = isHidden
-        })
-    end
-end
-function ChatBox.sendMessage(self, message, prefix, brackets, bracketColor, range)
-    self._internalChatBox:get().sendMessage(message, prefix, brackets, bracketColor, range)
-end
-function ChatBox.sendMessageToPlayer(self, message, username, prefix, brackets, bracketColor, range)
-    self._internalChatBox:get().sendMessageToPlayer(message, username, prefix, brackets, bracketColor, range)
-end
-function ChatBox.sendToastToPlayer(self, message, title, username, prefix, brackets, bracketColor, range)
-    self._internalChatBox:get().sendToastToPlayer(message, title, username, prefix, brackets, bracketColor, range)
-end
-function ChatBox.sendFormattedMessage(self, json, prefix, brackets, bracketColor, range)
-    self._internalChatBox:get().sendFormattedMessage(json, prefix, brackets, bracketColor, range)
-end
-function ChatBox.sendFormattedMessageToPlayer(self, json, username, prefix, brackets, bracketColor, range)
-    self._internalChatBox:get().sendFormattedMessageToPlayer(json, username, prefix, brackets, bracketColor, range)
-end
-function ChatBox.sendFormattedToastToPlayer(self, messageJson, titleJson, username, prefix, brackets, bracketColor, range)
-    self._internalChatBox:get().sendFormattedToastToPlayer(messageJson, titleJson, username, prefix, brackets, bracketColor, range)
-end
-ChatBox._internalChatBox = CcPeripheral:find("chatBox")
-return ____exports
- end,
-["preBuild.src.util.types.result"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local Error = ____lualib.Error
-local RangeError = ____lualib.RangeError
-local ReferenceError = ____lualib.ReferenceError
-local SyntaxError = ____lualib.SyntaxError
-local TypeError = ____lualib.TypeError
-local URIError = ____lualib.URIError
-local __TS__New = ____lualib.__TS__New
-local ____exports = {}
-local ____optional = require("preBuild.src.util.types.optional")
-local Optional = ____optional.Optional
-____exports.Result = __TS__Class()
-local Result = ____exports.Result
-Result.name = "Result"
-function Result.prototype.____constructor(self, value, errorMessage)
-    if value == nil and errorMessage == nil then
-        error(
-            __TS__New(Error, "Cannot create a result with both undefined values"),
-            0
-        )
-    end
-    self.value = value
-    self.errorMessage = errorMessage
-end
-function Result.of(self, value)
-    return __TS__New(____exports.Result, value, nil)
-end
-function Result.ofError(self, value, errorMessage)
-    return __TS__New(____exports.Result, value, errorMessage)
-end
-function Result.void(self)
-    return __TS__New(____exports.Result, "No value", nil)
-end
-function Result.error(self, errorMessage)
-    return __TS__New(____exports.Result, nil, errorMessage or "No error message given")
-end
-function Result.errorValue(self, value, errorMessage)
-    return __TS__New(____exports.Result, value, errorMessage)
-end
-function Result.prototype.isSuccess(self)
-    return self.errorMessage == nil
-end
-function Result.prototype.isError(self)
-    return not self:isSuccess()
-end
-function Result.prototype.ifSuccess(self, callback)
-    if self:isSuccess() then
-        callback(nil, self.value)
-    end
-    return self
-end
-function Result.prototype.ifError(self, callback)
-    if self:isError() then
-        callback(nil, self.errorMessage)
-    end
-    return self
-end
-function Result.prototype.getValueUnsafe(self, message)
-    if not self.value then
-        error(
-            __TS__New(Error, message or self.errorMessage or "Cannot unwrap `Result` value"),
-            0
-        )
-    end
-    return self.value
-end
-function Result.prototype.getValueOrDefault(self, defaultValue)
-    local ____self_value_0 = self.value
-    if ____self_value_0 == nil then
-        ____self_value_0 = defaultValue
-    end
-    return ____self_value_0
-end
-function Result.prototype.getErrorMessage(self)
-    return self.errorMessage
-end
-function Result.prototype.asOptional(self)
-    return Optional:of(self.value)
-end
-Result.prototype["then"] = function(self, callback)
-    if not self.value then
-        return ____exports.Result:error(self.errorMessage)
-    end
-    return ____exports.Result:of(callback(nil, self.value))
-end
-return ____exports
- end,
-["preBuild.src.util.types.optional"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local __TS__New = ____lualib.__TS__New
-local Error = ____lualib.Error
-local RangeError = ____lualib.RangeError
-local ReferenceError = ____lualib.ReferenceError
-local SyntaxError = ____lualib.SyntaxError
-local TypeError = ____lualib.TypeError
-local URIError = ____lualib.URIError
-local ____exports = {}
-local ____result = require("preBuild.src.util.types.result")
-local Result = ____result.Result
-____exports.Optional = __TS__Class()
-local Optional = ____exports.Optional
-Optional.name = "Optional"
-function Optional.prototype.____constructor(self, value)
-    self.value = value
-end
-function Optional.of(self, value)
-    return __TS__New(____exports.Optional, value)
-end
-function Optional.ofNullable(self, value)
-    if value == nil or value == nil then
-        return ____exports.Optional:empty()
-    end
-    return ____exports.Optional:of(value)
-end
-function Optional.empty(self)
-    return __TS__New(____exports.Optional, nil)
-end
-function Optional.prototype.isPresent(self)
-    return self.value ~= nil
-end
-function Optional.prototype.isEmpty(self)
-    return self.value == nil
-end
-function Optional.prototype.getValueUnsafe(self, message)
-    if not self.value then
-        error(
-            __TS__New(Error, message or "Cannot unwrap `Optional` value!"),
-            0
-        )
-    end
-    return self.value
-end
-function Optional.prototype.getValueOrDefault(self, defaultValue)
-    local ____self_value_0 = self.value
-    if ____self_value_0 == nil then
-        ____self_value_0 = defaultValue
-    end
-    return ____self_value_0
-end
-Optional.prototype["then"] = function(self, callback)
-    if not self.value then
-        return ____exports.Optional:empty()
-    end
-    return ____exports.Optional:of(callback(nil, self.value))
-end
-function Optional.prototype.ifPresent(self, callback)
-    if self.value then
-        callback(nil, self.value)
-    end
-    return self
-end
-function Optional.prototype.ifEmpty(self, callback)
-    if not self.value then
-        callback(nil)
-    end
-    return self
-end
-Optional.prototype["or"] = function(self, other)
-    local ____table_value_1
-    if self.value then
-        ____table_value_1 = self
-    else
-        ____table_value_1 = other
-    end
-    return ____table_value_1
-end
-function Optional.prototype.toResult(self, errorMessage)
-    if self.value then
-        return Result:of(self.value)
-    end
-    return Result:ofError(self.value, errorMessage)
-end
-return ____exports
- end,
-["preBuild.src.util.types.collection.luaSet"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local Set = ____lualib.Set
-local __TS__New = ____lualib.__TS__New
-local __TS__ArrayForEach = ____lualib.__TS__ArrayForEach
-local __TS__Spread = ____lualib.__TS__Spread
-local ____exports = {}
-local ____luaList = require("preBuild.src.util.types.collection.luaList")
-local LuaList = ____luaList.LuaList
-____exports.LuaSet = __TS__Class()
-local LuaSet = ____exports.LuaSet
-LuaSet.name = "LuaSet"
-function LuaSet.prototype.____constructor(self)
-    self.elements = __TS__New(Set)
-end
-function LuaSet.ofArray(self, elements)
-    return __TS__New(____exports.LuaSet):addAll(elements)
-end
-function LuaSet.ofList(self, elements)
-    return __TS__New(____exports.LuaSet):addAll(elements)
-end
-function LuaSet.ofSingleton(self, element)
-    return __TS__New(____exports.LuaSet):add(element)
-end
-function LuaSet.empty(self)
-    return __TS__New(____exports.LuaSet)
-end
-function LuaSet.prototype.addAll(self, elements)
-    __TS__ArrayForEach(
-        elements,
-        function(____, element) return self:add(element) end
-    )
-    return self
-end
-function LuaSet.prototype.removeAll(self, elements)
-    __TS__ArrayForEach(
-        elements,
-        function(____, element) return self:remove(element) end
-    )
-    return self
-end
-function LuaSet.prototype.add(self, element)
-    self.elements:add(element)
-    return self
-end
-function LuaSet.prototype.remove(self, element)
-    self.elements:delete(element)
-    return self
-end
-function LuaSet.prototype.contains(self, element)
-    return self.elements:has(element)
-end
-function LuaSet.prototype.select(self, selector)
-    local result = __TS__New(____exports.LuaSet)
-    self.elements:forEach(function(____, element) return result:add(selector(nil, element)) end)
-    return result
-end
-function LuaSet.prototype.where(self, predicate)
-    local result = __TS__New(____exports.LuaSet)
-    self.elements:forEach(function(____, element)
-        if predicate(nil, element) then
-            result:add(element)
-        end
-    end)
-    return result
-end
-function LuaSet.prototype.clear(self)
-    self.elements:clear()
-    return self
-end
-function LuaSet.prototype.size(self)
-    return self.elements.size
-end
-function LuaSet.prototype.isEmpty(self)
-    return self.elements.size == 0
-end
-function LuaSet.prototype.isNotEmpty(self)
-    return self.elements.size > 0
-end
-function LuaSet.prototype.forEach(self, action)
-    self.elements:forEach(action)
-    return self
-end
-function LuaSet.prototype.toList(self)
-    return LuaList:ofSet(self)
-end
-function LuaSet.prototype.copy(self)
-    return __TS__New(____exports.LuaSet):addAll(self)
-end
-function LuaSet.prototype.union(self, other)
-    return __TS__New(____exports.LuaSet):addAll(self):addAll(other)
-end
-function LuaSet.prototype.intersection(self, other)
-    return self:where(other.contains)
-end
-function LuaSet.prototype.difference(self, other)
-    return self:where(function(____, element) return not other:contains(element) end)
-end
-function LuaSet.prototype.isSubsetOf(self, other)
-    return other:difference(self):isEmpty()
-end
-function LuaSet.prototype.isSupersetOf(self, other)
-    return other:isSubsetOf(self)
-end
-function LuaSet.prototype.isStrictSubsetOf(self, other)
-    return self:size() < other:size() and self:isSubsetOf(other)
-end
-function LuaSet.prototype.isStrictSupersetOf(self, other)
-    return self:size() > other:size() and self:isSupersetOf(other)
-end
-function LuaSet.prototype.toArray(self)
-    return {__TS__Spread(self.elements)}
-end
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.lua.table"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.lua.tableUtil"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local ____exports = {}
-local ____lua = require("preBuild.src.lua.lua")
-local Lua = ____lua.Lua
-____exports.TableUtil = __TS__Class()
-local TableUtil = ____exports.TableUtil
-TableUtil.name = "TableUtil"
-function TableUtil.prototype.____constructor(self)
-end
-function TableUtil.fromArray(self, elements)
-    local result = {}
-    if elements == nil then
-        return result
-    end
-    local length = #elements
-    do
-        local i = 0
-        while i < length do
-            local luaIndex = i + 1
-            result[luaIndex] = elements[luaIndex]
-            i = i + 1
-        end
-    end
-    return result
-end
-return ____exports
- end,
-["preBuild.src.util.types.collection.luaList"] = function(...) 
+
+end)
+__bundle_register("preBuild.src.util.types.collection.luaList", function(require, _LOADED, __bundle_register, __bundle_modules)
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
 local __TS__New = ____lualib.__TS__New
@@ -3281,6 +3150,8 @@ local __TS__Unpack = ____lualib.__TS__Unpack
 local __TS__ArraySlice = ____lualib.__TS__ArraySlice
 local Set = ____lualib.Set
 local __TS__Spread = ____lualib.__TS__Spread
+local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["32"] = 1,["33"] = 1,["34"] = 2,["35"] = 2,["36"] = 3,["37"] = 3,["38"] = 5,["39"] = 5,["40"] = 7,["41"] = 7,["42"] = 7,["43"] = 10,["44"] = 8,["45"] = 11,["46"] = 10,["47"] = 14,["48"] = 15,["49"] = 14,["50"] = 18,["51"] = 19,["52"] = 20,["53"] = 21,["54"] = 22,["55"] = 23,["56"] = 18,["57"] = 26,["58"] = 27,["59"] = 26,["60"] = 30,["61"] = 31,["62"] = 31,["63"] = 31,["64"] = 31,["65"] = 31,["66"] = 31,["67"] = 31,["68"] = 30,["69"] = 34,["70"] = 35,["71"] = 35,["72"] = 35,["73"] = 35,["74"] = 34,["75"] = 38,["76"] = 39,["77"] = 38,["78"] = 42,["79"] = 43,["80"] = 42,["81"] = 46,["82"] = 47,["83"] = 46,["84"] = 50,["85"] = 51,["86"] = 51,["87"] = 52,["88"] = 50,["89"] = 55,["90"] = 58,["91"] = 59,["92"] = 55,["93"] = 62,["94"] = 63,["95"] = 64,["96"] = 62,["97"] = 67,["98"] = 68,["99"] = 69,["100"] = 67,["101"] = 72,["102"] = 73,["103"] = 73,["105"] = 74,["106"] = 72,["107"] = 77,["108"] = 78,["109"] = 78,["111"] = 79,["112"] = 77,["113"] = 82,["114"] = 83,["116"] = 84,["120"] = 85,["121"] = 82,["122"] = 88,["123"] = 89,["124"] = 90,["125"] = 90,["127"] = 91,["128"] = 92,["129"] = 88,["130"] = 95,["131"] = 96,["132"] = 97,["133"] = 95,["134"] = 100,["135"] = 101,["136"] = 100,["137"] = 104,["138"] = 105,["139"] = 105,["140"] = 105,["141"] = 105,["142"] = 104,["143"] = 108,["144"] = 109,["145"] = 109,["146"] = 109,["147"] = 109,["148"] = 108,["149"] = 112,["150"] = 113,["151"] = 112,["152"] = 116,["153"] = 117,["154"] = 116,["155"] = 120,["156"] = 121,["157"] = 120,["158"] = 124,["159"] = 125,["160"] = 125,["161"] = 125,["162"] = 125,["163"] = 124,["164"] = 128,["165"] = 131,["166"] = 131,["167"] = 131,["168"] = 131,["169"] = 128,["170"] = 134,["171"] = 135,["172"] = 134,["173"] = 138,["174"] = 139,["175"] = 139,["176"] = 139,["177"] = 139,["178"] = 138,["179"] = 144,["180"] = 145,["181"] = 144,["182"] = 148,["183"] = 149,["184"] = 150,["185"] = 148,["186"] = 153,["187"] = 156,["188"] = 156,["189"] = 156,["190"] = 156,["191"] = 153,["192"] = 159,["193"] = 160,["194"] = 160,["195"] = 160,["196"] = 160,["197"] = 159,["198"] = 163,["199"] = 167,["200"] = 163,["201"] = 170,["202"] = 171,["203"] = 171,["205"] = 172,["206"] = 170,["207"] = 175,["208"] = 176,["209"] = 176,["211"] = 177,["212"] = 175,["213"] = 180,["214"] = 181,["215"] = 181,["217"] = 182,["218"] = 180,["219"] = 185,["220"] = 186,["221"] = 186,["223"] = 187,["224"] = 185,["225"] = 190,["226"] = 191,["227"] = 190,["228"] = 194,["229"] = 195,["230"] = 194,["231"] = 198,["232"] = 199,["233"] = 199,["234"] = 199,["235"] = 199,["236"] = 198,["237"] = 205,["238"] = 206,["239"] = 206,["241"] = 207,["242"] = 205,["243"] = 210,["244"] = 211,["245"] = 211,["247"] = 212,["248"] = 210,["249"] = 215,["250"] = 216,["251"] = 216,["253"] = 218,["254"] = 219,["256"] = 221,["257"] = 221,["258"] = 222,["259"] = 223,["260"] = 225,["261"] = 226,["262"] = 227,["264"] = 221,["267"] = 231,["268"] = 215,["269"] = 234,["270"] = 235,["271"] = 235,["273"] = 236,["274"] = 234,["275"] = 239,["276"] = 240,["277"] = 240,["279"] = 242,["280"] = 243,["282"] = 245,["283"] = 245,["284"] = 246,["285"] = 247,["286"] = 249,["287"] = 250,["288"] = 251,["290"] = 245,["293"] = 255,["294"] = 239,["295"] = 258,["296"] = 259,["297"] = 259,["298"] = 259,["299"] = 259,["300"] = 258,["301"] = 262,["302"] = 263,["303"] = 263,["304"] = 263,["305"] = 263,["306"] = 262,["307"] = 266,["308"] = 267,["309"] = 267,["310"] = 267,["311"] = 267,["312"] = 266,["313"] = 270,["314"] = 271,["315"] = 271,["316"] = 271,["317"] = 271,["318"] = 270,["319"] = 274,["320"] = 275,["321"] = 274,["322"] = 278,["323"] = 279,["324"] = 278,["325"] = 282,["326"] = 283,["327"] = 282});
 local ____exports = {}
 local ____optional = require("preBuild.src.util.types.optional")
 local Optional = ____optional.Optional
@@ -3579,241 +3450,409 @@ function LuaList.prototype.toTable(self)
     return TableUtil:fromArray(self:toArray())
 end
 return ____exports
- end,
-["preBuild.src.util.types.collection.luaMapEntry"] = function(...) 
+
+end)
+__bundle_register("preBuild.src.util.computer.api.tier1.lua.tableUtil", function(require, _LOADED, __bundle_register, __bundle_modules)
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
-local __TS__New = ____lualib.__TS__New
+local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["6"] = 2,["7"] = 2,["8"] = 4,["9"] = 4,["10"] = 4,["12"] = 4,["13"] = 5,["14"] = 6,["15"] = 8,["16"] = 9,["18"] = 12,["20"] = 13,["21"] = 13,["22"] = 14,["23"] = 15,["24"] = 13,["27"] = 17,["28"] = 5});
 local ____exports = {}
-____exports.LuaMapEntry = __TS__Class()
-local LuaMapEntry = ____exports.LuaMapEntry
-LuaMapEntry.name = "LuaMapEntry"
-function LuaMapEntry.prototype.____constructor(self, key, value)
-    self.key = key
-    self.value = value
+local ____lua = require("preBuild.src.lua.lua")
+local Lua = ____lua.Lua
+____exports.TableUtil = __TS__Class()
+local TableUtil = ____exports.TableUtil
+TableUtil.name = "TableUtil"
+function TableUtil.prototype.____constructor(self)
 end
-function LuaMapEntry.of(self, key, value)
-    return __TS__New(____exports.LuaMapEntry, key, value)
-end
-function LuaMapEntry.prototype.getKey(self)
-    return self.key
-end
-function LuaMapEntry.prototype.getValue(self)
-    return self.value
+function TableUtil.fromArray(self, elements)
+    local result = {}
+    if elements == nil then
+        return result
+    end
+    local length = #elements
+    do
+        local i = 0
+        while i < length do
+            local luaIndex = i + 1
+            result[luaIndex] = elements[luaIndex]
+            i = i + 1
+        end
+    end
+    return result
 end
 return ____exports
- end,
-["preBuild.src.util.types.collection.luaMap"] = function(...) 
+
+end)
+__bundle_register("preBuild.src.lua.lua", function(require, _LOADED, __bundle_register, __bundle_modules)
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
-local Map = ____lualib.Map
+local Error = ____lualib.Error
+local RangeError = ____lualib.RangeError
+local ReferenceError = ____lualib.ReferenceError
+local SyntaxError = ____lualib.SyntaxError
+local TypeError = ____lualib.TypeError
+local URIError = ____lualib.URIError
+local __TS__New = ____lualib.__TS__New
+local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["13"] = 1,["14"] = 1,["15"] = 1,["17"] = 1,["18"] = 2,["20"] = 3,["23"] = 2});
+local ____exports = {}
+____exports.Lua = __TS__Class()
+local Lua = ____exports.Lua
+Lua.name = "Lua"
+function Lua.prototype.____constructor(self)
+end
+function Lua.literal(self, luaVersion)
+    error(
+        __TS__New(Error, ("Lua.literal(" .. luaVersion) .. ") has no Typescript alternative"),
+        0
+    )
+end
+return ____exports
+
+end)
+__bundle_register("preBuild.src.util.types.collection.luaSet", function(require, _LOADED, __bundle_register, __bundle_modules)
+local ____lualib = require("lualib_bundle")
+local __TS__Class = ____lualib.__TS__Class
+local Set = ____lualib.Set
 local __TS__New = ____lualib.__TS__New
 local __TS__ArrayForEach = ____lualib.__TS__ArrayForEach
-local __TS__Iterator = ____lualib.__TS__Iterator
 local __TS__Spread = ____lualib.__TS__Spread
-local __TS__ArrayMap = ____lualib.__TS__ArrayMap
+local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["10"] = 1,["11"] = 1,["12"] = 3,["13"] = 3,["14"] = 3,["16"] = 7,["17"] = 6,["18"] = 10,["19"] = 11,["20"] = 10,["21"] = 14,["22"] = 17,["23"] = 14,["24"] = 23,["25"] = 24,["26"] = 23,["27"] = 30,["28"] = 31,["29"] = 30,["30"] = 38,["31"] = 41,["32"] = 41,["33"] = 41,["34"] = 41,["35"] = 42,["36"] = 38,["37"] = 49,["38"] = 52,["39"] = 52,["40"] = 52,["41"] = 52,["42"] = 53,["43"] = 49,["44"] = 61,["45"] = 62,["46"] = 63,["47"] = 61,["48"] = 71,["49"] = 72,["50"] = 73,["51"] = 71,["52"] = 79,["53"] = 80,["54"] = 79,["55"] = 86,["56"] = 89,["57"] = 90,["58"] = 91,["59"] = 86,["60"] = 97,["61"] = 98,["62"] = 99,["63"] = 100,["64"] = 101,["66"] = 99,["67"] = 104,["68"] = 97,["69"] = 111,["70"] = 112,["71"] = 113,["72"] = 111,["73"] = 119,["74"] = 120,["75"] = 119,["76"] = 126,["77"] = 127,["78"] = 126,["79"] = 133,["80"] = 134,["81"] = 133,["82"] = 141,["83"] = 142,["84"] = 143,["85"] = 141,["86"] = 149,["87"] = 150,["88"] = 149,["89"] = 156,["90"] = 157,["91"] = 156,["92"] = 163,["93"] = 164,["94"] = 163,["95"] = 170,["96"] = 171,["97"] = 170,["98"] = 177,["99"] = 178,["100"] = 177,["101"] = 184,["102"] = 185,["103"] = 184,["104"] = 191,["105"] = 192,["106"] = 191,["107"] = 199,["108"] = 200,["109"] = 199,["110"] = 207,["111"] = 208,["112"] = 207,["113"] = 211,["114"] = 212,["115"] = 211});
+local ____exports = {}
+local ____luaList = require("preBuild.src.util.types.collection.luaList")
+local LuaList = ____luaList.LuaList
+____exports.LuaSet = __TS__Class()
+local LuaSet = ____exports.LuaSet
+LuaSet.name = "LuaSet"
+function LuaSet.prototype.____constructor(self)
+    self.elements = __TS__New(Set)
+end
+function LuaSet.ofArray(self, elements)
+    return __TS__New(____exports.LuaSet):addAll(elements)
+end
+function LuaSet.ofList(self, elements)
+    return __TS__New(____exports.LuaSet):addAll(elements)
+end
+function LuaSet.ofSingleton(self, element)
+    return __TS__New(____exports.LuaSet):add(element)
+end
+function LuaSet.empty(self)
+    return __TS__New(____exports.LuaSet)
+end
+function LuaSet.prototype.addAll(self, elements)
+    __TS__ArrayForEach(
+        elements,
+        function(____, element) return self:add(element) end
+    )
+    return self
+end
+function LuaSet.prototype.removeAll(self, elements)
+    __TS__ArrayForEach(
+        elements,
+        function(____, element) return self:remove(element) end
+    )
+    return self
+end
+function LuaSet.prototype.add(self, element)
+    self.elements:add(element)
+    return self
+end
+function LuaSet.prototype.remove(self, element)
+    self.elements:delete(element)
+    return self
+end
+function LuaSet.prototype.contains(self, element)
+    return self.elements:has(element)
+end
+function LuaSet.prototype.select(self, selector)
+    local result = __TS__New(____exports.LuaSet)
+    self.elements:forEach(function(____, element) return result:add(selector(nil, element)) end)
+    return result
+end
+function LuaSet.prototype.where(self, predicate)
+    local result = __TS__New(____exports.LuaSet)
+    self.elements:forEach(function(____, element)
+        if predicate(nil, element) then
+            result:add(element)
+        end
+    end)
+    return result
+end
+function LuaSet.prototype.clear(self)
+    self.elements:clear()
+    return self
+end
+function LuaSet.prototype.size(self)
+    return self.elements.size
+end
+function LuaSet.prototype.isEmpty(self)
+    return self.elements.size == 0
+end
+function LuaSet.prototype.isNotEmpty(self)
+    return self.elements.size > 0
+end
+function LuaSet.prototype.forEach(self, action)
+    self.elements:forEach(action)
+    return self
+end
+function LuaSet.prototype.toList(self)
+    return LuaList:ofSet(self)
+end
+function LuaSet.prototype.copy(self)
+    return __TS__New(____exports.LuaSet):addAll(self)
+end
+function LuaSet.prototype.union(self, other)
+    return __TS__New(____exports.LuaSet):addAll(self):addAll(other)
+end
+function LuaSet.prototype.intersection(self, other)
+    return self:where(other.contains)
+end
+function LuaSet.prototype.difference(self, other)
+    return self:where(function(____, element) return not other:contains(element) end)
+end
+function LuaSet.prototype.isSubsetOf(self, other)
+    return other:difference(self):isEmpty()
+end
+function LuaSet.prototype.isSupersetOf(self, other)
+    return other:isSubsetOf(self)
+end
+function LuaSet.prototype.isStrictSubsetOf(self, other)
+    return self:size() < other:size() and self:isSubsetOf(other)
+end
+function LuaSet.prototype.isStrictSupersetOf(self, other)
+    return self:size() > other:size() and self:isSupersetOf(other)
+end
+function LuaSet.prototype.toArray(self)
+    return {__TS__Spread(self.elements)}
+end
+return ____exports
+
+end)
+__bundle_register("preBuild.src.util.types.optional", function(require, _LOADED, __bundle_register, __bundle_modules)
+local ____lualib = require("lualib_bundle")
+local __TS__Class = ____lualib.__TS__Class
+local __TS__New = ____lualib.__TS__New
+local Error = ____lualib.Error
+local RangeError = ____lualib.RangeError
+local ReferenceError = ____lualib.ReferenceError
+local SyntaxError = ____lualib.SyntaxError
+local TypeError = ____lualib.TypeError
+local URIError = ____lualib.URIError
+local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["13"] = 1,["14"] = 1,["15"] = 3,["16"] = 3,["17"] = 3,["18"] = 6,["19"] = 7,["20"] = 6,["21"] = 10,["22"] = 11,["23"] = 10,["24"] = 14,["25"] = 17,["26"] = 18,["28"] = 19,["29"] = 14,["30"] = 22,["31"] = 23,["32"] = 22,["33"] = 26,["34"] = 27,["35"] = 26,["36"] = 30,["37"] = 31,["38"] = 30,["39"] = 34,["40"] = 35,["42"] = 36,["46"] = 37,["47"] = 34,["48"] = 40,["49"] = 41,["50"] = 41,["51"] = 41,["53"] = 41,["54"] = 40,["55"] = 44,["56"] = 47,["57"] = 47,["59"] = 48,["60"] = 44,["61"] = 51,["62"] = 52,["63"] = 52,["65"] = 53,["66"] = 51,["67"] = 56,["68"] = 57,["69"] = 57,["71"] = 58,["72"] = 56,["73"] = 61,["74"] = 62,["75"] = 62,["76"] = 62,["78"] = 62,["80"] = 62,["81"] = 61,["82"] = 65,["83"] = 66,["84"] = 66,["86"] = 67,["87"] = 65});
+local ____exports = {}
+local ____result = require("preBuild.src.util.types.result")
+local Result = ____result.Result
+____exports.Optional = __TS__Class()
+local Optional = ____exports.Optional
+Optional.name = "Optional"
+function Optional.prototype.____constructor(self, value)
+    self.value = value
+end
+function Optional.of(self, value)
+    return __TS__New(____exports.Optional, value)
+end
+function Optional.ofNullable(self, value)
+    if value == nil or value == nil then
+        return ____exports.Optional:empty()
+    end
+    return ____exports.Optional:of(value)
+end
+function Optional.empty(self)
+    return __TS__New(____exports.Optional, nil)
+end
+function Optional.prototype.isPresent(self)
+    return self.value ~= nil
+end
+function Optional.prototype.isEmpty(self)
+    return self.value == nil
+end
+function Optional.prototype.getValueUnsafe(self, message)
+    if not self.value then
+        error(
+            __TS__New(Error, message or "Cannot unwrap `Optional` value!"),
+            0
+        )
+    end
+    return self.value
+end
+function Optional.prototype.getValueOrDefault(self, defaultValue)
+    local ____self_value_0 = self.value
+    if ____self_value_0 == nil then
+        ____self_value_0 = defaultValue
+    end
+    return ____self_value_0
+end
+Optional.prototype["then"] = function(self, callback)
+    if not self.value then
+        return ____exports.Optional:empty()
+    end
+    return ____exports.Optional:of(callback(nil, self.value))
+end
+function Optional.prototype.ifPresent(self, callback)
+    if self.value then
+        callback(nil, self.value)
+    end
+    return self
+end
+function Optional.prototype.ifEmpty(self, callback)
+    if not self.value then
+        callback(nil)
+    end
+    return self
+end
+Optional.prototype["or"] = function(self, other)
+    local ____table_value_1
+    if self.value then
+        ____table_value_1 = self
+    else
+        ____table_value_1 = other
+    end
+    return ____table_value_1
+end
+function Optional.prototype.toResult(self, errorMessage)
+    if self.value then
+        return Result:of(self.value)
+    end
+    return Result:ofError(self.value, errorMessage)
+end
+return ____exports
+
+end)
+__bundle_register("preBuild.src.util.types.result", function(require, _LOADED, __bundle_register, __bundle_modules)
+local ____lualib = require("lualib_bundle")
+local __TS__Class = ____lualib.__TS__Class
+local Error = ____lualib.Error
+local RangeError = ____lualib.RangeError
+local ReferenceError = ____lualib.ReferenceError
+local SyntaxError = ____lualib.SyntaxError
+local TypeError = ____lualib.TypeError
+local URIError = ____lualib.URIError
+local __TS__New = ____lualib.__TS__New
+local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["13"] = 1,["14"] = 1,["15"] = 3,["16"] = 3,["17"] = 3,["18"] = 8,["19"] = 11,["21"] = 12,["25"] = 16,["26"] = 17,["27"] = 7,["28"] = 20,["29"] = 21,["30"] = 20,["31"] = 24,["32"] = 28,["33"] = 24,["34"] = 31,["35"] = 32,["36"] = 31,["37"] = 35,["38"] = 36,["39"] = 35,["40"] = 42,["41"] = 46,["42"] = 42,["43"] = 49,["44"] = 50,["45"] = 49,["46"] = 53,["47"] = 54,["48"] = 53,["49"] = 57,["50"] = 58,["51"] = 58,["53"] = 59,["54"] = 57,["55"] = 62,["56"] = 63,["57"] = 63,["59"] = 64,["60"] = 62,["61"] = 67,["62"] = 68,["64"] = 69,["68"] = 72,["69"] = 67,["70"] = 75,["71"] = 76,["72"] = 76,["73"] = 76,["75"] = 76,["76"] = 75,["77"] = 79,["78"] = 80,["79"] = 79,["80"] = 83,["81"] = 84,["82"] = 83,["83"] = 87,["84"] = 90,["85"] = 90,["87"] = 91,["88"] = 87});
 local ____exports = {}
 local ____optional = require("preBuild.src.util.types.optional")
 local Optional = ____optional.Optional
-local ____luaList = require("preBuild.src.util.types.collection.luaList")
-local LuaList = ____luaList.LuaList
-local ____luaMapEntry = require("preBuild.src.util.types.collection.luaMapEntry")
-local LuaMapEntry = ____luaMapEntry.LuaMapEntry
-____exports.LuaMap = __TS__Class()
-local LuaMap = ____exports.LuaMap
-LuaMap.name = "LuaMap"
-function LuaMap.prototype.____constructor(self)
-    self.map = __TS__New(Map)
-end
-function LuaMap.ofEntries(self, entries)
-    return __TS__New(____exports.LuaMap):setAllEntries(entries)
-end
-function LuaMap.ofSingleton(self, key, value)
-    return __TS__New(____exports.LuaMap):set(key, value)
-end
-function LuaMap.ofSingletonEntry(self, entry)
-    return __TS__New(____exports.LuaMap):setEntry(entry)
-end
-function LuaMap.empty(self)
-    return __TS__New(____exports.LuaMap)
-end
-function LuaMap.prototype.get(self, key)
-    if not self.map:has(key) then
-        return Optional:empty()
-    end
-    return Optional:of(self.map:get(key))
-end
-function LuaMap.prototype.getOrDefault(self, key, defaultValue)
-    if not self.map:has(key) then
-        return defaultValue
-    end
-    return self.map:get(key)
-end
-function LuaMap.prototype.set(self, key, value)
-    self.map:set(key, value)
-    return self
-end
-function LuaMap.prototype.setEntry(self, entry)
-    return self:set(
-        entry:getKey(),
-        entry:getValue()
-    )
-end
-function LuaMap.prototype.setAllEntries(self, entries)
-    __TS__ArrayForEach(entries, self.setEntry)
-    return self
-end
-function LuaMap.prototype.remove(self, key)
-    if not self.map:has(key) then
-        return Optional:empty()
-    end
-    local value = self.map:get(key)
-    self.map:delete(key)
-    return Optional:of(value)
-end
-function LuaMap.prototype.clear(self)
-    self.map:clear()
-    return self
-end
-function LuaMap.prototype.containsKey(self, key)
-    return self.map:has(key)
-end
-function LuaMap.prototype.containsValue(self, value)
-    for ____, v in __TS__Iterator(self.map:values()) do
-        if v == value then
-            return true
-        end
-    end
-    return false
-end
-function LuaMap.prototype.keys(self)
-    return LuaList:of({__TS__Spread(self.map:keys())})
-end
-function LuaMap.prototype.values(self)
-    return LuaList:of({__TS__Spread(self.map:values())})
-end
-function LuaMap.prototype.entries(self)
-    return LuaList:of(__TS__ArrayMap(
-        {__TS__Spread(self.map:entries())},
-        function(____, ____bindingPattern0)
-            local value
-            local key
-            key = ____bindingPattern0[1]
-            value = ____bindingPattern0[2]
-            return LuaMapEntry:of(key, value)
-        end
-    ))
-end
-function LuaMap.prototype.isEmpty(self)
-    return self.map.size == 0
-end
-function LuaMap.prototype.isNotEmpty(self)
-    return self.map.size > 0
-end
-function LuaMap.prototype.size(self)
-    return self.map.size
-end
-function LuaMap.prototype.forEach(self, action)
-    self.map:forEach(function(____, value, key) return action(nil, key, value) end)
-    return self
-end
-function LuaMap.prototype.forEachEntry(self, action)
-    self:entries():forEach(action)
-    return self
-end
-function LuaMap.prototype.forEachKey(self, action)
-    self:keys():forEach(action)
-    return self
-end
-function LuaMap.prototype.forEachValue(self, action)
-    self:values():forEach(action)
-    return self
-end
-function LuaMap.prototype.select(self, transformer)
-    local result = __TS__New(____exports.LuaMap)
-    self.map:forEach(function(____, value, key)
-        result:set(
-            key,
-            transformer(nil, key, value)
+____exports.Result = __TS__Class()
+local Result = ____exports.Result
+Result.name = "Result"
+function Result.prototype.____constructor(self, value, errorMessage)
+    if value == nil and errorMessage == nil then
+        error(
+            __TS__New(Error, "Cannot create a result with both undefined values"),
+            0
         )
-    end)
-    return result
+    end
+    self.value = value
+    self.errorMessage = errorMessage
 end
-function LuaMap.prototype.selectKeys(self, transformer)
-    local result = __TS__New(____exports.LuaMap)
-    self:forEachEntry(function(____, entry)
-        result:set(
-            transformer(
-                nil,
-                entry:getKey()
-            ),
-            entry:getValue()
+function Result.of(self, value)
+    return __TS__New(____exports.Result, value, nil)
+end
+function Result.ofError(self, value, errorMessage)
+    return __TS__New(____exports.Result, value, errorMessage)
+end
+function Result.void(self)
+    return __TS__New(____exports.Result, "No value", nil)
+end
+function Result.error(self, errorMessage)
+    return __TS__New(____exports.Result, nil, errorMessage or "No error message given")
+end
+function Result.errorValue(self, value, errorMessage)
+    return __TS__New(____exports.Result, value, errorMessage)
+end
+function Result.prototype.isSuccess(self)
+    return self.errorMessage == nil
+end
+function Result.prototype.isError(self)
+    return not self:isSuccess()
+end
+function Result.prototype.ifSuccess(self, callback)
+    if self:isSuccess() then
+        callback(nil, self.value)
+    end
+    return self
+end
+function Result.prototype.ifError(self, callback)
+    if self:isError() then
+        callback(nil, self.errorMessage)
+    end
+    return self
+end
+function Result.prototype.getValueUnsafe(self, message)
+    if not self.value then
+        error(
+            __TS__New(Error, message or self.errorMessage or "Cannot unwrap `Result` value"),
+            0
         )
-    end)
-    return result
+    end
+    return self.value
 end
-function LuaMap.prototype.selectValues(self, transformer)
-    local result = __TS__New(____exports.LuaMap)
-    self:forEachEntry(function(____, entry)
-        result:set(
-            entry:getKey(),
-            transformer(nil, entry)
-        )
-    end)
-    return result
+function Result.prototype.getValueOrDefault(self, defaultValue)
+    local ____self_value_0 = self.value
+    if ____self_value_0 == nil then
+        ____self_value_0 = defaultValue
+    end
+    return ____self_value_0
 end
-function LuaMap.prototype.where(self, predicate)
-    local result = __TS__New(____exports.LuaMap)
-    self.map:forEach(function(____, value, key)
-        if predicate(nil, key, value) then
-            result:set(key, value)
-        end
-    end)
-    return result
+function Result.prototype.getErrorMessage(self)
+    return self.errorMessage
 end
-function LuaMap.prototype.whereEntries(self, predicate)
-    local result = __TS__New(____exports.LuaMap)
-    self:forEachEntry(function(____, entry)
-        if predicate(nil, entry) then
-            result:setEntry(entry)
-        end
-    end)
-    return result
+function Result.prototype.asOptional(self)
+    return Optional:of(self.value)
 end
-function LuaMap.prototype.whereKeys(self, predicate)
-    local result = __TS__New(____exports.LuaMap)
-    self.map:forEach(function(____, value, key)
-        if predicate(nil, key) then
-            result:set(key, value)
-        end
-    end)
-    return result
-end
-function LuaMap.prototype.whereValues(self, predicate)
-    local result = __TS__New(____exports.LuaMap)
-    self.map:forEach(function(____, value, key)
-        if predicate(nil, value) then
-            result:set(key, value)
-        end
-    end)
-    return result
-end
-function LuaMap.prototype.merge(self, other)
-    local result = self:copy()
-    other:forEach(function(____, key, value)
-        result:set(key, value)
-    end)
-    return result
-end
-function LuaMap.prototype.copy(self)
-    local newMap = __TS__New(____exports.LuaMap)
-    self:forEachEntry(newMap.setEntry)
-    return newMap
+Result.prototype["then"] = function(self, callback)
+    if not self.value then
+        return ____exports.Result:error(self.errorMessage)
+    end
+    return ____exports.Result:of(callback(nil, self.value))
 end
 return ____exports
- end,
-["preBuild.src.util.computer.api.tier2.logging.logLevel"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
+
+end)
+__bundle_register("preBuild.src.util.computer.api.tier2.logging.listeners.consoleLogListener", function(require, _LOADED, __bundle_register, __bundle_modules)
+local ____lualib = require("lualib_bundle")
+local __TS__Class = ____lualib.__TS__Class
+local __TS__ClassExtends = ____lualib.__TS__ClassExtends
+local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["7"] = 2,["8"] = 2,["9"] = 4,["10"] = 4,["11"] = 4,["12"] = 4,["13"] = 5,["14"] = 6,["15"] = 5,["16"] = 9,["17"] = 10,["18"] = 9});
+local ____exports = {}
+local ____logListener = require("preBuild.src.util.computer.api.tier2.logging.logListener")
+local LogListener = ____logListener.LogListener
+____exports.ConsoleLogListener = __TS__Class()
+local ConsoleLogListener = ____exports.ConsoleLogListener
+ConsoleLogListener.name = "ConsoleLogListener"
+__TS__ClassExtends(ConsoleLogListener, LogListener)
+function ConsoleLogListener.prototype.getName(self)
+    return "ConsoleLogListener"
+end
+function ConsoleLogListener.prototype.onLog(self, level, message)
+    print((("[" .. level) .. "] ") .. message)
+end
+return ____exports
+
+end)
+__bundle_register("preBuild.src.util.computer.api.tier2.logging.logListener", function(require, _LOADED, __bundle_register, __bundle_modules)
+local ____lualib = require("lualib_bundle")
+local __TS__Class = ____lualib.__TS__Class
+local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["6"] = 3,["7"] = 3,["8"] = 3,["10"] = 3});
+local ____exports = {}
+____exports.LogListener = __TS__Class()
+local LogListener = ____exports.LogListener
+LogListener.name = "LogListener"
+function LogListener.prototype.____constructor(self)
+end
+return ____exports
+
+end)
+__bundle_register("preBuild.src.util.computer.api.tier2.logging.logLevel", function(require, _LOADED, __bundle_register, __bundle_modules)
+local ____lualib = require("lualib_bundle")
+local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["13"] = 11,["14"] = 12,["15"] = 13,["16"] = 14,["17"] = 15});
 local ____exports = {}
 --- Enumeration for logging levels.
 -- 
@@ -3829,410 +3868,207 @@ ____exports.LogLevel.INFO = "INFO"
 ____exports.LogLevel.WARN = "WARN"
 ____exports.LogLevel.ERROR = "ERROR"
 return ____exports
- end,
-["preBuild.src.util.computer.api.tier2.logging.logListener"] = function(...) 
+
+end)
+__bundle_register("preBuild.src.util.computer.entrypoint.entrypoint", function(require, _LOADED, __bundle_register, __bundle_modules)
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
+local __TS__New = ____lualib.__TS__New
+local __TS__StringReplace = ____lualib.__TS__StringReplace
+local __TS__StringStartsWith = ____lualib.__TS__StringStartsWith
+local Error = ____lualib.Error
+local RangeError = ____lualib.RangeError
+local ReferenceError = ____lualib.ReferenceError
+local SyntaxError = ____lualib.SyntaxError
+local TypeError = ____lualib.TypeError
+local URIError = ____lualib.URIError
+local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["15"] = 1,["16"] = 1,["17"] = 2,["18"] = 2,["19"] = 3,["20"] = 3,["21"] = 4,["22"] = 4,["23"] = 5,["24"] = 5,["25"] = 7,["26"] = 7,["27"] = 8,["28"] = 8,["32"] = 15,["33"] = 15,["34"] = 15,["36"] = 24,["37"] = 15,["38"] = 31,["39"] = 32,["40"] = 33,["41"] = 34,["44"] = 39,["47"] = 37,["53"] = 42,["54"] = 31,["55"] = 50,["56"] = 51,["57"] = 53,["58"] = 53,["59"] = 54,["61"] = 57,["62"] = 57,["63"] = 58,["65"] = 61,["66"] = 61,["67"] = 62,["69"] = 50,["70"] = 71,["71"] = 72,["72"] = 71,["73"] = 87,["74"] = 88,["75"] = 87,["76"] = 107,["77"] = 108,["78"] = 114,["79"] = 117,["81"] = 119,["84"] = 114,["85"] = 107,["86"] = 142,["87"] = 143,["88"] = 142});
 local ____exports = {}
-____exports.LogListener = __TS__Class()
-local LogListener = ____exports.LogListener
-LogListener.name = "LogListener"
-function LogListener.prototype.____constructor(self)
+local ____luaMap = require("preBuild.src.util.types.collection.luaMap")
+local LuaMap = ____luaMap.LuaMap
+local ____logger = require("preBuild.src.util.computer.api.tier2.logging.logger")
+local Logger = ____logger.Logger
+local ____executionContext = require("preBuild.src.util.computer.executionContext")
+local ExecutionContext = ____executionContext.ExecutionContext
+local ____info = require("preBuild.src.util.computer.api.tier2.config.info")
+local Info = ____info.Info
+local ____fileLogListener = require("preBuild.src.util.computer.api.tier2.logging.listeners.fileLogListener")
+local FileLogListener = ____fileLogListener.FileLogListener
+local ____reflection = require("preBuild.src.util.reflection")
+local Reflection = ____reflection.Reflection
+local ____discordWebhookLogListener = require("preBuild.src.util.computer.api.tier2.logging.listeners.discordWebhookLogListener")
+local DiscordWebhookLogListener = ____discordWebhookLogListener.DiscordWebhookLogListener
+--- Abstract base class representing an application entry point.
+-- Provides functionality for registering and dispatching routes, as well as lifecycle hooks for application startup, shutdown, and error handling.
+-- Classes extending this should implement abstract methods and optionally override other lifecycle methods to define specific behavior.
+____exports.Entrypoint = __TS__Class()
+local Entrypoint = ____exports.Entrypoint
+Entrypoint.name = "Entrypoint"
+function Entrypoint.prototype.____constructor(self)
+    self._routes = LuaMap:empty()
+end
+function Entrypoint.prototype.run(self)
+    self:applyInfoConfig()
+    self:registerRoutes()
+    self:onStart()
+    do
+        local function ____catch(cause)
+            self:onCrash(cause)
+        end
+        local ____try, ____hasReturned = pcall(function()
+            self:dispatchRoute()
+        end)
+        if not ____try then
+            ____catch(____hasReturned)
+        end
+    end
+    self:onStop()
+end
+function Entrypoint.prototype.applyInfoConfig(self)
+    local info = Info:load()
+    local ____opt_0 = info.logging
+    if ____opt_0 and ____opt_0.level then
+        Logger.level = info.logging.level
+    end
+    local ____opt_2 = info.logging
+    if ____opt_2 and ____opt_2.writeToFile then
+        Logger:addListener(__TS__New(FileLogListener))
+    end
+    local ____opt_4 = info.logging
+    if ____opt_4 and ____opt_4.writeToDiscord then
+        Logger:addListener(__TS__New(DiscordWebhookLogListener))
+    end
+end
+function Entrypoint.prototype.registerRoutes(self)
+    Reflection:getMethods(self):whereKeys(function(____, key) return __TS__StringStartsWith(key, "route") end):selectKeys(function(____, key) return string.lower(__TS__StringReplace(key, "route", "")) end):forEach(function(____, name, route) return self:registerRoute(name, route) end)
+end
+function Entrypoint.prototype.registerRoute(self, name, callback)
+    self._routes:set(name, callback)
+end
+function Entrypoint.prototype.dispatchRoute(self)
+    local targetRouteName = ExecutionContext.commandLineArguments:first():getValueUnsafe("EC19 - " .. "The first command line argument (route name) was not provided")
+    self._routes:get(targetRouteName):ifEmpty(function()
+        local validRouteNamesString = ("'" .. self._routes:keys():join("', '")) .. "'"
+        error(
+            __TS__New(Error, (("Unknown route: " .. targetRouteName) .. "\nThe first argument must be a valid route name.\nE.g. ") .. validRouteNamesString),
+            0
+        )
+    end):ifPresent(function(____, routeFunction) return routeFunction(nil) end)
+end
+function Entrypoint.prototype.onCrash(self, cause)
+    error(cause, 0)
 end
 return ____exports
- end,
-["preBuild.src.util.computer.api.tier2.logging.listeners.consoleLogListener"] = function(...) 
+
+end)
+__bundle_register("preBuild.src.util.computer.api.tier2.logging.listeners.discordWebhookLogListener", function(require, _LOADED, __bundle_register, __bundle_modules)
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
 local __TS__ClassExtends = ____lualib.__TS__ClassExtends
+local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["7"] = 1,["8"] = 1,["9"] = 2,["10"] = 2,["11"] = 3,["12"] = 3,["13"] = 5,["14"] = 5,["15"] = 5,["16"] = 5,["17"] = 14,["18"] = 15,["19"] = 14,["20"] = 18,["21"] = 19,["22"] = 18,["23"] = 7,["24"] = 7,["25"] = 7,["26"] = 7});
 local ____exports = {}
 local ____logListener = require("preBuild.src.util.computer.api.tier2.logging.logListener")
 local LogListener = ____logListener.LogListener
-____exports.ConsoleLogListener = __TS__Class()
-local ConsoleLogListener = ____exports.ConsoleLogListener
-ConsoleLogListener.name = "ConsoleLogListener"
-__TS__ClassExtends(ConsoleLogListener, LogListener)
-function ConsoleLogListener.prototype.getName(self)
-    return "ConsoleLogListener"
+local ____discordWebhook = require("preBuild.src.util.computer.api.tier2.externalApi.discord.discordWebhook")
+local DiscordWebhook = ____discordWebhook.DiscordWebhook
+local ____environment = require("preBuild.src.util.computer.api.tier2.environment")
+local Environment = ____environment.Environment
+____exports.DiscordWebhookLogListener = __TS__Class()
+local DiscordWebhookLogListener = ____exports.DiscordWebhookLogListener
+DiscordWebhookLogListener.name = "DiscordWebhookLogListener"
+__TS__ClassExtends(DiscordWebhookLogListener, LogListener)
+function DiscordWebhookLogListener.prototype.getName(self)
+    return "DiscordWebhookLogListener"
 end
-function ConsoleLogListener.prototype.onLog(self, level, message)
-    print((("[" .. level) .. "] ") .. message)
+function DiscordWebhookLogListener.prototype.onLog(self, level, message)
+    ____exports.DiscordWebhookLogListener._webhook:sendMessage((("[" .. level) .. "] ") .. message)
 end
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier2.logging.logger"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local __TS__ArrayMap = ____lualib.__TS__ArrayMap
-local Map = ____lualib.Map
-local __TS__New = ____lualib.__TS__New
-local ____exports = {}
-local ____logLevel = require("preBuild.src.util.computer.api.tier2.logging.logLevel")
-local LogLevel = ____logLevel.LogLevel
-local ____consoleLogListener = require("preBuild.src.util.computer.api.tier2.logging.listeners.consoleLogListener")
-local ConsoleLogListener = ____consoleLogListener.ConsoleLogListener
-local ____luaMap = require("preBuild.src.util.types.collection.luaMap")
-local LuaMap = ____luaMap.LuaMap
-____exports.Logger = __TS__Class()
-local Logger = ____exports.Logger
-Logger.name = "Logger"
-function Logger.prototype.____constructor(self)
-end
-function Logger.addListener(self, listener)
-    self.listeners:set(
-        listener:getName(),
-        listener
-    )
-end
-function Logger.clearListeners(self)
-    self.listeners:clear()
-end
-function Logger.log(self, level, ...)
-    local args = {...}
-    if (self.levelMap:get(level) or 0) < (self.levelMap:get(self.level) or 0) then
-        return
-    end
-    local message = table.concat(
-        __TS__ArrayMap(
-            args,
-            function(____, arg) return tostring(arg) end
-        ),
-        " "
-    )
-    self.listeners:forEachValue(function(____, listener)
-        listener:onLog(level, message)
-    end)
-end
-function Logger.debug(self, ...)
-    self:log(LogLevel.DEBUG, ...)
-end
-function Logger.info(self, ...)
-    self:log(LogLevel.INFO, ...)
-end
-function Logger.warn(self, ...)
-    self:log(LogLevel.WARN, ...)
-end
-function Logger.error(self, ...)
-    self:log(LogLevel.ERROR, ...)
-end
-Logger.level = LogLevel.DEBUG
-Logger.levelMap = __TS__New(Map, {{LogLevel.DEBUG, 0}, {LogLevel.INFO, 1}, {LogLevel.WARN, 2}, {LogLevel.ERROR, 3}})
-Logger.listeners = LuaMap:ofSingleton(
-    __TS__New(ConsoleLogListener):getName(),
-    __TS__New(ConsoleLogListener)
+DiscordWebhookLogListener._webhook = DiscordWebhook:fromUrl(
+    "ComputerCraft",
+    Environment:get("DISCORD_WEBHOOK_URL"):getValueUnsafe("EC18 - " .. "Failed to get `DISCORD_WEBHOOK_URL` from environment")
 )
 return ____exports
- end,
-["preBuild.src.util.computer.executionContext"] = function(...) 
+
+end)
+__bundle_register("preBuild.src.util.computer.api.tier2.environment", function(require, _LOADED, __bundle_register, __bundle_modules)
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
+local __TS__StringSplit = ____lualib.__TS__StringSplit
+local __TS__StringStartsWith = ____lualib.__TS__StringStartsWith
+local __TS__StringTrim = ____lualib.__TS__StringTrim
+local __TS__StringIncludes = ____lualib.__TS__StringIncludes
+local __TS__Unpack = ____lualib.__TS__Unpack
+local __TS__ArrayForEach = ____lualib.__TS__ArrayForEach
+local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["12"] = 2,["13"] = 2,["14"] = 3,["15"] = 3,["20"] = 11,["21"] = 11,["22"] = 11,["24"] = 11,["25"] = 14,["26"] = 15,["27"] = 17,["28"] = 19,["30"] = 22,["31"] = 14,["32"] = 25,["33"] = 26,["34"] = 27,["36"] = 30,["37"] = 34,["38"] = 36,["39"] = 25,["40"] = 41,["41"] = 42,["42"] = 43,["44"] = 46,["45"] = 50,["46"] = 52,["47"] = 53,["48"] = 53,["49"] = 53,["50"] = 54,["53"] = 58,["56"] = 62,["59"] = 66,["60"] = 67,["61"] = 53,["62"] = 53,["63"] = 70,["64"] = 41,["65"] = 12});
 local ____exports = {}
-local ____lua = require("preBuild.src.lua.lua")
-local Lua = ____lua.Lua
-local ____luaList = require("preBuild.src.util.types.collection.luaList")
-local LuaList = ____luaList.LuaList
---- Represents the execution context for a script or program, including relevant
--- properties and methods for managing its state and resources.
--- s
--- This class provides functionality to handle context-specific data, such as
--- command-line arguments available when the program executes.
-____exports.ExecutionContext = __TS__Class()
-local ExecutionContext = ____exports.ExecutionContext
-ExecutionContext.name = "ExecutionContext"
-function ExecutionContext.prototype.____constructor(self)
+local ____luaMap = require("preBuild.src.util.types.collection.luaMap")
+local LuaMap = ____luaMap.LuaMap
+local ____fileUtil = require("preBuild.src.util.computer.api.tier2.fileUtil")
+local FileUtil = ____fileUtil.FileUtil
+--- Represents an environment that manages and interacts with environment
+-- variables in ComputerCraft. This utility can be used to
+-- handle operations concerning environmental properties or variables
+-- within a specific execution context.
+____exports.Environment = __TS__Class()
+local Environment = ____exports.Environment
+Environment.name = "Environment"
+function Environment.prototype.____constructor(self)
 end
-ExecutionContext.commandLineArguments = LuaList:ofTable(COMMAND_LINE_ARGUMENTS)
+function Environment.get(self, key)
+    local result = self:load():get(key)
+    if result:isEmpty() then
+        self:set(key, "")
+    end
+    return result
+end
+function Environment.set(self, key, value)
+    if not FileUtil:exists(self._path) then
+        FileUtil:writeText(self._path, ""):getValueUnsafe("EC3")
+    end
+    local content = FileUtil:readText(self._path):getValueUnsafe("EC4 - " .. "Could not read from .env file")
+    content = content .. (("\n" .. key) .. "=") .. value
+    FileUtil:writeText(self._path, content):getValueUnsafe("EC5 - " .. "Could not write to .env file")
+end
+function Environment.load(self)
+    if not FileUtil:exists(self._path) then
+        FileUtil:writeText(self._path, ""):getValueUnsafe("EC6")
+    end
+    local content = FileUtil:readText(self._path):getValueUnsafe("EC7 - " .. "Could not read from .env file")
+    local lines = __TS__StringSplit(content, "\n")
+    local output = LuaMap:empty()
+    __TS__ArrayForEach(
+        lines,
+        function(____, line)
+            if __TS__StringStartsWith(line, "#") then
+                return
+            end
+            if __TS__StringTrim(line) == "" then
+                return
+            end
+            if not __TS__StringIncludes(line, "=") then
+                return
+            end
+            local key, value = __TS__Unpack(__TS__StringSplit(line, "=", 2))
+            output:set(key, value)
+        end
+    )
+    return output
+end
+Environment._path = "app/data/.env"
 return ____exports
- end,
-["preBuild.src.util.computer.api.tier2.config.infoModel"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.types.files.fileReadHandle"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local ____exports = {}
-local ____lua = require("preBuild.src.lua.lua")
-local Lua = ____lua.Lua
---- A utility class for read-handle operations
--- Based on the documentation: https://tweaked.cc/module/fs.html#ty:ReadHandle
-____exports.FileReadHandle = __TS__Class()
-local FileReadHandle = ____exports.FileReadHandle
-FileReadHandle.name = "FileReadHandle"
-function FileReadHandle.prototype.____constructor(self, handle)
-    self.handle = handle
-end
-function FileReadHandle.prototype.readBytes(self, count)
-    return self.handle.read(count)
-end
-function FileReadHandle.prototype.readAllContent(self)
-    return self.handle.readAll()
-end
-function FileReadHandle.prototype.readLine(self, includeTrailingNewline)
-    if includeTrailingNewline == nil then
-        includeTrailingNewline = false
-    end
-    return self.handle.readLine(includeTrailingNewline)
-end
-function FileReadHandle.prototype.seekPosition(self, whence, offset)
-    if whence == nil then
-        whence = "cur"
-    end
-    if offset == nil then
-        offset = 0
-    end
-    return self.handle.seek(whence, offset)
-end
-function FileReadHandle.prototype.close(self)
-    self.handle.close()
-end
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.types.files.fileReadWriteHandle"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local ____exports = {}
-local ____lua = require("preBuild.src.lua.lua")
-local Lua = ____lua.Lua
---- A utility class for read-write handle operations
--- Based on the documentation: https://tweaked.cc/module/fs.html#ty:ReadWriteHandle
-____exports.FileReadWriteHandle = __TS__Class()
-local FileReadWriteHandle = ____exports.FileReadWriteHandle
-FileReadWriteHandle.name = "FileReadWriteHandle"
-function FileReadWriteHandle.prototype.____constructor(self, handle)
-    self.handle = handle
-end
-function FileReadWriteHandle.prototype.readBytes(self, count)
-    return self.handle.read(count)
-end
-function FileReadWriteHandle.prototype.readAllContent(self)
-    return self.handle.readAll()
-end
-function FileReadWriteHandle.prototype.readLine(self, includeTrailingNewline)
-    if includeTrailingNewline == nil then
-        includeTrailingNewline = false
-    end
-    return self.handle.readLine(includeTrailingNewline)
-end
-function FileReadWriteHandle.prototype.writeContent(self, content)
-    self.handle.write(content)
-end
-function FileReadWriteHandle.prototype.writeLine(self, text)
-    self.handle.writeLine(text)
-end
-function FileReadWriteHandle.prototype.flushBuffers(self)
-    self.handle.flush()
-end
-function FileReadWriteHandle.prototype.seekPosition(self, whence, offset)
-    if whence == nil then
-        whence = "cur"
-    end
-    if offset == nil then
-        offset = 0
-    end
-    return self.handle.seek(whence, offset)
-end
-function FileReadWriteHandle.prototype.close(self)
-    self.handle.close()
-end
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.types.files.fileWriteHandle"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local ____exports = {}
-local ____lua = require("preBuild.src.lua.lua")
-local Lua = ____lua.Lua
---- A utility class for write-handle operations
--- Based on the documentation: https://tweaked.cc/module/fs.html#ty:WriteHandle
-____exports.FileWriteHandle = __TS__Class()
-local FileWriteHandle = ____exports.FileWriteHandle
-FileWriteHandle.name = "FileWriteHandle"
-function FileWriteHandle.prototype.____constructor(self, handle)
-    self.handle = handle
-end
-function FileWriteHandle.prototype.writeContent(self, content)
-    self.handle.write(content)
-end
-function FileWriteHandle.prototype.writeLine(self, text)
-    self.handle.writeLine(text)
-end
-function FileWriteHandle.prototype.flushBuffers(self)
-    self.handle.flush()
-end
-function FileWriteHandle.prototype.seekPosition(self, whence, offset)
-    if whence == nil then
-        whence = "cur"
-    end
-    if offset == nil then
-        offset = 0
-    end
-    return self.handle.seek(whence, offset)
-end
-function FileWriteHandle.prototype.close(self)
-    self.handle.close()
-end
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.globals.ccFs"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local __TS__New = ____lualib.__TS__New
-local ____exports = {}
-local ____lua = require("preBuild.src.lua.lua")
-local Lua = ____lua.Lua
-local ____fileReadHandle = require("preBuild.src.util.computer.api.tier1.types.files.fileReadHandle")
-local FileReadHandle = ____fileReadHandle.FileReadHandle
-local ____fileReadWriteHandle = require("preBuild.src.util.computer.api.tier1.types.files.fileReadWriteHandle")
-local FileReadWriteHandle = ____fileReadWriteHandle.FileReadWriteHandle
-local ____fileWriteHandle = require("preBuild.src.util.computer.api.tier1.types.files.fileWriteHandle")
-local FileWriteHandle = ____fileWriteHandle.FileWriteHandle
-local ____optional = require("preBuild.src.util.types.optional")
-local Optional = ____optional.Optional
-local ____result = require("preBuild.src.util.types.result")
-local Result = ____result.Result
-local ____tableUtil = require("preBuild.src.util.computer.api.tier1.lua.tableUtil")
-local TableUtil = ____tableUtil.TableUtil
---- Types for the `fs` api in ComputerCraft
--- Based on the documentation: https://tweaked.cc/module/fs.html
--- <br>
--- Features:
--- 1. Clearer TypeScript method and parameter names for available functions
--- 2. Docs included with each function
--- 3. Separation of complex functions into multiple where needed
-____exports.CcFs = __TS__Class()
-local CcFs = ____exports.CcFs
-CcFs.name = "CcFs"
-function CcFs.prototype.____constructor(self)
-end
-function CcFs.completeFileName(self, path, location, includeFiles, includeDirectories)
-    if includeFiles == nil then
-        includeFiles = true
-    end
-    if includeDirectories == nil then
-        includeDirectories = true
-    end
-    return fs.complete(path, location, includeFiles, includeDirectories)
-end
-function CcFs.findFiles(self, path)
-    return fs.find(path)
-end
-function CcFs.isDriveRootDirectory(self, path)
-    return fs.isDriveRoot(path)
-end
-function CcFs.listDirectory(self, path)
-    return fs.list(path)
-end
-function CcFs.combinePath(self, ...)
-    local paths = {...}
-    local pathsTable = TableUtil:fromArray(paths)
-    return fs.combine(table.unpack(pathsTable))
-end
-function CcFs.getFileName(self, path)
-    return fs.getName(path)
-end
-function CcFs.getDirectoryName(self, path)
-    return fs.getDir(path)
-end
-function CcFs.getFileSize(self, path)
-    return fs.getSize(path)
-end
-function CcFs.fileExists(self, path)
-    return fs.exists(path)
-end
-function CcFs.isDirectory(self, path)
-    return fs.isDir(path)
-end
-function CcFs.isReadOnly(self, path)
-    return fs.isReadOnly(path)
-end
-function CcFs.createDirectory(self, path)
-    fs.makeDir(path)
-end
-function CcFs.move(self, sourcePath, destinationPath)
-    fs.move(sourcePath, destinationPath)
-end
-function CcFs.copy(self, sourcePath, destinationPath)
-    fs.copy(sourcePath, destinationPath)
-end
-function CcFs.delete(self, path)
-    fs.delete(path)
-end
-function CcFs.openFileForReading(self, path)
-    local fileHandle = nil
-    local errorMessage = nil
-    fileHandle, errorMessage = fs.open(path, 'r')
-    if errorMessage then
-        return Result:error(errorMessage)
-    end
-    return Result:of(__TS__New(FileReadHandle, fileHandle))
-end
-function CcFs.openFileForWriting(self, path)
-    local fileHandle = nil
-    local errorMessage = nil
-    fileHandle, errorMessage = fs.open(path, 'w')
-    if errorMessage then
-        return Result:error(errorMessage)
-    end
-    return Result:of(__TS__New(FileWriteHandle, fileHandle))
-end
-function CcFs.openFileForReadAndWrite(self, path)
-    local fileHandle = nil
-    local errorMessage = nil
-    fileHandle, errorMessage = fs.open(path, 'rw')
-    if errorMessage then
-        return Result:error(errorMessage)
-    end
-    return Result:of(__TS__New(FileReadWriteHandle, fileHandle))
-end
-function CcFs.openFileForAppending(self, path)
-    local fileHandle = nil
-    local errorMessage = nil
-    fileHandle, errorMessage = fs.open(path, 'a')
-    if errorMessage then
-        return Result:error(errorMessage)
-    end
-    return Result:of(__TS__New(FileWriteHandle, fileHandle))
-end
-function CcFs.openFileForBinaryReading(self, path)
-    local fileHandle = nil
-    local errorMessage = nil
-    fileHandle, errorMessage = fs.open(path, 'rb')
-    if errorMessage then
-        return Result:error(errorMessage)
-    end
-    return Result:of(__TS__New(FileReadHandle, fileHandle))
-end
-function CcFs.openFileForBinaryWriting(self, path)
-    local fileHandle = nil
-    local errorMessage = nil
-    fileHandle, errorMessage = fs.open(path, 'wb')
-    if errorMessage then
-        return Result:error(errorMessage)
-    end
-    return Result:of(__TS__New(FileWriteHandle, fileHandle))
-end
-function CcFs.getDriveName(self, path)
-    return Optional:ofNullable(fs.getDrive(path))
-end
-function CcFs.getFreeSpaceOnDrive(self, path)
-    return fs.getFreeSpace(path)
-end
-function CcFs.getDriveCapacity(self, path)
-    return Optional:ofNullable(fs.getCapacity(path))
-end
-function CcFs.getFileAttributes(self, path)
-    return fs.attributes(path)
-end
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier2.fileUtil"] = function(...) 
+
+end)
+__bundle_register("preBuild.src.util.computer.api.tier2.fileUtil", function(require, _LOADED, __bundle_register, __bundle_modules)
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
 local __TS__StringReplace = ____lualib.__TS__StringReplace
 local __TS__StringStartsWith = ____lualib.__TS__StringStartsWith
 local __TS__StringSubstring = ____lualib.__TS__StringSubstring
+local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["9"] = 1,["10"] = 1,["11"] = 2,["12"] = 2,["13"] = 5,["14"] = 5,["15"] = 7,["16"] = 7,["17"] = 7,["19"] = 7,["20"] = 8,["21"] = 9,["22"] = 8,["23"] = 12,["24"] = 13,["25"] = 12,["26"] = 23,["27"] = 24,["28"] = 26,["29"] = 27,["31"] = 30,["32"] = 31,["33"] = 32,["34"] = 33,["35"] = 34,["37"] = 37,["38"] = 23,["39"] = 49,["40"] = 50,["41"] = 52,["42"] = 53,["44"] = 56,["45"] = 58,["46"] = 59,["48"] = 62,["51"] = 66,["52"] = 66,["54"] = 66,["55"] = 66,["57"] = 66,["60"] = 64,["66"] = 68,["69"] = 63,["72"] = 71,["73"] = 49,["74"] = 83,["75"] = 85,["76"] = 86,["77"] = 87,["79"] = 91,["80"] = 93,["81"] = 94,["83"] = 97,["86"] = 101,["87"] = 101,["89"] = 101,["90"] = 101,["92"] = 101,["95"] = 99,["101"] = 103,["104"] = 98,["107"] = 106,["108"] = 83,["109"] = 109,["110"] = 110,["111"] = 109,["112"] = 113,["113"] = 114,["114"] = 113,["115"] = 117,["116"] = 118,["117"] = 117,["118"] = 121,["121"] = 126,["122"] = 126,["124"] = 126,["125"] = 126,["127"] = 126,["130"] = 123,["131"] = 124,["137"] = 122,["140"] = 121,["141"] = 130,["144"] = 135,["145"] = 135,["147"] = 135,["148"] = 135,["150"] = 135,["153"] = 132,["154"] = 133,["160"] = 131,["163"] = 130,["164"] = 139,["167"] = 144,["168"] = 144,["170"] = 144,["171"] = 144,["173"] = 144,["176"] = 141,["177"] = 142,["183"] = 140,["186"] = 139,["187"] = 148,["188"] = 149,["189"] = 149,["191"] = 149,["193"] = 148,["194"] = 152,["195"] = 153,["196"] = 152,["197"] = 158,["198"] = 159,["199"] = 158,["200"] = 164,["201"] = 165,["202"] = 166,["204"] = 169,["205"] = 171,["206"] = 173,["207"] = 177,["208"] = 164,["209"] = 180,["210"] = 181,["211"] = 182,["213"] = 185,["214"] = 187,["215"] = 188,["216"] = 187,["217"] = 193,["218"] = 180,["219"] = 196,["222"] = 201,["223"] = 201,["225"] = 201,["226"] = 201,["228"] = 201,["231"] = 198,["232"] = 199,["238"] = 197,["241"] = 196,["242"] = 205,["245"] = 213,["246"] = 213,["248"] = 213,["249"] = 213,["251"] = 213,["254"] = 210,["255"] = 211,["261"] = 209,["264"] = 205,["265"] = 217,["266"] = 221,["267"] = 222,["269"] = 225,["270"] = 226,["272"] = 229,["273"] = 231,["274"] = 232,["275"] = 232,["276"] = 234,["277"] = 234,["278"] = 234,["279"] = 232,["280"] = 232,["281"] = 235,["282"] = 235,["283"] = 232,["284"] = 231,["285"] = 238,["286"] = 239,["287"] = 239,["288"] = 241,["289"] = 241,["290"] = 241,["291"] = 239,["292"] = 239,["293"] = 242,["294"] = 242,["295"] = 239,["296"] = 238,["297"] = 245,["298"] = 217,["299"] = 248,["302"] = 256,["303"] = 256,["305"] = 256,["306"] = 256,["308"] = 256,["311"] = 253,["312"] = 254,["318"] = 252,["321"] = 248,["322"] = 260,["325"] = 265,["326"] = 265,["328"] = 265,["329"] = 265,["331"] = 265,["334"] = 262,["335"] = 263,["341"] = 261,["344"] = 260,["345"] = 269,["346"] = 270,["347"] = 271,["349"] = 274,["350"] = 276,["351"] = 277,["352"] = 278,["353"] = 278,["354"] = 277,["355"] = 276,["356"] = 282,["357"] = 283,["358"] = 284,["359"] = 284,["360"] = 283,["361"] = 282,["362"] = 288,["363"] = 269,["364"] = 291,["365"] = 292,["366"] = 293,["367"] = 294,["369"] = 297,["370"] = 298,["371"] = 299,["373"] = 302,["374"] = 303,["375"] = 291});
 local ____exports = {}
 local ____ccFs = require("preBuild.src.util.computer.api.tier1.globals.ccFs")
 local CcFs = ____ccFs.CcFs
@@ -4602,10 +4438,348 @@ function FileUtil.removeByteOrderMark(self, path)
     return self:writeText(path, newContent)
 end
 return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.globals.ccTextUtils"] = function(...) 
+
+end)
+__bundle_register("preBuild.src.util.computer.api.tier1.globals.ccFs", function(require, _LOADED, __bundle_register, __bundle_modules)
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
+local __TS__New = ____lualib.__TS__New
+local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["7"] = 1,["8"] = 1,["9"] = 2,["10"] = 2,["11"] = 3,["12"] = 3,["13"] = 4,["14"] = 4,["15"] = 5,["16"] = 5,["17"] = 6,["18"] = 6,["19"] = 9,["20"] = 9,["28"] = 37,["29"] = 37,["30"] = 37,["32"] = 37,["33"] = 41,["34"] = 44,["35"] = 44,["37"] = 45,["38"] = 45,["40"] = 47,["41"] = 41,["42"] = 55,["43"] = 56,["44"] = 55,["45"] = 62,["46"] = 63,["47"] = 62,["48"] = 69,["49"] = 70,["50"] = 69,["51"] = 76,["52"] = 76,["53"] = 77,["54"] = 78,["55"] = 76,["56"] = 84,["57"] = 85,["58"] = 84,["59"] = 91,["60"] = 92,["61"] = 91,["62"] = 98,["63"] = 99,["64"] = 98,["65"] = 105,["66"] = 106,["67"] = 105,["68"] = 112,["69"] = 113,["70"] = 112,["71"] = 119,["72"] = 120,["73"] = 119,["74"] = 126,["75"] = 127,["76"] = 126,["77"] = 133,["78"] = 134,["79"] = 133,["80"] = 140,["81"] = 141,["82"] = 140,["83"] = 147,["84"] = 148,["85"] = 147,["86"] = 154,["87"] = 155,["88"] = 156,["89"] = 158,["90"] = 160,["91"] = 161,["93"] = 164,["94"] = 154,["95"] = 170,["96"] = 171,["97"] = 172,["98"] = 174,["99"] = 176,["100"] = 177,["102"] = 180,["103"] = 170,["104"] = 186,["105"] = 189,["106"] = 190,["107"] = 192,["108"] = 194,["109"] = 195,["111"] = 198,["112"] = 186,["113"] = 204,["114"] = 205,["115"] = 206,["116"] = 208,["117"] = 210,["118"] = 211,["120"] = 214,["121"] = 204,["122"] = 220,["123"] = 223,["124"] = 224,["125"] = 226,["126"] = 228,["127"] = 229,["129"] = 232,["130"] = 220,["131"] = 238,["132"] = 241,["133"] = 242,["134"] = 244,["135"] = 246,["136"] = 247,["138"] = 250,["139"] = 238,["140"] = 256,["141"] = 257,["142"] = 256,["143"] = 263,["144"] = 264,["145"] = 263,["146"] = 270,["147"] = 271,["148"] = 270,["149"] = 277,["150"] = 278,["151"] = 277});
+local ____exports = {}
+local ____lua = require("preBuild.src.lua.lua")
+local Lua = ____lua.Lua
+local ____fileReadHandle = require("preBuild.src.util.computer.api.tier1.types.files.fileReadHandle")
+local FileReadHandle = ____fileReadHandle.FileReadHandle
+local ____fileReadWriteHandle = require("preBuild.src.util.computer.api.tier1.types.files.fileReadWriteHandle")
+local FileReadWriteHandle = ____fileReadWriteHandle.FileReadWriteHandle
+local ____fileWriteHandle = require("preBuild.src.util.computer.api.tier1.types.files.fileWriteHandle")
+local FileWriteHandle = ____fileWriteHandle.FileWriteHandle
+local ____optional = require("preBuild.src.util.types.optional")
+local Optional = ____optional.Optional
+local ____result = require("preBuild.src.util.types.result")
+local Result = ____result.Result
+local ____tableUtil = require("preBuild.src.util.computer.api.tier1.lua.tableUtil")
+local TableUtil = ____tableUtil.TableUtil
+--- Types for the `fs` api in ComputerCraft
+-- Based on the documentation: https://tweaked.cc/module/fs.html
+-- <br>
+-- Features:
+-- 1. Clearer TypeScript method and parameter names for available functions
+-- 2. Docs included with each function
+-- 3. Separation of complex functions into multiple where needed
+____exports.CcFs = __TS__Class()
+local CcFs = ____exports.CcFs
+CcFs.name = "CcFs"
+function CcFs.prototype.____constructor(self)
+end
+function CcFs.completeFileName(self, path, location, includeFiles, includeDirectories)
+    if includeFiles == nil then
+        includeFiles = true
+    end
+    if includeDirectories == nil then
+        includeDirectories = true
+    end
+    return fs.complete(path, location, includeFiles, includeDirectories)
+end
+function CcFs.findFiles(self, path)
+    return fs.find(path)
+end
+function CcFs.isDriveRootDirectory(self, path)
+    return fs.isDriveRoot(path)
+end
+function CcFs.listDirectory(self, path)
+    return fs.list(path)
+end
+function CcFs.combinePath(self, ...)
+    local paths = {...}
+    local pathsTable = TableUtil:fromArray(paths)
+    return fs.combine(table.unpack(pathsTable))
+end
+function CcFs.getFileName(self, path)
+    return fs.getName(path)
+end
+function CcFs.getDirectoryName(self, path)
+    return fs.getDir(path)
+end
+function CcFs.getFileSize(self, path)
+    return fs.getSize(path)
+end
+function CcFs.fileExists(self, path)
+    return fs.exists(path)
+end
+function CcFs.isDirectory(self, path)
+    return fs.isDir(path)
+end
+function CcFs.isReadOnly(self, path)
+    return fs.isReadOnly(path)
+end
+function CcFs.createDirectory(self, path)
+    fs.makeDir(path)
+end
+function CcFs.move(self, sourcePath, destinationPath)
+    fs.move(sourcePath, destinationPath)
+end
+function CcFs.copy(self, sourcePath, destinationPath)
+    fs.copy(sourcePath, destinationPath)
+end
+function CcFs.delete(self, path)
+    fs.delete(path)
+end
+function CcFs.openFileForReading(self, path)
+    local fileHandle = nil
+    local errorMessage = nil
+    fileHandle, errorMessage = fs.open(path, 'r')
+    if errorMessage then
+        return Result:error(errorMessage)
+    end
+    return Result:of(__TS__New(FileReadHandle, fileHandle))
+end
+function CcFs.openFileForWriting(self, path)
+    local fileHandle = nil
+    local errorMessage = nil
+    fileHandle, errorMessage = fs.open(path, 'w')
+    if errorMessage then
+        return Result:error(errorMessage)
+    end
+    return Result:of(__TS__New(FileWriteHandle, fileHandle))
+end
+function CcFs.openFileForReadAndWrite(self, path)
+    local fileHandle = nil
+    local errorMessage = nil
+    fileHandle, errorMessage = fs.open(path, 'rw')
+    if errorMessage then
+        return Result:error(errorMessage)
+    end
+    return Result:of(__TS__New(FileReadWriteHandle, fileHandle))
+end
+function CcFs.openFileForAppending(self, path)
+    local fileHandle = nil
+    local errorMessage = nil
+    fileHandle, errorMessage = fs.open(path, 'a')
+    if errorMessage then
+        return Result:error(errorMessage)
+    end
+    return Result:of(__TS__New(FileWriteHandle, fileHandle))
+end
+function CcFs.openFileForBinaryReading(self, path)
+    local fileHandle = nil
+    local errorMessage = nil
+    fileHandle, errorMessage = fs.open(path, 'rb')
+    if errorMessage then
+        return Result:error(errorMessage)
+    end
+    return Result:of(__TS__New(FileReadHandle, fileHandle))
+end
+function CcFs.openFileForBinaryWriting(self, path)
+    local fileHandle = nil
+    local errorMessage = nil
+    fileHandle, errorMessage = fs.open(path, 'wb')
+    if errorMessage then
+        return Result:error(errorMessage)
+    end
+    return Result:of(__TS__New(FileWriteHandle, fileHandle))
+end
+function CcFs.getDriveName(self, path)
+    return Optional:ofNullable(fs.getDrive(path))
+end
+function CcFs.getFreeSpaceOnDrive(self, path)
+    return fs.getFreeSpace(path)
+end
+function CcFs.getDriveCapacity(self, path)
+    return Optional:ofNullable(fs.getCapacity(path))
+end
+function CcFs.getFileAttributes(self, path)
+    return fs.attributes(path)
+end
+return ____exports
+
+end)
+__bundle_register("preBuild.src.util.computer.api.tier1.types.files.fileWriteHandle", function(require, _LOADED, __bundle_register, __bundle_modules)
+local ____lualib = require("lualib_bundle")
+local __TS__Class = ____lualib.__TS__Class
+local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["6"] = 1,["7"] = 1,["10"] = 7,["11"] = 7,["12"] = 7,["13"] = 10,["14"] = 11,["15"] = 10,["16"] = 14,["17"] = 15,["18"] = 14,["19"] = 18,["20"] = 19,["21"] = 18,["22"] = 22,["23"] = 23,["24"] = 22,["25"] = 26,["26"] = 27,["27"] = 27,["29"] = 28,["30"] = 28,["32"] = 30,["33"] = 26,["34"] = 33,["35"] = 34,["36"] = 33});
+local ____exports = {}
+local ____lua = require("preBuild.src.lua.lua")
+local Lua = ____lua.Lua
+--- A utility class for write-handle operations
+-- Based on the documentation: https://tweaked.cc/module/fs.html#ty:WriteHandle
+____exports.FileWriteHandle = __TS__Class()
+local FileWriteHandle = ____exports.FileWriteHandle
+FileWriteHandle.name = "FileWriteHandle"
+function FileWriteHandle.prototype.____constructor(self, handle)
+    self.handle = handle
+end
+function FileWriteHandle.prototype.writeContent(self, content)
+    self.handle.write(content)
+end
+function FileWriteHandle.prototype.writeLine(self, text)
+    self.handle.writeLine(text)
+end
+function FileWriteHandle.prototype.flushBuffers(self)
+    self.handle.flush()
+end
+function FileWriteHandle.prototype.seekPosition(self, whence, offset)
+    if whence == nil then
+        whence = "cur"
+    end
+    if offset == nil then
+        offset = 0
+    end
+    return self.handle.seek(whence, offset)
+end
+function FileWriteHandle.prototype.close(self)
+    self.handle.close()
+end
+return ____exports
+
+end)
+__bundle_register("preBuild.src.util.computer.api.tier1.types.files.fileReadWriteHandle", function(require, _LOADED, __bundle_register, __bundle_modules)
+local ____lualib = require("lualib_bundle")
+local __TS__Class = ____lualib.__TS__Class
+local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["6"] = 1,["7"] = 1,["10"] = 7,["11"] = 7,["12"] = 7,["13"] = 10,["14"] = 11,["15"] = 10,["16"] = 14,["17"] = 15,["18"] = 14,["19"] = 18,["20"] = 19,["21"] = 18,["22"] = 22,["23"] = 22,["24"] = 22,["26"] = 23,["27"] = 22,["28"] = 26,["29"] = 27,["30"] = 26,["31"] = 30,["32"] = 31,["33"] = 30,["34"] = 34,["35"] = 35,["36"] = 34,["37"] = 38,["38"] = 39,["39"] = 39,["41"] = 40,["42"] = 40,["44"] = 42,["45"] = 38,["46"] = 45,["47"] = 46,["48"] = 45});
+local ____exports = {}
+local ____lua = require("preBuild.src.lua.lua")
+local Lua = ____lua.Lua
+--- A utility class for read-write handle operations
+-- Based on the documentation: https://tweaked.cc/module/fs.html#ty:ReadWriteHandle
+____exports.FileReadWriteHandle = __TS__Class()
+local FileReadWriteHandle = ____exports.FileReadWriteHandle
+FileReadWriteHandle.name = "FileReadWriteHandle"
+function FileReadWriteHandle.prototype.____constructor(self, handle)
+    self.handle = handle
+end
+function FileReadWriteHandle.prototype.readBytes(self, count)
+    return self.handle.read(count)
+end
+function FileReadWriteHandle.prototype.readAllContent(self)
+    return self.handle.readAll()
+end
+function FileReadWriteHandle.prototype.readLine(self, includeTrailingNewline)
+    if includeTrailingNewline == nil then
+        includeTrailingNewline = false
+    end
+    return self.handle.readLine(includeTrailingNewline)
+end
+function FileReadWriteHandle.prototype.writeContent(self, content)
+    self.handle.write(content)
+end
+function FileReadWriteHandle.prototype.writeLine(self, text)
+    self.handle.writeLine(text)
+end
+function FileReadWriteHandle.prototype.flushBuffers(self)
+    self.handle.flush()
+end
+function FileReadWriteHandle.prototype.seekPosition(self, whence, offset)
+    if whence == nil then
+        whence = "cur"
+    end
+    if offset == nil then
+        offset = 0
+    end
+    return self.handle.seek(whence, offset)
+end
+function FileReadWriteHandle.prototype.close(self)
+    self.handle.close()
+end
+return ____exports
+
+end)
+__bundle_register("preBuild.src.util.computer.api.tier1.types.files.fileReadHandle", function(require, _LOADED, __bundle_register, __bundle_modules)
+local ____lualib = require("lualib_bundle")
+local __TS__Class = ____lualib.__TS__Class
+local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["6"] = 1,["7"] = 1,["10"] = 7,["11"] = 7,["12"] = 7,["13"] = 10,["14"] = 11,["15"] = 10,["16"] = 14,["17"] = 15,["18"] = 14,["19"] = 18,["20"] = 19,["21"] = 18,["22"] = 22,["23"] = 22,["24"] = 22,["26"] = 23,["27"] = 22,["28"] = 26,["29"] = 27,["30"] = 27,["32"] = 28,["33"] = 28,["35"] = 30,["36"] = 26,["37"] = 33,["38"] = 34,["39"] = 33});
+local ____exports = {}
+local ____lua = require("preBuild.src.lua.lua")
+local Lua = ____lua.Lua
+--- A utility class for read-handle operations
+-- Based on the documentation: https://tweaked.cc/module/fs.html#ty:ReadHandle
+____exports.FileReadHandle = __TS__Class()
+local FileReadHandle = ____exports.FileReadHandle
+FileReadHandle.name = "FileReadHandle"
+function FileReadHandle.prototype.____constructor(self, handle)
+    self.handle = handle
+end
+function FileReadHandle.prototype.readBytes(self, count)
+    return self.handle.read(count)
+end
+function FileReadHandle.prototype.readAllContent(self)
+    return self.handle.readAll()
+end
+function FileReadHandle.prototype.readLine(self, includeTrailingNewline)
+    if includeTrailingNewline == nil then
+        includeTrailingNewline = false
+    end
+    return self.handle.readLine(includeTrailingNewline)
+end
+function FileReadHandle.prototype.seekPosition(self, whence, offset)
+    if whence == nil then
+        whence = "cur"
+    end
+    if offset == nil then
+        offset = 0
+    end
+    return self.handle.seek(whence, offset)
+end
+function FileReadHandle.prototype.close(self)
+    self.handle.close()
+end
+return ____exports
+
+end)
+__bundle_register("preBuild.src.util.computer.api.tier2.externalApi.discord.discordWebhook", function(require, _LOADED, __bundle_register, __bundle_modules)
+local ____lualib = require("lualib_bundle")
+local __TS__Class = ____lualib.__TS__Class
+local __TS__New = ____lualib.__TS__New
+local __TS__ArrayIsArray = ____lualib.__TS__ArrayIsArray
+local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["8"] = 1,["9"] = 1,["10"] = 2,["11"] = 2,["12"] = 32,["13"] = 32,["14"] = 32,["15"] = 38,["16"] = 39,["17"] = 40,["18"] = 38,["19"] = 43,["20"] = 44,["21"] = 43,["22"] = 47,["23"] = 52,["24"] = 52,["25"] = 52,["26"] = 52,["27"] = 47,["28"] = 60,["29"] = 60,["30"] = 77,["31"] = 78,["32"] = 79,["33"] = 80,["34"] = 80,["35"] = 80,["37"] = 80,["39"] = 78,["40"] = 77,["41"] = 33});
+local ____exports = {}
+local ____ccHttp = require("preBuild.src.util.computer.api.tier1.globals.ccHttp")
+local CcHttp = ____ccHttp.CcHttp
+local ____ccTextUtils = require("preBuild.src.util.computer.api.tier1.globals.ccTextUtils")
+local CcTextUtils = ____ccTextUtils.CcTextUtils
+____exports.DiscordWebhook = __TS__Class()
+local DiscordWebhook = ____exports.DiscordWebhook
+DiscordWebhook.name = "DiscordWebhook"
+function DiscordWebhook.prototype.____constructor(self, username, url)
+    self._username = username
+    self._url = url
+end
+function DiscordWebhook.fromUrl(self, username, url)
+    return __TS__New(____exports.DiscordWebhook, username, url)
+end
+function DiscordWebhook.prototype.sendWebhookData(self, data)
+    CcHttp:post(
+        self._url,
+        CcTextUtils:serializeJSON(data):getValueUnsafe("EC17 - " .. "Could not serialize POST data for Discord webhook")
+    )
+end
+function DiscordWebhook.prototype.sendMessage(self, message)
+end
+function DiscordWebhook.prototype.sendEmbed(self, embeds)
+    local ____self_sendWebhookData_2 = self.sendWebhookData
+    local ____self__username_1 = self._username
+    local ____Array_isArray_result_0
+    if __TS__ArrayIsArray(embeds) then
+        ____Array_isArray_result_0 = embeds
+    else
+        ____Array_isArray_result_0 = {embeds}
+    end
+    ____self_sendWebhookData_2(self, {username = ____self__username_1, embeds = ____Array_isArray_result_0})
+end
+DiscordWebhook.DISCORD_MESSAGE_LENGTH_LIMIT = 2000
+return ____exports
+
+end)
+__bundle_register("preBuild.src.util.computer.api.tier1.globals.ccTextUtils", function(require, _LOADED, __bundle_register, __bundle_modules)
+local ____lualib = require("lualib_bundle")
+local __TS__Class = ____lualib.__TS__Class
+local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["6"] = 1,["7"] = 1,["8"] = 2,["9"] = 2,["13"] = 35,["14"] = 35,["15"] = 35,["17"] = 35,["18"] = 54,["19"] = 55,["20"] = 54,["21"] = 63,["22"] = 64,["23"] = 63,["24"] = 73,["25"] = 74,["26"] = 75,["27"] = 76,["28"] = 73,["29"] = 85,["30"] = 86,["31"] = 87,["32"] = 88,["33"] = 85,["34"] = 95,["35"] = 96,["36"] = 95,["37"] = 103,["38"] = 104,["39"] = 103,["40"] = 118,["41"] = 119,["42"] = 120,["43"] = 121,["44"] = 123,["45"] = 124,["47"] = 127,["48"] = 118,["49"] = 137,["50"] = 138,["51"] = 139,["52"] = 141,["53"] = 142,["55"] = 145,["56"] = 137,["57"] = 154,["58"] = 158,["59"] = 159,["60"] = 160,["61"] = 164,["62"] = 165,["64"] = 168,["65"] = 154,["66"] = 177,["67"] = 181,["68"] = 182,["69"] = 183,["70"] = 187,["71"] = 188,["73"] = 190,["74"] = 177,["75"] = 200,["76"] = 201,["77"] = 202,["78"] = 203,["79"] = 200,["80"] = 214,["81"] = 218,["82"] = 219,["83"] = 220,["84"] = 214,["85"] = 39,["86"] = 44});
 local ____exports = {}
 local ____lua = require("preBuild.src.lua.lua")
 local Lua = ____lua.Lua
@@ -4689,172 +4863,14 @@ end
 CcTextUtils.empty_json_array = {}
 CcTextUtils.json_null = {}
 return ____exports
- end,
-["preBuild.src.util.computer.api.tier2.config.info"] = function(...) 
+
+end)
+__bundle_register("preBuild.src.util.computer.api.tier1.globals.ccHttp", function(require, _LOADED, __bundle_register, __bundle_modules)
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
 local __TS__New = ____lualib.__TS__New
-local ____exports = {}
-local ____fileUtil = require("preBuild.src.util.computer.api.tier2.fileUtil")
-local FileUtil = ____fileUtil.FileUtil
-local ____ccTextUtils = require("preBuild.src.util.computer.api.tier1.globals.ccTextUtils")
-local CcTextUtils = ____ccTextUtils.CcTextUtils
---- This allows access to the readonly information stored in `info.json`
-____exports.Info = __TS__Class()
-local Info = ____exports.Info
-Info.name = "Info"
-function Info.prototype.____constructor(self, model)
-    self.version = model.version
-    self.name = model.name
-    self.description = model.description
-    self.startup = model.startup
-    self.deployment = model.deployment
-    self.logging = model.logging
-    self.lifetime = model.lifetime
-end
-function Info.load(self)
-    local contentString = FileUtil:readText(self._path):getValueUnsafe("EC15 - " .. "Could not read info.json")
-    local content = CcTextUtils:unserializeJSON(contentString):getValueUnsafe("EC16 - " .. "Could not parse info.json")
-    return __TS__New(____exports.Info, content)
-end
-Info._path = "info.json"
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier2.logging.listeners.fileLogListener"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local __TS__ClassExtends = ____lualib.__TS__ClassExtends
-local ____exports = {}
-local ____fileUtil = require("preBuild.src.util.computer.api.tier2.fileUtil")
-local FileUtil = ____fileUtil.FileUtil
-local ____logListener = require("preBuild.src.util.computer.api.tier2.logging.logListener")
-local LogListener = ____logListener.LogListener
-____exports.FileLogListener = __TS__Class()
-local FileLogListener = ____exports.FileLogListener
-FileLogListener.name = "FileLogListener"
-__TS__ClassExtends(FileLogListener, LogListener)
-function FileLogListener.prototype.getName(self)
-    return "FileLogListener"
-end
-function FileLogListener.prototype.onLog(self, level, message)
-    FileUtil:appendText(____exports.FileLogListener.LOG_PATH, ((("[" .. level) .. "] ") .. message) .. "\n")
-end
-FileLogListener.LOG_PATH = "app/logs/main.log"
-return ____exports
- end,
-["preBuild.src.util.reflection"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local ____exports = {}
-local ____lua = require("preBuild.src.lua.lua")
-local Lua = ____lua.Lua
-local ____result = require("preBuild.src.util.types.result")
-local Result = ____result.Result
-local ____luaMap = require("preBuild.src.util.types.collection.luaMap")
-local LuaMap = ____luaMap.LuaMap
-____exports.Reflection = __TS__Class()
-local Reflection = ____exports.Reflection
-Reflection.name = "Reflection"
-function Reflection.prototype.____constructor(self)
-end
-function Reflection.getFields(self, ____table)
-    local fields = LuaMap:empty()
-    local k = ""
-    local v = nil
-    for k, v in pairs(table) do
-        if type(v) ~= 'function' then
-            fields[k] = v
-        end
-    end
-    return fields
-end
-function Reflection.getField(self, ____table, name)
-    if type(table) ~= 'table' then
-        return Result:error(("'" .. tostring(____table)) .. "' is not a table")
-    end
-    local value = table[name]
-    if value == nil or value == nil then
-        return Result:error(((("'" .. name) .. "' is not a field of '") .. tostring(____table)) .. "'")
-    end
-    return Result:of(value)
-end
-function Reflection.getMethod(self, ____table, name)
-    return self:getMethods(____table):get(name):toResult(((("'" .. name) .. "' is not a method of '") .. tostring(____table)) .. "'")
-end
-function Reflection.getMethods(self, ____table)
-    local methods = LuaMap:empty()
-    local k = ""
-    local function v()
-    end
-    for k, v in pairs(table) do
-        if type(v) == 'function' then
-    methods:set(
-        k,
-        function(____, ...) return v(nil, ____table, ...) end
-    )
-        end
-    end
-    return methods
-end
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.types.http.request.httpRequestOptions"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.types.http.urlCheckResult"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.types.http.websocket"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.types.http.response.httpResponseCode"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.types.http.response.httpResponseHeaders"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.types.http.response.httpResponse"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local __TS__ClassExtends = ____lualib.__TS__ClassExtends
-local ____exports = {}
-local ____lua = require("preBuild.src.lua.lua")
-local Lua = ____lua.Lua
-local ____fileReadHandle = require("preBuild.src.util.computer.api.tier1.types.files.fileReadHandle")
-local FileReadHandle = ____fileReadHandle.FileReadHandle
---- Represents an HTTP response in ComputerCraft.
--- Extends FileReadHandle to provide access to the response body data.
-____exports.HttpResponse = __TS__Class()
-local HttpResponse = ____exports.HttpResponse
-HttpResponse.name = "HttpResponse"
-__TS__ClassExtends(HttpResponse, FileReadHandle)
-function HttpResponse.prototype.getResponseCode(self)
-    return self.handle.getResponseCode()
-end
-function HttpResponse.prototype.getResponseHeaders(self)
-    return self.handle.getResponseHeaders()
-end
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.types.http.request.httpRequest"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.globals.ccHttp"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local __TS__New = ____lualib.__TS__New
+local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["7"] = 1,["8"] = 1,["9"] = 2,["10"] = 2,["11"] = 6,["12"] = 6,["18"] = 16,["19"] = 16,["20"] = 16,["22"] = 16,["23"] = 24,["24"] = 31,["25"] = 32,["26"] = 33,["27"] = 35,["28"] = 39,["29"] = 40,["30"] = 40,["31"] = 40,["32"] = 40,["34"] = 46,["35"] = 24,["36"] = 57,["37"] = 65,["38"] = 66,["39"] = 67,["40"] = 69,["41"] = 73,["42"] = 75,["43"] = 75,["44"] = 75,["45"] = 75,["47"] = 81,["48"] = 57,["49"] = 92,["50"] = 100,["51"] = 92,["52"] = 108,["53"] = 109,["54"] = 108,["55"] = 117,["56"] = 118,["57"] = 119,["58"] = 121,["59"] = 123,["60"] = 117,["61"] = 134,["62"] = 135,["63"] = 136,["64"] = 138,["65"] = 140,["66"] = 134,["67"] = 152,["68"] = 162,["69"] = 152,["70"] = 171,["71"] = 182,["72"] = 183,["73"] = 185,["74"] = 189,["75"] = 190,["77"] = 193,["78"] = 171});
 local ____exports = {}
 local ____lua = require("preBuild.src.lua.lua")
 local Lua = ____lua.Lua
@@ -4929,4011 +4945,309 @@ function CcHttp.websocket(self, urlOrOptions, headers)
     return Result:of(websocket)
 end
 return ____exports
- end,
-["preBuild.src.util.computer.api.tier2.externalApi.discord.discordWebhook"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local __TS__New = ____lualib.__TS__New
-local __TS__ArrayIsArray = ____lualib.__TS__ArrayIsArray
-local ____exports = {}
-local ____ccHttp = require("preBuild.src.util.computer.api.tier1.globals.ccHttp")
-local CcHttp = ____ccHttp.CcHttp
-local ____ccTextUtils = require("preBuild.src.util.computer.api.tier1.globals.ccTextUtils")
-local CcTextUtils = ____ccTextUtils.CcTextUtils
-____exports.DiscordWebhook = __TS__Class()
-local DiscordWebhook = ____exports.DiscordWebhook
-DiscordWebhook.name = "DiscordWebhook"
-function DiscordWebhook.prototype.____constructor(self, username, url)
-    self._username = username
-    self._url = url
-end
-function DiscordWebhook.fromUrl(self, username, url)
-    return __TS__New(____exports.DiscordWebhook, username, url)
-end
-function DiscordWebhook.prototype.sendWebhookData(self, data)
-    CcHttp:post(
-        self._url,
-        CcTextUtils:serializeJSON(data):getValueUnsafe("EC17 - " .. "Could not serialize POST data for Discord webhook")
-    )
-end
-function DiscordWebhook.prototype.sendMessage(self, message)
-end
-function DiscordWebhook.prototype.sendEmbed(self, embeds)
-    local ____self_sendWebhookData_2 = self.sendWebhookData
-    local ____self__username_1 = self._username
-    local ____Array_isArray_result_0
-    if __TS__ArrayIsArray(embeds) then
-        ____Array_isArray_result_0 = embeds
-    else
-        ____Array_isArray_result_0 = {embeds}
-    end
-    ____self_sendWebhookData_2(self, {username = ____self__username_1, embeds = ____Array_isArray_result_0})
-end
-DiscordWebhook.DISCORD_MESSAGE_LENGTH_LIMIT = 2000
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier2.environment"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local __TS__StringSplit = ____lualib.__TS__StringSplit
-local __TS__StringStartsWith = ____lualib.__TS__StringStartsWith
-local __TS__StringTrim = ____lualib.__TS__StringTrim
-local __TS__StringIncludes = ____lualib.__TS__StringIncludes
-local __TS__Unpack = ____lualib.__TS__Unpack
-local __TS__ArrayForEach = ____lualib.__TS__ArrayForEach
-local ____exports = {}
-local ____luaMap = require("preBuild.src.util.types.collection.luaMap")
-local LuaMap = ____luaMap.LuaMap
-local ____fileUtil = require("preBuild.src.util.computer.api.tier2.fileUtil")
-local FileUtil = ____fileUtil.FileUtil
---- Represents an environment that manages and interacts with environment
--- variables in ComputerCraft. This utility can be used to
--- handle operations concerning environmental properties or variables
--- within a specific execution context.
-____exports.Environment = __TS__Class()
-local Environment = ____exports.Environment
-Environment.name = "Environment"
-function Environment.prototype.____constructor(self)
-end
-function Environment.get(self, key)
-    local result = self:load():get(key)
-    if result:isEmpty() then
-        self:set(key, "")
-    end
-    return result
-end
-function Environment.set(self, key, value)
-    if not FileUtil:exists(self._path) then
-        FileUtil:writeText(self._path, ""):getValueUnsafe("EC3")
-    end
-    local content = FileUtil:readText(self._path):getValueUnsafe("EC4 - " .. "Could not read from .env file")
-    content = content .. (("\n" .. key) .. "=") .. value
-    FileUtil:writeText(self._path, content):getValueUnsafe("EC5 - " .. "Could not write to .env file")
-end
-function Environment.load(self)
-    if not FileUtil:exists(self._path) then
-        FileUtil:writeText(self._path, ""):getValueUnsafe("EC6")
-    end
-    local content = FileUtil:readText(self._path):getValueUnsafe("EC7 - " .. "Could not read from .env file")
-    local lines = __TS__StringSplit(content, "\n")
-    local output = LuaMap:empty()
-    __TS__ArrayForEach(
-        lines,
-        function(____, line)
-            if __TS__StringStartsWith(line, "#") then
-                return
-            end
-            if __TS__StringTrim(line) == "" then
-                return
-            end
-            if not __TS__StringIncludes(line, "=") then
-                return
-            end
-            local key, value = __TS__Unpack(__TS__StringSplit(line, "=", 2))
-            output:set(key, value)
-        end
-    )
-    return output
-end
-Environment._path = "app/data/.env"
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier2.logging.listeners.discordWebhookLogListener"] = function(...) 
+
+end)
+__bundle_register("preBuild.src.util.computer.api.tier1.types.http.response.httpResponse", function(require, _LOADED, __bundle_register, __bundle_modules)
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
 local __TS__ClassExtends = ____lualib.__TS__ClassExtends
-local ____exports = {}
-local ____logListener = require("preBuild.src.util.computer.api.tier2.logging.logListener")
-local LogListener = ____logListener.LogListener
-local ____discordWebhook = require("preBuild.src.util.computer.api.tier2.externalApi.discord.discordWebhook")
-local DiscordWebhook = ____discordWebhook.DiscordWebhook
-local ____environment = require("preBuild.src.util.computer.api.tier2.environment")
-local Environment = ____environment.Environment
-____exports.DiscordWebhookLogListener = __TS__Class()
-local DiscordWebhookLogListener = ____exports.DiscordWebhookLogListener
-DiscordWebhookLogListener.name = "DiscordWebhookLogListener"
-__TS__ClassExtends(DiscordWebhookLogListener, LogListener)
-function DiscordWebhookLogListener.prototype.getName(self)
-    return "DiscordWebhookLogListener"
-end
-function DiscordWebhookLogListener.prototype.onLog(self, level, message)
-    ____exports.DiscordWebhookLogListener._webhook:sendMessage((("[" .. level) .. "] ") .. message)
-end
-DiscordWebhookLogListener._webhook = DiscordWebhook:fromUrl(
-    "ComputerCraft",
-    Environment:get("DISCORD_WEBHOOK_URL"):getValueUnsafe("EC18 - " .. "Failed to get `DISCORD_WEBHOOK_URL` from environment")
-)
-return ____exports
- end,
-["preBuild.src.util.computer.entrypoint.entrypoint"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local __TS__New = ____lualib.__TS__New
-local __TS__StringReplace = ____lualib.__TS__StringReplace
-local __TS__StringStartsWith = ____lualib.__TS__StringStartsWith
-local Error = ____lualib.Error
-local RangeError = ____lualib.RangeError
-local ReferenceError = ____lualib.ReferenceError
-local SyntaxError = ____lualib.SyntaxError
-local TypeError = ____lualib.TypeError
-local URIError = ____lualib.URIError
-local ____exports = {}
-local ____luaMap = require("preBuild.src.util.types.collection.luaMap")
-local LuaMap = ____luaMap.LuaMap
-local ____logger = require("preBuild.src.util.computer.api.tier2.logging.logger")
-local Logger = ____logger.Logger
-local ____executionContext = require("preBuild.src.util.computer.executionContext")
-local ExecutionContext = ____executionContext.ExecutionContext
-local ____info = require("preBuild.src.util.computer.api.tier2.config.info")
-local Info = ____info.Info
-local ____fileLogListener = require("preBuild.src.util.computer.api.tier2.logging.listeners.fileLogListener")
-local FileLogListener = ____fileLogListener.FileLogListener
-local ____reflection = require("preBuild.src.util.reflection")
-local Reflection = ____reflection.Reflection
-local ____discordWebhookLogListener = require("preBuild.src.util.computer.api.tier2.logging.listeners.discordWebhookLogListener")
-local DiscordWebhookLogListener = ____discordWebhookLogListener.DiscordWebhookLogListener
---- Abstract base class representing an application entry point.
--- Provides functionality for registering and dispatching routes, as well as lifecycle hooks for application startup, shutdown, and error handling.
--- Classes extending this should implement abstract methods and optionally override other lifecycle methods to define specific behavior.
-____exports.Entrypoint = __TS__Class()
-local Entrypoint = ____exports.Entrypoint
-Entrypoint.name = "Entrypoint"
-function Entrypoint.prototype.____constructor(self)
-    self._routes = LuaMap:empty()
-end
-function Entrypoint.prototype.run(self)
-    self:applyInfoConfig()
-    self:registerRoutes()
-    self:onStart()
-    do
-        local function ____catch(cause)
-            self:onCrash(cause)
-        end
-        local ____try, ____hasReturned = pcall(function()
-            self:dispatchRoute()
-        end)
-        if not ____try then
-            ____catch(____hasReturned)
-        end
-    end
-    self:onStop()
-end
-function Entrypoint.prototype.applyInfoConfig(self)
-    local info = Info:load()
-    local ____opt_0 = info.logging
-    if ____opt_0 and ____opt_0.level then
-        Logger.level = info.logging.level
-    end
-    local ____opt_2 = info.logging
-    if ____opt_2 and ____opt_2.writeToFile then
-        Logger:addListener(__TS__New(FileLogListener))
-    end
-    local ____opt_4 = info.logging
-    if ____opt_4 and ____opt_4.writeToDiscord then
-        Logger:addListener(__TS__New(DiscordWebhookLogListener))
-    end
-end
-function Entrypoint.prototype.registerRoutes(self)
-    Reflection:getMethods(self):whereKeys(function(____, key) return __TS__StringStartsWith(key, "route") end):selectKeys(function(____, key) return string.lower(__TS__StringReplace(key, "route", "")) end):forEach(function(____, name, route) return self:registerRoute(name, route) end)
-end
-function Entrypoint.prototype.registerRoute(self, name, callback)
-    self._routes:set(name, callback)
-end
-function Entrypoint.prototype.dispatchRoute(self)
-    local targetRouteName = ExecutionContext.commandLineArguments:first():getValueUnsafe("EC19 - " .. "The first command line argument (route name) was not provided")
-    self._routes:get(targetRouteName):ifEmpty(function()
-        local validRouteNamesString = ("'" .. self._routes:keys():join("', '")) .. "'"
-        error(
-            __TS__New(Error, (("Unknown route: " .. targetRouteName) .. "\nThe first argument must be a valid route name.\nE.g. ") .. validRouteNamesString),
-            0
-        )
-    end):ifPresent(function(____, routeFunction) return routeFunction(nil) end)
-end
-function Entrypoint.prototype.onCrash(self, cause)
-    error(cause, 0)
-end
-return ____exports
- end,
-["preBuild.src.entrypoints.example.entrypoint"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local __TS__ClassExtends = ____lualib.__TS__ClassExtends
-local __TS__New = ____lualib.__TS__New
-local ____exports = {}
-local ____chatBox = require("preBuild.src.util.computer.api.tier1.advancedPeripherals.chatBox")
-local ChatBox = ____chatBox.ChatBox
-local ____luaList = require("preBuild.src.util.types.collection.luaList")
-local LuaList = ____luaList.LuaList
-local ____entrypoint = require("preBuild.src.util.computer.entrypoint.entrypoint")
-local Entrypoint = ____entrypoint.Entrypoint
-local ____logger = require("preBuild.src.util.computer.api.tier2.logging.logger")
-local Logger = ____logger.Logger
-____exports.ExampleEntrypoint = __TS__Class()
-local ExampleEntrypoint = ____exports.ExampleEntrypoint
-ExampleEntrypoint.name = "ExampleEntrypoint"
-__TS__ClassExtends(ExampleEntrypoint, Entrypoint)
-function ExampleEntrypoint.prototype.onStart(self)
-end
-function ExampleEntrypoint.prototype.onStop(self)
-end
-function ExampleEntrypoint.prototype.routeRun(self)
-    Logger:info("First")
-    local list = LuaList:ofSingleton(11):append(22):append(44):append(33)
-    Logger:debug(list)
-    ChatBox:sendMessage("Hello World!")
-    Logger:warn("Last")
-end
-__TS__New(____exports.ExampleEntrypoint):run()
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.globals.ccShell"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
+local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["7"] = 1,["8"] = 1,["9"] = 2,["10"] = 2,["13"] = 10,["14"] = 10,["15"] = 10,["16"] = 10,["17"] = 15,["18"] = 16,["19"] = 15,["20"] = 23,["21"] = 24,["22"] = 23});
 local ____exports = {}
 local ____lua = require("preBuild.src.lua.lua")
 local Lua = ____lua.Lua
-local ____result = require("preBuild.src.util.types.result")
-local Result = ____result.Result
-local ____optional = require("preBuild.src.util.types.optional")
-local Optional = ____optional.Optional
-local ____tableUtil = require("preBuild.src.util.computer.api.tier1.lua.tableUtil")
-local TableUtil = ____tableUtil.TableUtil
---- The shell API provides access to CraftOS's command line interface.
--- 
--- Based on the documentation: https://tweaked.cc/module/shell.html
-____exports.CcShell = __TS__Class()
-local CcShell = ____exports.CcShell
-CcShell.name = "CcShell"
-function CcShell.prototype.____constructor(self)
-end
-function CcShell.execute(self, command, ...)
-    local args = {...}
-    local argsTable = TableUtil:fromArray(args)
-    local success = false
-    success = shell.execute(command, table.unpack(argsTable))
-    return Result:of(success)
-end
-function CcShell.run(self, command, ...)
-    local args = {...}
-    local argsTable = TableUtil:fromArray(args)
-    local success = false
-    success = shell.run(command, table.unpack(argsTable))
-    return Result:of(success)
-end
-function CcShell.exit(self)
-    shell.exit()
-end
-function CcShell.getCurrentWorkingDirectory(self)
-    local currentDir = ""
-    currentDir = shell.dir()
-    return currentDir
-end
-function CcShell.setCurrentWorkingDirectory(self, dir)
-    local success = true
-    local errorMessage = nil
-    local success, errorMessage = pcall(function()
-        shell.setDir(dir)
-    end)
-    local ____success_0
-    if success then
-        ____success_0 = Result:void()
-    else
-        ____success_0 = Result:error(errorMessage or "Unknown error")
-    end
-    return ____success_0
-end
-function CcShell.getPath(self)
-    local currentPath = ""
-    currentPath = shell.path()
-    return currentPath
-end
-function CcShell.setPath(self, path)
-    shell.setPath(path)
-end
-function CcShell.getAbsolutePath(self, path)
-    local resolvedPath = ""
-    resolvedPath = shell.resolve(path)
-    return resolvedPath
-end
-function CcShell.resolveProgramPath(self, command)
-    local programPath
-    programPath = shell.resolveProgram(command)
-    return Optional:ofNullable(programPath)
-end
-function CcShell.getProgramList(self, includeHidden)
-    local programs = {}
-    local progs = shell.programs(includeHidden)
-    for i = 1, #progs do
-        programs[i] = progs[i]
-    end
-    return programs
-end
-function CcShell.getCompletions(self, sLine)
-    local completions = shell.complete(sLine)
-    return Optional:ofNullable(completions):getValueOrDefault({})
-end
-function CcShell.getCompletionsForProgramName(self, program)
-    local completions = {}
-    local comps = shell.completeProgram(program)
-    for i = 1, #comps do
-        completions[i] = comps[i]
-    end
-    return completions
-end
-function CcShell.setCompletionFunction(self, program, complete)
-    shell.setCompletionFunction(program, complete)
-end
-function CcShell.getCompletionInfo(self)
-    local info = {}
-    local compInfo = shell.getCompletionInfo()
-    for k,v in pairs(compInfo) do
-        info[k] = v
-    end
-    return info
-end
-function CcShell.getPathToRunningProgram(self)
-    local programPath = ""
-    programPath = shell.getRunningProgram()
-    return programPath
-end
-function CcShell.setAlias(self, command, program)
-    shell.setAlias(command, program)
-end
-function CcShell.clearAlias(self, command)
-    shell.clearAlias(command)
-end
-function CcShell.aliases(self)
-    local aliases = {}
-    local als = shell.aliases()
-    for k,v in pairs(als) do
-        aliases[k] = v
-    end
-    return aliases
-end
-function CcShell.openTab(self, command, ...)
-    local args = {...}
-    local argsTable = TableUtil:fromArray(args)
-    local tabId = nil
-    tabId = shell.openTab(command, table.unpack(argsTable))
-    local ____temp_1
-    if tabId ~= nil then
-        ____temp_1 = Result:of(tabId)
-    else
-        ____temp_1 = Result:error("Failed to open tab")
-    end
-    return ____temp_1
-end
-function CcShell.switchTab(self, id)
-    shell.switchTab(id)
-end
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier2.config.config"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local Error = ____lualib.Error
-local RangeError = ____lualib.RangeError
-local ReferenceError = ____lualib.ReferenceError
-local SyntaxError = ____lualib.SyntaxError
-local TypeError = ____lualib.TypeError
-local URIError = ____lualib.URIError
-local __TS__New = ____lualib.__TS__New
-local ____exports = {}
-local ____fileUtil = require("preBuild.src.util.computer.api.tier2.fileUtil")
-local FileUtil = ____fileUtil.FileUtil
-local ____ccTextUtils = require("preBuild.src.util.computer.api.tier1.globals.ccTextUtils")
-local CcTextUtils = ____ccTextUtils.CcTextUtils
-local ____result = require("preBuild.src.util.types.result")
-local Result = ____result.Result
-____exports.Config = __TS__Class()
-local Config = ____exports.Config
-Config.name = "Config"
-function Config.prototype.____constructor(self, data)
-    self.data = data
-end
-function Config.load(self)
-    if not FileUtil:exists(self._configPath) then
-        FileUtil:writeText(self._configPath, "{}")
-    end
-    local contentString = FileUtil:readText(self._configPath)
-    if contentString:isError() then
-        return Result:error(contentString:getErrorMessage())
-    end
-    local content = CcTextUtils:unserializeJSON(contentString:getValueUnsafe("EC12 - " .. "Could not read config.json"))
-    if content:isError() then
-        error(
-            __TS__New(
-                Error,
-                content:getErrorMessage()
-            ),
-            0
-        )
-    end
-    return Result:of(__TS__New(
-        ____exports.Config,
-        content:getValueUnsafe("EC13 - " .. "Could not parse config.json")
-    ))
-end
-function Config.create(self, data)
-    local config = __TS__New(____exports.Config, data)
-    local saved = config:save()
-    if saved:isError() then
-        return Result:error(saved:getErrorMessage())
-    end
-    return Result:of(config)
-end
-function Config.prototype.save(self)
-    local contentString = CcTextUtils:serializeJSON(self.data)
-    if contentString:isError() then
-        return Result:error(contentString:getErrorMessage())
-    end
-    local result = FileUtil:writeText(
-        ____exports.Config._configPath,
-        contentString:getValueUnsafe("EC14 - " .. "Could not serialize config.json")
-    )
-    if result:isError() then
-        return Result:error(result:getErrorMessage())
-    end
-    return Result:void()
-end
-Config._configPath = "app/data/config.json"
-return ____exports
- end,
-["preBuild.src.entrypoints.gps.gpsConfig"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-return ____exports
- end,
-["preBuild.src.entrypoints.gps.entrypoint"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local __TS__ClassExtends = ____lualib.__TS__ClassExtends
-local __TS__New = ____lualib.__TS__New
-local ____exports = {}
-local ____ccShell = require("preBuild.src.util.computer.api.tier1.globals.ccShell")
-local CcShell = ____ccShell.CcShell
-local ____config = require("preBuild.src.util.computer.api.tier2.config.config")
-local Config = ____config.Config
-local ____entrypoint = require("preBuild.src.util.computer.entrypoint.entrypoint")
-local Entrypoint = ____entrypoint.Entrypoint
-local ____logger = require("preBuild.src.util.computer.api.tier2.logging.logger")
-local Logger = ____logger.Logger
-local GpsEntrypoint = __TS__Class()
-GpsEntrypoint.name = "GpsEntrypoint"
-__TS__ClassExtends(GpsEntrypoint, Entrypoint)
-function GpsEntrypoint.prototype.onStart(self)
-end
-function GpsEntrypoint.prototype.onStop(self)
-end
-function GpsEntrypoint.prototype.routeRun(self)
-    Logger:debug("Running GPS entrypoint 'run' route")
-    local config = Config:load():getValueUnsafe("EC1")
-    Logger:debug("Extracting key values from config")
-    local ____opt_0 = config.data
-    local x = ____opt_0 and ____opt_0.x or 0
-    local ____opt_2 = config.data
-    local y = ____opt_2 and ____opt_2.y or 0
-    local ____opt_4 = config.data
-    local z = ____opt_4 and ____opt_4.z or 0
-    Logger:debug((((("Config for 'run' route: x=" .. tostring(x)) .. ", y=") .. tostring(y)) .. ", z=") .. tostring(z))
-    CcShell:run(
-        "gps",
-        "host",
-        x,
-        y,
-        z
-    )
-    Logger:debug("GPS entrypoint 'run' route finished")
-end
-__TS__New(GpsEntrypoint):run()
-return ____exports
- end,
-["preBuild.src.util.computer.test.assert"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local Error = ____lualib.Error
-local RangeError = ____lualib.RangeError
-local ReferenceError = ____lualib.ReferenceError
-local SyntaxError = ____lualib.SyntaxError
-local TypeError = ____lualib.TypeError
-local URIError = ____lualib.URIError
-local __TS__New = ____lualib.__TS__New
-local ____exports = {}
-____exports.Assert = __TS__Class()
-local Assert = ____exports.Assert
-Assert.name = "Assert"
-function Assert.prototype.____constructor(self)
-end
-function Assert.fail(self, message)
-    error(
-        __TS__New(Error, message),
-        0
-    )
-end
-function Assert.pass(self, reason)
-end
-return ____exports
- end,
-["preBuild.src.util.computer.test.testInfo"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-return ____exports
- end,
-["preBuild.src.util.computer.test.testResult"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-return ____exports
- end,
-["preBuild.src.util.computer.test.test"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local __TS__StringReplace = ____lualib.__TS__StringReplace
-local __TS__StringStartsWith = ____lualib.__TS__StringStartsWith
-local ____exports = {}
-local ____reflection = require("preBuild.src.util.reflection")
-local Reflection = ____reflection.Reflection
-local ____logger = require("preBuild.src.util.computer.api.tier2.logging.logger")
-local Logger = ____logger.Logger
-____exports.Test = __TS__Class()
-local Test = ____exports.Test
-Test.name = "Test"
-function Test.prototype.____constructor(self)
-end
-function Test.prototype.run(self)
-    local name = self:getTestInfo().name
-    Logger:info((" * Running '" .. name) .. "'...'")
-    Logger:debug("   - Before All")
-    self:beforeAll()
-    Logger:debug("   - Running Tests")
-    local results = self:gatherTestCases():entries():select(function(____, entry) return self:runTestCase(
-        entry:getKey(),
-        entry:getValue()
-    ) end)
-    Logger:debug("   - After All")
-    self:afterAll()
-    local passed = results:where(function(____, result) return not result.passed end)
-    local failed = results:where(function(____, result) return result.passed end)
-    Logger:info((((((" * '" .. name) .. "' ") .. tostring(passed:size())) .. "/") .. tostring(results:size())) .. " passed")
-    passed:forEach(function(____, result) return Logger:debug((("PASS " .. result.name) .. ": ") .. result.message) end)
-    failed:forEach(function(____, result) return Logger:error((("FAIL " .. result.name) .. ": ") .. result.message) end)
-    return results
-end
-function Test.prototype.gatherTestCases(self)
-    return Reflection:getMethods(self):whereKeys(function(____, key) return __TS__StringStartsWith(key, "test") end):selectKeys(function(____, key) return string.lower(__TS__StringReplace(key, "test", "")) end)
-end
-function Test.prototype.runTestCase(self, name, test)
-    self:beforeEach()
-    do
-        local function ____catch(cause)
-            print((("Test \"" .. name) .. "\" failed: ") .. tostring(cause))
-            return true, {
-                name = name,
-                passed = false,
-                message = tostring(cause)
-            }
-        end
-        local ____try, ____hasReturned, ____returnValue = pcall(function()
-            test(nil)
-        end)
-        if not ____try then
-            ____hasReturned, ____returnValue = ____catch(____hasReturned)
-        end
-        if ____hasReturned then
-            return ____returnValue
-        end
-    end
-    self:afterEach()
-    return {name = name, passed = true, message = "All checks passed"}
-end
-function Test.prototype.beforeAll(self)
-end
-function Test.prototype.afterAll(self)
-end
-function Test.prototype.beforeEach(self)
-end
-function Test.prototype.afterEach(self)
-end
-return ____exports
- end,
-["preBuild.src.entrypoints.tests.tests.exampleTest"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local __TS__ClassExtends = ____lualib.__TS__ClassExtends
-local ____exports = {}
-local ____assert = require("preBuild.src.util.computer.test.assert")
-local Assert = ____assert.Assert
-local ____test = require("preBuild.src.util.computer.test.test")
-local Test = ____test.Test
-____exports.ExampleTest = __TS__Class()
-local ExampleTest = ____exports.ExampleTest
-ExampleTest.name = "ExampleTest"
-__TS__ClassExtends(ExampleTest, Test)
-function ExampleTest.prototype.getTestInfo(self)
-    return {name = "ExampleTest", description = "An example of how tests could be defined"}
-end
-function ExampleTest.prototype.testFirstExample(self)
-    print("First example test running!")
-    Assert:fail("This test should fail")
-end
-function ExampleTest.prototype.testSecondExampleShouldPass(self)
-    print("Second example test running!")
-    Assert:pass("This test should pass as it does nothing and is an example.")
-end
-return ____exports
- end,
-["preBuild.src.entrypoints.tests.entrypoint"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local __TS__ClassExtends = ____lualib.__TS__ClassExtends
-local __TS__New = ____lualib.__TS__New
-local ____exports = {}
-local ____exampleTest = require("preBuild.src.entrypoints.tests.tests.exampleTest")
-local ExampleTest = ____exampleTest.ExampleTest
-local ____entrypoint = require("preBuild.src.util.computer.entrypoint.entrypoint")
-local Entrypoint = ____entrypoint.Entrypoint
-local ____luaList = require("preBuild.src.util.types.collection.luaList")
-local LuaList = ____luaList.LuaList
-local ____logger = require("preBuild.src.util.computer.api.tier2.logging.logger")
-local Logger = ____logger.Logger
-local TestsEntrypoint = __TS__Class()
-TestsEntrypoint.name = "TestsEntrypoint"
-__TS__ClassExtends(TestsEntrypoint, Entrypoint)
-function TestsEntrypoint.prototype.____constructor(self, ...)
-    Entrypoint.prototype.____constructor(self, ...)
-    self._tests = LuaList:of({__TS__New(ExampleTest)})
-end
-function TestsEntrypoint.prototype.onStart(self)
-end
-function TestsEntrypoint.prototype.onStop(self)
-end
-function TestsEntrypoint.prototype.routeRun(self)
-    Logger:info("Running Tests...")
-    local results = self._tests:select(function(____, test) return test:run() end):flatten()
-    local passed = results:where(function(____, result) return result.passed end)
-    local failed = results:where(function(____, result) return not result.passed end)
-    Logger:info("\n\nTests Finished")
-    Logger:info("--------------------")
-    Logger:info("Total  :  " .. tostring(results:size()))
-    Logger:info("Pass   :  " .. tostring(passed:size()))
-    Logger:info("Fail   :  " .. tostring(failed:size()))
-end
-__TS__New(TestsEntrypoint):run()
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.advancedPeripherals.arController"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local ____exports = {}
-local ____ccPeripheral = require("preBuild.src.util.computer.api.tier1.globals.ccPeripheral")
-local CcPeripheral = ____ccPeripheral.CcPeripheral
-local ____lua = require("preBuild.src.lua.lua")
-local Lua = ____lua.Lua
---- A class representing the AR Controller peripheral from the Advanced Peripherals mod.
--- Controls AR Goggles to display overlays in the player's view.
-____exports.ArController = __TS__Class()
-local ArController = ____exports.ArController
-ArController.name = "ArController"
-function ArController.prototype.____constructor(self)
-end
-function ArController.clear(self)
-    return ArController._internalController.clear()
-end
-function ArController.clearElement(self, id)
-    return ArController._internalController.clearElement(id)
-end
-function ArController.horizontalLine(self, minX, maxX, y, color)
-    return ArController._internalController.horizontalLine(minX, maxX, y, color)
-end
-function ArController.horizontalLineWithId(self, id, minX, maxX, y, color)
-    return ArController._internalController.horizontalLineWithId(id, minX, maxX, y, color)
-end
-function ArController.verticalLine(self, x, minY, maxY, color)
-    return ArController._internalController.verticalLine(x, minY, maxY, color)
-end
-function ArController.verticalLineWithId(self, id, x, minY, maxY, color)
-    return ArController._internalController.verticalLineWithId(id, x, minY, maxY, color)
-end
-function ArController.drawString(self, text, x, y, color)
-    return ArController._internalController.drawString(text, x, y, color)
-end
-function ArController.drawStringWithId(self, id, text, x, y, color)
-    return ArController._internalController.drawStringWithId(id, text, x, y, color)
-end
-function ArController.drawCenteredString(self, text, x, y, color)
-    return ArController._internalController.drawCenteredString(text, x, y, color)
-end
-function ArController.drawCenteredStringWithId(self, id, text, x, y, color)
-    return ArController._internalController.drawCenteredStringWithId(id, text, x, y, color)
-end
-function ArController.drawRightboundString(self, text, x, y, color)
-    return ArController._internalController.drawRightboundString(text, x, y, color)
-end
-function ArController.drawRightboundStringWithId(self, id, text, x, y, color)
-    return ArController._internalController.drawRightboundStringWithId(id, text, x, y, color)
-end
-function ArController.drawItemIcon(self, itemId, x, y)
-    return ArController._internalController.drawItemIcon(itemId, x, y)
-end
-function ArController.drawItemIconWithId(self, id, itemId, x, y)
-    return ArController._internalController.drawItemIconWithId(id, itemId, x, y)
-end
-function ArController.drawCircle(self, x, y, radius, color)
-    return ArController._internalController.drawCircle(x, y, radius, color)
-end
-function ArController.drawCircleWithId(self, id, x, y, radius, color)
-    return ArController._internalController.drawCircleWithId(id, x, y, radius, color)
-end
-function ArController.fill(self, minX, minY, maxX, maxY, color)
-    return ArController._internalController.fill(minX, minY, maxX, maxY, color)
-end
-function ArController.fillWithId(self, id, minX, minY, maxX, maxY, color)
-    return ArController._internalController.fillWithId(id, minX, minY, maxX, maxY, color)
-end
-function ArController.fillCircle(self, x, y, radius, color)
-    return ArController._internalController.fillCircle(x, y, radius, color)
-end
-function ArController.fillCircleWithId(self, id, x, y, radius, color)
-    return ArController._internalController.fillCircleWithId(id, x, y, radius, color)
-end
-function ArController.fillGradient(self, minX, minY, maxX, maxY, colorFrom, colorTo)
-    return ArController._internalController.fillGradient(minX, minY, maxX, maxY, colorFrom, colorTo)
-end
-function ArController.fillGradientWithId(self, id, minX, minY, maxX, maxY, colorFrom, colorTo)
-    return ArController._internalController.fillGradientWithId(id, minX, minY, maxX, maxY, colorFrom, colorTo)
-end
-function ArController.isRelativeMode(self)
-    return ArController._internalController.isRelativeMode()
-end
-function ArController.setRelativeMode(self, enabled, virtualScreenWidth, virtualScreenHeight)
-    return ArController._internalController.setRelativeMode(enabled, virtualScreenWidth, virtualScreenHeight)
-end
-ArController._internalController = CcPeripheral:find("arController")
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.advancedPeripherals.colonyIntegrator"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local ____exports = {}
-local ____ccPeripheral = require("preBuild.src.util.computer.api.tier1.globals.ccPeripheral")
-local CcPeripheral = ____ccPeripheral.CcPeripheral
-local ____lua = require("preBuild.src.lua.lua")
-local Lua = ____lua.Lua
---- A class representing the Colony Integrator peripheral from the Advanced Peripherals mod.
--- Provides interaction with MineColonies colony functionality.
-____exports.ColonyIntegrator = __TS__Class()
-local ColonyIntegrator = ____exports.ColonyIntegrator
-ColonyIntegrator.name = "ColonyIntegrator"
-function ColonyIntegrator.prototype.____constructor(self)
-end
-function ColonyIntegrator.getCitizens(self)
-    return ColonyIntegrator._internalIntegrator.getCitizens()
-end
-function ColonyIntegrator.getBuildings(self)
-    return ColonyIntegrator._internalIntegrator.getBuildings()
-end
-function ColonyIntegrator.getId(self)
-    return ColonyIntegrator._internalIntegrator.getColonyID()
-end
-function ColonyIntegrator.getName(self)
-    return ColonyIntegrator._internalIntegrator.getColonyName()
-end
-function ColonyIntegrator.isActive(self)
-    return ColonyIntegrator._internalIntegrator.isActive()
-end
-function ColonyIntegrator.isUnderAttack(self)
-    return ColonyIntegrator._internalIntegrator.isUnderAttack()
-end
-function ColonyIntegrator.isInColony(self)
-    return ColonyIntegrator._internalIntegrator.isInColony()
-end
-function ColonyIntegrator.getCitizenCount(self)
-    return ColonyIntegrator._internalIntegrator.amountOfCitizens()
-end
-function ColonyIntegrator.getMaxCitizens(self)
-    return ColonyIntegrator._internalIntegrator.maxOfCitizens()
-end
-ColonyIntegrator._internalIntegrator = CcPeripheral:find("colonyIntegrator")
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.advancedPeripherals.environmentDetector"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local ____exports = {}
-local ____ccPeripheral = require("preBuild.src.util.computer.api.tier1.globals.ccPeripheral")
-local CcPeripheral = ____ccPeripheral.CcPeripheral
-local ____lua = require("preBuild.src.lua.lua")
-local Lua = ____lua.Lua
---- A class representing the Environment Detector peripheral from the Advanced Peripherals mod.
--- Allows querying environmental data like biome, light levels, moon phase, weather, dimension info, and more.
-____exports.EnvironmentDetector = __TS__Class()
-local EnvironmentDetector = ____exports.EnvironmentDetector
-EnvironmentDetector.name = "EnvironmentDetector"
-function EnvironmentDetector.prototype.____constructor(self)
-end
-function EnvironmentDetector.getBiome(self)
-    return EnvironmentDetector._internalDetector.getBiome()
-end
-function EnvironmentDetector.getBlockLightLevel(self)
-    return EnvironmentDetector._internalDetector.getBlockLightLevel()
-end
-function EnvironmentDetector.getDayLightLevel(self)
-    return EnvironmentDetector._internalDetector.getDayLightLevel()
-end
-function EnvironmentDetector.getSkyLightLevel(self)
-    return EnvironmentDetector._internalDetector.getSkyLightLevel()
-end
-function EnvironmentDetector.getDimensionName(self)
-    return EnvironmentDetector._internalDetector.getDimensionName()
-end
-function EnvironmentDetector.getDimensionPaN(self)
-    return EnvironmentDetector._internalDetector.getDimensionPaN()
-end
-function EnvironmentDetector.getDimensionProvider(self)
-    return EnvironmentDetector._internalDetector.getDimensionProvider()
-end
-function EnvironmentDetector.getMoonId(self)
-    return EnvironmentDetector._internalDetector.getMoonId()
-end
-function EnvironmentDetector.getMoonName(self)
-    return EnvironmentDetector._internalDetector.getMoonName()
-end
-function EnvironmentDetector.getTime(self)
-    return EnvironmentDetector._internalDetector.getTime()
-end
-function EnvironmentDetector.getRadiation(self)
-    return EnvironmentDetector._internalDetector.getRadiation()
-end
-function EnvironmentDetector.getRadiationRaw(self)
-    return EnvironmentDetector._internalDetector.getRadiationRaw()
-end
-function EnvironmentDetector.isDimension(self, dimension)
-    return Lua:literal(("EnvironmentDetector._internalDetector.isDimension(\"" .. dimension) .. "\")")
-end
-function EnvironmentDetector.isMoon(self, moonPhaseId)
-    return Lua:literal(("EnvironmentDetector._internalDetector.isMoon(" .. tostring(moonPhaseId)) .. ")")
-end
-function EnvironmentDetector.isRaining(self)
-    return EnvironmentDetector._internalDetector.isRaining()
-end
-function EnvironmentDetector.isSunny(self)
-    return EnvironmentDetector._internalDetector.isSunny()
-end
-function EnvironmentDetector.isThunder(self)
-    return EnvironmentDetector._internalDetector.isThunder()
-end
-function EnvironmentDetector.isSlimeChunk(self)
-    return EnvironmentDetector._internalDetector.isSlimeChunk()
-end
-function EnvironmentDetector.listDimensions(self)
-    return EnvironmentDetector._internalDetector.listDimensions()
-end
-function EnvironmentDetector.scanEntities(self, range)
-    return Lua:literal(("EnvironmentDetector._internalDetector.scanEntities(" .. tostring(range)) .. ")")
-end
-EnvironmentDetector._internalDetector = CcPeripheral:find("environmentDetector")
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.advancedPeripherals.geoScanner"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local ____exports = {}
-local ____ccPeripheral = require("preBuild.src.util.computer.api.tier1.globals.ccPeripheral")
-local CcPeripheral = ____ccPeripheral.CcPeripheral
-local ____lua = require("preBuild.src.lua.lua")
-local Lua = ____lua.Lua
---- A class representing the Geo Scanner peripheral from the Advanced Peripherals mod.
--- Provides information about blocks and ores in the surrounding area and chunk.
-____exports.GeoScanner = __TS__Class()
-local GeoScanner = ____exports.GeoScanner
-GeoScanner.name = "GeoScanner"
-function GeoScanner.prototype.____constructor(self)
-end
-function GeoScanner.getFuelLevel(self)
-    return GeoScanner._internalScanner.getFuelLevel()
-end
-function GeoScanner.getMaxFuelLevel(self)
-    return GeoScanner._internalScanner.getMaxFuelLevel()
-end
-function GeoScanner.cost(self, radius)
-    return GeoScanner._internalScanner.cost(radius)
-end
-function GeoScanner.scan(self, radius)
-    return GeoScanner._internalScanner.scan(radius)
-end
-function GeoScanner.getScanCooldown(self)
-    return GeoScanner._internalScanner.getScanCooldown()
-end
-function GeoScanner.chunkAnalyze(self)
-    return GeoScanner._internalScanner.chunkAnalyze()
-end
-GeoScanner._internalScanner = CcPeripheral:find("geoScanner")
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.advancedPeripherals.inventoryManager"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local ____exports = {}
-local ____ccPeripheral = require("preBuild.src.util.computer.api.tier1.globals.ccPeripheral")
-local CcPeripheral = ____ccPeripheral.CcPeripheral
-local ____lua = require("preBuild.src.lua.lua")
-local Lua = ____lua.Lua
---- A class representing the Inventory Manager peripheral from the Advanced Peripherals mod.
--- Manages player inventory interactions and provides inventory information.
-____exports.InventoryManager = __TS__Class()
-local InventoryManager = ____exports.InventoryManager
-InventoryManager.name = "InventoryManager"
-function InventoryManager.prototype.____constructor(self)
-end
-function InventoryManager.addItemToPlayer(self, direction, item)
-    return InventoryManager._internalManager.addItemToPlayer(direction, item)
-end
-function InventoryManager.removeItemFromPlayer(self, direction, item)
-    return InventoryManager._internalManager.removeItemFromPlayer(direction, item)
-end
-function InventoryManager.getArmor(self)
-    return InventoryManager._internalManager.getArmor()
-end
-function InventoryManager.getItems(self)
-    return InventoryManager._internalManager.getItems()
-end
-function InventoryManager.getOwner(self)
-    return InventoryManager._internalManager.getOwner()
-end
-function InventoryManager.isPlayerEquipped(self)
-    return InventoryManager._internalManager.isPlayerEquipped()
-end
-function InventoryManager.isWearing(self, slot)
-    return InventoryManager._internalManager.isWearing(slot)
-end
-function InventoryManager.getItemInHand(self)
-    return InventoryManager._internalManager.getItemInHand()
-end
-function InventoryManager.getItemInOffHand(self)
-    return InventoryManager._internalManager.getItemInOffHand()
-end
-function InventoryManager.getFreeSlot(self)
-    return InventoryManager._internalManager.getFreeSlot()
-end
-function InventoryManager.isSpaceAvailable(self)
-    return InventoryManager._internalManager.isSpaceAvailable()
-end
-function InventoryManager.getEmptySpace(self)
-    return InventoryManager._internalManager.getEmptySpace()
-end
-InventoryManager._internalManager = CcPeripheral:find("inventoryManager")
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.advancedPeripherals.playerDetector"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local ____exports = {}
-local ____ccPeripheral = require("preBuild.src.util.computer.api.tier1.globals.ccPeripheral")
-local CcPeripheral = ____ccPeripheral.CcPeripheral
-local ____lua = require("preBuild.src.lua.lua")
-local Lua = ____lua.Lua
---- A class representing the Player Detector peripheral from the Advanced Peripherals mod.
--- Detects player presence, position, and interaction within range or defined coordinates.
-____exports.PlayerDetector = __TS__Class()
-local PlayerDetector = ____exports.PlayerDetector
-PlayerDetector.name = "PlayerDetector"
-function PlayerDetector.prototype.____constructor(self)
-end
-function PlayerDetector.onPlayerClick(self, listener)
-    local event = ""
-    local username = ""
-    local deviceName = ""
-    while true do
-        local event, username, deviceName = os.pullEvent("playerClick")
-        listener(nil, {event = event, username = username, deviceName = deviceName})
-    end
-end
-function PlayerDetector.onPlayerJoin(self, listener)
-    local event = ""
-    local username = ""
-    local dimension = ""
-    while true do
-        local event, username, dimension = os.pullEvent("playerJoin")
-        listener(nil, {event = event, username = username, dimension = dimension})
-    end
-end
-function PlayerDetector.onPlayerLeave(self, listener)
-    local event = ""
-    local username = ""
-    local dimension = ""
-    while true do
-        local event, username, dimension = os.pullEvent("playerLeave")
-        listener(nil, {event = event, username = username, dimension = dimension})
-    end
-end
-function PlayerDetector.onPlayerChangedDimension(self, listener)
-    local event = ""
-    local username = ""
-    local fromDimension = ""
-    local toDimension = ""
-    while true do
-        local event, username, fromDimension, toDimension = os.pullEvent("playerChangedDimension")
-        listener(nil, {event = event, username = username, fromDimension = fromDimension, toDimension = toDimension})
-    end
-end
-function PlayerDetector.getPlayerInfo(self, username)
-    return PlayerDetector._internalDetector.getPlayerPos(username)
-end
-function PlayerDetector.getOnlinePlayers(self)
-    return PlayerDetector._internalDetector.getOnlinePlayers()
-end
-function PlayerDetector.getPlayersInRange(self, range)
-    return PlayerDetector._internalDetector.getPlayersInRange(range)
-end
-function PlayerDetector.getPlayersInCoords(self, posOne, posTwo)
-    return PlayerDetector._internalDetector.getPlayersInCoords(posOne, posTwo)
-end
-function PlayerDetector.getPlayersInCubic(self, width, height, depth)
-    return PlayerDetector._internalDetector.getPlayersInCubic(width, height, depth)
-end
-function PlayerDetector.isPlayerInRange(self, range, username)
-    return PlayerDetector._internalDetector.isPlayerInRange(range, username)
-end
-function PlayerDetector.isPlayerInCoords(self, posOne, posTwo, username)
-    return PlayerDetector._internalDetector.isPlayerInCoords(posOne, posTwo, username)
-end
-function PlayerDetector.isPlayerInCubic(self, width, height, depth, username)
-    return PlayerDetector._internalDetector.isPlayerInCubic(width, height, depth, username)
-end
-function PlayerDetector.isPlayersInRange(self, range)
-    return PlayerDetector._internalDetector.isPlayersInRange(range)
-end
-function PlayerDetector.isPlayersInCoords(self, posOne, posTwo)
-    return PlayerDetector._internalDetector.isPlayersInCoords(posOne, posTwo)
-end
-function PlayerDetector.isPlayersInCubic(self, width, height, depth)
-    return PlayerDetector._internalDetector.isPlayersInCubic(width, height, depth)
-end
-PlayerDetector._internalDetector = CcPeripheral:find("playerDetector")
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.advancedPeripherals.redstoneIntegrator"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local ____exports = {}
-local ____ccPeripheral = require("preBuild.src.util.computer.api.tier1.globals.ccPeripheral")
-local CcPeripheral = ____ccPeripheral.CcPeripheral
-local ____lua = require("preBuild.src.lua.lua")
-local Lua = ____lua.Lua
---- A class representing the Redstone Integrator peripheral from the Advanced Peripherals mod.
--- Provides methods to interact with redstone signals on different sides of the block.
-____exports.RedstoneIntegrator = __TS__Class()
-local RedstoneIntegrator = ____exports.RedstoneIntegrator
-RedstoneIntegrator.name = "RedstoneIntegrator"
-function RedstoneIntegrator.prototype.____constructor(self)
-end
-function RedstoneIntegrator.getInput(self, side)
-    return RedstoneIntegrator._internalIntegrator.getInput(side)
-end
-function RedstoneIntegrator.getOutput(self, side)
-    return RedstoneIntegrator._internalIntegrator.getOutput(side)
-end
-function RedstoneIntegrator.getAnalogInput(self, side)
-    return RedstoneIntegrator._internalIntegrator.getAnalogInput(side)
-end
-function RedstoneIntegrator.getAnalogOutput(self, side)
-    return RedstoneIntegrator._internalIntegrator.getAnalogOutput(side)
-end
-function RedstoneIntegrator.setOutput(self, side, powered)
-    RedstoneIntegrator._internalIntegrator.setOutput(side, powered)
-end
-function RedstoneIntegrator.setAnalogOutput(self, side, power)
-    RedstoneIntegrator._internalIntegrator.setAnalogOutput(side, power)
-end
-RedstoneIntegrator._internalIntegrator = CcPeripheral:find("redstoneIntegrator")
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.types.item.basicItemDetail"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.types.item.listedItemDetail"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.types.item.inventoryContent"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.types.item.detailedItemDetail"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.genericPeripherals.ccInventory"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local __TS__New = ____lualib.__TS__New
-local ____exports = {}
-local ____ccPeripheral = require("preBuild.src.util.computer.api.tier1.globals.ccPeripheral")
-local CcPeripheral = ____ccPeripheral.CcPeripheral
-local ____optional = require("preBuild.src.util.types.optional")
-local Optional = ____optional.Optional
-local ____lua = require("preBuild.src.lua.lua")
-local Lua = ____lua.Lua
---- A class representing a generic inventory peripheral.
--- Allows interaction with inventories, including reading/writing items and pushing/pulling items between inventories.
--- 
--- Based on the documentation: https://tweaked.cc/generic_peripheral/inventory.html
-____exports.CcInventory = __TS__Class()
-local CcInventory = ____exports.CcInventory
-CcInventory.name = "CcInventory"
-function CcInventory.prototype.____constructor(self, peripheralName)
-    self._internalInventory = CcPeripheral:find(peripheralName)
-end
-function CcInventory.create(self, peripheralName)
-    local inventory = __TS__New(____exports.CcInventory, peripheralName)
-    if inventory._internalInventory == nil or inventory._internalInventory == nil then
-        return Optional:empty()
-    end
-    return Optional:of(inventory)
-end
-function CcInventory.prototype.getSize(self)
-    return self._internalInventory:size()
-end
-function CcInventory.prototype.listItems(self)
-    return self._internalInventory:list()
-end
-function CcInventory.prototype.getItemDetail(self, slot)
-    local result
-    result = self._internalInventory.getItemDetail(slot)
-    return Optional:ofNullable(result)
-end
-function CcInventory.prototype.getItemLimit(self, slot)
-    return self._internalInventory:getItemLimit(slot)
-end
-function CcInventory.prototype.pushItems(self, toName, fromSlot, limit, toSlot)
-    return self._internalInventory:pushItems(toName, fromSlot, limit, toSlot)
-end
-function CcInventory.prototype.pullItems(self, fromName, fromSlot, limit, toSlot)
-    return self._internalInventory:pullItems(fromName, fromSlot, limit, toSlot)
-end
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.globals.ccColours"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local ____exports = {}
-local ____lua = require("preBuild.src.lua.lua")
-local Lua = ____lua.Lua
-local ____tableUtil = require("preBuild.src.util.computer.api.tier1.lua.tableUtil")
-local TableUtil = ____tableUtil.TableUtil
---- Adapter for the colours module
--- 
--- This class provides a wrapper around the colours module, allowing it to be used from TypeScript
--- 
--- Based on the documentation: https://tweaked.cc/module/colors.html
-____exports.CcColours = __TS__Class()
-local CcColours = ____exports.CcColours
-CcColours.name = "CcColours"
-function CcColours.prototype.____constructor(self)
-    self.values = {
-        white = colours.white,
-        orange = colours.orange,
-        magenta = colours.magenta,
-        lightBlue = colours.lightBlue,
-        yellow = colours.yellow,
-        lime = colours.lime,
-        pink = colours.pink,
-        gray = colours.gray,
-        lightGray = colours.lightGray,
-        cyan = colours.cyan,
-        purple = colours.purple,
-        blue = colours.blue,
-        brown = colours.brown,
-        green = colours.green,
-        red = colours.red,
-        black = colours.black
-    }
-end
-function CcColours.prototype.combine(self, ...)
-    local colours = {...}
-    local coloursTable = TableUtil:fromArray(colours)
-    return colors.combine(table.unpack(coloursTable))
-end
-function CcColours.prototype.subtract(self, colours, ...)
-    local toSubtract = {...}
-    local toSubtractTable = TableUtil:fromArray(toSubtract)
-    return colors.subtract(colours, table.unpack(toSubtractTable))
-end
-function CcColours.prototype.test(self, colours, colour)
-    return colors.test(colours, colour)
-end
-function CcColours.prototype.packRGB(self, r, g, b)
-    return colors.packRGB(r, g, b)
-end
-function CcColours.prototype.unpackRGB(self, rgb)
-    local r = 0
-    local g = 0
-    local b = 0
-    r, g, b = colors.unpackRGB(rgb)
-    return {r, g, b}
-end
-function CcColours.prototype.toBlit(self, colour)
-    return colors.toBlit(colour)
-end
-function CcColours.prototype.fromBlit(self, hex)
-    return colors.fromBlit(hex)
-end
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.globals.ccGlobals"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local __TS__StringSplit = ____lualib.__TS__StringSplit
-local Map = ____lualib.Map
-local __TS__New = ____lualib.__TS__New
-local __TS__Iterator = ____lualib.__TS__Iterator
-local ____exports = {}
-local ____lua = require("preBuild.src.lua.lua")
-local Lua = ____lua.Lua
-local ____tableUtil = require("preBuild.src.util.computer.api.tier1.lua.tableUtil")
-local TableUtil = ____tableUtil.TableUtil
---- Adapter for ComputerCraft global functions and variables
--- 
--- Based on the documentation: https://tweaked.cc/module/_G.html
-____exports.CcGlobals = __TS__Class()
-local CcGlobals = ____exports.CcGlobals
-CcGlobals.name = "CcGlobals"
-function CcGlobals.prototype.____constructor(self)
-end
-function CcGlobals.getHost(self)
-    local hostString = _HOST
-    local hostParts = __TS__StringSplit(hostString, " ")
-    local computerCraftVersion = hostParts[1]
-    local minecraftVersion = hostParts[2]
-    return {computerCraftVersion = computerCraftVersion, minecraftVersion = minecraftVersion}
-end
-function CcGlobals.getDefaultSettings(self)
-    local settingsString = _CC_DEFAULT_SETTINGS
-    local settingsParts = __TS__StringSplit(settingsString, ",")
-    local settings = __TS__New(Map)
-    for ____, setting in ipairs(settingsParts) do
-        local settingParts = __TS__StringSplit(setting, "=")
-        local key = settingParts[1]
-        local value = settingParts[2]
-        settings:set(key, value)
-    end
-    return settings
-end
-function CcGlobals.setDefaultSetting(self, settings)
-    local segments = {}
-    for ____, ____value in __TS__Iterator(settings:entries()) do
-        local key = ____value[1]
-        local value = ____value[2]
-        segments[#segments + 1] = (key .. "=") .. value
-    end
-    local settingsString = table.concat(segments, ",")
-    Lua:literal(("_CC_DEFAULT_SETTINGS = \"" .. settingsString) .. "\"")
-end
-function CcGlobals.sleep(self, time)
-    sleep(time)
-end
-function CcGlobals.write(self, text)
-    return write(text)
-end
-function CcGlobals.print(self, ...)
-    local values = {...}
-    local valuesTable = TableUtil:fromArray(values)
-    return print(table.unpack(valuesTable))
-end
-function CcGlobals.printError(self, ...)
-    local values = {...}
-    local valuesTable = TableUtil:fromArray(values)
-    printError(table.unpack(valuesTable))
-end
-function CcGlobals.read(self, options)
-    return read(options.replaceChar, options.history, options.completeFn, options.default)
-end
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.globals.ccGps"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local ____exports = {}
-local ____lua = require("preBuild.src.lua.lua")
-local Lua = ____lua.Lua
-local ____result = require("preBuild.src.util.types.result")
-local Result = ____result.Result
---- Adapter for the gps module
--- 
--- This class provides a wrapper around the gps module, allowing it to be used from TypeScript
--- 
--- Based on the documentation: https://tweaked.cc/module/gps.html
-____exports.CcGps = __TS__Class()
-local CcGps = ____exports.CcGps
-CcGps.name = "CcGps"
-function CcGps.prototype.____constructor(self)
-end
-function CcGps.locate(self, timeout, ____debug)
-    local x = nil
-    local y = nil
-    local z = nil
-    x, y, z = gps.locate(timeout, debug)
-    if x == nil or y == nil or z == nil then
-        return Result:error("Could not establish position")
-    end
-    return Result:of({x, y, z})
-end
-CcGps.CHANNEL_GPS = 65534
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.globals.ccHelp"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local ____exports = {}
-local ____lua = require("preBuild.src.lua.lua")
-local Lua = ____lua.Lua
---- Adapter for the help module
--- 
--- This class provides a wrapper around the help module, allowing it to be used from TypeScript
--- 
--- Based on the documentation: https://tweaked.cc/module/help.html
-____exports.CcHelp = __TS__Class()
-local CcHelp = ____exports.CcHelp
-CcHelp.name = "CcHelp"
-function CcHelp.prototype.____constructor(self)
-end
-function CcHelp.path(self)
-    local path = ""
-    path = help.path()
-    return path
-end
-function CcHelp.setPath(self, newPath)
-    help.setPath(newPath)
-end
-function CcHelp.lookup(self, topic)
-    local path = nil
-    path = help.lookup(topic)
-    return path
-end
-function CcHelp.topics(self)
-    local topics = {}
-    topics = help.topics()
-    return topics
-end
-function CcHelp.completeTopic(self, prefix)
-    local completions = {}
-    completions = help.completeTopic(prefix)
-    return completions
-end
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.globals.ccIo"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local ____exports = {}
-local ____lua = require("preBuild.src.lua.lua")
-local Lua = ____lua.Lua
-local ____result = require("preBuild.src.util.types.result")
-local Result = ____result.Result
-local ____tableUtil = require("preBuild.src.util.computer.api.tier1.lua.tableUtil")
-local TableUtil = ____tableUtil.TableUtil
---- Adapter for the io module
--- 
--- This class provides a wrapper around ComputerCraft's io module
--- 
--- Based on documentation from: https://tweaked.cc/module/io.html
-____exports.CcIo = __TS__Class()
-local CcIo = ____exports.CcIo
-CcIo.name = "CcIo"
-function CcIo.prototype.____constructor(self)
-end
-function CcIo.input(self, file)
-    local handle = nil
-    local ____error = nil
-    handle, error = io.input(file)
-    if handle == nil then
-        return Result:error(____error or "Unknown error")
-    end
-    return Result:of(handle)
-end
-function CcIo.output(self, file)
-    local handle = nil
-    local ____error = nil
-    handle, error = io.output(file)
-    if handle == nil then
-        return Result:error(____error or "Unknown error")
-    end
-    return Result:of(handle)
-end
-function CcIo.open(self, filename, mode)
-    local handle = nil
-    local ____error = nil
-    handle, error = io.open(filename, mode)
-    if handle == nil then
-        return Result:error(____error or "Unknown error")
-    end
-    return Result:of(handle)
-end
-function CcIo.read(self, ...)
-    local formats = {...}
-    local formatsTable = TableUtil:fromArray(formats)
-    local result = {}
-    result = {io.read(table.unpack(formatsTable))}
-    return result
-end
-function CcIo.write(self, ...)
-    local values = {...}
-    local valuesTable = TableUtil:fromArray(values)
-    io.write(table.unpack(valuesTable))
-end
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.globals.ccKeys"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local ____exports = {}
-local ____lua = require("preBuild.src.lua.lua")
-local Lua = ____lua.Lua
---- Provides access to ComputerCraft keyboard key codes and utilities
--- This class allows interaction with the ComputerCraft keys API
-____exports.CcKeys = __TS__Class()
-local CcKeys = ____exports.CcKeys
-CcKeys.name = "CcKeys"
-function CcKeys.prototype.____constructor(self)
-end
-function CcKeys.getName(self, code)
-    local name
-    name = keys.getName(code)
-    return name
-end
-CcKeys.codes = {
-    space = keys.space,
-    apostrophe = keys.apostrophe,
-    comma = keys.comma,
-    minus = keys.minus,
-    period = keys.period,
-    slash = keys.slash,
-    zero = keys.zero,
-    one = keys.one,
-    two = keys.two,
-    three = keys.three,
-    four = keys.four,
-    five = keys.five,
-    six = keys.six,
-    seven = keys.seven,
-    eight = keys.eight,
-    nine = keys.nine,
-    semicolon = keys.semicolon,
-    equals = keys.equals,
-    a = keys.a,
-    b = keys.b,
-    c = keys.c,
-    d = keys.d,
-    e = keys.e,
-    f = keys.f,
-    g = keys.g,
-    h = keys.h,
-    i = keys.i,
-    j = keys.j,
-    k = keys.k,
-    l = keys.l,
-    m = keys.m,
-    n = keys.n,
-    o = keys.o,
-    p = keys.p,
-    q = keys.q,
-    r = keys.r,
-    s = keys.s,
-    t = keys.t,
-    u = keys.u,
-    v = keys.v,
-    w = keys.w,
-    x = keys.x,
-    y = keys.y,
-    z = keys.z,
-    leftBracket = keys.leftBracket,
-    backslash = keys.backslash,
-    rightBracket = keys.rightBracket,
-    grave = keys.grave,
-    enter = keys.enter,
-    tab = keys.tab,
-    backspace = keys.backspace,
-    insert = keys.insert,
-    delete = keys.delete,
-    right = keys.right,
-    left = keys.left,
-    down = keys.down,
-    up = keys.up,
-    pageUp = keys.pageUp,
-    pageDown = keys.pageDown,
-    home = keys.home,
-    capsLock = keys.capsLock,
-    scrollLock = keys.scrollLock,
-    numLock = keys.numLock,
-    printScreen = keys.printScreen,
-    pause = keys.pause,
-    f1 = keys.f1,
-    f2 = keys.f2,
-    f3 = keys.f3,
-    f4 = keys.f4,
-    f5 = keys.f5,
-    f6 = keys.f6,
-    f7 = keys.f7,
-    f8 = keys.f8,
-    f9 = keys.f9,
-    f10 = keys.f10,
-    f11 = keys.f11,
-    f12 = keys.f12,
-    f13 = keys.f13,
-    f14 = keys.f14,
-    f15 = keys.f15,
-    f16 = keys.f16,
-    f17 = keys.f17,
-    f18 = keys.f18,
-    f19 = keys.f19,
-    f20 = keys.f20,
-    f21 = keys.f21,
-    f22 = keys.f22,
-    f23 = keys.f23,
-    f24 = keys.f24,
-    f25 = keys.f25,
-    numPad0 = keys.numPad0,
-    numPad1 = keys.numPad1,
-    numPad2 = keys.numPad2,
-    numPad3 = keys.numPad3,
-    numPad4 = keys.numPad4,
-    numPad5 = keys.numPad5,
-    numPad6 = keys.numPad6,
-    numPad7 = keys.numPad7,
-    numPad8 = keys.numPad8,
-    numPad9 = keys.numPad9,
-    numPadDecimal = keys.numPadDecimal,
-    numPadDivide = keys.numPadDivide,
-    numPadMultiply = keys.numPadMultiply,
-    numPadSubtract = keys.numPadSubtract,
-    numPadAdd = keys.numPadAdd,
-    numPadEnter = keys.numPadEnter,
-    numPadEqual = keys.numPadEqual,
-    leftShift = keys.leftShift,
-    leftCtrl = keys.leftCtrl,
-    leftAlt = keys.leftAlt,
-    leftSuper = keys.leftSuper,
-    rightShift = keys.rightShift,
-    rightCtrl = keys.rightCtrl,
-    rightAlt = keys.rightAlt,
-    menu = keys.menu
-}
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.globals.ccMultishell"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local ____exports = {}
-local ____lua = require("preBuild.src.lua.lua")
-local Lua = ____lua.Lua
-local ____tableUtil = require("preBuild.src.util.computer.api.tier1.lua.tableUtil")
-local TableUtil = ____tableUtil.TableUtil
---- Allows multiple programs to be run at the same time.
--- When multiple programs are running, it displays a tab bar at the top of the screen,
--- which allows you to switch between programs.
--- 
--- Based on the documentation: https://tweaked.cc/module/multishell.html
-____exports.CcMultishell = __TS__Class()
-local CcMultishell = ____exports.CcMultishell
-CcMultishell.name = "CcMultishell"
-function CcMultishell.prototype.____constructor(self)
-end
-function CcMultishell.getFocus(self)
-    local focus = 0
-    focus = multishell.getFocus()
-    return focus
-end
-function CcMultishell.setFocus(self, n)
-    local success = false
-    success = multishell.setFocus(n)
-    return success
-end
-function CcMultishell.getTitle(self, n)
-    local title = nil
-    title = multishell.getTitle(n)
-    return title
-end
-function CcMultishell.setTitle(self, n, title)
-    multishell.setTitle(n, title)
-end
-function CcMultishell.getCurrent(self)
-    local current = 0
-    current = multishell.getCurrent()
-    return current
-end
-function CcMultishell.launch(self, env, programPath, ...)
-    local args = {...}
-    local argsTable = TableUtil:fromArray(args)
-    local processId = 0
-    processId = multishell.launch(env, programPath, table.unpack(argsTable))
-    return processId
-end
-function CcMultishell.getCount(self)
-    local count = 0
-    count = multishell.getCount()
-    return count
-end
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.globals.ccOs"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local Error = ____lualib.Error
-local RangeError = ____lualib.RangeError
-local ReferenceError = ____lualib.ReferenceError
-local SyntaxError = ____lualib.SyntaxError
-local TypeError = ____lualib.TypeError
-local URIError = ____lualib.URIError
-local __TS__New = ____lualib.__TS__New
-local ____exports = {}
-local ____lua = require("preBuild.src.lua.lua")
-local Lua = ____lua.Lua
-local ____optional = require("preBuild.src.util.types.optional")
-local Optional = ____optional.Optional
-local ____tableUtil = require("preBuild.src.util.computer.api.tier1.lua.tableUtil")
-local TableUtil = ____tableUtil.TableUtil
---- Provides access to ComputerCraft OS functionality
-____exports.CcOs = __TS__Class()
-local CcOs = ____exports.CcOs
-CcOs.name = "CcOs"
-function CcOs.prototype.____constructor(self)
-end
-function CcOs.loadAPI(self, path)
-    return os.loadAPI(path)
-end
-function CcOs.unloadAPI(self, name)
-    os.unloadAPI(name)
-end
-function CcOs.pullEvent(self, filter)
-    local eventData = {os.pullEvent(filter)}
-    local name = eventData[1]
-    local details = eventData:slice(2)
-    return {name = name, details = details}
-end
-function CcOs.pullEventRaw(self, filter)
-    local eventData = {os.pullEventRaw(filter)}
-    local name = eventData[1]
-    local details = eventData:slice(2)
-    return {name = name, details = details}
-end
-function CcOs.sleep(self, time)
-    os.sleep(time)
-end
-function CcOs.version(self)
-    return os.version()
-end
-function CcOs.run(self, env, path, ...)
-    local args = {...}
-    local argsTable = TableUtil:fromArray(args)
-    return os.run(env, path, table.unpack(argsTable))
-end
-function CcOs.queueEvent(self, name, ...)
-    local params = {...}
-    local paramsTable = TableUtil:fromArray(params)
-    os.queueEvent(name, table.unpack(paramsTable))
-end
-function CcOs.startTimer(self, time)
-    return os.startTimer(time)
-end
-function CcOs.cancelTimer(self, token)
-    os.cancelTimer(token)
-end
-function CcOs.setAlarm(self, time)
-    return os.setAlarm(time)
-end
-function CcOs.cancelAlarm(self, token)
-    os.cancelAlarm(token)
-end
-function CcOs.shutdown(self)
-    os.shutdown()
-end
-function CcOs.reboot(self)
-    os.reboot()
-end
-function CcOs.getComputerID(self)
-    return os.getComputerID()
-end
-function CcOs.computerID(self)
-    return os.computerID()
-end
-function CcOs.getComputerLabel(self)
-    local label = os.getComputerLabel()
-    return Optional:ofNullable(label)
-end
-function CcOs.computerLabel(self)
-    local label = os.computerLabel()
-    return Optional:ofNullable(label)
-end
-function CcOs.setComputerLabel(self, label)
-    os.setComputerLabel(label)
-end
-function CcOs.clock(self)
-    return os.clock()
-end
-function CcOs.time(self, locale)
-    return os.time(locale)
-end
-function CcOs.day(self, locale)
-    return os.day(locale)
-end
-function CcOs.epoch(self, locale)
-    return os.epoch(locale)
-end
-function CcOs.date(self, format, time)
-    if format == "!*t" then
-        error(
-            __TS__New(Error, "!*t not supported in `date` - use `dateTable` instead"),
-            0
-        )
-    end
-    return os.date(format, time)
-end
-function CcOs.dateTable(self, time)
-    return os.date("!*t", time)
-end
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.globals.ccPaintutils"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local ____exports = {}
-local ____lua = require("preBuild.src.lua.lua")
-local Lua = ____lua.Lua
-local ____result = require("preBuild.src.util.types.result")
-local Result = ____result.Result
---- Adapter for the paintutils module
--- 
--- This class provides a wrapper around the paintutils module, allowing it to be used from TypeScript
--- 
--- Based on the documentation: https://tweaked.cc/module/paintutils.html
-____exports.CcPaintutils = __TS__Class()
-local CcPaintutils = ____exports.CcPaintutils
-CcPaintutils.name = "CcPaintutils"
-function CcPaintutils.prototype.____constructor(self)
-end
-function CcPaintutils.parseImage(self, image)
-    local result = {}
-    result = paintutils.parseImage(image)
-    return result
-end
-function CcPaintutils.loadImage(self, path)
-    local image = nil
-    image = paintutils.loadImage(path)
-    if image == nil then
-        return Result:error("Failed to load image")
-    end
-    return Result:of(image)
-end
-function CcPaintutils.drawPixel(self, xPos, yPos, colour)
-    paintutils.drawPixel(xPos, yPos, colour)
-end
-function CcPaintutils.drawLine(self, startX, startY, endX, endY, colour)
-    paintutils.drawLine(startX, startY, endX, endY, colour)
-end
-function CcPaintutils.drawBox(self, startX, startY, endX, endY, colour)
-    paintutils.drawBox(startX, startY, endX, endY, colour)
-end
-function CcPaintutils.drawFilledBox(self, startX, startY, endX, endY, colour)
-    paintutils.drawFilledBox(startX, startY, endX, endY, colour)
-end
-function CcPaintutils.drawImage(self, image, xPos, yPos)
-    paintutils.drawImage(image, xPos, yPos)
-end
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.globals.ccParallel"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local ____exports = {}
-local ____lua = require("preBuild.src.lua.lua")
-local Lua = ____lua.Lua
-local ____tableUtil = require("preBuild.src.util.computer.api.tier1.lua.tableUtil")
-local TableUtil = ____tableUtil.TableUtil
---- An adapter for the parallel API in ComputerCraft
--- This class provides methods for running multiple functions concurrently
-____exports.CcParallel = __TS__Class()
-local CcParallel = ____exports.CcParallel
-CcParallel.name = "CcParallel"
-function CcParallel.prototype.____constructor(self)
-end
-function CcParallel.waitForAny(self, ...)
-    local functions = {...}
-    local functionsTable = TableUtil:fromArray(functions)
-    parallel.waitForAny(table.unpack(functionsTable))
-end
-function CcParallel.waitForAll(self, ...)
-    local functions = {...}
-    local functionsTable = TableUtil:fromArray(functions)
-    parallel.waitForAll(table.unpack(functionsTable))
-end
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.globals.ccPocket"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local ____exports = {}
-local ____lua = require("preBuild.src.lua.lua")
-local Lua = ____lua.Lua
-local ____result = require("preBuild.src.util.types.result")
-local Result = ____result.Result
---- Adapter for the pocket module
--- 
--- This class provides a wrapper around the pocket module, allowing it to be used from TypeScript
--- 
--- Based on the documentation: https://tweaked.cc/module/pocket.html
-____exports.CcPocket = __TS__Class()
-local CcPocket = ____exports.CcPocket
-CcPocket.name = "CcPocket"
-function CcPocket.prototype.____constructor(self)
-end
-function CcPocket.equipBack(self)
-    local success = false
-    local reason = nil
-    success, reason = pocket.equipBack()
-    if not success then
-        return Result:error(reason or "Unknown error")
-    end
-    return Result:of(success)
-end
-function CcPocket.unequipBack(self)
-    local success = false
-    local reason = nil
-    success, reason = pocket.unequipBack()
-    if not success then
-        return Result:error(reason or "Unknown error")
-    end
-    return Result:of(success)
-end
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.globals.ccRednet"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local ____exports = {}
-local ____lua = require("preBuild.src.lua.lua")
-local Lua = ____lua.Lua
-local ____result = require("preBuild.src.util.types.result")
-local Result = ____result.Result
-local ____optional = require("preBuild.src.util.types.optional")
-local Optional = ____optional.Optional
---- Adapter for the rednet module
--- 
--- This class provides a wrapper around the rednet module, allowing it to be used from TypeScript
--- 
--- Based on the documentation: https://tweaked.cc/module/rednet.html
-____exports.CcRednet = __TS__Class()
-local CcRednet = ____exports.CcRednet
-CcRednet.name = "CcRednet"
-function CcRednet.prototype.____constructor(self)
-end
-function CcRednet.open(self, modem)
-    rednet.open(modem)
-end
-function CcRednet.close(self, modem)
-    rednet.close(modem)
-end
-function CcRednet.isOpen(self, modem)
-    return rednet.isOpen(modem)
-end
-function CcRednet.send(self, recipient, message, protocol)
-    return rednet.send(recipient, message, protocol)
-end
-function CcRednet.broadcast(self, message, protocol)
-    rednet.broadcast(message, protocol)
-end
-function CcRednet.receive(self, protocolFilter, timeout)
-    local senderId = nil
-    local message = nil
-    local protocol = nil
-    senderId, message, protocol = rednet.receive(protocolFilter, timeout)
-    if senderId == nil then
-        return Result:error("Timeout or no message received")
-    end
-    return Result:of({senderId = senderId, message = message, protocol = protocol or nil})
-end
-function CcRednet.host(self, protocol, hostname)
-    rednet.host(protocol, hostname)
-end
-function CcRednet.unhost(self, protocol)
-    rednet.unhost(protocol)
-end
-function CcRednet.lookup(self, protocol)
-    local result = nil
-    result = {rednet.lookup(protocol)}
-    local ____temp_0
-    if result == nil then
-        ____temp_0 = {}
-    else
-        ____temp_0 = result
-    end
-    return ____temp_0
-end
-function CcRednet.lookupByHostname(self, protocol, hostname)
-    local result = nil
-    result = rednet.lookup(protocol, hostname)
-    return Optional:ofNullable(result)
-end
-CcRednet.CHANNEL_BROADCAST = 65535
-CcRednet.CHANNEL_REPEAT = 65533
-CcRednet.MAX_ID_CHANNELS = 65500
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.types.consts.side"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-____exports.Side = Side or ({})
-____exports.Side.LEFT = "left"
-____exports.Side.RIGHT = "right"
-____exports.Side.BACK = "back"
-____exports.Side.FRONT = "front"
-____exports.Side.TOP = "top"
-____exports.Side.BOTTOM = "bottom"
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.globals.ccRedstone"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local ____exports = {}
-local ____lua = require("preBuild.src.lua.lua")
-local Lua = ____lua.Lua
---- Adapter for the redstone module
--- 
--- This class provides a wrapper around the redstone module, allowing it to be used from TypeScript
--- 
--- Based on the documentation: https://tweaked.cc/module/redstone.html
-____exports.CcRedstone = __TS__Class()
-local CcRedstone = ____exports.CcRedstone
-CcRedstone.name = "CcRedstone"
-function CcRedstone.prototype.____constructor(self)
-end
-function CcRedstone.getSides(self)
-    local sides = {}
-    sides = redstone.getSides()
-    return sides
-end
-function CcRedstone.setOutput(self, side, on)
-    redstone.setOutput(side, on)
-end
-function CcRedstone.getOutput(self, side)
-    local output = false
-    output = redstone.getOutput(side)
-    return output
-end
-function CcRedstone.getInput(self, side)
-    local input = false
-    input = redstone.getInput(side)
-    return input
-end
-function CcRedstone.setAnalogOutput(self, side, value)
-    redstone.setAnalogOutput(side, value)
-end
-function CcRedstone.getAnalogOutput(self, side)
-    local strength = 0
-    strength = redstone.getAnalogOutput(side)
-    return strength
-end
-function CcRedstone.getAnalogInput(self, side)
-    local strength = 0
-    strength = redstone.getAnalogInput(side)
-    return strength
-end
-function CcRedstone.setBundledOutput(self, side, output)
-    redstone.setBundledOutput(side, output)
-end
-function CcRedstone.getBundledOutput(self, side)
-    local output = 0
-    output = redstone.getBundledOutput(side)
-    return output
-end
-function CcRedstone.getBundledInput(self, side)
-    local input = 0
-    input = redstone.getBundledInput(side)
-    return input
-end
-function CcRedstone.testBundledInput(self, side, mask)
-    local result = false
-    result = redstone.testBundledInput(side, mask)
-    return result
-end
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.globals.ccSettings"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local ____exports = {}
-local ____lua = require("preBuild.src.lua.lua")
-local Lua = ____lua.Lua
-local ____result = require("preBuild.src.util.types.result")
-local Result = ____result.Result
---- Adapter for the settings module
--- 
--- This class provides a wrapper around the settings module, allowing reading and writing of configuration options
--- for CraftOS and programs.
--- 
--- Based on the documentation: https://tweaked.cc/module/settings.html
-____exports.CcSettings = __TS__Class()
-local CcSettings = ____exports.CcSettings
-CcSettings.name = "CcSettings"
-function CcSettings.prototype.____constructor(self)
-end
-function CcSettings.define(self, name, options)
-    settings.define(name, options)
-end
-function CcSettings.undefine(self, name)
-    settings.undefine(name)
-end
-function CcSettings.set(self, name, value)
-    local success = true
-    success = settings.set(name, value)
-    if not success then
-        return Result:error("Failed to set setting value")
-    end
-    return Result:void()
-end
-function CcSettings.get(self, name, defaultValue)
-    return settings.get(name, defaultValue)
-end
-function CcSettings.getDetails(self, name)
-    return settings.getDetails(name)
-end
-function CcSettings.unset(self, name)
-    settings.unset(name)
-end
-function CcSettings.clear(self)
-    settings.clear()
-end
-function CcSettings.getNames(self)
-    return settings.getNames()
-end
-function CcSettings.load(self, path)
-    if path == nil then
-        path = ".settings"
-    end
-    local success = false
-    success = settings.load(path)
-    if not success then
-        return Result:error("Failed to load settings")
-    end
-    return Result:void()
-end
-function CcSettings.save(self, path)
-    if path == nil then
-        path = ".settings"
-    end
-    local success = false
-    success = settings.save(path)
-    if not success then
-        return Result:error("Failed to save settings")
-    end
-    return Result:void()
-end
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.types.blockInspectionResult"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.globals.ccTurtle"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local ____exports = {}
-local ____lua = require("preBuild.src.lua.lua")
-local Lua = ____lua.Lua
-local ____result = require("preBuild.src.util.types.result")
-local Result = ____result.Result
-local ____optional = require("preBuild.src.util.types.optional")
-local Optional = ____optional.Optional
---- Provides access to ComputerCraft turtle functionality.
--- Turtles are robotic devices that can move, break/place blocks, attack mobs and store items.
--- They have an internal inventory of 16 slots and require fuel for movement.
-____exports.CcTurtle = __TS__Class()
-local CcTurtle = ____exports.CcTurtle
-CcTurtle.name = "CcTurtle"
-function CcTurtle.prototype.____constructor(self)
-end
-function CcTurtle.craft(self, limit)
-    local success = false
-    local errorMessage = nil
-    success, errorMessage = turtle.craft(limit)
-    return Result:ofError(success, errorMessage)
-end
-function CcTurtle.forward(self)
-    local success = false
-    local errorMessage = nil
-    success, errorMessage = turtle.forward()
-    return Result:ofError(success, errorMessage)
-end
-function CcTurtle.back(self)
-    local success = false
-    local errorMessage = nil
-    success, errorMessage = turtle.back()
-    return Result:ofError(success, errorMessage)
-end
-function CcTurtle.up(self)
-    local success = false
-    local errorMessage = nil
-    success, errorMessage = turtle.up()
-    return Result:ofError(success, errorMessage)
-end
-function CcTurtle.down(self)
-    local success = false
-    local errorMessage = nil
-    success, errorMessage = turtle.down()
-    return Result:ofError(success, errorMessage)
-end
-function CcTurtle.turnLeft(self)
-    local success = false
-    local errorMessage = nil
-    success, errorMessage = turtle.turnLeft()
-    return Result:ofError(success, errorMessage)
-end
-function CcTurtle.turnRight(self)
-    local success = false
-    local errorMessage = nil
-    success, errorMessage = turtle.turnRight()
-    return Result:ofError(success, errorMessage)
-end
-function CcTurtle.dig(self, side)
-    local success = false
-    local errorMessage = nil
-    success, errorMessage = turtle.dig(side)
-    return Result:ofError(success, errorMessage)
-end
-function CcTurtle.digUp(self, side)
-    local success = false
-    local errorMessage = nil
-    success, errorMessage = turtle.digUp(side)
-    return Result:ofError(success, errorMessage)
-end
-function CcTurtle.digDown(self, side)
-    local success = false
-    local errorMessage = nil
-    success, errorMessage = turtle.digDown(side)
-    return Result:ofError(success, errorMessage)
-end
-function CcTurtle.place(self, text)
-    local success = false
-    local errorMessage = nil
-    success, errorMessage = turtle.place(text)
-    return Result:ofError(success, errorMessage)
-end
-function CcTurtle.placeUp(self, text)
-    local success = false
-    local errorMessage = nil
-    success, errorMessage = turtle.placeUp(text)
-    return Result:ofError(success, errorMessage)
-end
-function CcTurtle.placeDown(self, text)
-    local success = false
-    local errorMessage = nil
-    success, errorMessage = turtle.placeDown(text)
-    return Result:ofError(success, errorMessage)
-end
-function CcTurtle.drop(self, count)
-    local success = false
-    local errorMessage = nil
-    success, errorMessage = turtle.drop(count)
-    return Result:ofError(success, errorMessage)
-end
-function CcTurtle.dropUp(self, count)
-    local success = false
-    local errorMessage = nil
-    success, errorMessage = turtle.dropUp(count)
-    return Result:ofError(success, errorMessage)
-end
-function CcTurtle.dropDown(self, count)
-    local success = false
-    local errorMessage = nil
-    success, errorMessage = turtle.dropDown(count)
-    return Result:ofError(success, errorMessage)
-end
-function CcTurtle.select(self, slot)
-    if slot < 1 or slot > 16 then
-        return Result:error(("slot '" .. tostring(slot)) .. "' must be between 1 and 16")
-    end
-    do
-        local function ____catch(e)
-            return true, Result:ofError(false, e.message)
-        end
-        local ____try, ____hasReturned, ____returnValue = pcall(function()
-            turtle.select(slot)
-            return true, Result:of(true)
-        end)
-        if not ____try then
-            ____hasReturned, ____returnValue = ____catch(____hasReturned)
-        end
-        if ____hasReturned then
-            return ____returnValue
-        end
-    end
-end
-function CcTurtle.getItemCount(self, slot)
-    if slot ~= nil and (slot < 1 or slot > 16) then
-        return Result:error(("slot '" .. tostring(slot)) .. "' must be between 1 and 16")
-    end
-    local count = 0
-    local errorMessage = nil
-    do
-        local function ____catch(e)
-            errorMessage = e.message
-        end
-        local ____try, ____hasReturned = pcall(function()
-            count = turtle.getItemCount(slot)
-        end)
-        if not ____try then
-            ____catch(____hasReturned)
-        end
-    end
-    return Result:ofError(count, errorMessage)
-end
-function CcTurtle.getItemSpace(self, slot)
-    if slot ~= nil and (slot < 1 or slot > 16) then
-        return Result:error(("slot '" .. tostring(slot)) .. "' must be between 1 and 16")
-    end
-    local count = 0
-    local errorMessage = nil
-    do
-        local function ____catch(e)
-            errorMessage = e.message
-        end
-        local ____try, ____hasReturned = pcall(function()
-            count = turtle.getItemSpace(slot)
-        end)
-        if not ____try then
-            ____catch(____hasReturned)
-        end
-    end
-    return Result:ofError(count, errorMessage)
-end
-function CcTurtle.detect(self)
-    return turtle.detect()
-end
-function CcTurtle.detectUp(self)
-    return turtle.detectUp()
-end
-function CcTurtle.detectDown(self)
-    return turtle.detectDown()
-end
-function CcTurtle.compare(self)
-    return turtle.compare()
-end
-function CcTurtle.compareUp(self)
-    return turtle.compareUp()
-end
-function CcTurtle.compareDown(self)
-    return turtle.compareDown()
-end
-function CcTurtle.attack(self, side)
-    local success = false
-    local reason = nil
-    success, reason = turtle.attack(side)
-    return Result:ofError(success, reason)
-end
-function CcTurtle.attackUp(self, side)
-    local success = false
-    local reason = nil
-    success, reason = turtle.attackUp(side)
-    return Result:ofError(success, reason)
-end
-function CcTurtle.attackDown(self, side)
-    local success = false
-    local reason = nil
-    success, reason = turtle.attackDown(side)
-    return Result:ofError(success, reason)
-end
-function CcTurtle.suck(self, count)
-    local success = false
-    local reason = nil
-    success, reason = turtle.suck(side)
-    return Result:ofError(success, reason)
-end
-function CcTurtle.suckUp(self, count)
-    local success = false
-    local reason = nil
-    success, reason = turtle.suckUp(side)
-    return Result:ofError(success, reason)
-end
-function CcTurtle.suckDown(self, count)
-    local success = false
-    local reason = nil
-    success, reason = turtle.suckDown(side)
-    return Result:ofError(success, reason)
-end
-function CcTurtle.getFuelLevel(self)
-    return turtle.getFuelLevel()
-end
-function CcTurtle.refuel(self, count)
-    local refueled = false
-    local message = nil
-    do
-        local function ____catch(e)
-            return true, Result:error(e.message)
-        end
-        local ____try, ____hasReturned, ____returnValue = pcall(function()
-            refueled, message = turtle.refuel(count)
-        end)
-        if not ____try then
-            ____hasReturned, ____returnValue = ____catch(____hasReturned)
-        end
-        if ____hasReturned then
-            return ____returnValue
-        end
-    end
-    return Result:ofError(refueled, message)
-end
-function CcTurtle.compareTo(self, slot)
-    if slot < 1 or slot > 16 then
-        return Result:error(("slot '" .. tostring(slot)) .. "' must be between 1 and 16")
-    end
-    local result = false
-    local message = nil
-    do
-        local function ____catch(e)
-            return true, Result:error(e.message)
-        end
-        local ____try, ____hasReturned, ____returnValue = pcall(function()
-            result, message = turtle.compareTo(slot)
-        end)
-        if not ____try then
-            ____hasReturned, ____returnValue = ____catch(____hasReturned)
-        end
-        if ____hasReturned then
-            return ____returnValue
-        end
-    end
-    return Result:ofError(result, message)
-end
-function CcTurtle.transferTo(self, slot, count)
-    if slot < 1 or slot > 16 then
-        return Result:error(("slot '" .. tostring(slot)) .. "' must be between 1 and 16")
-    end
-    local result = false
-    local message = nil
-    do
-        local function ____catch(e)
-            return true, Result:error(e.message)
-        end
-        local ____try, ____hasReturned, ____returnValue = pcall(function()
-            result, message = turtle.transferTo(slot, count)
-        end)
-        if not ____try then
-            ____hasReturned, ____returnValue = ____catch(____hasReturned)
-        end
-        if ____hasReturned then
-            return ____returnValue
-        end
-    end
-    return Result:ofError(result, message)
-end
-function CcTurtle.getSelectedSlot(self)
-    return turtle.getSelectedSlot()
-end
-function CcTurtle.getFuelLimit(self)
-    return turtle.getFuelLimit()
-end
-function CcTurtle.equipLeft(self)
-    local success = false
-    local reason = nil
-    do
-        local function ____catch(e)
-            return true, Result:error(e.message)
-        end
-        local ____try, ____hasReturned, ____returnValue = pcall(function()
-            success, reason = turtle.equipLeft()
-        end)
-        if not ____try then
-            ____hasReturned, ____returnValue = ____catch(____hasReturned)
-        end
-        if ____hasReturned then
-            return ____returnValue
-        end
-    end
-    return Result:ofError(success, reason)
-end
-function CcTurtle.equipRight(self)
-    local success = false
-    local reason = nil
-    do
-        local function ____catch(e)
-            return true, Result:error(e.message)
-        end
-        local ____try, ____hasReturned, ____returnValue = pcall(function()
-            success, reason = turtle.equipRight()
-        end)
-        if not ____try then
-            ____hasReturned, ____returnValue = ____catch(____hasReturned)
-        end
-        if ____hasReturned then
-            return ____returnValue
-        end
-    end
-    return Result:ofError(success, reason)
-end
-function CcTurtle.getEquippedLeft(self)
-    return turtle.getEquippedLeft()
-end
-function CcTurtle.getEquippedRight(self)
-    return turtle.getEquippedRight()
-end
-function CcTurtle.inspect(self)
-    local success = false
-    local value = "No value was returned by `turtle.inspect()`"
-    do
-        local function ____catch(e)
-            return true, Result:error(e.message)
-        end
-        local ____try, ____hasReturned, ____returnValue = pcall(function()
-            success, value = turtle.inspect()
-        end)
-        if not ____try then
-            ____hasReturned, ____returnValue = ____catch(____hasReturned)
-        end
-        if ____hasReturned then
-            return ____returnValue
-        end
-    end
-    if not success then
-        return Result:error(value)
-    end
-    return Result:of(value)
-end
-function CcTurtle.inspectUp(self)
-    local success = false
-    local value = "No value was returned by `turtle.inspectUp()`"
-    do
-        local function ____catch(e)
-            return true, Result:error(e.message)
-        end
-        local ____try, ____hasReturned, ____returnValue = pcall(function()
-            success, value = turtle.inspectUp()
-        end)
-        if not ____try then
-            ____hasReturned, ____returnValue = ____catch(____hasReturned)
-        end
-        if ____hasReturned then
-            return ____returnValue
-        end
-    end
-    if not success then
-        return Result:error(value)
-    end
-    return Result:of(value)
-end
-function CcTurtle.inspectDown(self)
-    local success = false
-    local value = "No value was returned by `turtle.inspectDown()`"
-    do
-        local function ____catch(e)
-            return true, Result:error(e.message)
-        end
-        local ____try, ____hasReturned, ____returnValue = pcall(function()
-            success, value = turtle.inspectDown()
-        end)
-        if not ____try then
-            ____hasReturned, ____returnValue = ____catch(____hasReturned)
-        end
-        if ____hasReturned then
-            return ____returnValue
-        end
-    end
-    if not success then
-        return Result:error(value)
-    end
-    return Result:of(value)
-end
-function CcTurtle.getBasicItemDetail(self, slot)
-    if slot ~= nil and (slot < 1 or slot > 16) then
-        return Result:error(("slot '" .. tostring(slot)) .. "' must be between 1 and 16")
-    end
-    local result = nil
-    do
-        local function ____catch(e)
-            return true, Result:error(e.message)
-        end
-        local ____try, ____hasReturned, ____returnValue = pcall(function()
-            result = turtle.getItemDetail(slot, false)
-        end)
-        if not ____try then
-            ____hasReturned, ____returnValue = ____catch(____hasReturned)
-        end
-        if ____hasReturned then
-            return ____returnValue
-        end
-    end
-    return Result:of(Optional:ofNullable(result))
-end
-function CcTurtle.getDetailedItemDetail(self, slot)
-    if slot ~= nil and (slot < 1 or slot > 16) then
-        return Result:error(("slot '" .. tostring(slot)) .. "' must be between 1 and 16")
-    end
-    local result = nil
-    do
-        local function ____catch(e)
-            return true, Result:error(e.message)
-        end
-        local ____try, ____hasReturned, ____returnValue = pcall(function()
-            result = turtle.getItemDetail(slot, true)
-        end)
-        if not ____try then
-            ____hasReturned, ____returnValue = ____catch(____hasReturned)
-        end
-        if ____hasReturned then
-            return ____returnValue
-        end
-    end
-    return Result:of(Optional:ofNullable(result))
-end
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.globals.ccVector"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local __TS__New = ____lualib.__TS__New
-local ____exports = {}
-local ____lua = require("preBuild.src.lua.lua")
-local Lua = ____lua.Lua
---- A 3-dimensional vector implementation wrapper.
--- Suitable for representing both position and directional vectors.
--- 
--- Based on the documentation: https://tweaked.cc/module/vector.html
-____exports.CcVector = __TS__Class()
-local CcVector = ____exports.CcVector
-CcVector.name = "CcVector"
-function CcVector.prototype.____constructor(self, x, y, z)
-    self.vector = Vector.new(x, y, z)
-end
-function CcVector.of(self, x, y, z)
-    return __TS__New(____exports.CcVector, x, y, z)
-end
-function CcVector.prototype.add(self, other)
-    local result = self.vector:add(other.vector)
-    return ____exports.CcVector:of(result.x, result.y, result.z)
-end
-function CcVector.prototype.subtract(self, other)
-    local result = self.vector:sub(other.vector)
-    return ____exports.CcVector:of(result.x, result.y, result.z)
-end
-function CcVector.prototype.multiply(self, factor)
-    local result = self.vector:mul(factor)
-    return ____exports.CcVector:of(result.x, result.y, result.z)
-end
-function CcVector.prototype.divide(self, factor)
-    local result = self.vector:div(factor)
-    return ____exports.CcVector:of(result.x, result.y, result.z)
-end
-function CcVector.prototype.negate(self)
-    local result = self.vector:unm()
-    return ____exports.CcVector:of(result.x, result.y, result.z)
-end
-function CcVector.prototype.dotProduct(self, other)
-    return self.vector:dot(other.vector)
-end
-function CcVector.prototype.crossProduct(self, other)
-    local result = self.vector:cross(other.vector)
-    return ____exports.CcVector:of(result.x, result.y, result.z)
-end
-function CcVector.prototype.length(self)
-    return self.vector:length()
-end
-function CcVector.prototype.normalize(self)
-    local result = self.vector:normalize()
-    return ____exports.CcVector:of(result.x, result.y, result.z)
-end
-function CcVector.prototype.round(self, tolerance)
-    local result = self.vector:round(tolerance)
-    return ____exports.CcVector:of(result.x, result.y, result.z)
-end
-function CcVector.prototype.__tostring(self)
-    return tostring(self.vector)
-end
-function CcVector.prototype.equals(self, other)
-    return self.vector:equals(other.vector)
-end
-function CcVector.prototype.getX(self)
-    return self.vector.x
-end
-function CcVector.prototype.getY(self)
-    return self.vector.y
-end
-function CcVector.prototype.getZ(self)
-    return self.vector.z
-end
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.globals.ccWindow"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local __TS__New = ____lualib.__TS__New
-local ____exports = {}
-local ____lua = require("preBuild.src.lua.lua")
-local Lua = ____lua.Lua
---- A terminal redirect occupying a smaller area of an existing terminal.
--- Allows defining spaces within the display that can be written/drawn to, then later redrawn/repositioned/etc.
--- Windows are considered terminal objects and have access to nearly all commands in the term API.
--- Each window has a "parent" terminal object and retains memory of everything rendered through them.
--- 
--- Based on the documentation: https://tweaked.cc/module/window.html
-____exports.CcWindow = __TS__Class()
-local CcWindow = ____exports.CcWindow
-CcWindow.name = "CcWindow"
-function CcWindow.prototype.____constructor(self, window)
-    self.window = window
-end
-function CcWindow.create(self, parent, x, y, width, height, startVisible)
-    if startVisible == nil then
-        startVisible = true
-    end
-    return __TS__New(
-        ____exports.CcWindow,
-        window.create(parent, x, y, width, height, startVisible)
-    )
-end
-function CcWindow.prototype.write(self, text)
-    self.window.write(text)
-end
-function CcWindow.prototype.blit(self, text, textColor, backgroundColor)
-    self.window.blit(text, textColor, backgroundColor)
-end
-function CcWindow.prototype.clear(self)
-    self.window.clear()
-end
-function CcWindow.prototype.clearLine(self)
-    self.window.clearLine()
-end
-function CcWindow.prototype.getCursorPos(self)
-    local x = 0
-    local y = 0
-    x, y = self.window.getCursorPos()
-    return {x = x, y = y}
-end
-function CcWindow.prototype.setCursorPos(self, x, y)
-    self.window.setCursorPos(x, y)
-end
-function CcWindow.prototype.setCursorBlink(self, blink)
-    self.window.setCursorBlink(blink)
-end
-function CcWindow.prototype.getCursorBlink(self)
-    local blink = false
-    blink = self.window.getCursorBlink()
-    return blink
-end
-function CcWindow.prototype.isColor(self)
-    local color = false
-    color = self.window.isColor()
-    return color
-end
-function CcWindow.prototype.isColour(self)
-    local colour = false
-    colour = self.window.isColour()
-    return colour
-end
-function CcWindow.prototype.setTextColor(self, color)
-    self.window.setTextColor(color)
-end
-function CcWindow.prototype.setTextColour(self, color)
-    self.window.setTextColour(color)
-end
-function CcWindow.prototype.setPaletteColor(self, color, r, g, b)
-    self.window.setPaletteColor(color, r, g, b)
-end
-function CcWindow.prototype.setPaletteColour(self, color, r, g, b)
-    self.window.setPaletteColour(color, r, g, b)
-end
-function CcWindow.prototype.getPaletteColor(self, color)
-    local r = 0
-    local g = 0
-    local b = 0
-    r, g, b = self.window.getPaletteColor(color)
-    return {r, g, b}
-end
-function CcWindow.prototype.getPaletteColour(self, color)
-    local r = 0
-    local g = 0
-    local b = 0
-    r, g, b = self.window.getPaletteColour(color)
-    return {r, g, b}
-end
-function CcWindow.prototype.setBackgroundColor(self, color)
-    self.window.setBackgroundColor(color)
-end
-function CcWindow.prototype.setBackgroundColour(self, color)
-    self.window.setBackgroundColour(color)
-end
-function CcWindow.prototype.getDimensions(self)
-    local width = 0
-    local height = 0
-    width, height = self.window.getSize()
-    return {width = width, height = height}
-end
-function CcWindow.prototype.scroll(self, n)
-    self.window.scroll(n)
-end
-function CcWindow.prototype.getTextColour(self)
-    local colour = 0
-    colour = self.window.getTextColour()
-    return colour
-end
-function CcWindow.prototype.getBackgroundColour(self)
-    local colour = 0
-    colour = self.window.getBackgroundColour()
-    return colour
-end
-function CcWindow.prototype.getLine(self, y)
-    local text = ""
-    local textColor = ""
-    local bgColor = ""
-    text, textColor, bgColor = self.window.getLine(y)
-    return {text, textColor, bgColor}
-end
-function CcWindow.prototype.setVisible(self, visible)
-    self.window.setVisible(visible)
-end
-function CcWindow.prototype.isVisible(self)
-    local visible = false
-    visible = self.window.isVisible()
-    return visible
-end
-function CcWindow.prototype.redraw(self)
-    self.window.redraw()
-end
-function CcWindow.prototype.restoreCursor(self)
-    self.window.restoreCursor()
-end
-function CcWindow.prototype.getPosition(self)
-    local x = 0
-    local y = 0
-    x, y = self.window.getPosition()
-    return {x = x, y = y}
-end
-function CcWindow.prototype.reposition(self, newX, newY, newWidth, newHeight, newParent)
-    self.window.reposition(newX, newY, newWidth, newHeight, newParent)
-end
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.modules.ccAudioDfpwm"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local ____exports = {}
-local ____lua = require("preBuild.src.lua.lua")
-local Lua = ____lua.Lua
-local dfpwm = require("cc.audio.dfpwm")
---- The CcAudioDfpwm class provides methods for working with the DFPWM audio format.
--- It allows encoding PCM audio to DFPWM and decoding DFPWM back to PCM.
--- 
--- Based on the documentation: https://tweaked.cc/library/cc.audio.dfpwm.html
-____exports.CcAudioDfpwm = __TS__Class()
-local CcAudioDfpwm = ____exports.CcAudioDfpwm
-CcAudioDfpwm.name = "CcAudioDfpwm"
-function CcAudioDfpwm.prototype.____constructor(self)
-end
-function CcAudioDfpwm.makeEncoder(self)
-    return dfpwm.make_encoder()
-end
-function CcAudioDfpwm.makeDecoder(self)
-    return dfpwm.make_decoder()
-end
-function CcAudioDfpwm.encode(self, input)
-    return dfpwm.encode(input)
-end
-function CcAudioDfpwm.decode(self, input)
-    return dfpwm.decode(input)
-end
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.modules.ccCompletion"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local ____exports = {}
-local ____lua = require("preBuild.src.lua.lua")
-local Lua = ____lua.Lua
-local completion = require("cc.completion")
---- The CcCompletion class provides methods for working with input completion.
--- Based on the documentation: https://tweaked.cc/library/cc.completion.html
-____exports.CcCompletion = __TS__Class()
-local CcCompletion = ____exports.CcCompletion
-CcCompletion.name = "CcCompletion"
-function CcCompletion.prototype.____constructor(self)
-end
-function CcCompletion.choice(self, text, choices, addSpace)
-    return completion.choice(text, choices, addSpace)
-end
-function CcCompletion.peripheral(self, text, addSpace)
-    return completion.peripheral(text, addSpace)
-end
-function CcCompletion.side(self, text, addSpace)
-    return completion.side(text, addSpace)
-end
-function CcCompletion.setting(self, text, addSpace)
-    return completion.setting(text, addSpace)
-end
-function CcCompletion.command(self, text, addSpace)
-    return completion.command(text, addSpace)
-end
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.modules.ccExpect"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local ____exports = {}
-local ____lua = require("preBuild.src.lua.lua")
-local Lua = ____lua.Lua
-local ____tableUtil = require("preBuild.src.util.computer.api.tier1.lua.tableUtil")
-local TableUtil = ____tableUtil.TableUtil
-local expect = require("cc.expect")
---- The CcExpect class provides helper functions for verifying that function arguments
--- are well-formed and of the correct type.
--- 
--- Based on the documentation: https://tweaked.cc/library/cc.expect.html
-____exports.CcExpect = __TS__Class()
-local CcExpect = ____exports.CcExpect
-CcExpect.name = "CcExpect"
-function CcExpect.prototype.____constructor(self)
-end
-function CcExpect.expect(self, index, value, ...)
-    local types = {...}
-    local typesTable = TableUtil:fromArray(types)
-    return expect(index, value, table.unpack(typesTable))
-end
-function CcExpect.field(self, tbl, index, ...)
-    local types = {...}
-    local typesTable = TableUtil:fromArray(types)
-    return expect.field(tbl, index, table.unpack(typesTable))
-end
-function CcExpect.range(self, num, min, max)
-    if min == nil then
-        min = -math.huge
-    end
-    if max == nil then
-        max = math.huge
-    end
-    return expect.range(num, min, max)
-end
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.modules.ccImageNft"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local ____exports = {}
-local ____lua = require("preBuild.src.lua.lua")
-local Lua = ____lua.Lua
-local ____result = require("preBuild.src.util.types.result")
-local Result = ____result.Result
-local nft = require("cc.image.nft")
---- The CcImageNft class provides methods for working with NFT (Nitrogen Fingers Text) images.
--- NFT is a file format for drawing basic images that supports colored text and pixels.
--- 
--- Based on the documentation: https://tweaked.cc/library/cc.image.nft.html
-____exports.CcImageNft = __TS__Class()
-local CcImageNft = ____exports.CcImageNft
-CcImageNft.name = "CcImageNft"
-function CcImageNft.prototype.____constructor(self)
-end
-function CcImageNft.parse(self, image)
-    return nft.parse(image)
-end
-function CcImageNft.load(self, path)
-    local image = nil
-    local ____error = nil
-    image, error = nft.load(path)
-    return Result:ofError(image, ____error)
-end
-function CcImageNft.draw(self, image, xPos, yPos, target)
-    return nft.draw(image, xPos, yPos, target)
-end
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.modules.ccPretty"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local ____exports = {}
-local ____lua = require("preBuild.src.lua.lua")
-local Lua = ____lua.Lua
-local pretty = require("cc.pretty")
---- The CcPretty class provides methods for rendering data structures in an aesthetically pleasing manner.
--- It allows building and manipulating documents for formatted output.
--- 
--- Based on the documentation: https://tweaked.cc/module/cc.pretty.html
-____exports.CcPretty = __TS__Class()
-local CcPretty = ____exports.CcPretty
-CcPretty.name = "CcPretty"
-function CcPretty.prototype.____constructor(self)
-end
-function CcPretty.text(self, text, colour)
-    return pretty.text(text, colour)
-end
-function CcPretty.concat(self, ...)
-    return pretty.concat(...)
-end
-function CcPretty.nest(self, depth, doc)
-    return pretty.nest(depth, doc)
-end
-function CcPretty.group(self, doc)
-    return pretty.group(doc)
-end
-function CcPretty.write(self, doc, ribbonFrac)
-    if ribbonFrac == nil then
-        ribbonFrac = 0.6
-    end
-    pretty.write(doc, ribbonFrac)
-end
-function CcPretty.print(self, doc, ribbonFrac)
-    if ribbonFrac == nil then
-        ribbonFrac = 0.6
-    end
-    pretty.print(doc, ribbonFrac)
-end
-function CcPretty.render(self, doc, width, ribbonFrac)
-    if ribbonFrac == nil then
-        ribbonFrac = 0.6
-    end
-    return pretty.render(doc, width, ribbonFrac)
-end
-function CcPretty.pretty(self, obj, options)
-    return pretty.pretty(obj, options)
-end
-function CcPretty.prettyPrint(self, obj, options, ribbonFrac)
-    if ribbonFrac == nil then
-        ribbonFrac = 0.6
-    end
-    pretty.pretty_print(obj, options, ribbonFrac)
-end
-CcPretty.empty = pretty.empty
-CcPretty.space = pretty.space
-CcPretty.line = pretty.line
-CcPretty.spaceLine = pretty.space_line
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.modules.ccRequire"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local ____exports = {}
-local ____lua = require("preBuild.src.lua.lua")
-local Lua = ____lua.Lua
-local require = require("cc.require")
---- The CcRequire class provides methods for working with Lua's require function and package library.
--- It allows creating custom environments with their own require implementation.
--- 
--- Based on the documentation: https://tweaked.cc/module/cc.require.html
-____exports.CcRequire = __TS__Class()
-local CcRequire = ____exports.CcRequire
-CcRequire.name = "CcRequire"
-function CcRequire.prototype.____constructor(self)
-end
-function CcRequire.make(self, env, dir)
-    local requireFunction
-    local packageLibrary
-    requireFunction, packageLibrary = require.make(env, dir)
-    return {requireFunction = requireFunction, packageLibrary = packageLibrary}
-end
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.modules.ccShellCompletion"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local ____exports = {}
-local ____lua = require("preBuild.src.lua.lua")
-local Lua = ____lua.Lua
-local completion = require("cc.shell.completion")
---- The CcShellCompletion class provides methods for working with shell completion.
--- Most programs may be completed using the build helper method, rather than manually switching on the argument index.
--- 
--- Based on the documentation: https://tweaked.cc/library/cc.shell.completion.html
-____exports.CcShellCompletion = __TS__Class()
-local CcShellCompletion = ____exports.CcShellCompletion
-CcShellCompletion.name = "CcShellCompletion"
-function CcShellCompletion.prototype.____constructor(self)
-end
-function CcShellCompletion.file(self, shell, text)
-    return completion.file(shell, text)
-end
-function CcShellCompletion.dir(self, shell, text)
-    return completion.dir(shell, text)
-end
-function CcShellCompletion.dirOrFile(self, shell, text, previous, addSpace)
-    return completion.dirOrFile(shell, text, previous, add_space)
-end
-function CcShellCompletion.program(self, shell, text)
-    return completion.program(shell, text)
-end
-function CcShellCompletion.programWithArgs(self, shell, text, previous, starting)
-    return completion.programWithArgs(shell, text, previous, starting)
-end
-function CcShellCompletion.build(self, ...)
-    return completion.build(...)
-end
-CcShellCompletion.help = completion.help
-CcShellCompletion.choice = completion.choice
-CcShellCompletion.peripheral = completion.peripheral
-CcShellCompletion.side = completion.side
-CcShellCompletion.setting = completion.setting
-CcShellCompletion.command = completion.command
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.modules.ccStrings"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local ____exports = {}
-local ____lua = require("preBuild.src.lua.lua")
-local Lua = ____lua.Lua
-local strings = require("cc.strings")
---- The CcStrings class provides utilities for working with strings and text.
--- 
--- Based on the documentation: https://tweaked.cc/library/cc.strings.html
-____exports.CcStrings = __TS__Class()
-local CcStrings = ____exports.CcStrings
-CcStrings.name = "CcStrings"
-function CcStrings.prototype.____constructor(self)
-end
-function CcStrings.wrap(self, text, width)
-    return strings.wrap(text, width)
-end
-function CcStrings.ensureWidth(self, line, width)
-    return strings.ensure_width(line, width)
-end
-function CcStrings.split(self, str, deliminator, plain, limit)
-    if plain == nil then
-        plain = false
-    end
-    return strings.split(str, deliminator, plain, limit)
-end
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.peripherals.ccCommandBlock"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local ____exports = {}
-local ____ccPeripheral = require("preBuild.src.util.computer.api.tier1.globals.ccPeripheral")
-local CcPeripheral = ____ccPeripheral.CcPeripheral
-local ____lua = require("preBuild.src.lua.lua")
-local Lua = ____lua.Lua
-local ____result = require("preBuild.src.util.types.result")
-local Result = ____result.Result
---- A class representing the Command Block peripheral.
--- Allows interaction with command blocks by getting/setting commands and executing them.
-____exports.CcCommandBlock = __TS__Class()
-local CcCommandBlock = ____exports.CcCommandBlock
-CcCommandBlock.name = "CcCommandBlock"
-function CcCommandBlock.prototype.____constructor(self)
-end
-function CcCommandBlock.getCommand(self)
-    return self._internalCommandBlock:get().getCommand()
-end
-function CcCommandBlock.setCommand(self, command)
-    self._internalCommandBlock:get().setCommand(command)
-end
-function CcCommandBlock.runCommand(self)
-    local success = false
-    local errorMessage
-    success, errorMessage = self._internalCommandBlock:get().runCommand()
-    return Result:ofError(success, errorMessage)
-end
-CcCommandBlock._internalCommandBlock = CcPeripheral:find("command")
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.peripherals.ccComputer"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local ____exports = {}
-local ____ccPeripheral = require("preBuild.src.util.computer.api.tier1.globals.ccPeripheral")
-local CcPeripheral = ____ccPeripheral.CcPeripheral
-local ____lua = require("preBuild.src.lua.lua")
-local Lua = ____lua.Lua
---- A class representing the Computer peripheral.
--- Allows for basic interaction with adjacent computers.
-____exports.CcComputer = __TS__Class()
-local CcComputer = ____exports.CcComputer
-CcComputer.name = "CcComputer"
-function CcComputer.prototype.____constructor(self)
-end
-function CcComputer.turnOn(self)
-    self._internalComputer:get().turnOn()
-end
-function CcComputer.shutdown(self)
-    self._internalComputer:get().shutdown()
-end
-function CcComputer.reboot(self)
-    self._internalComputer:get().reboot()
-end
-function CcComputer.getID(self)
-    return self._internalComputer:get().getID()
-end
-function CcComputer.isOn(self)
-    return self._internalComputer:get().isOn()
-end
-function CcComputer.getLabel(self)
-    return self._internalComputer:get().getLabel()
-end
-CcComputer._internalComputer = CcPeripheral:find("computer")
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.peripherals.ccDrive"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local ____exports = {}
-local ____ccPeripheral = require("preBuild.src.util.computer.api.tier1.globals.ccPeripheral")
-local CcPeripheral = ____ccPeripheral.CcPeripheral
-local ____lua = require("preBuild.src.lua.lua")
-local Lua = ____lua.Lua
-local ____optional = require("preBuild.src.util.types.optional")
-local Optional = ____optional.Optional
-local ____result = require("preBuild.src.util.types.result")
-local Result = ____result.Result
---- A class representing the Disk Drive peripheral.
--- Allows interaction with floppy disks and other mountable media, including reading/writing data and playing audio.
--- 
--- Based on the documentation: https://tweaked.cc/peripheral/drive.html
-____exports.CcDrive = __TS__Class()
-local CcDrive = ____exports.CcDrive
-CcDrive.name = "CcDrive"
-function CcDrive.prototype.____constructor(self)
-end
-function CcDrive.isDiskPresent(self)
-    return self._internalDrive:get().isDiskPresent()
-end
-function CcDrive.getDiskLabel(self)
-    return Optional:ofNullable(self._internalDrive:get().getDiskLabel())
-end
-function CcDrive.setDiskLabel(self, label)
-    self._internalDrive:get().setDiskLabel(label)
-end
-function CcDrive.hasData(self)
-    return self._internalDrive:get().hasData()
-end
-function CcDrive.getMountPath(self)
-    return Optional:ofNullable(self._internalDrive:get().getMountPath())
-end
-function CcDrive.hasAudio(self)
-    return self._internalDrive:get().hasAudio()
-end
-function CcDrive.getAudioTitle(self)
-    local result = self._internalDrive:get().getAudioTitle()
-    if result == false then
-        return Result:error("No disk inserted")
-    end
-    if result == nil or result == nil then
-        return Result:error("Disk has no audio")
-    end
-    return Result:of(result)
-end
-function CcDrive.playAudio(self)
-    self._internalDrive:get().playAudio()
-end
-function CcDrive.stopAudio(self)
-    self._internalDrive:get().stopAudio()
-end
-function CcDrive.ejectDisk(self)
-    self._internalDrive:get().ejectDisk()
-end
-function CcDrive.getDiskID(self)
-    return Optional:ofNullable(self._internalDrive:get().getDiskID())
-end
-CcDrive._internalDrive = CcPeripheral:find("drive")
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.peripherals.ccModem"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local ____exports = {}
-local ____ccPeripheral = require("preBuild.src.util.computer.api.tier1.globals.ccPeripheral")
-local CcPeripheral = ____ccPeripheral.CcPeripheral
-local ____lua = require("preBuild.src.lua.lua")
-local Lua = ____lua.Lua
-local ____optional = require("preBuild.src.util.types.optional")
-local Optional = ____optional.Optional
-local ____tableUtil = require("preBuild.src.util.computer.api.tier1.lua.tableUtil")
-local TableUtil = ____tableUtil.TableUtil
---- A class representing the Modem peripheral from ComputerCraft.
--- Allows sending and receiving messages between computers over channels.
--- 
--- Based on the documentation: https://tweaked.cc/peripheral/modem.html
-____exports.CcModem = __TS__Class()
-local CcModem = ____exports.CcModem
-CcModem.name = "CcModem"
-function CcModem.prototype.____constructor(self)
-end
-function CcModem.open(self, channel)
-    self._internalModem:get().open(channel)
-end
-function CcModem.isOpen(self, channel)
-    local isOpen = false
-    isOpen = self._internalModem:get().isOpen(channel)
-    return isOpen
-end
-function CcModem.close(self, channel)
-    self._internalModem:get().close(channel)
-end
-function CcModem.closeAll(self)
-    self._internalModem:get().closeAll()
-end
-function CcModem.transmit(self, channel, replyChannel, payload)
-    self._internalModem:get().transmit(channel, replyChannel, payload)
-end
-function CcModem.isWireless(self)
-    local isWireless = false
-    isWireless = self._internalModem:get().isWireless()
-    return isWireless
-end
-function CcModem.getNamesRemote(self)
-    local names = {}
-    names = self._internalModem:get().getNamesRemote()
-    return names
-end
-function CcModem.isPresentRemote(self, name)
-    local isPresent = false
-    isPresent = self._internalModem:get().isPresentRemote(name)
-    return isPresent
-end
-function CcModem.getTypeRemote(self, name)
-    local ____type
-    type = self._internalModem:get().getTypeRemote(name)
-    return Optional:ofNullable(____type)
-end
-function CcModem.hasTypeRemote(self, name, ____type)
-    local hasType
-    hasType = self._internalModem:get().hasTypeRemote(name, type)
-    return Optional:ofNullable(hasType)
-end
-function CcModem.getMethodsRemote(self, name)
-    local methods = {}
-    methods = self._internalModem:get().getMethodsRemote(name)
-    return Optional:ofNullable(methods)
-end
-function CcModem.callRemote(self, remoteName, method, ...)
-    local args = {...}
-    local argsTable = TableUtil:fromArray(args)
-    local result
-    result = self._internalModem:get().callRemote(remoteName, method, table.unpack(argsTable))
-    return result
-end
-function CcModem.getNameLocal(self)
-    local name
-    name = self._internalModem:get().getNameLocal()
-    return Optional:ofNullable(name)
-end
-CcModem._internalModem = CcPeripheral:find("modem")
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.peripherals.ccMonitor"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local ____exports = {}
-local ____ccPeripheral = require("preBuild.src.util.computer.api.tier1.globals.ccPeripheral")
-local CcPeripheral = ____ccPeripheral.CcPeripheral
-local ____lua = require("preBuild.src.lua.lua")
-local Lua = ____lua.Lua
---- A class representing the Monitor peripheral.
--- Allows interaction with ComputerCraft monitors by writing text, changing colors,
--- handling touch events, and managing display properties.
-____exports.CcMonitor = __TS__Class()
-local CcMonitor = ____exports.CcMonitor
-CcMonitor.name = "CcMonitor"
-function CcMonitor.prototype.____constructor(self)
-end
-function CcMonitor.write(self, text)
-    self._internalMonitor:get().write(text)
-end
-function CcMonitor.scroll(self, y)
-    self._internalMonitor:get().scroll(y)
-end
-function CcMonitor.getCursorPos(self)
-    local x = 0
-    local y = 0
-    x, y = self._internalMonitor:get().getCursorPos()
-    return {x, y}
-end
-function CcMonitor.setCursorPos(self, x, y)
-    self._internalMonitor:get().setCursorPos(x, y)
-end
-function CcMonitor.getCursorBlink(self)
-    return self._internalMonitor:get().getCursorBlink()
-end
-function CcMonitor.setCursorBlink(self, blink)
-    self._internalMonitor:get().setCursorBlink(blink)
-end
-function CcMonitor.getSize(self)
-    local width = 0
-    local height = 0
-    width, height = self._internalMonitor:get().getSize()
-    return {width, height}
-end
-function CcMonitor.clear(self)
-    self._internalMonitor:get().clear()
-end
-function CcMonitor.clearLine(self)
-    self._internalMonitor:get().clearLine()
-end
-function CcMonitor.setTextScale(self, scale)
-    self._internalMonitor:get().setTextScale(scale)
-end
-function CcMonitor.getTextScale(self)
-    return self._internalMonitor:get().getTextScale()
-end
-function CcMonitor.onResize(self, listener)
-    local event = ""
-    local side = ""
-    while true do
-        local event, side = os.pullEvent("monitor_resize")
-        listener(nil, {event = event, side = side})
-    end
-end
-function CcMonitor.onTouch(self, listener)
-    local event = ""
-    local side = ""
-    local x = 0
-    local y = 0
-    while true do
-        local event, side, x, y = os.pullEvent("monitor_touch")
-        listener(nil, {event = event, side = side, x = x, y = y})
-    end
-end
-CcMonitor._internalMonitor = CcPeripheral:find("monitor")
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.peripherals.ccPrinter"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local ____exports = {}
-local ____ccPeripheral = require("preBuild.src.util.computer.api.tier1.globals.ccPeripheral")
-local CcPeripheral = ____ccPeripheral.CcPeripheral
-local ____lua = require("preBuild.src.lua.lua")
-local Lua = ____lua.Lua
---- A class representing the Printer peripheral from ComputerCraft.
--- Allows printing text onto pages which can be crafted into printed pages or books.
--- Requires ink (colored dyes) and paper to function.
-____exports.CcPrinter = __TS__Class()
-local CcPrinter = ____exports.CcPrinter
-CcPrinter.name = "CcPrinter"
-function CcPrinter.prototype.____constructor(self)
-end
-function CcPrinter.write(self, text)
-    self._internalPrinter:get().write(text)
-end
-function CcPrinter.getCursorPos(self)
-    local x = 0
-    local y = 0
-    x, y = self._internalPrinter:get().getCursorPos()
-    return {x = x, y = y}
-end
-function CcPrinter.setCursorPos(self, x, y)
-    self._internalPrinter:get().setCursorPos(x, y)
-end
-function CcPrinter.getPageSize(self)
-    local width = 0
-    local height = 0
-    width, height = self._internalPrinter:get().getPageSize()
-    return {width = width, height = height}
-end
-function CcPrinter.newPage(self)
-    local success = false
-    success = self._internalPrinter:get().newPage()
-    return success
-end
-function CcPrinter.endPage(self)
-    local success = false
-    success = self._internalPrinter:get().endPage()
-    return success
-end
-function CcPrinter.setPageTitle(self, title)
-    self._internalPrinter:get().setPageTitle(title)
-end
-function CcPrinter.getInkLevel(self)
-    local level = 0
-    level = self._internalPrinter:get().getInkLevel()
-    return level
-end
-function CcPrinter.getPaperLevel(self)
-    local level = 0
-    level = self._internalPrinter:get().getPaperLevel()
-    return level
-end
-CcPrinter._internalPrinter = CcPeripheral:find("printer")
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.peripherals.ccRedstoneRelay"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local ____exports = {}
-local ____ccPeripheral = require("preBuild.src.util.computer.api.tier1.globals.ccPeripheral")
-local CcPeripheral = ____ccPeripheral.CcPeripheral
-local ____lua = require("preBuild.src.lua.lua")
-local Lua = ____lua.Lua
---- The redstone relay is a peripheral that allows reading and outputting redstone signals.
--- While this is not very useful on its own (as computers have the same functionality built-in),
--- this can be used with wired modems to interact with multiple redstone signals from the same computer.
-____exports.CcRedstoneRelay = __TS__Class()
-local CcRedstoneRelay = ____exports.CcRedstoneRelay
-CcRedstoneRelay.name = "CcRedstoneRelay"
-function CcRedstoneRelay.prototype.____constructor(self)
-end
-function CcRedstoneRelay.setOutput(self, side, on)
-    self._internalRelay:get().setOutput(side, on)
-end
-function CcRedstoneRelay.getOutput(self, side)
-    return self._internalRelay:get().getOutput(side)
-end
-function CcRedstoneRelay.getInput(self, side)
-    return self._internalRelay:get().getInput(side)
-end
-function CcRedstoneRelay.setAnalogOutput(self, side, value)
-    self._internalRelay:get().setAnalogOutput(side, value)
-end
-function CcRedstoneRelay.setAnalogueOutput(self, side, value)
-    self._internalRelay:get().setAnalogueOutput(side, value)
-end
-function CcRedstoneRelay.getAnalogOutput(self, side)
-    return self._internalRelay:get().getAnalogOutput(side)
-end
-function CcRedstoneRelay.getAnalogueOutput(self, side)
-    return self._internalRelay:get().getAnalogueOutput(side)
-end
-function CcRedstoneRelay.getAnalogInput(self, side)
-    return self._internalRelay:get().getAnalogInput(side)
-end
-function CcRedstoneRelay.getAnalogueInput(self, side)
-    return self._internalRelay:get().getAnalogueInput(side)
-end
-function CcRedstoneRelay.setBundledOutput(self, side, output)
-    self._internalRelay:get().setBundledOutput(side, output)
-end
-function CcRedstoneRelay.getBundledOutput(self, side)
-    return self._internalRelay:get().getBundledOutput(side)
-end
-function CcRedstoneRelay.getBundledInput(self, side)
-    return self._internalRelay:get().getBundledInput(side)
-end
-function CcRedstoneRelay.testBundledInput(self, side, mask)
-    return self._internalRelay:get().testBundledInput(side, mask)
-end
-CcRedstoneRelay._internalRelay = CcPeripheral:find("redstone_relay")
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.peripherals.ccSpeaker"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local ____exports = {}
-local ____ccPeripheral = require("preBuild.src.util.computer.api.tier1.globals.ccPeripheral")
-local CcPeripheral = ____ccPeripheral.CcPeripheral
-local ____lua = require("preBuild.src.lua.lua")
-local Lua = ____lua.Lua
---- The `CcSpeaker` class provides a static API for interacting with a connected Computercraft speaker peripheral.
--- It allows playing note block notes, Minecraft sounds, streaming audio data, and stopping audio playback.
--- 
--- Based on the documentation: https://tweaked.cc/peripheral/speaker.html
-____exports.CcSpeaker = __TS__Class()
-local CcSpeaker = ____exports.CcSpeaker
-CcSpeaker.name = "CcSpeaker"
-function CcSpeaker.prototype.____constructor(self)
-end
-function CcSpeaker.playNote(self, instrument, volume, pitch)
-    local success = false
-    success = self._internalSpeaker:get().playNote(instrument, volume, pitch)
-    return success
-end
-function CcSpeaker.playSound(self, name, volume, pitch)
-    local success = false
-    success = self._internalSpeaker:get().playSound(name, volume, pitch)
-    return success
-end
-function CcSpeaker.playAudio(self, audio, volume)
-    local success = false
-    success = self._internalSpeaker:get().playAudio(audio, volume)
-    return success
-end
-function CcSpeaker.stop(self)
-    self._internalSpeaker:get().stop()
-end
-CcSpeaker._internalSpeaker = CcPeripheral:find("speaker")
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.types.consts.events"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-____exports.Events = Events or ({})
-____exports.Events.ALARM = "alarm"
-____exports.Events.CHAR = "char"
-____exports.Events.COMPUTER_COMMAND = "computer_command"
-____exports.Events.DISK = "disk"
-____exports.Events.DISK_EJECT = "disk_eject"
-____exports.Events.FILE_TRANSFER = "file_transfer"
-____exports.Events.HTTP_CHECK = "http_check"
-____exports.Events.HTTP_FAILURE = "http_failure"
-____exports.Events.HTTP_SUCCESS = "http_success"
-____exports.Events.KEY = "key"
-____exports.Events.KEY_UP = "key_up"
-____exports.Events.MODEM_MESSAGE = "modem_message"
-____exports.Events.MONITOR_RESIZE = "monitor_resize"
-____exports.Events.MONITOR_TOUCH = "monitor_touch"
-____exports.Events.MOUSE_CLICK = "mouse_click"
-____exports.Events.MOUSE_DRAG = "mouse_drag"
-____exports.Events.MOUSE_SCROLL = "mouse_scroll"
-____exports.Events.MOUSE_UP = "mouse_up"
-____exports.Events.PASTE = "paste"
-____exports.Events.PERIPHERAL = "peripheral"
-____exports.Events.PERIPHERAL_DETACH = "peripheral_detach"
-____exports.Events.REDNET_MESSAGE = "rednet_message"
-____exports.Events.REDSTONE = "redstone"
-____exports.Events.SPEAKER_AUDIO_EMPTY = "speaker_audio_empty"
-____exports.Events.TASK_COMPLETE = "task_complete"
-____exports.Events.TERM_RESIZE = "term_resize"
-____exports.Events.TERMINATE = "terminate"
-____exports.Events.TIMER = "timer"
-____exports.Events.TURTLE_INVENTORY = "turtle_inventory"
-____exports.Events.WEBSOCKET_CLOSED = "websocket_closed"
-____exports.Events.WEBSOCKET_FAILURE = "websocket_failure"
-____exports.Events.WEBSOCKET_MESSAGE = "websocket_message"
-____exports.Events.WEBSOCKET_SUCCESS = "websocket_success"
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.types.consts.keys"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-local ____ccKeys = require("preBuild.src.util.computer.api.tier1.globals.ccKeys")
-local CcKeys = ____ccKeys.CcKeys
-____exports.Keys = CcKeys.codes
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.types.consts.mouseButton"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
---- Enum representing mouse buttons.
--- 
--- This enumeration provides identifiers for commonly used mouse buttons, such as left, right, and middle buttons.
--- 
--- Enum values:
--- - `LEFT`: Represents the left mouse button, with a numeric value of 1.
--- - `RIGHT`: Represents the right mouse button, with a numeric value of 2.
--- - `MIDDLE`: Represents the middle mouse button, typically the scroll wheel button, with a numeric value of 3.
--- 
--- Use this enum to handle mouse button inputs in a consistent and readable manner.
-____exports.MouseButton = MouseButton or ({})
-____exports.MouseButton.LEFT = 1
-____exports.MouseButton[____exports.MouseButton.LEFT] = "LEFT"
-____exports.MouseButton.RIGHT = 2
-____exports.MouseButton[____exports.MouseButton.RIGHT] = "RIGHT"
-____exports.MouseButton.MIDDLE = 3
-____exports.MouseButton[____exports.MouseButton.MIDDLE] = "MIDDLE"
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.types.consts.scrollDirection"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
---- Represents the direction of a scrolling action.
--- 
--- This enum provides two possible values for scrolling direction:
--- UP for scrolling upwards and DOWN for scrolling downwards.
--- 
--- Each direction is associated with a numeric value:
--- - UP corresponds to -1.
--- - DOWN corresponds to 1.
-____exports.ScrollDirection = ScrollDirection or ({})
-____exports.ScrollDirection.UP = -1
-____exports.ScrollDirection[____exports.ScrollDirection.UP] = "UP"
-____exports.ScrollDirection.DOWN = 1
-____exports.ScrollDirection[____exports.ScrollDirection.DOWN] = "DOWN"
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.types.events.alarmEvent"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.types.events.charEvent"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.types.events.computerCommandEvent"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.types.files.transferredFileReadHandle"] = function(...) 
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local __TS__ClassExtends = ____lualib.__TS__ClassExtends
-local ____exports = {}
 local ____fileReadHandle = require("preBuild.src.util.computer.api.tier1.types.files.fileReadHandle")
 local FileReadHandle = ____fileReadHandle.FileReadHandle
-local ____lua = require("preBuild.src.lua.lua")
-local Lua = ____lua.Lua
---- Represents a read-only handle to access a transferred file. This class extends the `FileReadHandle` class and provides
--- functionality specific to handling files that have been transferred between systems or contexts.
--- 
--- Use this class to interact with transferred files in a read-only manner. The primary method provided is for
--- retrieving the name of the file associated with this handle.
--- 
--- This class assumes the presence of a `handle` object with methods that are invoked to interact with the underlying file.
--- It is not intended for writing or modifying the file's contents.
--- 
--- Methods:
--- - `getName`: Retrieves the name of the transferred file as a string.
--- 
--- Based on the documentation: https://tweaked.cc/event/file_transfer.html
-____exports.TransferredFileReadHandle = __TS__Class()
-local TransferredFileReadHandle = ____exports.TransferredFileReadHandle
-TransferredFileReadHandle.name = "TransferredFileReadHandle"
-__TS__ClassExtends(TransferredFileReadHandle, FileReadHandle)
-function TransferredFileReadHandle.prototype.getName(self)
-    return self.handle.getName()
+--- Represents an HTTP response in ComputerCraft.
+-- Extends FileReadHandle to provide access to the response body data.
+____exports.HttpResponse = __TS__Class()
+local HttpResponse = ____exports.HttpResponse
+HttpResponse.name = "HttpResponse"
+__TS__ClassExtends(HttpResponse, FileReadHandle)
+function HttpResponse.prototype.getResponseCode(self)
+    return self.handle.getResponseCode()
+end
+function HttpResponse.prototype.getResponseHeaders(self)
+    return self.handle.getResponseHeaders()
 end
 return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.types.events.fileTransferEvent"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.types.events.modemMessageEvent"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.types.events.pasteEvent"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.types.events.rednetMessageEvent"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.types.events.redstoneEvent"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.types.events.speakerAudioEmptyEvent"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.types.events.taskCompleteEvent"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.types.events.terminalResizeEvent"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.types.events.terminateEvent"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.types.events.timerEvent"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.types.events.turtleInventoryChangeEvent"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.types.events.disk.diskEjectEvent"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.types.events.disk.diskEvent"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.types.events.http.httpCheckEvent"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.types.events.http.httpFailureEvent"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.types.events.http.httpSuccessEvent"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.types.events.key.keyDownEvent"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.types.events.key.keyUpEvent"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.types.events.monitor.monitorResizeEvent"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.types.events.monitor.monitorTouchEvent"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.types.events.mouse.mouseClickEvent"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.types.events.mouse.mouseClickReleaseEvent"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.types.events.mouse.mouseDragEvent"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.types.events.mouse.mouseScrollEvent"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.types.events.peripheral.peripheralAttachEvent"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.types.events.peripheral.peripheralDetachEvent"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.types.events.websocket.websocketClosedEvent"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.types.events.websocket.websocketFailureEvent"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.types.events.websocket.websocketMessageEvent"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-return ____exports
- end,
-["preBuild.src.util.computer.api.tier1.types.events.websocket.websocketSuccessEvent"] = function(...) 
---[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local ____exports = {}
-return ____exports
- end,
-["preBuild.src.util.types.collection.luaTableList"] = function(...) 
+
+end)
+__bundle_register("preBuild.src.util.reflection", function(require, _LOADED, __bundle_register, __bundle_modules)
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
-local __TS__New = ____lualib.__TS__New
-local __TS__Iterator = ____lualib.__TS__Iterator
-local __TS__Symbol = ____lualib.__TS__Symbol
-local Symbol = ____lualib.Symbol
+local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["6"] = 1,["7"] = 1,["8"] = 2,["9"] = 2,["10"] = 3,["11"] = 3,["12"] = 5,["13"] = 5,["14"] = 5,["16"] = 5,["17"] = 6,["18"] = 7,["19"] = 9,["20"] = 10,["21"] = 12,["22"] = 13,["23"] = 14,["24"] = 15,["25"] = 16,["26"] = 18,["27"] = 6,["28"] = 21,["29"] = 22,["30"] = 23,["32"] = 26,["33"] = 27,["34"] = 28,["36"] = 31,["37"] = 21,["38"] = 34,["39"] = 38,["40"] = 34,["41"] = 45,["42"] = 46,["43"] = 48,["44"] = 49,["45"] = 49,["46"] = 53,["47"] = 54,["48"] = 55,["49"] = 55,["50"] = 55,["51"] = 55,["52"] = 56,["53"] = 57,["54"] = 59,["55"] = 45});
 local ____exports = {}
 local ____lua = require("preBuild.src.lua.lua")
 local Lua = ____lua.Lua
-local ____optional = require("preBuild.src.util.types.optional")
-local Optional = ____optional.Optional
----
--- @deprecated Use LuaList instead
-____exports.LuaTableList = __TS__Class()
-local LuaTableList = ____exports.LuaTableList
-LuaTableList.name = "LuaTableList"
-function LuaTableList.prototype.____constructor(self)
-    self._table = {}
+local ____result = require("preBuild.src.util.types.result")
+local Result = ____result.Result
+local ____luaMap = require("preBuild.src.util.types.collection.luaMap")
+local LuaMap = ____luaMap.LuaMap
+____exports.Reflection = __TS__Class()
+local Reflection = ____exports.Reflection
+Reflection.name = "Reflection"
+function Reflection.prototype.____constructor(self)
 end
-function LuaTableList.of(self, elements)
-    local result = __TS__New(____exports.LuaTableList)
-    for ____, element in ipairs(elements) do
-        result:add(element)
-    end
-    return result
-end
-function LuaTableList.ofSingleton(self, element)
-    return __TS__New(____exports.LuaTableList):add(element)
-end
-function LuaTableList.empty(self)
-    return __TS__New(____exports.LuaTableList)
-end
-function LuaTableList.prototype.toArray(self)
-    local result = {}
-    for ____, element in __TS__Iterator(self) do
-        result[#result + 1] = element
-    end
-    return result
-end
-function LuaTableList.prototype.__tostring(self)
-    local body = self:select(function(____, element) return tostring(element) end):join(", ")
-    return ("[" .. body) .. "]"
-end
-function LuaTableList.prototype.size(self)
-    return #self._table
-end
-function LuaTableList.prototype.add(self, element)
-    self._table[#self._table + 1] = element
-    return self
-end
-function LuaTableList.prototype.insert(self, element, index)
-    table.insert(self._table, index, element)
-    return self
-end
-function LuaTableList.prototype.get(self, index)
-    return self._table[index]
-end
-function LuaTableList.prototype.remove(self, element)
-    local index = self:indexOf(element)
-    if index:isEmpty() then
-        return Optional:empty()
-    end
-    local indexValue = index:getValueOrDefault(0)
-    return Optional:of(table.remove(self._table, indexValue))
-end
-function LuaTableList.prototype.removeAt(self, index)
-    return table.remove(self._table, index)
-end
-function LuaTableList.prototype.indexOf(self, element)
-    for index, value in ipairs(self._table) do
-        if value == element then
-            return Optional:of(index)
+function Reflection.getFields(self, ____table)
+    local fields = LuaMap:empty()
+    local k = ""
+    local v = nil
+    for k, v in pairs(table) do
+        if type(v) ~= 'function' then
+            fields[k] = v
         end
     end
-    return Optional:of(nil)
+    return fields
 end
-LuaTableList.prototype[Symbol.iterator] = function(self)
-    local index = 0
-    local size = self:size()
-    return {next = function()
-        index = index + 1
-        if index <= size then
-            return {
-                done = false,
-                value = self:get(index)
-            }
-        end
-        return {done = true, value = nil}
-    end}
-end
-function LuaTableList.prototype.forEach(self, callback)
-    for ____, element in __TS__Iterator(self) do
-        callback(nil, element)
+function Reflection.getField(self, ____table, name)
+    if type(table) ~= 'table' then
+        return Result:error(("'" .. tostring(____table)) .. "' is not a table")
     end
-    return self
-end
-function LuaTableList.prototype.select(self, callback)
-    local result = __TS__New(____exports.LuaTableList)
-    for ____, element in __TS__Iterator(self) do
-        result:add(callback(nil, element))
+    local value = table[name]
+    if value == nil or value == nil then
+        return Result:error(((("'" .. name) .. "' is not a field of '") .. tostring(____table)) .. "'")
     end
-    return result
+    return Result:of(value)
 end
-function LuaTableList.prototype.where(self, callback)
-    local result = __TS__New(____exports.LuaTableList)
-    for ____, element in __TS__Iterator(self) do
-        if callback(nil, element) then
-            result:add(element)
+function Reflection.getMethod(self, ____table, name)
+    return self:getMethods(____table):get(name):toResult(((("'" .. name) .. "' is not a method of '") .. tostring(____table)) .. "'")
+end
+function Reflection.getMethods(self, ____table)
+    local methods = LuaMap:empty()
+    local k = ""
+    local function v()
+    end
+    for k, v in pairs(table) do
+        if type(v) == 'function' then
+    methods:set(
+        k,
+        function(____, ...) return v(nil, ____table, ...) end
+    )
         end
     end
-    return result
-end
-function LuaTableList.prototype.join(self, separator)
-    local stringElements = self:select(function(____, element) return tostring(element) end)
-    local result = ""
-    local size = stringElements:size()
-    local index = 0
-    for ____, stringElement in __TS__Iterator(stringElements) do
-        index = index + 1
-        result = result .. stringElement
-        if index < size then
-            result = result .. separator
-        end
-    end
-    return result
+    return methods
 end
 return ____exports
- end,
-["preBuild.src.util.types.minecraft.vector2D"] = function(...) 
+
+end)
+__bundle_register("preBuild.src.util.computer.api.tier2.logging.listeners.fileLogListener", function(require, _LOADED, __bundle_register, __bundle_modules)
+local ____lualib = require("lualib_bundle")
+local __TS__Class = ____lualib.__TS__Class
+local __TS__ClassExtends = ____lualib.__TS__ClassExtends
+local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["7"] = 1,["8"] = 1,["9"] = 2,["10"] = 2,["11"] = 4,["12"] = 4,["13"] = 4,["14"] = 4,["15"] = 7,["16"] = 8,["17"] = 7,["18"] = 11,["19"] = 12,["20"] = 11,["21"] = 5});
+local ____exports = {}
+local ____fileUtil = require("preBuild.src.util.computer.api.tier2.fileUtil")
+local FileUtil = ____fileUtil.FileUtil
+local ____logListener = require("preBuild.src.util.computer.api.tier2.logging.logListener")
+local LogListener = ____logListener.LogListener
+____exports.FileLogListener = __TS__Class()
+local FileLogListener = ____exports.FileLogListener
+FileLogListener.name = "FileLogListener"
+__TS__ClassExtends(FileLogListener, LogListener)
+function FileLogListener.prototype.getName(self)
+    return "FileLogListener"
+end
+function FileLogListener.prototype.onLog(self, level, message)
+    FileUtil:appendText(____exports.FileLogListener.LOG_PATH, ((("[" .. level) .. "] ") .. message) .. "\n")
+end
+FileLogListener.LOG_PATH = "app/logs/main.log"
+return ____exports
+
+end)
+__bundle_register("preBuild.src.util.computer.api.tier2.config.info", function(require, _LOADED, __bundle_register, __bundle_modules)
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
 local __TS__New = ____lualib.__TS__New
+local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["7"] = 8,["8"] = 8,["9"] = 9,["10"] = 9,["12"] = 14,["13"] = 14,["14"] = 14,["15"] = 25,["16"] = 26,["17"] = 27,["18"] = 28,["19"] = 29,["20"] = 30,["21"] = 31,["22"] = 32,["23"] = 25,["24"] = 35,["25"] = 36,["26"] = 40,["27"] = 44,["28"] = 35,["29"] = 15});
 local ____exports = {}
-____exports.Vector2D = __TS__Class()
-local Vector2D = ____exports.Vector2D
-Vector2D.name = "Vector2D"
-function Vector2D.prototype.____constructor(self, x, y)
-    self.x = x
-    self.y = y
+local ____fileUtil = require("preBuild.src.util.computer.api.tier2.fileUtil")
+local FileUtil = ____fileUtil.FileUtil
+local ____ccTextUtils = require("preBuild.src.util.computer.api.tier1.globals.ccTextUtils")
+local CcTextUtils = ____ccTextUtils.CcTextUtils
+--- This allows access to the readonly information stored in `info.json`
+____exports.Info = __TS__Class()
+local Info = ____exports.Info
+Info.name = "Info"
+function Info.prototype.____constructor(self, model)
+    self.version = model.version
+    self.name = model.name
+    self.description = model.description
+    self.startup = model.startup
+    self.deployment = model.deployment
+    self.logging = model.logging
+    self.lifetime = model.lifetime
 end
-function Vector2D.zero(self)
-    return __TS__New(____exports.Vector2D, 0, 0)
+function Info.load(self)
+    local contentString = FileUtil:readText(self._path):getValueUnsafe("EC15 - " .. "Could not read info.json")
+    local content = CcTextUtils:unserializeJSON(contentString):getValueUnsafe("EC16 - " .. "Could not parse info.json")
+    return __TS__New(____exports.Info, content)
 end
-function Vector2D.from(self, vector)
-    return __TS__New(____exports.Vector2D, vector.x, vector.y)
-end
-function Vector2D.prototype.add(self, other)
-    return __TS__New(____exports.Vector2D, self.x + other.x, self.y + other.y)
-end
-function Vector2D.prototype.subtract(self, other)
-    return __TS__New(____exports.Vector2D, self.x - other.x, self.y - other.y)
-end
-function Vector2D.prototype.scale(self, factor)
-    return __TS__New(____exports.Vector2D, self.x * factor, self.y * factor)
-end
-function Vector2D.prototype.length(self)
-    return math.sqrt(self.x * self.x + self.y * self.y)
-end
-function Vector2D.prototype.normalize(self)
-    local len = self:length()
-    if len == 0 then
-        return ____exports.Vector2D:zero()
-    end
-    return self:scale(1 / len)
-end
-function Vector2D.prototype.__tostring(self)
-    return ((("Vector2D(" .. tostring(self.x)) .. ", ") .. tostring(self.y)) .. ")"
-end
+Info._path = "info.json"
 return ____exports
- end,
-["preBuild.src.util.types.minecraft.vector3D"] = function(...) 
+
+end)
+__bundle_register("preBuild.src.util.computer.executionContext", function(require, _LOADED, __bundle_register, __bundle_modules)
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
-local __TS__New = ____lualib.__TS__New
+local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["6"] = 1,["7"] = 1,["8"] = 2,["9"] = 2,["15"] = 11,["16"] = 11,["17"] = 11,["19"] = 11,["20"] = 16});
 local ____exports = {}
-____exports.Vector3D = __TS__Class()
-local Vector3D = ____exports.Vector3D
-Vector3D.name = "Vector3D"
-function Vector3D.prototype.____constructor(self, x, y, z)
-    self.x = x
-    self.y = y
-    self.z = z
+local ____lua = require("preBuild.src.lua.lua")
+local Lua = ____lua.Lua
+local ____luaList = require("preBuild.src.util.types.collection.luaList")
+local LuaList = ____luaList.LuaList
+--- Represents the execution context for a script or program, including relevant
+-- properties and methods for managing its state and resources.
+-- s
+-- This class provides functionality to handle context-specific data, such as
+-- command-line arguments available when the program executes.
+____exports.ExecutionContext = __TS__Class()
+local ExecutionContext = ____exports.ExecutionContext
+ExecutionContext.name = "ExecutionContext"
+function ExecutionContext.prototype.____constructor(self)
 end
-function Vector3D.prototype.add(self, other)
-    return __TS__New(____exports.Vector3D, self.x + other.x, self.y + other.y, self.z + other.z)
+ExecutionContext.commandLineArguments = LuaList:ofTable(COMMAND_LINE_ARGUMENTS)
+return ____exports
+
+end)
+__bundle_register("preBuild.src.util.computer.api.tier1.advancedPeripherals.chatBox", function(require, _LOADED, __bundle_register, __bundle_modules)
+local ____lualib = require("lualib_bundle")
+local __TS__Class = ____lualib.__TS__Class
+local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["6"] = 1,["7"] = 1,["8"] = 2,["9"] = 2,["13"] = 27,["14"] = 27,["15"] = 27,["17"] = 27,["18"] = 43,["19"] = 44,["20"] = 45,["21"] = 46,["22"] = 47,["23"] = 48,["24"] = 51,["25"] = 52,["26"] = 56,["27"] = 56,["28"] = 56,["29"] = 56,["30"] = 56,["31"] = 56,["32"] = 56,["34"] = 43,["35"] = 74,["36"] = 81,["37"] = 74,["38"] = 95,["39"] = 103,["40"] = 95,["41"] = 118,["42"] = 127,["43"] = 118,["44"] = 140,["45"] = 147,["46"] = 140,["47"] = 161,["48"] = 169,["49"] = 161,["50"] = 184,["51"] = 193,["52"] = 184,["53"] = 28});
+local ____exports = {}
+local ____ccPeripheral = require("preBuild.src.util.computer.api.tier1.globals.ccPeripheral")
+local CcPeripheral = ____ccPeripheral.CcPeripheral
+local ____lua = require("preBuild.src.lua.lua")
+local Lua = ____lua.Lua
+--- A class representing the ChatBox peripheral from the Advanced Peripherals mod.
+-- Allows reading and writing to the Minecraft in-game chat, including sending messages,
+-- toasts, and formatted components globally or to specific players.
+____exports.ChatBox = __TS__Class()
+local ChatBox = ____exports.ChatBox
+ChatBox.name = "ChatBox"
+function ChatBox.prototype.____constructor(self)
 end
-function Vector3D.prototype.subtract(self, other)
-    return __TS__New(____exports.Vector3D, self.x - other.x, self.y - other.y, self.z - other.z)
-end
-function Vector3D.prototype.length(self)
-    return math.sqrt(self.x * self.x + self.y * self.y + self.z * self.z)
-end
-function Vector3D.prototype.normalize(self)
-    local len = self:length()
-    if len == 0 then
-        return __TS__New(____exports.Vector3D, 0, 0, 0)
+function ChatBox.onMessage(self, listener)
+    local event = ""
+    local username = ""
+    local message = ""
+    local uuid = ""
+    local isHidden = true
+    while true do
+        local event, username, message, uuid, isHidden = os.pullEvent("chat")
+        listener(nil, {
+            event = event,
+            username = username,
+            message = message,
+            uuid = uuid,
+            isHidden = isHidden
+        })
     end
-    return __TS__New(____exports.Vector3D, self.x / len, self.y / len, self.z / len)
+end
+function ChatBox.sendMessage(self, message, prefix, brackets, bracketColor, range)
+    self._internalChatBox:get().sendMessage(message, prefix, brackets, bracketColor, range)
+end
+function ChatBox.sendMessageToPlayer(self, message, username, prefix, brackets, bracketColor, range)
+    self._internalChatBox:get().sendMessageToPlayer(message, username, prefix, brackets, bracketColor, range)
+end
+function ChatBox.sendToastToPlayer(self, message, title, username, prefix, brackets, bracketColor, range)
+    self._internalChatBox:get().sendToastToPlayer(message, title, username, prefix, brackets, bracketColor, range)
+end
+function ChatBox.sendFormattedMessage(self, json, prefix, brackets, bracketColor, range)
+    self._internalChatBox:get().sendFormattedMessage(json, prefix, brackets, bracketColor, range)
+end
+function ChatBox.sendFormattedMessageToPlayer(self, json, username, prefix, brackets, bracketColor, range)
+    self._internalChatBox:get().sendFormattedMessageToPlayer(json, username, prefix, brackets, bracketColor, range)
+end
+function ChatBox.sendFormattedToastToPlayer(self, messageJson, titleJson, username, prefix, brackets, bracketColor, range)
+    self._internalChatBox:get().sendFormattedToastToPlayer(messageJson, titleJson, username, prefix, brackets, bracketColor, range)
+end
+ChatBox._internalChatBox = CcPeripheral:find("chatBox")
+return ____exports
+
+end)
+__bundle_register("preBuild.src.util.computer.api.tier1.globals.ccPeripheral", function(require, _LOADED, __bundle_register, __bundle_modules)
+local ____lualib = require("lualib_bundle")
+local __TS__Class = ____lualib.__TS__Class
+local Error = ____lualib.Error
+local RangeError = ____lualib.RangeError
+local ReferenceError = ____lualib.ReferenceError
+local SyntaxError = ____lualib.SyntaxError
+local TypeError = ____lualib.TypeError
+local URIError = ____lualib.URIError
+local __TS__New = ____lualib.__TS__New
+local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["13"] = 1,["14"] = 1,["18"] = 8,["19"] = 8,["20"] = 8,["21"] = 11,["22"] = 12,["23"] = 11,["24"] = 20,["25"] = 21,["26"] = 20,["27"] = 31,["28"] = 35,["29"] = 38,["31"] = 39,["35"] = 42,["36"] = 31,["37"] = 50,["38"] = 51,["39"] = 50,["40"] = 60,["41"] = 61,["42"] = 60,["43"] = 70,["44"] = 71,["45"] = 70,["46"] = 81,["47"] = 85,["48"] = 81,["49"] = 94,["50"] = 95,["51"] = 94,["52"] = 104,["53"] = 105,["54"] = 104,["55"] = 116,["56"] = 117,["57"] = 116,["58"] = 126,["59"] = 127,["60"] = 126,["61"] = 136,["62"] = 137,["63"] = 136,["64"] = 147,["65"] = 148,["66"] = 147,["67"] = 156,["68"] = 157,["69"] = 156,["70"] = 167,["71"] = 168,["72"] = 167,["73"] = 178,["74"] = 179,["75"] = 178});
+local ____exports = {}
+local ____lua = require("preBuild.src.lua.lua")
+local Lua = ____lua.Lua
+--- A wrapper for the ComputerCraft `peripheral` API.
+-- Provides utilities to find, call, and inspect peripherals attached to a computer.
+-- Based on documentation from: https://tweaked.cc/module/peripheral.html
+____exports.CcPeripheral = __TS__Class()
+local CcPeripheral = ____exports.CcPeripheral
+CcPeripheral.name = "CcPeripheral"
+function CcPeripheral.prototype.____constructor(self, internalPeripheral)
+    self.internalPeripheral = internalPeripheral
+end
+function CcPeripheral.prototype.get(self)
+    return self.internalPeripheral
+end
+function CcPeripheral.find(self, peripheralName, filter)
+    local internalPeripheral = peripheral.find(peripheralName, filter)
+    if internalPeripheral == nil then
+        error(
+            __TS__New(Error, ("No peripheral of type \"" .. peripheralName) .. "\" found."),
+            0
+        )
+    end
+    return __TS__New(____exports.CcPeripheral, internalPeripheral)
+end
+function CcPeripheral.getNames(self)
+    return peripheral.getNames()
+end
+function CcPeripheral.isPresent(self, name)
+    return peripheral.isPresent(name)
+end
+function CcPeripheral.getType(self, peripheral)
+    return peripheral.getType(peripheral)
+end
+function CcPeripheral.hasType(self, peripheral, peripheralType)
+    return peripheral.hasType(peripheral, peripheralType)
+end
+function CcPeripheral.getMethods(self, name)
+    return peripheral.getMethods(name)
+end
+function CcPeripheral.getName(self, peripheral)
+    return peripheral.getName(peripheral)
+end
+function CcPeripheral.call(self, name, method, ...)
+    return peripheral.call(name, method, ...)
+end
+function CcPeripheral.wrap(self, name)
+    return peripheral.wrap(name)
+end
+function CcPeripheral.prototype.hasType(self, peripheralType)
+    return peripheral.hasType(self.internalPeripheral, peripheralType)
+end
+function CcPeripheral.prototype.getType(self)
+    return peripheral.getType(self.internalPeripheral)
+end
+function CcPeripheral.prototype.getName(self)
+    return peripheral.getName(self.internalPeripheral)
+end
+function CcPeripheral.prototype.call(self, method, ...)
+    return peripheral.call(self.internalPeripheral, method, ...)
+end
+function CcPeripheral.prototype.getMethods(self)
+    return peripheral.getMethods(self.internalPeripheral)
 end
 return ____exports
- end,
-}
-return require("preBuild.src.entrypoints.example.entrypoint", ...)
+
+end)
+return __bundle_require("__root")
