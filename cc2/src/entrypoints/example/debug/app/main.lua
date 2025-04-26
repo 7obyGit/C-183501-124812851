@@ -5693,7 +5693,7 @@ function ArController.fillGradientWithId(self, id, minX, minY, maxX, maxY, color
     return ArController._internalController.fillGradientWithId(id, minX, minY, maxX, maxY, colorFrom, colorTo)
 end
 function ArController.isRelativeMode(self)
-    return return ArController._internalController.isRelativeMode()
+    return ArController._internalController.isRelativeMode()
 end
 function ArController.setRelativeMode(self, enabled, virtualScreenWidth, virtualScreenHeight)
     return ArController._internalController.setRelativeMode(enabled, virtualScreenWidth, virtualScreenHeight)
