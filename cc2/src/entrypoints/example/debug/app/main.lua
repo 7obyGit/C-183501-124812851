@@ -4624,26 +4624,7 @@ local ____ = "use strict";
     function ____class_70.load(self)
         local exampleLines = __TS__StringSplit("This is a test\nThis is another Test", "\n")
         print(exampleLines)
-        if not FileUtil:exists(self._path) then
-            FileUtil:writeText(self._path, ""):getValueUnsafe("EC9")
-        end
-        local content = FileUtil:readText(self._path):getValueUnsafe("EC10 - Could not read from .env file")
-        local lines = content:split("\n")
-        local output = LuaMap:empty()
-        lines:forEach(function(____, line)
-            if line:startsWith("#") then
-                return
-            end
-            if line:trim() == "" then
-                return
-            end
-            if not line:includes("=") then
-                return
-            end
-            local key, value = __TS__Unpack(line:split("=", 2))
-            output:set(key, value)
-        end)
-        return output
+        return LuaMap:empty()
     end
     ____class_70._path = "app/data/.env"
     local Environment = ____class_70
