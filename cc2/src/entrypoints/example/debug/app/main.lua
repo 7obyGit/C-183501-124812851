@@ -4711,6 +4711,10 @@ local ____ = "use strict";
     function _LuaString.prototype.__tostring(self)
         return self._value
     end
+    function _LuaString.prototype.split(self, separator, limit)
+        local values = self._value:split(separator, limit)
+        return LuaList:of(values)
+    end
     local LuaString = _LuaString
     local ____class_71 = __TS__Class()
     ____class_71.name = "Environment"
@@ -4738,7 +4742,7 @@ local ____ = "use strict";
         if not FileUtil:exists(self._path) then
             FileUtil:writeText(self._path, ""):getValueUnsafe("EC9")
         end
-        local content = tostring(LuaString:of(FileUtil:readText(self._path):getValueUnsafe("EC10 - Could not read from .env file")))
+        local content = LuaString:of(FileUtil:readText(self._path):getValueUnsafe("EC10 - Could not read from .env file"))
         local lines = content:split("\n")
         local output = LuaMap:empty()
         lines:forEach(function(____, line)
