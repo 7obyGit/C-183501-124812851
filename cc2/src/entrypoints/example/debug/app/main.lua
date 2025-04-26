@@ -4700,6 +4700,18 @@ local ____ = "use strict";
         return os.date("!*t", time)
     end
     local CcOs = ____class_70
+    local _LuaString = __TS__Class()
+    _LuaString.name = "_LuaString"
+    function _LuaString.prototype.____constructor(self, value)
+        self._value = value
+    end
+    function _LuaString.of(self, value)
+        return __TS__New(_LuaString, value)
+    end
+    function _LuaString.prototype.__tostring(self)
+        return self._value
+    end
+    local LuaString = _LuaString
     local ____class_71 = __TS__Class()
     ____class_71.name = "Environment"
     function ____class_71.prototype.____constructor(self)
@@ -4726,7 +4738,7 @@ local ____ = "use strict";
         if not FileUtil:exists(self._path) then
             FileUtil:writeText(self._path, ""):getValueUnsafe("EC9")
         end
-        local content = FileUtil:readText(self._path):getValueUnsafe("EC10 - Could not read from .env file")
+        local content = tostring(LuaString:of(FileUtil:readText(self._path):getValueUnsafe("EC10 - Could not read from .env file")))
         local lines = content:split("\n")
         local output = LuaMap:empty()
         lines:forEach(function(____, line)
