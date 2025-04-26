@@ -3,7 +3,7 @@
 --- be easily copied into a computer
 
 
-baseUrl = "https://raw.githubusercontent.com/7obyGit/C-183501-124812851/main/cc2/src/entrypoints/tests"
+baseUrl = "https://raw.githubusercontent.com/7obyGit/C-183501-124812851/main/cc2/src/entrypoints/tests/release"
 
 
 function download(url)
