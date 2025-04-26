@@ -2795,6 +2795,7 @@ local Map = ____lualib.Map
 local __TS__Iterator = ____lualib.__TS__Iterator
 local __TS__ClassExtends = ____lualib.__TS__ClassExtends
 local __TS__ArrayIsArray = ____lualib.__TS__ArrayIsArray
+local __TS__StringSplit = ____lualib.__TS__StringSplit
 local ____ = "use strict";
 (function()
     local Optional, LuaList
@@ -4621,6 +4622,8 @@ local ____ = "use strict";
         FileUtil:writeText(self._path, content):getValueUnsafe("EC8 - Could not write to .env file")
     end
     function ____class_70.load(self)
+        local exampleLines = __TS__StringSplit("This is a test\nThis is another Test", "\n")
+        print(exampleLines)
         if not FileUtil:exists(self._path) then
             FileUtil:writeText(self._path, ""):getValueUnsafe("EC9")
         end
