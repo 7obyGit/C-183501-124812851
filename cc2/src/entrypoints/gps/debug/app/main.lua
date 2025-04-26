@@ -3746,7 +3746,7 @@ local ____ = "use strict";
         if file:isError() then
             return Result:error(file:getErrorMessage())
         end
-        local handle = file:getValueUnsafe("Error Code: 6 - No file")
+        local handle = file:getValueUnsafe("EC6 - No file")
         local content = handle:readAllContent()
         handle:close()
         if content == nil then
@@ -3763,7 +3763,7 @@ local ____ = "use strict";
         if file:isError() then
             return Result:error(file:getErrorMessage())
         end
-        local handle = file:getValueUnsafe("Error Code: 7 - No file")
+        local handle = file:getValueUnsafe("EC7 - No file")
         do
             local function ____catch(e)
                 local ____Result_error_25 = Result.error
@@ -3797,7 +3797,7 @@ local ____ = "use strict";
         if file:isError() then
             return Result:error(file:getErrorMessage())
         end
-        local handle = file:getValueUnsafe("Error Code: 8 - No file")
+        local handle = file:getValueUnsafe("EC8 - No file")
         do
             local function ____catch(e)
                 local ____Result_error_29 = Result.error
@@ -4075,7 +4075,7 @@ local ____ = "use strict";
         if contentResult:isError() then
             return Result:error(contentResult:getErrorMessage())
         end
-        local content = contentResult:getValueUnsafe("Error Code: 9 - No file")
+        local content = contentResult:getValueUnsafe("EC9 - No file")
         if not content:startsWith("?") then
             return Result:void()
         end
@@ -4170,7 +4170,7 @@ local ____ = "use strict";
         if contentString:isError() then
             return Result:error(contentString:getErrorMessage())
         end
-        local content = CcTextUtils:unserializeJSON(contentString:getValueUnsafe("Error Code: 3 - Could not read config.json"))
+        local content = CcTextUtils:unserializeJSON(contentString:getValueUnsafe("EC3 - Could not read config.json"))
         if content:isError() then
             error(
                 __TS__New(
@@ -4182,7 +4182,7 @@ local ____ = "use strict";
         end
         return Result:of(__TS__New(
             _Config,
-            content:getValueUnsafe("Error Code: 4 - Could not parse config.json")
+            content:getValueUnsafe("EC4 - Could not parse config.json")
         ))
     end
     function _Config.create(self, data)
@@ -4200,7 +4200,7 @@ local ____ = "use strict";
         end
         local result = FileUtil:writeText(
             _Config._configPath,
-            contentString:getValueUnsafe("Error Code: 5 - Could not serialize config.json")
+            contentString:getValueUnsafe("EC5 - Could not serialize config.json")
         )
         if result:isError() then
             return Result:error(result:getErrorMessage())
@@ -4497,8 +4497,8 @@ local ____ = "use strict";
         self.lifetime = model.lifetime
     end
     function _Info.load(self)
-        local contentString = FileUtil:readText(self._path):getValueUnsafe("Error Code: 10 - Could not read info.json")
-        local content = CcTextUtils:unserializeJSON(contentString):getValueUnsafe("Error Code: 11 - Could not parse info.json")
+        local contentString = FileUtil:readText(self._path):getValueUnsafe("EC10 - Could not read info.json")
+        local content = CcTextUtils:unserializeJSON(contentString):getValueUnsafe("EC11 - Could not parse info.json")
         return __TS__New(_Info, content)
     end
     _Info._path = "info.json"
@@ -4632,7 +4632,7 @@ local ____ = "use strict";
     end
     function ____class_70.prototype.routeRun(self)
         Logger:debug("Running GPS entrypoint 'run' route")
-        local config = Config:load():getValueUnsafe("Error Code: 1")
+        local config = Config:load():getValueUnsafe("EC1")
         Logger:debug("Extracting key values from config")
         local ____opt_71 = config.data
         if ____opt_71 ~= nil then
