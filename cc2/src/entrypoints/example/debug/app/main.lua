@@ -7581,7 +7581,7 @@ function CcWindow.create(self, parent, x, y, width, height, startVisible)
     end
     return __TS__New(
         ____exports.CcWindow,
-        window.create(parent, x, y, width, height, startVisible
+        window.create(parent, x, y, width, height, startVisible)
     )
 end
 function CcWindow.prototype.write(self, text)
