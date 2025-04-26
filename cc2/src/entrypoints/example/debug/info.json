@@ -1,9 +1,9 @@
 {
-    "version": "0.0.141",
+    "version": "0.0.142",
     "name": "Example Application",
     "description": "This is an example application.\nIt can have a long description.",
     "startup": {
-        "delaySeconds": 5,
+        "delaySeconds": 3,
         "autoUpdate": true,
         "clearLogs": false
     },
