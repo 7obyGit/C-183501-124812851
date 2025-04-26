@@ -3746,7 +3746,7 @@ local ____ = "use strict";
         if file:isError() then
             return Result:error(file:getErrorMessage())
         end
-        local handle = file:getValueUnsafe("EC6 - No file")
+        local handle = file:getValueUnsafe("EC9 - No file")
         local content = handle:readAllContent()
         handle:close()
         if content == nil then
@@ -3763,7 +3763,7 @@ local ____ = "use strict";
         if file:isError() then
             return Result:error(file:getErrorMessage())
         end
-        local handle = file:getValueUnsafe("EC7 - No file")
+        local handle = file:getValueUnsafe("EC10 - No file")
         do
             local function ____catch(e)
                 local ____Result_error_25 = Result.error
@@ -3797,7 +3797,7 @@ local ____ = "use strict";
         if file:isError() then
             return Result:error(file:getErrorMessage())
         end
-        local handle = file:getValueUnsafe("EC8 - No file")
+        local handle = file:getValueUnsafe("EC11 - No file")
         do
             local function ____catch(e)
                 local ____Result_error_29 = Result.error
@@ -4075,7 +4075,7 @@ local ____ = "use strict";
         if contentResult:isError() then
             return Result:error(contentResult:getErrorMessage())
         end
-        local content = contentResult:getValueUnsafe("EC9 - No file")
+        local content = contentResult:getValueUnsafe("EC12 - No file")
         if not content:startsWith("?") then
             return Result:void()
         end
@@ -4497,8 +4497,8 @@ local ____ = "use strict";
         self.lifetime = model.lifetime
     end
     function _Info.load(self)
-        local contentString = FileUtil:readText(self._path):getValueUnsafe("EC10 - Could not read info.json")
-        local content = CcTextUtils:unserializeJSON(contentString):getValueUnsafe("EC11 - Could not parse info.json")
+        local contentString = FileUtil:readText(self._path):getValueUnsafe("EC13 - Could not read info.json")
+        local content = CcTextUtils:unserializeJSON(contentString):getValueUnsafe("EC14 - Could not parse info.json")
         return __TS__New(_Info, content)
     end
     _Info._path = "info.json"
@@ -4607,7 +4607,7 @@ local ____ = "use strict";
         self._routes:set(name, callback)
     end
     function ____class_65.prototype.dispatchRoute(self)
-        local targetRouteName = ExecutionContext.commandLineArguments:first():getValueUnsafe("The first command line argument (route name) was not provided")
+        local targetRouteName = ExecutionContext.commandLineArguments:first():getValueUnsafe("EC17 - The first command line argument (route name) was not provided")
         self._routes:get(targetRouteName):ifEmpty(function()
             local validRouteNamesString = ("'" .. self._routes:keys():join("', '")) .. "'"
             error(
