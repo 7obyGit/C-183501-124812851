@@ -6979,7 +6979,7 @@ function CcSettings.undefine(self, name)
 end
 function CcSettings.set(self, name, value)
     local success = true
-    success = settings.set(name, value))
+    success = settings.set(name, value)
     if not success then
         return Result:error("Failed to set setting value")
     end
