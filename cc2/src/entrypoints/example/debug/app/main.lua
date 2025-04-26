@@ -4712,7 +4712,7 @@ local ____ = "use strict";
         return self._value
     end
     function _LuaString.prototype.split(self, separator, limit)
-        local values = self._value:split(separator, limit)
+        local values = __TS__StringSplit(self._value, separator, limit)
         return LuaList:of(values)
     end
     local LuaString = _LuaString
