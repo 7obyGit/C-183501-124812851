@@ -2795,7 +2795,6 @@ local Map = ____lualib.Map
 local __TS__Iterator = ____lualib.__TS__Iterator
 local __TS__ClassExtends = ____lualib.__TS__ClassExtends
 local __TS__ArrayIsArray = ____lualib.__TS__ArrayIsArray
-local __TS__StringSplit = ____lualib.__TS__StringSplit
 local ____ = "use strict";
 (function()
     local Optional, LuaList
@@ -4602,104 +4601,6 @@ local ____ = "use strict";
     end
     _DiscordWebhook.DISCORD_MESSAGE_LENGTH_LIMIT = 2000
     local DiscordWebhook = _DiscordWebhook
-    local ____class_70 = __TS__Class()
-    ____class_70.name = "CcOs"
-    function ____class_70.prototype.____constructor(self)
-    end
-    function ____class_70.loadAPI(self, path)
-        return os.loadAPI(path)
-    end
-    function ____class_70.unloadAPI(self, name)
-        os.unloadAPI(name)
-    end
-    function ____class_70.pullEvent(self, filter)
-        local eventData = {os.pullEvent(filter)}
-        local name = eventData[1]
-        local details = eventData:slice(2)
-        return {name = name, details = details}
-    end
-    function ____class_70.pullEventRaw(self, filter)
-        local eventData = {os.pullEventRaw(filter)}
-        local name = eventData[1]
-        local details = eventData:slice(2)
-        return {name = name, details = details}
-    end
-    function ____class_70.sleep(self, time)
-        os.sleep(time)
-    end
-    function ____class_70.version(self)
-        return os.version()
-    end
-    function ____class_70.run(self, env, path, ...)
-        local args = {...}
-        local argsTable = TableUtil:fromArray(args)
-        return os.run(env, path, table.unpack(argsTable))
-    end
-    function ____class_70.queueEvent(self, name, ...)
-        local params = {...}
-        local paramsTable = TableUtil:fromArray(params)
-        os.queueEvent(name, table.unpack(paramsTable))
-    end
-    function ____class_70.startTimer(self, time)
-        return os.startTimer(time)
-    end
-    function ____class_70.cancelTimer(self, token)
-        os.cancelTimer(token)
-    end
-    function ____class_70.setAlarm(self, time)
-        return os.setAlarm(time)
-    end
-    function ____class_70.cancelAlarm(self, token)
-        os.cancelAlarm(token)
-    end
-    function ____class_70.shutdown(self)
-        os.shutdown()
-    end
-    function ____class_70.reboot(self)
-        os.reboot()
-    end
-    function ____class_70.getComputerID(self)
-        return os.getComputerID()
-    end
-    function ____class_70.computerID(self)
-        return os.computerID()
-    end
-    function ____class_70.getComputerLabel(self)
-        local label = os.getComputerLabel()
-        return Optional:ofNullable(label)
-    end
-    function ____class_70.computerLabel(self)
-        local label = os.computerLabel()
-        return Optional:ofNullable(label)
-    end
-    function ____class_70.setComputerLabel(self, label)
-        os.setComputerLabel(label)
-    end
-    function ____class_70.clock(self)
-        return os.clock()
-    end
-    function ____class_70.time(self, locale)
-        return os.time(locale)
-    end
-    function ____class_70.day(self, locale)
-        return os.day(locale)
-    end
-    function ____class_70.epoch(self, locale)
-        return os.epoch(locale)
-    end
-    function ____class_70.date(self, format, time)
-        if format == "!*t" then
-            error(
-                __TS__New(Error, "!*t not supported in `date` - use `dateTable` instead"),
-                0
-            )
-        end
-        return os.date(format, time)
-    end
-    function ____class_70.dateTable(self, time)
-        return os.date("!*t", time)
-    end
-    local CcOs = ____class_70
     local _LuaString = __TS__Class()
     _LuaString.name = "_LuaString"
     function _LuaString.prototype.____constructor(self, value)
@@ -4716,18 +4617,18 @@ local ____ = "use strict";
         return LuaList:of(values)
     end
     local LuaString = _LuaString
-    local ____class_71 = __TS__Class()
-    ____class_71.name = "Environment"
-    function ____class_71.prototype.____constructor(self)
+    local ____class_70 = __TS__Class()
+    ____class_70.name = "Environment"
+    function ____class_70.prototype.____constructor(self)
     end
-    function ____class_71.get(self, key)
+    function ____class_70.get(self, key)
         local result = self:load():get(key)
         if result:isEmpty() then
             self:set(key, "")
         end
         return result
     end
-    function ____class_71.set(self, key, value)
+    function ____class_70.set(self, key, value)
         if not FileUtil:exists(self._path) then
             FileUtil:writeText(self._path, ""):getValueUnsafe("EC6")
         end
@@ -4735,10 +4636,7 @@ local ____ = "use strict";
         content = tostring(content) .. (("\n" .. tostring(key)) .. "=") .. tostring(value)
         FileUtil:writeText(self._path, content):getValueUnsafe("EC8 - Could not write to .env file")
     end
-    function ____class_71.load(self)
-        local exampleLines = __TS__StringSplit("This is a test\nThis is another Test", "\n")
-        print(exampleLines)
-        CcOs:sleep(5)
+    function ____class_70.load(self)
         if not FileUtil:exists(self._path) then
             FileUtil:writeText(self._path, ""):getValueUnsafe("EC9")
         end
@@ -4760,8 +4658,8 @@ local ____ = "use strict";
         end)
         return output
     end
-    ____class_71._path = "app/data/.env"
-    local Environment = ____class_71
+    ____class_70._path = "app/data/.env"
+    local Environment = ____class_70
     local _DiscordWebhookLogListener = __TS__Class()
     _DiscordWebhookLogListener.name = "_DiscordWebhookLogListener"
     __TS__ClassExtends(_DiscordWebhookLogListener, LogListener)
@@ -4776,12 +4674,12 @@ local ____ = "use strict";
         Environment:get("DISCORD_WEBHOOK_URL"):getValueUnsafe("EC18 - Failed to get `DISCORD_WEBHOOK_URL` from environment")
     )
     local DiscordWebhookLogListener = _DiscordWebhookLogListener
-    local ____class_72 = __TS__Class()
-    ____class_72.name = "Entrypoint"
-    function ____class_72.prototype.____constructor(self)
+    local ____class_71 = __TS__Class()
+    ____class_71.name = "Entrypoint"
+    function ____class_71.prototype.____constructor(self)
         self._routes = LuaMap:empty()
     end
-    function ____class_72.prototype.run(self)
+    function ____class_71.prototype.run(self)
         self:applyInfoConfig()
         self:registerRoutes()
         self:onStart()
@@ -4798,37 +4696,37 @@ local ____ = "use strict";
         end
         self:onStop()
     end
-    function ____class_72.prototype.applyInfoConfig(self)
+    function ____class_71.prototype.applyInfoConfig(self)
         local info = Info:load()
-        local ____opt_73 = info.logging
-        if ____opt_73 ~= nil then
-            ____opt_73 = ____opt_73.level
+        local ____opt_72 = info.logging
+        if ____opt_72 ~= nil then
+            ____opt_72 = ____opt_72.level
         end
-        if ____opt_73 then
+        if ____opt_72 then
             Logger.level = info.logging.level
         end
-        local ____opt_75 = info.logging
-        if ____opt_75 ~= nil then
-            ____opt_75 = ____opt_75.writeToFile
+        local ____opt_74 = info.logging
+        if ____opt_74 ~= nil then
+            ____opt_74 = ____opt_74.writeToFile
         end
-        if ____opt_75 then
+        if ____opt_74 then
             Logger:addListener(__TS__New(FileLogListener))
         end
-        local ____opt_77 = info.logging
-        if ____opt_77 ~= nil then
-            ____opt_77 = ____opt_77.writeToDiscord
+        local ____opt_76 = info.logging
+        if ____opt_76 ~= nil then
+            ____opt_76 = ____opt_76.writeToDiscord
         end
-        if ____opt_77 then
+        if ____opt_76 then
             Logger:addListener(__TS__New(DiscordWebhookLogListener))
         end
     end
-    function ____class_72.prototype.registerRoutes(self)
+    function ____class_71.prototype.registerRoutes(self)
         Reflection:getMethods(self):whereKeys(function(____, key) return key:startsWith("route") end):selectKeys(function(____, key) return key:replace("route", ""):toLowerCase() end):forEach(function(____, name, route) return self:registerRoute(name, route) end)
     end
-    function ____class_72.prototype.registerRoute(self, name, callback)
+    function ____class_71.prototype.registerRoute(self, name, callback)
         self._routes:set(name, callback)
     end
-    function ____class_72.prototype.dispatchRoute(self)
+    function ____class_71.prototype.dispatchRoute(self)
         local targetRouteName = ExecutionContext.commandLineArguments:first():getValueUnsafe("EC19 - The first command line argument (route name) was not provided")
         self._routes:get(targetRouteName):ifEmpty(function()
             local validRouteNamesString = ("'" .. self._routes:keys():join("', '")) .. "'"
@@ -4841,25 +4739,25 @@ local ____ = "use strict";
             )
         end):ifPresent(function(____, routeFunction) return routeFunction(_G) end)
     end
-    function ____class_72.prototype.onCrash(self, cause)
+    function ____class_71.prototype.onCrash(self, cause)
         error(cause, 0)
     end
-    local Entrypoint = ____class_72
-    local ____class_79 = __TS__Class()
-    ____class_79.name = "ExampleEntrypoint"
-    __TS__ClassExtends(____class_79, Entrypoint)
-    function ____class_79.prototype.onStart(self)
+    local Entrypoint = ____class_71
+    local ____class_78 = __TS__Class()
+    ____class_78.name = "ExampleEntrypoint"
+    __TS__ClassExtends(____class_78, Entrypoint)
+    function ____class_78.prototype.onStart(self)
     end
-    function ____class_79.prototype.onStop(self)
+    function ____class_78.prototype.onStop(self)
     end
-    function ____class_79.prototype.routeRun(self)
+    function ____class_78.prototype.routeRun(self)
         Logger:info("First")
         local list = LuaList:ofSingleton(11):append(22):append(44):append(33)
         Logger:debug(list)
         ChatBox:sendMessage("Hello World!")
         Logger:warn("Last")
     end
-    local ExampleEntrypoint = ____class_79
+    local ExampleEntrypoint = ____class_78
     __TS__New(ExampleEntrypoint):run()
 end)(_G)
  end,
