@@ -4001,7 +4001,7 @@ local ____ = "use strict";
         if file:isError() then
             return Result:error(file:getErrorMessage())
         end
-        local handle = file:getValueUnsafe("EC11 - No file")
+        local handle = file:getValueUnsafe("EC13 - No file")
         local content = handle:readAllContent()
         handle:close()
         if content == nil then
@@ -4018,7 +4018,7 @@ local ____ = "use strict";
         if file:isError() then
             return Result:error(file:getErrorMessage())
         end
-        local handle = file:getValueUnsafe("EC12 - No file")
+        local handle = file:getValueUnsafe("EC14 - No file")
         do
             local function ____catch(e)
                 local ____Result_error_27 = Result.error
@@ -4052,7 +4052,7 @@ local ____ = "use strict";
         if file:isError() then
             return Result:error(file:getErrorMessage())
         end
-        local handle = file:getValueUnsafe("EC13 - No file")
+        local handle = file:getValueUnsafe("EC15 - No file")
         do
             local function ____catch(e)
                 local ____Result_error_31 = Result.error
@@ -4330,7 +4330,7 @@ local ____ = "use strict";
         if contentResult:isError() then
             return Result:error(contentResult:getErrorMessage())
         end
-        local content = contentResult:getValueUnsafe("EC14 - No file")
+        local content = contentResult:getValueUnsafe("EC16 - No file")
         if not content:startsWith("?") then
             return Result:void()
         end
@@ -4424,8 +4424,8 @@ local ____ = "use strict";
         self.lifetime = model.lifetime
     end
     function _Info.load(self)
-        local contentString = FileUtil:readText(self._path):getValueUnsafe("EC15 - Could not read info.json")
-        local content = CcTextUtils:unserializeJSON(contentString):getValueUnsafe("EC16 - Could not parse info.json")
+        local contentString = FileUtil:readText(self._path):getValueUnsafe("EC17 - Could not read info.json")
+        local content = CcTextUtils:unserializeJSON(contentString):getValueUnsafe("EC18 - Could not parse info.json")
         return __TS__New(_Info, content)
     end
     _Info._path = "info.json"
@@ -4576,7 +4576,7 @@ local ____ = "use strict";
     function _DiscordWebhook.prototype.sendWebhookData(self, data)
         CcHttp:post(
             self._url,
-            CcTextUtils:serializeJSON(data):getValueUnsafe("EC17 - Could not serialize POST data for Discord webhook")
+            CcTextUtils:serializeJSON(data):getValueUnsafe("EC19 - Could not serialize POST data for Discord webhook")
         )
     end
     function _DiscordWebhook.prototype.sendMessage(self, message)
@@ -4604,21 +4604,12 @@ local ____ = "use strict";
     local DiscordWebhook = _DiscordWebhook
     local _LuaString = __TS__Class()
     _LuaString.name = "_LuaString"
-    function _LuaString.prototype.____constructor(self, value)
-        self._value = value
-    end
+    __TS__ClassExtends(_LuaString, String)
     function _LuaString.of(self, value)
         return __TS__New(_LuaString, value)
     end
-    function _LuaString.prototype.__tostring(self)
-        return self._value
-    end
-    function _LuaString.prototype.split(self, separator, limit)
-        if false then
-            __TS__StringSplit("", "")
-        end
-        local values = __TS__StringSplit(self._value, separator, limit)
-        return LuaList:of(values)
+    function _LuaString.prototype.isEmpty(self)
+        return self.length == 0
     end
     local LuaString = _LuaString
     local ____class_70 = __TS__Class()
@@ -4645,22 +4636,7 @@ local ____ = "use strict";
             FileUtil:writeText(self._path, ""):getValueUnsafe("EC9")
         end
         local content = LuaString:of(FileUtil:readText(self._path):getValueUnsafe("EC10 - Could not read from .env file"))
-        local lines = content:split("\n")
-        local output = LuaMap:empty()
-        lines:forEach(function(____, line)
-            if line:startsWith("#") then
-                return
-            end
-            if line:trim() == "" then
-                return
-            end
-            if not line:includes("=") then
-                return
-            end
-            local key, value = __TS__Unpack(line:split("=", 2))
-            output:set(key, value)
-        end)
-        return output
+        local lines = __TS__StringSplit(content, "\n")
     end
     ____class_70._path = "app/data/.env"
     local Environment = ____class_70
@@ -4675,7 +4651,7 @@ local ____ = "use strict";
     end
     _DiscordWebhookLogListener._webhook = DiscordWebhook:fromUrl(
         "ComputerCraft",
-        Environment:get("DISCORD_WEBHOOK_URL"):getValueUnsafe("EC18 - Failed to get `DISCORD_WEBHOOK_URL` from environment")
+        Environment:get("DISCORD_WEBHOOK_URL"):getValueUnsafe("EC20 - Failed to get `DISCORD_WEBHOOK_URL` from environment")
     )
     local DiscordWebhookLogListener = _DiscordWebhookLogListener
     local ____class_71 = __TS__Class()
@@ -4731,7 +4707,7 @@ local ____ = "use strict";
         self._routes:set(name, callback)
     end
     function ____class_71.prototype.dispatchRoute(self)
-        local targetRouteName = ExecutionContext.commandLineArguments:first():getValueUnsafe("EC19 - The first command line argument (route name) was not provided")
+        local targetRouteName = ExecutionContext.commandLineArguments:first():getValueUnsafe("EC21 - The first command line argument (route name) was not provided")
         self._routes:get(targetRouteName):ifEmpty(function()
             local validRouteNamesString = ("'" .. self._routes:keys():join("', '")) .. "'"
             error(
