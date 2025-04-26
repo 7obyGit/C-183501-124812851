@@ -12,11 +12,20 @@ local function require(file, ...)
     if ____moduleCache[file] then
         return ____moduleCache[file].value
     end
+
     if ____modules[file] then
         local module = ____modules[file]
-        local value = nil
-        if (select("#", ...) > 0) then value = module(...) else value = module(file) end
-        ____moduleCache[file] = { value = value }
+
+        ____moduleCache[file] = { value = {} }
+
+        local value
+        if select("#", ...) > 0 then
+            value = module(...)
+        else
+            value = module(file)
+        end
+
+        ____moduleCache[file].value = value
         return value
     else
         if ____originalRequire then
