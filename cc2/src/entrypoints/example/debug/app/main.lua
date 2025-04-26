@@ -6457,7 +6457,6 @@ CcKeys.codes = {
     pageUp = keys.pageUp,
     pageDown = keys.pageDown,
     home = keys.home,
-    ["end"] = keys.end,
     capsLock = keys.capsLock,
     scrollLock = keys.scrollLock,
     numLock = keys.numLock,
