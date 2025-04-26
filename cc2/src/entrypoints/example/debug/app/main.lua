@@ -8241,7 +8241,7 @@ function CcMonitor.setCursorPos(self, x, y)
     self._internalMonitor:get().setCursorPos(x, y)
 end
 function CcMonitor.getCursorBlink(self)
-    return return self._internalMonitor:get().getCursorBlink()
+    return self._internalMonitor:get().getCursorBlink()
 end
 function CcMonitor.setCursorBlink(self, blink)
     self._internalMonitor:get().setCursorBlink(blink)
@@ -8262,7 +8262,7 @@ function CcMonitor.setTextScale(self, scale)
     self._internalMonitor:get().setTextScale(scale)
 end
 function CcMonitor.getTextScale(self)
-    return return self._internalMonitor:get().getTextScale()
+    return self._internalMonitor:get().getTextScale()
 end
 function CcMonitor.onResize(self, listener)
     local event = ""
