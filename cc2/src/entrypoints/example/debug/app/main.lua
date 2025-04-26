@@ -2772,6 +2772,7 @@ local SyntaxError = ____lualib.SyntaxError
 local TypeError = ____lualib.TypeError
 local URIError = ____lualib.URIError
 local __TS__New = ____lualib.__TS__New
+local __TS__Number = ____lualib.__TS__Number
 local Set = ____lualib.Set
 local __TS__Spread = ____lualib.__TS__Spread
 local __TS__ArrayFrom = ____lualib.__TS__ArrayFrom
@@ -2981,6 +2982,18 @@ local ____ = "use strict";
             )
         end
         return self.value
+    end
+    function _Result.prototype.getStringUnsafe(self, message)
+        return tostring(self:getValueUnsafe("EC23 - " .. tostring(message)))
+    end
+    function _Result.prototype.getNumberUnsafe(self, message)
+        return __TS__Number(self:getValueUnsafe("EC24 - " .. tostring(message)))
+    end
+    function _Result.prototype.getBooleanUnsafe(self, message)
+        return Boolean(
+            _G,
+            self:getValueUnsafe("EC25 - " .. tostring(message))
+        )
     end
     function _Result.prototype.getValueOrDefault(self, defaultValue)
         local ____self_value_7 = self.value
@@ -4000,7 +4013,7 @@ local ____ = "use strict";
         if file:isError() then
             return Result:error(file:getErrorMessage())
         end
-        local handle = file:getValueUnsafe("EC16 - No file")
+        local handle = file:getValueUnsafe("EC14 - No file")
         local content = handle:readAllContent()
         handle:close()
         if content == nil then
@@ -4017,7 +4030,7 @@ local ____ = "use strict";
         if file:isError() then
             return Result:error(file:getErrorMessage())
         end
-        local handle = file:getValueUnsafe("EC17 - No file")
+        local handle = file:getValueUnsafe("EC15 - No file")
         do
             local function ____catch(e)
                 local ____Result_error_27 = Result.error
@@ -4051,7 +4064,7 @@ local ____ = "use strict";
         if file:isError() then
             return Result:error(file:getErrorMessage())
         end
-        local handle = file:getValueUnsafe("EC18 - No file")
+        local handle = file:getValueUnsafe("EC16 - No file")
         do
             local function ____catch(e)
                 local ____Result_error_31 = Result.error
@@ -4329,7 +4342,7 @@ local ____ = "use strict";
         if contentResult:isError() then
             return Result:error(contentResult:getErrorMessage())
         end
-        local content = contentResult:getValueUnsafe("EC19 - No file")
+        local content = contentResult:getValueUnsafe("EC17 - No file")
         if not content:startsWith("?") then
             return Result:void()
         end
@@ -4423,8 +4436,8 @@ local ____ = "use strict";
         self.lifetime = model.lifetime
     end
     function _Info.load(self)
-        local contentString = FileUtil:readText(self._path):getValueUnsafe("EC20 - Could not read info.json")
-        local content = CcTextUtils:unserializeJSON(contentString):getValueUnsafe("EC21 - Could not parse info.json")
+        local contentString = FileUtil:readText(self._path):getValueUnsafe("EC18 - Could not read info.json")
+        local content = CcTextUtils:unserializeJSON(contentString):getValueUnsafe("EC19 - Could not parse info.json")
         return __TS__New(_Info, content)
     end
     _Info._path = "info.json"
@@ -4575,7 +4588,7 @@ local ____ = "use strict";
     function _DiscordWebhook.prototype.sendWebhookData(self, data)
         CcHttp:post(
             self._url,
-            CcTextUtils:serializeJSON(data):getValueUnsafe("EC22 - Could not serialize POST data for Discord webhook")
+            CcTextUtils:serializeJSON(data):getValueUnsafe("EC20 - Could not serialize POST data for Discord webhook")
         )
     end
     function _DiscordWebhook.prototype.sendMessage(self, message)
@@ -4621,9 +4634,11 @@ local ____ = "use strict";
         FileUtil:writeText(self._path, content):getValueUnsafe("EC8 - Could not write to .env file")
     end
     function ____class_70.load(self)
-        local content = Result:of("test"):getValueUnsafe("EC15")
+        if not FileUtil:exists(self._path) then
+            FileUtil:writeText(self._path, ""):getValueUnsafe("EC13")
+        end
+        local content = FileUtil:readText(self._path):getStringUnsafe("Could not read from .env file")
         local lines = content:split("\n")
-        print(lines)
     end
     ____class_70._path = "app/data/.env"
     local Environment = ____class_70
@@ -4638,7 +4653,7 @@ local ____ = "use strict";
     end
     _DiscordWebhookLogListener._webhook = DiscordWebhook:fromUrl(
         "ComputerCraft",
-        Environment:get("DISCORD_WEBHOOK_URL"):getValueUnsafe("EC23 - Failed to get `DISCORD_WEBHOOK_URL` from environment")
+        Environment:get("DISCORD_WEBHOOK_URL"):getValueUnsafe("EC21 - Failed to get `DISCORD_WEBHOOK_URL` from environment")
     )
     local DiscordWebhookLogListener = _DiscordWebhookLogListener
     local ____class_71 = __TS__Class()
@@ -4694,7 +4709,7 @@ local ____ = "use strict";
         self._routes:set(name, callback)
     end
     function ____class_71.prototype.dispatchRoute(self)
-        local targetRouteName = ExecutionContext.commandLineArguments:first():getValueUnsafe("EC24 - The first command line argument (route name) was not provided")
+        local targetRouteName = ExecutionContext.commandLineArguments:first():getValueUnsafe("EC22 - The first command line argument (route name) was not provided")
         self._routes:get(targetRouteName):ifEmpty(function()
             local validRouteNamesString = ("'" .. self._routes:keys():join("', '")) .. "'"
             error(
