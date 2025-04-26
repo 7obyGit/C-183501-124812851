@@ -2795,6 +2795,7 @@ local Map = ____lualib.Map
 local __TS__Iterator = ____lualib.__TS__Iterator
 local __TS__ClassExtends = ____lualib.__TS__ClassExtends
 local __TS__ArrayIsArray = ____lualib.__TS__ArrayIsArray
+local __TS__StringSplit = ____lualib.__TS__StringSplit
 local ____ = "use strict";
 (function()
     local Optional, LuaList
@@ -4613,6 +4614,7 @@ local ____ = "use strict";
         return self._value
     end
     function _LuaString.prototype.split(self, separator, limit)
+        local tests = __TS__StringSplit("", "test")
         local values = __TS__StringSplit(self._value, separator, limit)
         return LuaList:of(values)
     end
