@@ -1,5 +1,5 @@
 {
-    "version": "0.0.144",
+    "version": "0.0.147",
     "name": "Example Application",
     "description": "This is an example application.\nIt can have a long description.",
     "startup": {
@@ -26,7 +26,8 @@
     "logging": {
         "level": "DEBUG",
         "writeToFile": true,
-        "maxFileLines": 1000
+        "maxFileLines": 1000,
+        "writeToDiscord": true
     },
     "lifetime": {
         "onCrash": "ROLLBACK",
