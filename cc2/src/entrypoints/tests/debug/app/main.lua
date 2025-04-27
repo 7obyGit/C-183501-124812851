@@ -3890,7 +3890,7 @@ local SyntaxError = ____lualib.SyntaxError
 local TypeError = ____lualib.TypeError
 local URIError = ____lualib.URIError
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
-__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["15"] = 1,["16"] = 1,["17"] = 2,["18"] = 2,["19"] = 3,["20"] = 3,["21"] = 4,["22"] = 4,["23"] = 5,["24"] = 5,["25"] = 7,["26"] = 7,["27"] = 8,["28"] = 8,["32"] = 15,["33"] = 15,["34"] = 15,["36"] = 24,["37"] = 15,["38"] = 31,["39"] = 32,["40"] = 33,["41"] = 34,["44"] = 39,["47"] = 37,["53"] = 42,["54"] = 31,["55"] = 50,["56"] = 51,["57"] = 53,["58"] = 53,["59"] = 54,["61"] = 57,["62"] = 57,["63"] = 58,["65"] = 61,["66"] = 61,["67"] = 62,["69"] = 50,["70"] = 71,["71"] = 72,["72"] = 71,["73"] = 87,["74"] = 88,["75"] = 87,["76"] = 107,["77"] = 108,["78"] = 114,["79"] = 117,["81"] = 119,["84"] = 114,["85"] = 107,["86"] = 142,["87"] = 143,["88"] = 142});
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["15"] = 1,["16"] = 1,["17"] = 2,["18"] = 2,["19"] = 3,["20"] = 3,["21"] = 4,["22"] = 4,["23"] = 5,["24"] = 5,["25"] = 7,["26"] = 7,["27"] = 8,["28"] = 8,["29"] = 9,["30"] = 9,["31"] = 10,["32"] = 10,["36"] = 17,["37"] = 17,["38"] = 17,["40"] = 26,["41"] = 17,["42"] = 33,["43"] = 34,["44"] = 35,["45"] = 36,["48"] = 41,["51"] = 39,["57"] = 44,["58"] = 33,["59"] = 52,["60"] = 53,["61"] = 55,["62"] = 55,["63"] = 56,["65"] = 59,["66"] = 59,["67"] = 60,["69"] = 63,["70"] = 63,["71"] = 64,["73"] = 52,["74"] = 73,["75"] = 74,["76"] = 75,["78"] = 76,["79"] = 76,["81"] = 77,["82"] = 73,["83"] = 92,["84"] = 93,["85"] = 92,["86"] = 112,["87"] = 113,["88"] = 119,["89"] = 122,["91"] = 124,["94"] = 119,["95"] = 112,["96"] = 147,["97"] = 148,["98"] = 147});
 local ____exports = {}
 local ____luaMap = require("src.util.types.collection.luaMap")
 local LuaMap = ____luaMap.LuaMap
@@ -3906,6 +3906,10 @@ local ____reflection = require("src.util.reflection")
 local Reflection = ____reflection.Reflection
 local ____discordWebhookLogListener = require("src.util.computer.api.tier2.logging.listeners.discordWebhookLogListener")
 local DiscordWebhookLogListener = ____discordWebhookLogListener.DiscordWebhookLogListener
+local ____ccTextUtils = require("src.util.computer.api.tier1.globals.ccTextUtils")
+local CcTextUtils = ____ccTextUtils.CcTextUtils
+local ____ccOs = require("src.util.computer.api.tier1.globals.ccOs")
+local CcOs = ____ccOs.CcOs
 --- Abstract base class representing an application entry point.
 -- Provides functionality for registering and dispatching routes, as well as lifecycle hooks for application startup, shutdown, and error handling.
 -- Classes extending this should implement abstract methods and optionally override other lifecycle methods to define specific behavior.
@@ -3948,6 +3952,12 @@ function Entrypoint.prototype.applyInfoConfig(self)
     end
 end
 function Entrypoint.prototype.registerRoutes(self)
+    print("This: ", self)
+    CcOs:sleep(3)
+    print(
+        "ThisJson: ",
+        CcTextUtils:serializeJSON(self)
+    )
     Reflection:getMethods(self):whereKeys(function(____, key) return __TS__StringStartsWith(key, "route") end):selectKeys(function(____, key) return string.lower(__TS__StringReplace(key, "route", "")) end):forEach(function(____, name, route) return self:registerRoute(name, route) end)
 end
 function Entrypoint.prototype.registerRoute(self, name, callback)
@@ -3966,6 +3976,217 @@ end
 function Entrypoint.prototype.onCrash(self, cause)
     error(cause, 0)
 end
+return ____exports
+
+end)
+__bundle_register("src.util.computer.api.tier1.globals.ccOs", function(require, _LOADED, __bundle_register, __bundle_modules)
+local ____lualib = require("lualib_bundle")
+local __TS__Class = ____lualib.__TS__Class
+local Error = ____lualib.Error
+local RangeError = ____lualib.RangeError
+local ReferenceError = ____lualib.ReferenceError
+local SyntaxError = ____lualib.SyntaxError
+local TypeError = ____lualib.TypeError
+local URIError = ____lualib.URIError
+local __TS__New = ____lualib.__TS__New
+local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["13"] = 1,["14"] = 1,["15"] = 2,["16"] = 2,["17"] = 4,["18"] = 4,["20"] = 57,["21"] = 57,["22"] = 57,["24"] = 57,["25"] = 64,["26"] = 65,["27"] = 64,["28"] = 73,["29"] = 74,["30"] = 73,["31"] = 82,["32"] = 83,["33"] = 84,["34"] = 85,["35"] = 86,["36"] = 82,["37"] = 98,["38"] = 99,["39"] = 100,["40"] = 101,["41"] = 102,["42"] = 98,["43"] = 113,["44"] = 114,["45"] = 113,["46"] = 121,["47"] = 122,["48"] = 121,["49"] = 133,["50"] = 133,["51"] = 134,["52"] = 135,["53"] = 133,["54"] = 143,["55"] = 143,["56"] = 144,["57"] = 145,["58"] = 143,["59"] = 154,["60"] = 155,["61"] = 154,["62"] = 162,["63"] = 163,["64"] = 162,["65"] = 171,["66"] = 172,["67"] = 171,["68"] = 179,["69"] = 180,["70"] = 179,["71"] = 186,["72"] = 187,["73"] = 186,["74"] = 193,["75"] = 194,["76"] = 193,["77"] = 201,["78"] = 202,["79"] = 201,["80"] = 209,["81"] = 210,["82"] = 209,["83"] = 217,["84"] = 218,["85"] = 219,["86"] = 217,["87"] = 226,["88"] = 227,["89"] = 228,["90"] = 226,["91"] = 235,["92"] = 236,["93"] = 235,["94"] = 243,["95"] = 244,["96"] = 243,["97"] = 257,["98"] = 258,["99"] = 257,["100"] = 270,["101"] = 271,["102"] = 270,["103"] = 283,["104"] = 284,["105"] = 283,["106"] = 297,["107"] = 298,["109"] = 299,["113"] = 303,["114"] = 297,["115"] = 311,["116"] = 312,["117"] = 311});
+local ____exports = {}
+local ____lua = require("src.lua.lua")
+local Lua = ____lua.Lua
+local ____optional = require("src.util.types.optional")
+local Optional = ____optional.Optional
+local ____tableUtil = require("src.util.computer.api.tier1.lua.tableUtil")
+local TableUtil = ____tableUtil.TableUtil
+--- Provides access to ComputerCraft OS functionality
+____exports.CcOs = __TS__Class()
+local CcOs = ____exports.CcOs
+CcOs.name = "CcOs"
+function CcOs.prototype.____constructor(self)
+end
+function CcOs.loadAPI(self, path)
+    return os.loadAPI(path)
+end
+function CcOs.unloadAPI(self, name)
+    os.unloadAPI(name)
+end
+function CcOs.pullEvent(self, filter)
+    local eventData = {os.pullEvent(filter)}
+    local name = eventData[1]
+    local details = eventData:slice(2)
+    return {name = name, details = details}
+end
+function CcOs.pullEventRaw(self, filter)
+    local eventData = {os.pullEventRaw(filter)}
+    local name = eventData[1]
+    local details = eventData:slice(2)
+    return {name = name, details = details}
+end
+function CcOs.sleep(self, time)
+    os.sleep(time)
+end
+function CcOs.version(self)
+    return os.version()
+end
+function CcOs.run(self, env, path, ...)
+    local args = {...}
+    local argsTable = TableUtil:fromArray(args)
+    return os.run(env, path, table.unpack(argsTable))
+end
+function CcOs.queueEvent(self, name, ...)
+    local params = {...}
+    local paramsTable = TableUtil:fromArray(params)
+    os.queueEvent(name, table.unpack(paramsTable))
+end
+function CcOs.startTimer(self, time)
+    return os.startTimer(time)
+end
+function CcOs.cancelTimer(self, token)
+    os.cancelTimer(token)
+end
+function CcOs.setAlarm(self, time)
+    return os.setAlarm(time)
+end
+function CcOs.cancelAlarm(self, token)
+    os.cancelAlarm(token)
+end
+function CcOs.shutdown(self)
+    os.shutdown()
+end
+function CcOs.reboot(self)
+    os.reboot()
+end
+function CcOs.getComputerID(self)
+    return os.getComputerID()
+end
+function CcOs.computerID(self)
+    return os.computerID()
+end
+function CcOs.getComputerLabel(self)
+    local label = os.getComputerLabel()
+    return Optional:ofNullable(label)
+end
+function CcOs.computerLabel(self)
+    local label = os.computerLabel()
+    return Optional:ofNullable(label)
+end
+function CcOs.setComputerLabel(self, label)
+    os.setComputerLabel(label)
+end
+function CcOs.clock(self)
+    return os.clock()
+end
+function CcOs.time(self, locale)
+    return os.time(locale)
+end
+function CcOs.day(self, locale)
+    return os.day(locale)
+end
+function CcOs.epoch(self, locale)
+    return os.epoch(locale)
+end
+function CcOs.date(self, format, time)
+    if format == "!*t" then
+        error(
+            __TS__New(Error, "!*t not supported in `date` - use `dateTable` instead"),
+            0
+        )
+    end
+    return os.date(format, time)
+end
+function CcOs.dateTable(self, time)
+    return os.date("!*t", time)
+end
+return ____exports
+
+end)
+__bundle_register("src.util.computer.api.tier1.globals.ccTextUtils", function(require, _LOADED, __bundle_register, __bundle_modules)
+local ____lualib = require("lualib_bundle")
+local __TS__Class = ____lualib.__TS__Class
+local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["6"] = 1,["7"] = 1,["8"] = 2,["9"] = 2,["13"] = 35,["14"] = 35,["15"] = 35,["17"] = 35,["18"] = 54,["19"] = 55,["20"] = 54,["21"] = 63,["22"] = 64,["23"] = 63,["24"] = 73,["25"] = 74,["26"] = 75,["27"] = 76,["28"] = 73,["29"] = 85,["30"] = 86,["31"] = 87,["32"] = 88,["33"] = 85,["34"] = 95,["35"] = 96,["36"] = 95,["37"] = 103,["38"] = 104,["39"] = 103,["40"] = 118,["41"] = 119,["42"] = 120,["43"] = 121,["44"] = 123,["45"] = 124,["47"] = 127,["48"] = 118,["49"] = 137,["50"] = 138,["51"] = 139,["52"] = 141,["53"] = 142,["55"] = 145,["56"] = 137,["57"] = 154,["58"] = 158,["59"] = 159,["60"] = 160,["61"] = 164,["62"] = 165,["64"] = 168,["65"] = 154,["66"] = 177,["67"] = 181,["68"] = 182,["69"] = 183,["70"] = 187,["71"] = 188,["73"] = 190,["74"] = 177,["75"] = 200,["76"] = 201,["77"] = 202,["78"] = 203,["79"] = 200,["80"] = 214,["81"] = 218,["82"] = 219,["83"] = 220,["84"] = 214,["85"] = 39,["86"] = 44});
+local ____exports = {}
+local ____lua = require("src.lua.lua")
+local Lua = ____lua.Lua
+local ____result = require("src.util.types.result")
+local Result = ____result.Result
+--- Adapter for the textutils module, providing text manipulation and formatting utilities.
+-- This includes functions for serialization, JSON handling, text formatting, and tabulated output.
+-- Based on ComputerCraft's textutils API: https://tweaked.cc/module/textutils.html
+____exports.CcTextUtils = __TS__Class()
+local CcTextUtils = ____exports.CcTextUtils
+CcTextUtils.name = "CcTextUtils"
+function CcTextUtils.prototype.____constructor(self)
+end
+function CcTextUtils.slowWrite(self, text, rate)
+    textutils.slowWrite(text, rate)
+end
+function CcTextUtils.slowPrint(self, text, rate)
+    textutils.slowPrint(text, rate)
+end
+function CcTextUtils.formatTime(self, time, twentyFourHour)
+    local result = ""
+    result = textutils.formatTime(time, twentyFourHour)
+    return result
+end
+function CcTextUtils.pagedPrint(self, text, freeLines)
+    local result = 0
+    result = textutils.pagedPrint(text, freeLines)
+    return result
+end
+function CcTextUtils.tabulate(self, ...)
+    textutils.tabulate(...)
+end
+function CcTextUtils.pagedTabulate(self, ...)
+    textutils.pagedTabulate(...)
+end
+function CcTextUtils.serialize(self, obj, opts)
+    local result = nil
+    local errorMessage = nil
+    result, errorMessage = textutils.serialize(obj, opts)
+    if errorMessage ~= nil then
+        return Result:error(errorMessage)
+    end
+    return Result:of(result)
+end
+function CcTextUtils.unserialize(self, str)
+    local result = nil
+    result = textutils.unserialize(str)
+    if result == nil then
+        return Result:error("Failed to unserialize")
+    end
+    return Result:of(result)
+end
+function CcTextUtils.serializeJSON(self, obj, opts)
+    local result = nil
+    local errorMessage = nil
+    result, errorMessage = textutils.serializeJSON(obj, opts)
+    if errorMessage ~= nil then
+        return Result:error(errorMessage)
+    end
+    return Result:of(result)
+end
+function CcTextUtils.unserializeJSON(self, str, opts)
+    local result = nil
+    local errorMessage = nil
+    result, errorMessage = textutils.unserializeJSON(str, opts)
+    if errorMessage ~= nil then
+        return Result:error(errorMessage)
+    end
+    return Result:of(result)
+end
+function CcTextUtils.urlEncode(self, str)
+    local result = ""
+    result = textutils.urlEncode(str)
+    return result
+end
+function CcTextUtils.getCompletion(self, searchText, searchTable)
+    local result = {}
+    result = textutils.complete(searchText, searchTable)
+    return result
+end
+CcTextUtils.empty_json_array = {}
+CcTextUtils.json_null = {}
 return ____exports
 
 end)
@@ -4782,96 +5003,6 @@ DiscordWebhook.DISCORD_MESSAGE_LENGTH_LIMIT = 2000
 return ____exports
 
 end)
-__bundle_register("src.util.computer.api.tier1.globals.ccTextUtils", function(require, _LOADED, __bundle_register, __bundle_modules)
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
-__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["6"] = 1,["7"] = 1,["8"] = 2,["9"] = 2,["13"] = 35,["14"] = 35,["15"] = 35,["17"] = 35,["18"] = 54,["19"] = 55,["20"] = 54,["21"] = 63,["22"] = 64,["23"] = 63,["24"] = 73,["25"] = 74,["26"] = 75,["27"] = 76,["28"] = 73,["29"] = 85,["30"] = 86,["31"] = 87,["32"] = 88,["33"] = 85,["34"] = 95,["35"] = 96,["36"] = 95,["37"] = 103,["38"] = 104,["39"] = 103,["40"] = 118,["41"] = 119,["42"] = 120,["43"] = 121,["44"] = 123,["45"] = 124,["47"] = 127,["48"] = 118,["49"] = 137,["50"] = 138,["51"] = 139,["52"] = 141,["53"] = 142,["55"] = 145,["56"] = 137,["57"] = 154,["58"] = 158,["59"] = 159,["60"] = 160,["61"] = 164,["62"] = 165,["64"] = 168,["65"] = 154,["66"] = 177,["67"] = 181,["68"] = 182,["69"] = 183,["70"] = 187,["71"] = 188,["73"] = 190,["74"] = 177,["75"] = 200,["76"] = 201,["77"] = 202,["78"] = 203,["79"] = 200,["80"] = 214,["81"] = 218,["82"] = 219,["83"] = 220,["84"] = 214,["85"] = 39,["86"] = 44});
-local ____exports = {}
-local ____lua = require("src.lua.lua")
-local Lua = ____lua.Lua
-local ____result = require("src.util.types.result")
-local Result = ____result.Result
---- Adapter for the textutils module, providing text manipulation and formatting utilities.
--- This includes functions for serialization, JSON handling, text formatting, and tabulated output.
--- Based on ComputerCraft's textutils API: https://tweaked.cc/module/textutils.html
-____exports.CcTextUtils = __TS__Class()
-local CcTextUtils = ____exports.CcTextUtils
-CcTextUtils.name = "CcTextUtils"
-function CcTextUtils.prototype.____constructor(self)
-end
-function CcTextUtils.slowWrite(self, text, rate)
-    textutils.slowWrite(text, rate)
-end
-function CcTextUtils.slowPrint(self, text, rate)
-    textutils.slowPrint(text, rate)
-end
-function CcTextUtils.formatTime(self, time, twentyFourHour)
-    local result = ""
-    result = textutils.formatTime(time, twentyFourHour)
-    return result
-end
-function CcTextUtils.pagedPrint(self, text, freeLines)
-    local result = 0
-    result = textutils.pagedPrint(text, freeLines)
-    return result
-end
-function CcTextUtils.tabulate(self, ...)
-    textutils.tabulate(...)
-end
-function CcTextUtils.pagedTabulate(self, ...)
-    textutils.pagedTabulate(...)
-end
-function CcTextUtils.serialize(self, obj, opts)
-    local result = nil
-    local errorMessage = nil
-    result, errorMessage = textutils.serialize(obj, opts)
-    if errorMessage ~= nil then
-        return Result:error(errorMessage)
-    end
-    return Result:of(result)
-end
-function CcTextUtils.unserialize(self, str)
-    local result = nil
-    result = textutils.unserialize(str)
-    if result == nil then
-        return Result:error("Failed to unserialize")
-    end
-    return Result:of(result)
-end
-function CcTextUtils.serializeJSON(self, obj, opts)
-    local result = nil
-    local errorMessage = nil
-    result, errorMessage = textutils.serializeJSON(obj, opts)
-    if errorMessage ~= nil then
-        return Result:error(errorMessage)
-    end
-    return Result:of(result)
-end
-function CcTextUtils.unserializeJSON(self, str, opts)
-    local result = nil
-    local errorMessage = nil
-    result, errorMessage = textutils.unserializeJSON(str, opts)
-    if errorMessage ~= nil then
-        return Result:error(errorMessage)
-    end
-    return Result:of(result)
-end
-function CcTextUtils.urlEncode(self, str)
-    local result = ""
-    result = textutils.urlEncode(str)
-    return result
-end
-function CcTextUtils.getCompletion(self, searchText, searchTable)
-    local result = {}
-    result = textutils.complete(searchText, searchTable)
-    return result
-end
-CcTextUtils.empty_json_array = {}
-CcTextUtils.json_null = {}
-return ____exports
-
-end)
 __bundle_register("src.util.computer.api.tier1.globals.ccHttp", function(require, _LOADED, __bundle_register, __bundle_modules)
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
@@ -5041,127 +5172,6 @@ function Reflection.getMethods(self, ____table)
         end
     end
     return methods
-end
-return ____exports
-
-end)
-__bundle_register("src.util.computer.api.tier1.globals.ccOs", function(require, _LOADED, __bundle_register, __bundle_modules)
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local Error = ____lualib.Error
-local RangeError = ____lualib.RangeError
-local ReferenceError = ____lualib.ReferenceError
-local SyntaxError = ____lualib.SyntaxError
-local TypeError = ____lualib.TypeError
-local URIError = ____lualib.URIError
-local __TS__New = ____lualib.__TS__New
-local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
-__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["13"] = 1,["14"] = 1,["15"] = 2,["16"] = 2,["17"] = 4,["18"] = 4,["20"] = 57,["21"] = 57,["22"] = 57,["24"] = 57,["25"] = 64,["26"] = 65,["27"] = 64,["28"] = 73,["29"] = 74,["30"] = 73,["31"] = 82,["32"] = 83,["33"] = 84,["34"] = 85,["35"] = 86,["36"] = 82,["37"] = 98,["38"] = 99,["39"] = 100,["40"] = 101,["41"] = 102,["42"] = 98,["43"] = 113,["44"] = 114,["45"] = 113,["46"] = 121,["47"] = 122,["48"] = 121,["49"] = 133,["50"] = 133,["51"] = 134,["52"] = 135,["53"] = 133,["54"] = 143,["55"] = 143,["56"] = 144,["57"] = 145,["58"] = 143,["59"] = 154,["60"] = 155,["61"] = 154,["62"] = 162,["63"] = 163,["64"] = 162,["65"] = 171,["66"] = 172,["67"] = 171,["68"] = 179,["69"] = 180,["70"] = 179,["71"] = 186,["72"] = 187,["73"] = 186,["74"] = 193,["75"] = 194,["76"] = 193,["77"] = 201,["78"] = 202,["79"] = 201,["80"] = 209,["81"] = 210,["82"] = 209,["83"] = 217,["84"] = 218,["85"] = 219,["86"] = 217,["87"] = 226,["88"] = 227,["89"] = 228,["90"] = 226,["91"] = 235,["92"] = 236,["93"] = 235,["94"] = 243,["95"] = 244,["96"] = 243,["97"] = 257,["98"] = 258,["99"] = 257,["100"] = 270,["101"] = 271,["102"] = 270,["103"] = 283,["104"] = 284,["105"] = 283,["106"] = 297,["107"] = 298,["109"] = 299,["113"] = 303,["114"] = 297,["115"] = 311,["116"] = 312,["117"] = 311});
-local ____exports = {}
-local ____lua = require("src.lua.lua")
-local Lua = ____lua.Lua
-local ____optional = require("src.util.types.optional")
-local Optional = ____optional.Optional
-local ____tableUtil = require("src.util.computer.api.tier1.lua.tableUtil")
-local TableUtil = ____tableUtil.TableUtil
---- Provides access to ComputerCraft OS functionality
-____exports.CcOs = __TS__Class()
-local CcOs = ____exports.CcOs
-CcOs.name = "CcOs"
-function CcOs.prototype.____constructor(self)
-end
-function CcOs.loadAPI(self, path)
-    return os.loadAPI(path)
-end
-function CcOs.unloadAPI(self, name)
-    os.unloadAPI(name)
-end
-function CcOs.pullEvent(self, filter)
-    local eventData = {os.pullEvent(filter)}
-    local name = eventData[1]
-    local details = eventData:slice(2)
-    return {name = name, details = details}
-end
-function CcOs.pullEventRaw(self, filter)
-    local eventData = {os.pullEventRaw(filter)}
-    local name = eventData[1]
-    local details = eventData:slice(2)
-    return {name = name, details = details}
-end
-function CcOs.sleep(self, time)
-    os.sleep(time)
-end
-function CcOs.version(self)
-    return os.version()
-end
-function CcOs.run(self, env, path, ...)
-    local args = {...}
-    local argsTable = TableUtil:fromArray(args)
-    return os.run(env, path, table.unpack(argsTable))
-end
-function CcOs.queueEvent(self, name, ...)
-    local params = {...}
-    local paramsTable = TableUtil:fromArray(params)
-    os.queueEvent(name, table.unpack(paramsTable))
-end
-function CcOs.startTimer(self, time)
-    return os.startTimer(time)
-end
-function CcOs.cancelTimer(self, token)
-    os.cancelTimer(token)
-end
-function CcOs.setAlarm(self, time)
-    return os.setAlarm(time)
-end
-function CcOs.cancelAlarm(self, token)
-    os.cancelAlarm(token)
-end
-function CcOs.shutdown(self)
-    os.shutdown()
-end
-function CcOs.reboot(self)
-    os.reboot()
-end
-function CcOs.getComputerID(self)
-    return os.getComputerID()
-end
-function CcOs.computerID(self)
-    return os.computerID()
-end
-function CcOs.getComputerLabel(self)
-    local label = os.getComputerLabel()
-    return Optional:ofNullable(label)
-end
-function CcOs.computerLabel(self)
-    local label = os.computerLabel()
-    return Optional:ofNullable(label)
-end
-function CcOs.setComputerLabel(self, label)
-    os.setComputerLabel(label)
-end
-function CcOs.clock(self)
-    return os.clock()
-end
-function CcOs.time(self, locale)
-    return os.time(locale)
-end
-function CcOs.day(self, locale)
-    return os.day(locale)
-end
-function CcOs.epoch(self, locale)
-    return os.epoch(locale)
-end
-function CcOs.date(self, format, time)
-    if format == "!*t" then
-        error(
-            __TS__New(Error, "!*t not supported in `date` - use `dateTable` instead"),
-            0
-        )
-    end
-    return os.date(format, time)
-end
-function CcOs.dateTable(self, time)
-    return os.date("!*t", time)
 end
 return ____exports
 
