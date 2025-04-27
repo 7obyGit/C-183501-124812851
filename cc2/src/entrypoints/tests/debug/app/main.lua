@@ -3892,7 +3892,7 @@ local SyntaxError = ____lualib.SyntaxError
 local TypeError = ____lualib.TypeError
 local URIError = ____lualib.URIError
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
-__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["17"] = 1,["18"] = 1,["19"] = 2,["20"] = 2,["21"] = 3,["22"] = 3,["23"] = 4,["24"] = 4,["25"] = 5,["26"] = 5,["27"] = 7,["28"] = 7,["29"] = 8,["30"] = 8,["34"] = 15,["35"] = 15,["36"] = 15,["38"] = 24,["39"] = 15,["40"] = 31,["41"] = 32,["42"] = 33,["43"] = 34,["46"] = 39,["49"] = 37,["55"] = 42,["56"] = 31,["57"] = 50,["58"] = 51,["59"] = 53,["60"] = 53,["61"] = 54,["63"] = 57,["64"] = 57,["65"] = 58,["67"] = 61,["68"] = 61,["69"] = 62,["71"] = 50,["72"] = 71,["73"] = 72,["74"] = 72,["75"] = 72,["76"] = 72,["77"] = 74,["78"] = 71,["79"] = 89,["80"] = 90,["81"] = 89,["82"] = 109,["83"] = 110,["84"] = 116,["85"] = 119,["87"] = 121,["90"] = 116,["91"] = 109,["92"] = 144,["93"] = 145,["94"] = 144});
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["17"] = 1,["18"] = 1,["19"] = 2,["20"] = 2,["21"] = 3,["22"] = 3,["23"] = 4,["24"] = 4,["25"] = 5,["26"] = 5,["27"] = 7,["28"] = 7,["29"] = 8,["30"] = 8,["34"] = 15,["35"] = 15,["36"] = 15,["38"] = 24,["39"] = 15,["40"] = 31,["41"] = 32,["42"] = 33,["43"] = 34,["46"] = 39,["49"] = 37,["55"] = 42,["56"] = 31,["57"] = 50,["58"] = 51,["59"] = 53,["60"] = 53,["61"] = 54,["63"] = 57,["64"] = 57,["65"] = 58,["67"] = 61,["68"] = 61,["69"] = 62,["71"] = 50,["72"] = 71,["73"] = 72,["74"] = 72,["75"] = 72,["76"] = 72,["77"] = 73,["78"] = 74,["79"] = 74,["80"] = 74,["81"] = 74,["82"] = 76,["83"] = 71,["84"] = 91,["85"] = 92,["86"] = 91,["87"] = 111,["88"] = 112,["89"] = 118,["90"] = 121,["92"] = 123,["95"] = 118,["96"] = 111,["97"] = 146,["98"] = 147,["99"] = 146});
 local ____exports = {}
 local ____luaMap = require("src.util.types.collection.luaMap")
 local LuaMap = ____luaMap.LuaMap
@@ -3952,6 +3952,11 @@ end
 function Entrypoint.prototype.registerRoutes(self)
     __TS__ArrayForEach(
         __TS__ObjectKeys(self),
+        function(____, key) return print(key) end
+    )
+    print("PASS")
+    __TS__ArrayForEach(
+        __TS__ObjectKeys(____exports.Entrypoint),
         function(____, key) return print(key) end
     )
     Reflection:getMethods(self):whereKeys(function(____, key) return __TS__StringStartsWith(key, "route") end):selectKeys(function(____, key) return string.lower(__TS__StringReplace(key, "route", "")) end):forEach(function(____, name, route) return self:registerRoute(name, route) end)
