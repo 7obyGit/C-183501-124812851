@@ -3235,7 +3235,7 @@ function LuaList.prototype.removeLast(self)
 end
 function LuaList.prototype.removeAt(self, index)
     if index < 0 or index >= #self.elements then
-        Unsafe:throwUnsafe("EC60 - " .. "Index was out of range")
+        Unsafe:throwUnsafe("EC61 - " .. "Index was out of range")
     end
     return __TS__ArraySplice(self.elements, index, 1)[1]
 end
@@ -3695,7 +3695,7 @@ function Optional.prototype.getValueUnsafe(self, message)
         if message == nil then
             message = "Cannot unwrap `Optional` value!"
         end
-        Unsafe:throwUnsafe("EC57 - " .. message)
+        Unsafe:throwUnsafe("EC58 - " .. message)
     end
     return self.value
 end
@@ -3758,7 +3758,7 @@ local Result = ____exports.Result
 Result.name = "Result"
 function Result.prototype.____constructor(self, value, errorMessage)
     if value == nil and errorMessage == nil then
-        Unsafe:throwUnsafe("EC58 - " .. "Cannot create a result with both undefined values")
+        Unsafe:throwUnsafe("EC59 - " .. "Cannot create a result with both undefined values")
     end
     self.value = value
     self.errorMessage = errorMessage
@@ -3801,7 +3801,7 @@ function Result.prototype.getValueUnsafe(self, message)
         if message == nil then
             message = self.errorMessage or "Cannot unwrap `Result` value"
         end
-        Unsafe:throwUnsafe("EC59 - " .. message)
+        Unsafe:throwUnsafe("EC60 - " .. message)
     end
     return self.value
 end
@@ -3957,10 +3957,10 @@ function Entrypoint.prototype.registerRoute(self, name, callback)
     self._routes:set(name, callback)
 end
 function Entrypoint.prototype.dispatchRoute(self)
-    local targetRouteName = ExecutionContext.commandLineArguments:first():getValueUnsafe("EC55 - " .. "The first command line argument (route name) was not provided")
+    local targetRouteName = ExecutionContext.commandLineArguments:first():getValueUnsafe("EC56 - " .. "The first command line argument (route name) was not provided")
     self._routes:get(targetRouteName):ifEmpty(function()
         local validRouteNamesString = ("'" .. self._routes:keys():join("', '")) .. "'"
-        Unsafe:throwUnsafe("EC56 - " .. (("Unknown route: " .. targetRouteName) .. "\nThe first argument must be a valid route name.\nE.g. ") .. validRouteNamesString)
+        Unsafe:throwUnsafe("EC57 - " .. (("Unknown route: " .. targetRouteName) .. "\nThe first argument must be a valid route name.\nE.g. ") .. validRouteNamesString)
     end):ifPresent(function(____, routeFunction) return routeFunction(nil) end)
 end
 function Entrypoint.prototype.onCrash(self, cause)
@@ -3994,7 +3994,7 @@ function DiscordWebhookLogListener.prototype.onLog(self, level, message)
 end
 DiscordWebhookLogListener._webhook = DiscordWebhook:fromUrl(
     "ComputerCraft",
-    Environment:get("DISCORD_WEBHOOK_URL"):getValueUnsafe("EC54 - " .. "Failed to get `DISCORD_WEBHOOK_URL` from environment")
+    Environment:get("DISCORD_WEBHOOK_URL"):getValueUnsafe("EC55 - " .. "Failed to get `DISCORD_WEBHOOK_URL` from environment")
 )
 return ____exports
 
@@ -4033,17 +4033,17 @@ function Environment.get(self, key)
 end
 function Environment.set(self, key, value)
     if not FileUtil:exists(self._path) then
-        FileUtil:writeText(self._path, ""):getValueUnsafe("EC36")
+        FileUtil:writeText(self._path, ""):getValueUnsafe("EC37")
     end
-    local content = FileUtil:readText(self._path):getValueUnsafe("EC37 - " .. "Could not read from .env file")
+    local content = FileUtil:readText(self._path):getValueUnsafe("EC38 - " .. "Could not read from .env file")
     content = content .. (("\n" .. key) .. "=") .. value
-    FileUtil:writeText(self._path, content):getValueUnsafe("EC38 - " .. "Could not write to .env file")
+    FileUtil:writeText(self._path, content):getValueUnsafe("EC39 - " .. "Could not write to .env file")
 end
 function Environment.load(self)
     if not FileUtil:exists(self._path) then
-        FileUtil:writeText(self._path, ""):getValueUnsafe("EC39")
+        FileUtil:writeText(self._path, ""):getValueUnsafe("EC40")
     end
-    local content = FileUtil:readText(self._path):getValueUnsafe("EC40 - " .. "Could not read from .env file")
+    local content = FileUtil:readText(self._path):getValueUnsafe("EC41 - " .. "Could not read from .env file")
     local lines = __TS__StringSplit(content, "\n")
     local output = LuaMap:empty()
     __TS__ArrayForEach(
@@ -4099,7 +4099,7 @@ function FileUtil.readText(self, path)
     if file:isError() then
         return Result:error(file:getErrorMessage())
     end
-    local handle = file:getValueUnsafe("EC41 - " .. "No file")
+    local handle = file:getValueUnsafe("EC42 - " .. "No file")
     local content = handle:readAllContent()
     handle:close()
     if content == nil then
@@ -4116,7 +4116,7 @@ function FileUtil.writeText(self, path, content)
     if file:isError() then
         return Result:error(file:getErrorMessage())
     end
-    local handle = file:getValueUnsafe("EC42 - " .. "No file")
+    local handle = file:getValueUnsafe("EC43 - " .. "No file")
     do
         local function ____catch(e)
             local ____Result_3 = Result
@@ -4151,7 +4151,7 @@ function FileUtil.appendText(self, path, content)
     if file:isError() then
         return Result:error(file:getErrorMessage())
     end
-    local handle = file:getValueUnsafe("EC43 - " .. "No file")
+    local handle = file:getValueUnsafe("EC44 - " .. "No file")
     do
         local function ____catch(e)
             local ____Result_8 = Result
@@ -4437,7 +4437,7 @@ function FileUtil.removeByteOrderMark(self, path)
     if contentResult:isError() then
         return Result:error(contentResult:getErrorMessage())
     end
-    local content = contentResult:getValueUnsafe("EC44 - " .. "No file")
+    local content = contentResult:getValueUnsafe("EC45 - " .. "No file")
     if not __TS__StringStartsWith(content, "?") then
         return Result:void()
     end
@@ -4766,8 +4766,8 @@ function DiscordWebhook.fromUrl(self, username, url)
 end
 function DiscordWebhook.prototype.sendWebhookData(self, data)
     local headers = {["Content-Type"] = "application/json"}
-    local body = CcTextUtils:serializeJSON(data):getValueUnsafe("EC51 - " .. "Could not serialize POST data for Discord webhook")
-    local response = CcHttp:post(self._url, body, headers):getValueUnsafe("EC52 - " .. "Could not send Discord webhook")
+    local body = CcTextUtils:serializeJSON(data):getValueUnsafe("EC52 - " .. "Could not serialize POST data for Discord webhook")
+    local response = CcHttp:post(self._url, body, headers):getValueUnsafe("EC53 - " .. "Could not send Discord webhook")
     if not __TS__StringStartsWith(
         response:getResponseCode(),
         "2"
@@ -4775,7 +4775,7 @@ function DiscordWebhook.prototype.sendWebhookData(self, data)
         print(("Code: '" .. response:getResponseCode()) .. "'")
         print(("Message: '" .. response:readAllContent()) .. "'")
         error(
-            Unsafe:throwUnsafe("EC53 - " .. ("Discord webhook returned an error: '" .. response:getResponseCode()) .. "'"),
+            Unsafe:throwUnsafe("EC54 - " .. ("Discord webhook returned an error: '" .. response:getResponseCode()) .. "'"),
             0
         )
     end
@@ -5141,8 +5141,8 @@ function Info.prototype.____constructor(self, model)
     self.lifetime = model.lifetime
 end
 function Info.load(self)
-    local contentString = FileUtil:readText(self._path):getValueUnsafe("EC49 - " .. "Could not read info.json")
-    local content = CcTextUtils:unserializeJSON(contentString):getValueUnsafe("EC50 - " .. "Could not parse info.json")
+    local contentString = FileUtil:readText(self._path):getValueUnsafe("EC50 - " .. "Could not read info.json")
+    local content = CcTextUtils:unserializeJSON(contentString):getValueUnsafe("EC51 - " .. "Could not parse info.json")
     return __TS__New(____exports.Info, content)
 end
 Info._path = "info.json"
@@ -5256,7 +5256,7 @@ end
 function CcPeripheral.find(self, peripheralName, filter)
     local internalPeripheral = peripheral.find(peripheralName, filter)
     if internalPeripheral == nil then
-        Unsafe:throwUnsafe("EC35 - " .. ("No peripheral of type \"" .. peripheralName) .. "\" found.")
+        Unsafe:throwUnsafe("EC36 - " .. ("No peripheral of type \"" .. peripheralName) .. "\" found.")
     end
     return __TS__New(____exports.CcPeripheral, internalPeripheral)
 end
