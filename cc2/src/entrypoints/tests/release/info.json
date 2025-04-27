@@ -1,5 +1,5 @@
 {
-    "version": "0.0.31",
+    "version": "0.0.32",
     "name": "Tests",
     "description": "Runs all unit tests.",
     "startup": {

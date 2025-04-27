@@ -5037,7 +5037,7 @@ function Reflection.getMethods(self, ____table)
 end
 function Reflection.getMethodsOfClass(self, ____table)
     local methods = LuaMap:empty()
-    local prototype = self.constructor.prototype
+    local prototype = ____table.constructor.prototype
     __TS__ArrayForEach(
         __TS__ObjectKeys(prototype),
         function(____, key)
