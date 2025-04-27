@@ -3890,7 +3890,7 @@ local SyntaxError = ____lualib.SyntaxError
 local TypeError = ____lualib.TypeError
 local URIError = ____lualib.URIError
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
-__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["15"] = 1,["16"] = 1,["17"] = 2,["18"] = 2,["19"] = 3,["20"] = 3,["21"] = 4,["22"] = 4,["23"] = 5,["24"] = 5,["25"] = 7,["26"] = 7,["27"] = 8,["28"] = 8,["32"] = 15,["33"] = 15,["34"] = 15,["36"] = 24,["37"] = 15,["38"] = 31,["39"] = 32,["40"] = 33,["41"] = 34,["44"] = 39,["47"] = 37,["53"] = 42,["54"] = 31,["55"] = 50,["56"] = 51,["57"] = 53,["58"] = 53,["59"] = 54,["61"] = 57,["62"] = 57,["63"] = 58,["65"] = 61,["66"] = 61,["67"] = 62,["69"] = 50,["70"] = 71,["71"] = 77,["72"] = 71,["73"] = 92,["74"] = 93,["75"] = 92,["76"] = 112,["77"] = 113,["78"] = 119,["79"] = 122,["81"] = 124,["84"] = 119,["85"] = 112,["86"] = 147,["87"] = 148,["88"] = 147});
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["15"] = 1,["16"] = 1,["17"] = 2,["18"] = 2,["19"] = 3,["20"] = 3,["21"] = 4,["22"] = 4,["23"] = 5,["24"] = 5,["25"] = 7,["26"] = 7,["27"] = 8,["28"] = 8,["32"] = 15,["33"] = 15,["34"] = 15,["36"] = 24,["37"] = 15,["38"] = 31,["39"] = 32,["40"] = 33,["41"] = 34,["44"] = 39,["47"] = 37,["53"] = 42,["54"] = 31,["55"] = 50,["56"] = 51,["57"] = 53,["58"] = 53,["59"] = 54,["61"] = 57,["62"] = 57,["63"] = 58,["65"] = 61,["66"] = 61,["67"] = 62,["69"] = 50,["70"] = 71,["71"] = 72,["72"] = 71,["73"] = 87,["74"] = 88,["75"] = 87,["76"] = 107,["77"] = 108,["78"] = 114,["79"] = 117,["81"] = 119,["84"] = 114,["85"] = 107,["86"] = 142,["87"] = 143,["88"] = 142});
 local ____exports = {}
 local ____luaMap = require("src.util.types.collection.luaMap")
 local LuaMap = ____luaMap.LuaMap
@@ -3948,7 +3948,7 @@ function Entrypoint.prototype.applyInfoConfig(self)
     end
 end
 function Entrypoint.prototype.registerRoutes(self)
-    Reflection:getMethodsOfClass(self):whereKeys(function(____, key) return __TS__StringStartsWith(key, "route") end):selectKeys(function(____, key) return string.lower(__TS__StringReplace(key, "route", "")) end):forEach(function(____, name, route) return self:registerRoute(name, route) end)
+    Reflection:getMethods(self):whereKeys(function(____, key) return __TS__StringStartsWith(key, "route") end):selectKeys(function(____, key) return string.lower(__TS__StringReplace(key, "route", "")) end):forEach(function(____, name, route) return self:registerRoute(name, route) end)
 end
 function Entrypoint.prototype.registerRoute(self, name, callback)
     self._routes:set(name, callback)
@@ -4986,7 +4986,7 @@ local __TS__Class = ____lualib.__TS__Class
 local __TS__ObjectKeys = ____lualib.__TS__ObjectKeys
 local __TS__ArrayForEach = ____lualib.__TS__ArrayForEach
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
-__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["8"] = 1,["9"] = 1,["10"] = 2,["11"] = 2,["12"] = 3,["13"] = 3,["14"] = 5,["15"] = 5,["16"] = 5,["18"] = 5,["19"] = 6,["20"] = 7,["21"] = 18,["22"] = 18,["23"] = 18,["24"] = 18,["25"] = 20,["26"] = 6,["27"] = 23,["28"] = 24,["29"] = 25,["31"] = 28,["32"] = 29,["33"] = 30,["35"] = 33,["36"] = 23,["37"] = 36,["38"] = 40,["39"] = 36,["40"] = 47,["41"] = 48,["42"] = 50,["43"] = 51,["44"] = 51,["45"] = 55,["46"] = 56,["47"] = 57,["48"] = 57,["49"] = 57,["50"] = 57,["51"] = 58,["52"] = 59,["53"] = 61,["54"] = 47,["55"] = 64,["56"] = 65,["57"] = 67,["58"] = 69,["59"] = 69,["60"] = 69,["61"] = 70,["62"] = 71,["63"] = 71,["64"] = 71,["65"] = 71,["66"] = 69,["67"] = 69,["68"] = 74,["69"] = 64});
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["8"] = 1,["9"] = 1,["10"] = 2,["11"] = 2,["12"] = 3,["13"] = 3,["14"] = 5,["15"] = 5,["16"] = 5,["18"] = 5,["19"] = 6,["20"] = 7,["21"] = 9,["22"] = 9,["23"] = 9,["24"] = 9,["25"] = 11,["26"] = 6,["27"] = 14,["28"] = 15,["29"] = 16,["31"] = 19,["32"] = 20,["33"] = 21,["35"] = 24,["36"] = 14,["37"] = 27,["38"] = 31,["39"] = 27,["40"] = 38,["41"] = 39,["42"] = 41,["43"] = 43,["44"] = 43,["45"] = 43,["46"] = 44,["47"] = 45,["48"] = 45,["49"] = 45,["50"] = 45,["51"] = 43,["52"] = 43,["53"] = 48,["54"] = 38});
 local ____exports = {}
 local ____lua = require("src.lua.lua")
 local Lua = ____lua.Lua
@@ -5021,21 +5021,6 @@ function Reflection.getMethod(self, ____table, name)
     return self:getMethods(____table):get(name):toResult(((("'" .. name) .. "' is not a method of '") .. tostring(____table)) .. "'")
 end
 function Reflection.getMethods(self, ____table)
-    local methods = LuaMap:empty()
-    local k = ""
-    local function v()
-    end
-    for k, v in pairs(table) do
-        if type(v) == 'function' then
-    methods:set(
-        k,
-        function(____, ...) return v(nil, ____table, ...) end
-    )
-        end
-    end
-    return methods
-end
-function Reflection.getMethodsOfClass(self, ____table)
     local methods = LuaMap:empty()
     local prototype = ____table.constructor.prototype
     __TS__ArrayForEach(
