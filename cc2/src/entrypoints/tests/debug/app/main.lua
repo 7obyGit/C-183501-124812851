@@ -4746,7 +4746,7 @@ local __TS__Class = ____lualib.__TS__Class
 local __TS__New = ____lualib.__TS__New
 local __TS__ArrayIsArray = ____lualib.__TS__ArrayIsArray
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
-__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["8"] = 1,["9"] = 1,["10"] = 2,["11"] = 2,["12"] = 3,["13"] = 3,["14"] = 37,["15"] = 37,["16"] = 37,["17"] = 43,["18"] = 44,["19"] = 45,["20"] = 43,["21"] = 48,["22"] = 49,["23"] = 48,["24"] = 52,["25"] = 57,["26"] = 58,["27"] = 60,["28"] = 64,["29"] = 66,["30"] = 71,["31"] = 72,["32"] = 73,["33"] = 52,["34"] = 76,["35"] = 77,["36"] = 82,["37"] = 83,["38"] = 82,["39"] = 76,["40"] = 90,["41"] = 91,["42"] = 92,["43"] = 93,["44"] = 93,["45"] = 93,["47"] = 93,["49"] = 91,["50"] = 90,["51"] = 38});
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["8"] = 1,["9"] = 1,["10"] = 2,["11"] = 2,["12"] = 3,["13"] = 3,["14"] = 37,["15"] = 37,["16"] = 37,["17"] = 43,["18"] = 44,["19"] = 45,["20"] = 43,["21"] = 48,["22"] = 49,["23"] = 48,["24"] = 52,["25"] = 57,["26"] = 58,["27"] = 60,["28"] = 64,["29"] = 68,["30"] = 70,["31"] = 76,["32"] = 77,["33"] = 78,["34"] = 52,["35"] = 81,["36"] = 82,["37"] = 87,["38"] = 88,["39"] = 87,["40"] = 81,["41"] = 95,["42"] = 96,["43"] = 97,["44"] = 98,["45"] = 98,["46"] = 98,["48"] = 98,["50"] = 96,["51"] = 95,["52"] = 38});
 local ____exports = {}
 local ____ccHttp = require("src.util.computer.api.tier1.globals.ccHttp")
 local CcHttp = ____ccHttp.CcHttp
@@ -4767,9 +4767,10 @@ end
 function DiscordWebhook.prototype.sendWebhookData(self, data)
     print(("Username: '" .. data.username) .. "'")
     print(("Content: '" .. data.content) .. "'")
+    local headers = {["Content-Type"] = "application/json"}
     local body = CcTextUtils:serializeJSON(data):getValueUnsafe("EC17 - " .. "Could not serialize POST data for Discord webhook")
     print(("Body: '" .. body) .. "'")
-    local response = CcHttp:post(self._url, body):getValueUnsafe("EC18 - " .. "Could not send Discord webhook")
+    local response = CcHttp:post(self._url, body, headers):getValueUnsafe("EC18 - " .. "Could not send Discord webhook")
     print(("Code: '" .. tostring(response:getResponseCode())) .. "'")
     print(("Headers: '" .. tostring(response:getResponseHeaders())) .. "'")
     print(("Message: '" .. response:readAllContent()) .. "'")
