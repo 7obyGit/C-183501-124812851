@@ -4739,7 +4739,7 @@ local __TS__Class = ____lualib.__TS__Class
 local __TS__New = ____lualib.__TS__New
 local __TS__ArrayIsArray = ____lualib.__TS__ArrayIsArray
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
-__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["8"] = 1,["9"] = 1,["10"] = 2,["11"] = 2,["12"] = 3,["13"] = 3,["14"] = 7,["15"] = 7,["16"] = 37,["17"] = 37,["18"] = 37,["19"] = 43,["20"] = 44,["21"] = 45,["22"] = 43,["23"] = 48,["24"] = 49,["25"] = 48,["26"] = 52,["27"] = 57,["28"] = 57,["29"] = 57,["30"] = 57,["31"] = 64,["32"] = 67,["33"] = 52,["34"] = 70,["35"] = 71,["36"] = 76,["37"] = 77,["38"] = 76,["39"] = 70,["40"] = 84,["41"] = 85,["42"] = 86,["43"] = 87,["44"] = 87,["45"] = 87,["47"] = 87,["49"] = 85,["50"] = 84,["51"] = 38});
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["8"] = 1,["9"] = 1,["10"] = 2,["11"] = 2,["12"] = 3,["13"] = 3,["14"] = 7,["15"] = 7,["16"] = 37,["17"] = 37,["18"] = 37,["19"] = 43,["20"] = 44,["21"] = 45,["22"] = 43,["23"] = 48,["24"] = 49,["25"] = 48,["26"] = 52,["27"] = 57,["28"] = 57,["29"] = 57,["30"] = 57,["31"] = 64,["32"] = 68,["33"] = 52,["34"] = 74,["35"] = 75,["36"] = 80,["37"] = 81,["38"] = 80,["39"] = 74,["40"] = 88,["41"] = 89,["42"] = 90,["43"] = 91,["44"] = 91,["45"] = 91,["47"] = 91,["49"] = 89,["50"] = 88,["51"] = 38});
 local ____exports = {}
 local ____ccHttp = require("src.util.computer.api.tier1.globals.ccHttp")
 local CcHttp = ____ccHttp.CcHttp
@@ -4765,7 +4765,7 @@ function DiscordWebhook.prototype.sendWebhookData(self, data)
         CcTextUtils:serializeJSON(data):getValueUnsafe("EC17 - " .. "Could not serialize POST data for Discord webhook")
     )
     local response = result:getValueUnsafe("EC18 - " .. "Could not send Discord webhook")
-    print(tostring(Reflection:getFields(response):keys()))
+    print(tostring(Reflection:getFields(response.handle):keys()))
 end
 function DiscordWebhook.prototype.sendMessage(self, message)
     local chunks = TextUtil:toChunks(message, ____exports.DiscordWebhook.DISCORD_MESSAGE_LENGTH_LIMIT)
