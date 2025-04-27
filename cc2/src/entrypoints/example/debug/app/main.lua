@@ -50,9 +50,15 @@ __bundle_register("__root", function(require, _LOADED, __bundle_register, __bund
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
 local __TS__ClassExtends = ____lualib.__TS__ClassExtends
+local Error = ____lualib.Error
+local RangeError = ____lualib.RangeError
+local ReferenceError = ____lualib.ReferenceError
+local SyntaxError = ____lualib.SyntaxError
+local TypeError = ____lualib.TypeError
+local URIError = ____lualib.URIError
 local __TS__New = ____lualib.__TS__New
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
-__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["8"] = 1,["9"] = 1,["10"] = 2,["11"] = 2,["12"] = 3,["13"] = 3,["14"] = 4,["15"] = 4,["16"] = 6,["17"] = 6,["18"] = 6,["19"] = 6,["20"] = 7,["21"] = 7,["22"] = 8,["23"] = 8,["24"] = 10,["25"] = 11,["26"] = 12,["27"] = 13,["28"] = 14,["29"] = 15,["30"] = 10,["31"] = 19});
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["14"] = 1,["15"] = 1,["16"] = 2,["17"] = 2,["18"] = 3,["19"] = 3,["20"] = 4,["21"] = 4,["22"] = 6,["23"] = 6,["24"] = 6,["25"] = 6,["26"] = 7,["27"] = 7,["28"] = 8,["29"] = 8,["30"] = 10,["31"] = 11,["32"] = 12,["33"] = 13,["34"] = 14,["35"] = 15,["37"] = 16,["40"] = 10,["41"] = 20});
 local ____exports = {}
 local ____chatBox = require("src.util.computer.api.tier1.advancedPeripherals.chatBox")
 local ChatBox = ____chatBox.ChatBox
@@ -76,6 +82,10 @@ function ExampleEntrypoint.prototype.routeRun(self)
     Logger:debug(list)
     ChatBox:sendMessage("Hello World!")
     Logger:warn("Last")
+    error(
+        __TS__New(Error, "Test"),
+        0
+    )
 end
 __TS__New(____exports.ExampleEntrypoint):run()
 return ____exports
