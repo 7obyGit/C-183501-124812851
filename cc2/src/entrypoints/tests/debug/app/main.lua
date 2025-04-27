@@ -4741,15 +4741,16 @@ __bundle_register("src.util.computer.api.tier2.externalApi.discord.discordWebhoo
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
 local __TS__New = ____lualib.__TS__New
-local __TS__ArrayForEach = ____lualib.__TS__ArrayForEach
 local __TS__ArrayIsArray = ____lualib.__TS__ArrayIsArray
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
-__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["9"] = 1,["10"] = 1,["11"] = 2,["12"] = 2,["13"] = 32,["14"] = 32,["15"] = 32,["16"] = 38,["17"] = 39,["18"] = 40,["19"] = 38,["20"] = 43,["21"] = 44,["22"] = 43,["23"] = 47,["24"] = 52,["25"] = 52,["26"] = 52,["27"] = 52,["28"] = 47,["29"] = 60,["30"] = 61,["31"] = 63,["32"] = 63,["33"] = 63,["34"] = 62,["35"] = 69,["36"] = 69,["37"] = 69,["38"] = 70,["39"] = 69,["40"] = 69,["41"] = 60,["42"] = 77,["43"] = 78,["44"] = 79,["45"] = 80,["46"] = 80,["47"] = 80,["49"] = 80,["51"] = 78,["52"] = 77,["53"] = 33});
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["8"] = 1,["9"] = 1,["10"] = 2,["11"] = 2,["12"] = 3,["13"] = 3,["14"] = 33,["15"] = 33,["16"] = 33,["17"] = 39,["18"] = 40,["19"] = 41,["20"] = 39,["21"] = 44,["22"] = 45,["23"] = 44,["24"] = 48,["25"] = 53,["26"] = 53,["27"] = 53,["28"] = 53,["29"] = 48,["30"] = 61,["31"] = 62,["32"] = 67,["33"] = 68,["34"] = 67,["35"] = 61,["36"] = 75,["37"] = 76,["38"] = 77,["39"] = 78,["40"] = 78,["41"] = 78,["43"] = 78,["45"] = 76,["46"] = 75,["47"] = 34});
 local ____exports = {}
 local ____ccHttp = require("src.util.computer.api.tier1.globals.ccHttp")
 local CcHttp = ____ccHttp.CcHttp
 local ____ccTextUtils = require("src.util.computer.api.tier1.globals.ccTextUtils")
 local CcTextUtils = ____ccTextUtils.CcTextUtils
+local ____textUtil = require("src.util.computer.api.tier2.text.textUtil")
+local TextUtil = ____textUtil.TextUtil
 ____exports.DiscordWebhook = __TS__Class()
 local DiscordWebhook = ____exports.DiscordWebhook
 DiscordWebhook.name = "DiscordWebhook"
@@ -4767,17 +4768,10 @@ function DiscordWebhook.prototype.sendWebhookData(self, data)
     )
 end
 function DiscordWebhook.prototype.sendMessage(self, message)
-    local chunks = message:match(__TS__New(
-        RegExp,
-        (".{1," .. tostring(____exports.DiscordWebhook.DISCORD_MESSAGE_LENGTH_LIMIT)) .. "}",
-        "g"
-    )) or ({})
-    __TS__ArrayForEach(
-        chunks,
-        function(____, chunk)
-            self:sendWebhookData({username = self._username, content = chunk})
-        end
-    )
+    local chunks = TextUtil:toChunks(message, ____exports.DiscordWebhook.DISCORD_MESSAGE_LENGTH_LIMIT)
+    chunks:forEach(function(____, chunk)
+        self:sendWebhookData({username = self._username, content = chunk})
+    end)
 end
 function DiscordWebhook.prototype.sendEmbed(self, embeds)
     local ____self_sendWebhookData_2 = self.sendWebhookData
@@ -4791,6 +4785,38 @@ function DiscordWebhook.prototype.sendEmbed(self, embeds)
     ____self_sendWebhookData_2(self, {username = ____self__username_1, embeds = ____Array_isArray_result_0})
 end
 DiscordWebhook.DISCORD_MESSAGE_LENGTH_LIMIT = 2000
+return ____exports
+
+end)
+__bundle_register("src.util.computer.api.tier2.text.textUtil", function(require, _LOADED, __bundle_register, __bundle_modules)
+local ____lualib = require("lualib_bundle")
+local __TS__Class = ____lualib.__TS__Class
+local __TS__StringSubstring = ____lualib.__TS__StringSubstring
+local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["7"] = 1,["8"] = 1,["9"] = 3,["10"] = 3,["11"] = 3,["13"] = 3,["14"] = 4,["15"] = 8,["16"] = 10,["18"] = 11,["19"] = 11,["20"] = 12,["21"] = 13,["22"] = 18,["23"] = 19,["24"] = 11,["27"] = 22,["28"] = 4});
+local ____exports = {}
+local ____luaList = require("src.util.types.collection.luaList")
+local LuaList = ____luaList.LuaList
+____exports.TextUtil = __TS__Class()
+local TextUtil = ____exports.TextUtil
+TextUtil.name = "TextUtil"
+function TextUtil.prototype.____constructor(self)
+end
+function TextUtil.toChunks(self, text, maxChunkLength)
+    local chunks = LuaList:empty()
+    local chunkCount = math.ceil(#text / maxChunkLength)
+    do
+        local i = 0
+        while i < chunkCount do
+            local chunkStart = i * maxChunkLength
+            local chunkEnd = math.min(#text, (i + 1) * maxChunkLength)
+            local chunk = __TS__StringSubstring(text, chunkStart, chunkEnd)
+            chunks:append(chunk)
+            i = i + 1
+        end
+    end
+    return chunks
+end
 return ____exports
 
 end)
