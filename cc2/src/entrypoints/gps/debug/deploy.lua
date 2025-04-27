@@ -6,12 +6,16 @@
 baseUrl = "https://raw.githubusercontent.com/7obyGit/C-183501-124812851/main/cc2/src/entrypoints/gps/debug"
 
 
+local l,h=32,126;local S=l+h
+function unmangle(s)return(s:gsub('.',function(c)local n=c:byte()if n>=l and n<=h then return string.char(S-n)end return c end))end
+
+
 function download(url)
     local request = http.get(url)
     local text = request.readAll()
     text = (text:sub(1,1) == "?" and text:sub(2)) or text
     request.close()
-    return text
+    return unmangle(text)
 end
 
 

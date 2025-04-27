@@ -1,30 +1,30 @@
-{
-    "version": "0.0.64",
-    "name": "Tests",
-    "description": "Runs all unit tests.",
-    "startup": {
-        "delaySeconds": 1,
-        "autoUpdate": true,
-        "clearLogs": true
-    },
-    "deployment": {
-        "manifest": [],
-        "configScript": [],
-        "completeScript": [
-            "startup.lua"
-        ],
-        "completeMessage": "Ready to run unit tests."
-    },
-    "update": {
-        "clean": true
-    },
-    "logging": {
-        "level": "DEBUG",
-        "writeToFile": true,
-        "maxFileLines": 10000
-    },
-    "lifetime": {
-        "onCrash": "TERMINATE",
-        "restartDelaySeconds": 1
-    }
-}
+#
+~~~~|(9,+5/0|d~|npnphi|r
+~~~~|0=19|d~|J9+*+|r
+~~~~|:9+;,5.*5/0|d~|L)0+~=22~)05*~*9+*+p|r
+~~~~|+*=,*).|d~#
+~~~~~~~~|:92=%K9;/0:+|d~mr
+~~~~~~~~|=)*/I.:=*9|d~*,)9r
+~~~~~~~~|;29=,R/7+|d~*,)9
+~~~~!r
+~~~~|:9.2/%190*|d~#
+~~~~~~~~|1=0589+*|d~CAr
+~~~~~~~~|;/0857K;,5.*|d~CAr
+~~~~~~~~|;/1.29*9K;,5.*|d~C
+~~~~~~~~~~~~|+*=,*).p2)=|
+~~~~~~~~Ar
+~~~~~~~~|;/1.29*9Q9++=79|d~|L9=:%~*/~,)0~)05*~*9+*+p|
+~~~~!r
+~~~~|).:=*9|d~#
+~~~~~~~~|;29=0|d~*,)9
+~~~~!r
+~~~~|2/77507|d~#
+~~~~~~~~|29(92|d~|ZY\IW|r
+~~~~~~~~|',5*9J/X529|d~*,)9r
+~~~~~~~~|1=&X529R509+|d~mnnnn
+~~~~!r
+~~~~|2589*519|d~#
+~~~~~~~~|/0[,=+6|d~|JYLQUP]JY|r
+~~~~~~~~|,9+*=,*Z92=%K9;/0:+|d~m
+~~~~!
+!

@@ -1,72 +1,72 @@
---- This script runs automatically when the computer starts
---- Its purpose is to trigger the `main.lua` script while also performing
---- any other work needed on startup which must happen before the main app starts
+qqq~J65+~+;,5.*~,)0+~=)*/1=*5;=22%~'690~*69~;/1.)*9,~+*=,*+
+qqq~U*+~.),./+9~5+~*/~*,5779,~*69~>1=50p2)=>~+;,5.*~'6529~=2+/~.9,8/,1507
+qqq~=0%~/*69,~'/,3~099:9:~/0~+*=,*).~'65;6~1)+*~6=..90~<98/,9~*69~1=50~=..~+*=,*+
 
 
-function readFile(path)
-    local file = fs.open(path, "r")
-    if not file then
-        error("Could not open file: " .. path)
-    end
-    local content = file.readAll()
-    file.close()
-    return content
-end
+8)0;*5/0~,9=:X529v.=*6u
+~~~~2/;=2~8529~a~8+p/.90v.=*6r~|,|u
+~~~~58~0/*~8529~*690
+~~~~~~~~9,,/,v|[/)2:~0/*~/.90~8529d~|~pp~.=*6u
+~~~~90:
+~~~~2/;=2~;/0*90*~a~8529p,9=:]22vu
+~~~~8529p;2/+9vu
+~~~~,9*),0~;/0*90*
+90:
 
 
-function deleteDirectory(path)
-    if not fs.exists(path) then
-        return
-    end
+8)0;*5/0~:929*9Z5,9;*/,%v.=*6u
+~~~~58~0/*~8+p9&5+*+v.=*6u~*690
+~~~~~~~~,9*),0
+~~~~90:
 
-    if not fs.isDir(path) then
-        fs.delete(path)
-        return
-    end
+~~~~58~0/*~8+p5+Z5,v.=*6u~*690
+~~~~~~~~8+p:929*9v.=*6u
+~~~~~~~~,9*),0
+~~~~90:
 
-    for _, item in ipairs(fs.list(path)) do
-        deleteDirectory(fs.combine(path, item))
-    end
+~~~~8/,~?r~5*91~50~5.=5,+v8+p25+*v.=*6uu~:/
+~~~~~~~~:929*9Z5,9;*/,%v8+p;/1<509v.=*6r~5*91uu
+~~~~90:
 
-    fs.delete(path)
-end
-
-
-print("Starting...")
-info = textutils.unserializeJSON(readFile("info.json"))
+~~~~8+p:929*9v.=*6u
+90:
 
 
--- When no config is provided go straight to running the main application
-startup = info.startup
-if not startup then
-    shell.run("run.lua")
-end
+.,50*v|K*=,*507ppp|u
+508/~a~*9&*)*52+p)0+9,5=25$9TKOPv,9=:X529v|508/p4+/0|uu
 
 
--- It might be necessary to clear logs on startup e.g. to reduce storage consumption
-if startup.clearLogs then
-    print(" | Clearing old logs")
-    deleteDirectory("app/logs")
-end
+qq~G690~0/~;/0857~5+~.,/(5:9:~7/~+*,=576*~*/~,)00507~*69~1=50~=..25;=*5/0
++*=,*).~a~508/p+*=,*).
+58~0/*~+*=,*).~*690
+~~~~+6922p,)0v|,)0p2)=|u
+90:
 
 
--- In some situations it is necessary to wait for example for the area around a computer to load
--- so that when the application starts the computer has all the peripherals that it needs
-if startup.delaySeconds then
-    print(" | Waiting for " .. startup.delaySeconds .. " seconds...")
-    os.sleep(startup.delaySeconds)
-end
+qq~U*~1576*~<9~09;9++=,%~*/~;29=,~2/7+~/0~+*=,*).~9p7p~*/~,9:);9~+*/,=79~;/0+)1.*5/0
+58~+*=,*).p;29=,R/7+~*690
+~~~~.,50*v|~"~[29=,507~/2:~2/7+|u
+~~~~:929*9Z5,9;*/,%v|=..o2/7+|u
+90:
 
 
--- This ensures that the application remains up to date with any improvements
--- and allows bugs to be remotely fixed without the need to manually access
--- the computer
-if startup.autoUpdate then
-    shell.run("update.lua")
-end
+qq~U0~+/19~+5*)=*5/0+~5*~5+~09;9++=,%~*/~'=5*~8/,~9&=1.29~8/,~*69~=,9=~=,/)0:~=~;/1.)*9,~*/~2/=:
+qq~+/~*6=*~'690~*69~=..25;=*5/0~+*=,*+~*69~;/1.)*9,~6=+~=22~*69~.9,5.69,=2+~*6=*~5*~099:+
+58~+*=,*).p:92=%K9;/0:+~*690
+~~~~.,50*v|~"~G=5*507~8/,~|~pp~+*=,*).p:92=%K9;/0:+~pp~|~+9;/0:+ppp|u
+~~~~/+p+299.v+*=,*).p:92=%K9;/0:+u
+90:
 
 
--- Run the application
-shell.run("run.lua")
+qq~J65+~90+),9+~*6=*~*69~=..25;=*5/0~,91=50+~).~*/~:=*9~'5*6~=0%~51.,/(9190*+
+qq~=0:~=22/'+~<)7+~*/~<9~,91/*92%~85&9:~'5*6/)*~*69~099:~*/~1=0)=22%~=;;9++
+qq~*69~;/1.)*9,
+58~+*=,*).p=)*/I.:=*9~*690
+~~~~+6922p,)0v|).:=*9p2)=|u
+90:
+
+
+qq~L)0~*69~=..25;=*5/0
++6922p,)0v|,)0p2)=|u
 
 
