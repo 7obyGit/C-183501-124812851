@@ -1,127 +1,127 @@
---- This script is responsible for safely running the main application
---- It can ensure that, in the event of an error, the application will continue
---- to operate effectively
+qqq~J65+~+;,5.*~5+~,9+./0+5<29~8/,~+=892%~,)00507~*69~1=50~=..25;=*5/0
+qqq~U*~;=0~90+),9~*6=*r~50~*69~9(90*~/8~=0~9,,/,r~*69~=..25;=*5/0~'522~;/0*50)9
+qqq~*/~/.9,=*9~9889;*5(92%
 
 
-function readFile(path)
-    local file = fs.open(path, "r")
-    if not file then
-        error("Could not open file: " .. path)
-    end
-    local content = file.readAll()
-    file.close()
-    return content
-end
+8)0;*5/0~,9=:X529v.=*6u
+~~~~2/;=2~8529~a~8+p/.90v.=*6r~|,|u
+~~~~58~0/*~8529~*690
+~~~~~~~~9,,/,v|[/)2:~0/*~/.90~8529d~|~pp~.=*6u
+~~~~90:
+~~~~2/;=2~;/0*90*~a~8529p,9=:]22vu
+~~~~8529p;2/+9vu
+~~~~,9*),0~;/0*90*
+90:
 
 
-function deleteDirectory(path)
-    if not fs.exists(path) then
-        return
-    end
+8)0;*5/0~:929*9Z5,9;*/,%v.=*6u
+~~~~58~0/*~8+p9&5+*+v.=*6u~*690
+~~~~~~~~,9*),0
+~~~~90:
 
-    if not fs.isDir(path) then
-        fs.delete(path)
-        return
-    end
+~~~~58~0/*~8+p5+Z5,v.=*6u~*690
+~~~~~~~~8+p:929*9v.=*6u
+~~~~~~~~,9*),0
+~~~~90:
 
-    for _, item in ipairs(fs.list(path)) do
-        deleteDirectory(fs.combine(path, item))
-    end
+~~~~8/,~?r~5*91~50~5.=5,+v8+p25+*v.=*6uu~:/
+~~~~~~~~:929*9Z5,9;*/,%v8+p;/1<509v.=*6r~5*91uu
+~~~~90:
 
-    fs.delete(path)
-end
-
-
-function copyDirectory(fromDirectory, toDirectory)
-    if not fs.exists(fromDirectory) or not fs.isDir(fromDirectory) then
-        error("Source directory does not exist or is not a directory: " .. fromDirectory)
-    end
-
-    if not fs.exists(toDirectory) then
-        fs.makeDir(toDirectory)
-    end
-
-    for _, item in ipairs(fs.list(fromDirectory)) do
-        local fromPath = fs.combine(fromDirectory, item)
-        local toPath = fs.combine(toDirectory, item)
-
-        if fs.isDir(fromPath) then
-            copyDirectory(fromPath, toPath)
-        else
-            if fs.exists(toPath) then
-                fs.delete(toPath)
-            end
-            fs.copy(fromPath, toPath)
-        end
-    end
-end
+~~~~8+p:929*9v.=*6u
+90:
 
 
-function moveDirectory(fromDirectory, toDirectory)
-    copyDirectory(fromDirectory, toDirectory)
-    deleteDirectory(fromDirectory)
-end
+8)0;*5/0~;/.%Z5,9;*/,%v8,/1Z5,9;*/,%r~*/Z5,9;*/,%u
+~~~~58~0/*~8+p9&5+*+v8,/1Z5,9;*/,%u~/,~0/*~8+p5+Z5,v8,/1Z5,9;*/,%u~*690
+~~~~~~~~9,,/,v|K/),;9~:5,9;*/,%~:/9+~0/*~9&5+*~/,~5+~0/*~=~:5,9;*/,%d~|~pp~8,/1Z5,9;*/,%u
+~~~~90:
+
+~~~~58~0/*~8+p9&5+*+v*/Z5,9;*/,%u~*690
+~~~~~~~~8+p1=39Z5,v*/Z5,9;*/,%u
+~~~~90:
+
+~~~~8/,~?r~5*91~50~5.=5,+v8+p25+*v8,/1Z5,9;*/,%uu~:/
+~~~~~~~~2/;=2~8,/1N=*6~a~8+p;/1<509v8,/1Z5,9;*/,%r~5*91u
+~~~~~~~~2/;=2~*/N=*6~a~8+p;/1<509v*/Z5,9;*/,%r~5*91u
+
+~~~~~~~~58~8+p5+Z5,v8,/1N=*6u~*690
+~~~~~~~~~~~~;/.%Z5,9;*/,%v8,/1N=*6r~*/N=*6u
+~~~~~~~~92+9
+~~~~~~~~~~~~58~8+p9&5+*+v*/N=*6u~*690
+~~~~~~~~~~~~~~~~8+p:929*9v*/N=*6u
+~~~~~~~~~~~~90:
+~~~~~~~~~~~~8+p;/.%v8,/1N=*6r~*/N=*6u
+~~~~~~~~90:
+~~~~90:
+90:
 
 
-info = textutils.unserializeJSON(readFile("info.json"))
-appName = info.name or "Application"
-lifetime = info.lifetime or {}
+8)0;*5/0~1/(9Z5,9;*/,%v8,/1Z5,9;*/,%r~*/Z5,9;*/,%u
+~~~~;/.%Z5,9;*/,%v8,/1Z5,9;*/,%r~*/Z5,9;*/,%u
+~~~~:929*9Z5,9;*/,%v8,/1Z5,9;*/,%u
+90:
 
 
-function rollback()
-    deleteDirectory("app")
-    moveDirectory("old", "app")
-end
+508/~a~*9&*)*52+p)0+9,5=25$9TKOPv,9=:X529v|508/p4+/0|uu
+=..P=19~a~508/p0=19~/,~|]..25;=*5/0|
+2589*519~a~508/p2589*519~/,~#!
 
 
-function run()
-    local runs = 0
-    while true do
-        runs = runs + 1
-
-        -- Try to run the application
-        print(appName .. " Starting...")
-        local success, err = pcall(function()
-            shell.run("app/main.lua", "run")
-        end)
-        print(appName .. " Terminated")
+8)0;*5/0~,/22<=;3vu
+~~~~:929*9Z5,9;*/,%v|=..|u
+~~~~1/(9Z5,9;*/,%v|/2:|r~|=..|u
+90:
 
 
-        if success then
-            return
-        else
-            print("Critical Error:")
-            print(err)
-        end
+8)0;*5/0~,)0vu
+~~~~2/;=2~,)0+~a~n
+~~~~'6529~*,)9~:/
+~~~~~~~~,)0+~a~,)0+~s~m
 
-        -- Decide what to do based on the `onCrash` strategy
-        local backupExists = fs.exists("old")
-        if backupExists then
-            print("Backup EXISTS")
-        end
-        if lifetime.onCrash == "ROLLBACK" and backupExists then
-            -- There is a backup in the `old` directory, rollback to that version
-            print("Rolling back to the previous version...")
-            rollback()
-            os.sleep(lifetime.restartDelaySeconds or 1)
-        elseif lifetime.onCrash == "ROLLBACK" or lifetime.onCrash == "RESTART" then
-            -- Ok to restart, no action needed
-            print("Restarting...")
-            os.sleep(lifetime.restartDelaySeconds or 1)
-        elseif lifetime.onCrash == "TERMINATE" then
-            -- Do nothing
-            print("Terminating Wrapper...")
-            return
-        else
-            -- Unknown crash strategy
-            error("Unknown crash strategy: " .. lifetime.onCrash)
-        end
-
-        -- Log the number of times this has happened
-        print("Crash Number: " .. runs)
-    end
-end
+~~~~~~~~qq~J,%~*/~,)0~*69~=..25;=*5/0
+~~~~~~~~.,50*v=..P=19~pp~|~K*=,*507ppp|u
+~~~~~~~~2/;=2~+);;9++r~9,,~a~.;=22v8)0;*5/0vu
+~~~~~~~~~~~~+6922p,)0v|=..o1=50p2)=|r~|,)0|u
+~~~~~~~~90:u
+~~~~~~~~.,50*v=..P=19~pp~|~J9,150=*9:|u
 
 
-run()
+~~~~~~~~58~+);;9++~*690
+~~~~~~~~~~~~,9*),0
+~~~~~~~~92+9
+~~~~~~~~~~~~.,50*v|[,5*5;=2~Y,,/,d|u
+~~~~~~~~~~~~.,50*v9,,u
+~~~~~~~~90:
+
+~~~~~~~~qq~Z9;5:9~'6=*~*/~:/~<=+9:~/0~*69~>/0[,=+6>~+*,=*97%
+~~~~~~~~2/;=2~<=;3).Y&5+*+~a~8+p9&5+*+v|/2:|u
+~~~~~~~~58~<=;3).Y&5+*+~*690
+~~~~~~~~~~~~.,50*v|\=;3).~YFUKJK|u
+~~~~~~~~90:
+~~~~~~~~58~2589*519p/0[,=+6~aa~|LORR\][S|~=0:~<=;3).Y&5+*+~*690
+~~~~~~~~~~~~qq~J69,9~5+~=~<=;3).~50~*69~>/2:>~:5,9;*/,%r~,/22<=;3~*/~*6=*~(9,+5/0
+~~~~~~~~~~~~.,50*v|L/22507~<=;3~*/~*69~.,9(5/)+~(9,+5/0ppp|u
+~~~~~~~~~~~~,/22<=;3vu
+~~~~~~~~~~~~/+p+299.v2589*519p,9+*=,*Z92=%K9;/0:+~/,~mu
+~~~~~~~~92+958~2589*519p/0[,=+6~aa~|LORR\][S|~/,~2589*519p/0[,=+6~aa~|LYKJ]LJ|~*690
+~~~~~~~~~~~~qq~O3~*/~,9+*=,*r~0/~=;*5/0~099:9:
+~~~~~~~~~~~~.,50*v|L9+*=,*507ppp|u
+~~~~~~~~~~~~/+p+299.v2589*519p,9+*=,*Z92=%K9;/0:+~/,~mu
+~~~~~~~~92+958~2589*519p/0[,=+6~aa~|JYLQUP]JY|~*690
+~~~~~~~~~~~~qq~Z/~0/*6507
+~~~~~~~~~~~~.,50*v|J9,150=*507~G,=..9,ppp|u
+~~~~~~~~~~~~,9*),0
+~~~~~~~~92+9
+~~~~~~~~~~~~qq~I030/'0~;,=+6~+*,=*97%
+~~~~~~~~~~~~9,,/,v|I030/'0~;,=+6~+*,=*97%d~|~pp~2589*519p/0[,=+6u
+~~~~~~~~90:
+
+~~~~~~~~qq~R/7~*69~0)1<9,~/8~*519+~*65+~6=+~6=..909:
+~~~~~~~~.,50*v|[,=+6~P)1<9,d~|~pp~,)0+u
+~~~~90:
+90:
+
+
+,)0vu
 
