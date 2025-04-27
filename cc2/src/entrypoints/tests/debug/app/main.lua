@@ -3974,7 +3974,7 @@ local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
 local __TS__ClassExtends = ____lualib.__TS__ClassExtends
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
-__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["7"] = 1,["8"] = 1,["9"] = 2,["10"] = 2,["11"] = 3,["12"] = 3,["13"] = 5,["14"] = 5,["15"] = 5,["16"] = 5,["17"] = 14,["18"] = 15,["19"] = 14,["20"] = 18,["21"] = 19,["22"] = 20,["23"] = 21,["24"] = 18,["25"] = 7,["26"] = 7,["27"] = 7,["28"] = 7});
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["7"] = 1,["8"] = 1,["9"] = 2,["10"] = 2,["11"] = 3,["12"] = 3,["13"] = 5,["14"] = 5,["15"] = 5,["16"] = 5,["17"] = 14,["18"] = 15,["19"] = 14,["20"] = 18,["21"] = 19,["22"] = 18,["23"] = 7,["24"] = 7,["25"] = 7,["26"] = 7});
 local ____exports = {}
 local ____logListener = require("src.util.computer.api.tier2.logging.logListener")
 local LogListener = ____logListener.LogListener
@@ -3990,9 +3990,7 @@ function DiscordWebhookLogListener.prototype.getName(self)
     return "DiscordWebhookLogListener"
 end
 function DiscordWebhookLogListener.prototype.onLog(self, level, message)
-    print("CALLED DISCORD: " .. message)
     ____exports.DiscordWebhookLogListener._webhook:sendMessage((("[" .. level) .. "] ") .. message)
-    print("CALLED DISCORD END: " .. message)
 end
 DiscordWebhookLogListener._webhook = DiscordWebhook:fromUrl(
     "ComputerCraft",
@@ -4743,9 +4741,10 @@ __bundle_register("src.util.computer.api.tier2.externalApi.discord.discordWebhoo
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
 local __TS__New = ____lualib.__TS__New
+local __TS__ArrayForEach = ____lualib.__TS__ArrayForEach
 local __TS__ArrayIsArray = ____lualib.__TS__ArrayIsArray
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
-__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["8"] = 1,["9"] = 1,["10"] = 2,["11"] = 2,["12"] = 32,["13"] = 32,["14"] = 32,["15"] = 38,["16"] = 39,["17"] = 40,["18"] = 38,["19"] = 43,["20"] = 44,["21"] = 43,["22"] = 47,["23"] = 52,["24"] = 52,["25"] = 52,["26"] = 52,["27"] = 47,["28"] = 60,["29"] = 60,["30"] = 77,["31"] = 78,["32"] = 79,["33"] = 80,["34"] = 80,["35"] = 80,["37"] = 80,["39"] = 78,["40"] = 77,["41"] = 33});
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["9"] = 1,["10"] = 1,["11"] = 2,["12"] = 2,["13"] = 32,["14"] = 32,["15"] = 32,["16"] = 38,["17"] = 39,["18"] = 40,["19"] = 38,["20"] = 43,["21"] = 44,["22"] = 43,["23"] = 47,["24"] = 52,["25"] = 52,["26"] = 52,["27"] = 52,["28"] = 47,["29"] = 60,["30"] = 61,["31"] = 63,["32"] = 63,["33"] = 63,["34"] = 62,["35"] = 69,["36"] = 69,["37"] = 69,["38"] = 70,["39"] = 69,["40"] = 69,["41"] = 60,["42"] = 77,["43"] = 78,["44"] = 79,["45"] = 80,["46"] = 80,["47"] = 80,["49"] = 80,["51"] = 78,["52"] = 77,["53"] = 33});
 local ____exports = {}
 local ____ccHttp = require("src.util.computer.api.tier1.globals.ccHttp")
 local CcHttp = ____ccHttp.CcHttp
@@ -4768,6 +4767,17 @@ function DiscordWebhook.prototype.sendWebhookData(self, data)
     )
 end
 function DiscordWebhook.prototype.sendMessage(self, message)
+    local chunks = message:match(__TS__New(
+        RegExp,
+        (".{1," .. tostring(____exports.DiscordWebhook.DISCORD_MESSAGE_LENGTH_LIMIT)) .. "}",
+        "g"
+    )) or ({})
+    __TS__ArrayForEach(
+        chunks,
+        function(____, chunk)
+            self:sendWebhookData({username = self._username, content = chunk})
+        end
+    )
 end
 function DiscordWebhook.prototype.sendEmbed(self, embeds)
     local ____self_sendWebhookData_2 = self.sendWebhookData
