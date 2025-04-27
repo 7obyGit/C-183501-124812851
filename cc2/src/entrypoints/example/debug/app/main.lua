@@ -3235,7 +3235,7 @@ function LuaList.prototype.removeLast(self)
 end
 function LuaList.prototype.removeAt(self, index)
     if index < 0 or index >= #self.elements then
-        Unsafe:throwUnsafe("EC39 - " .. "Index was out of range")
+        Unsafe:throwUnsafe("EC57 - " .. "Index was out of range")
     end
     return __TS__ArraySplice(self.elements, index, 1)[1]
 end
@@ -3531,7 +3531,7 @@ Lua.name = "Lua"
 function Lua.prototype.____constructor(self)
 end
 function Lua.literal(self, luaVersion)
-    Unsafe:throwUnsafe("EC1 - " .. ("Lua.literal(" .. luaVersion) .. ") has no Typescript alternative")
+    Unsafe:throwUnsafe("EC2 - " .. ("Lua.literal(" .. luaVersion) .. ") has no Typescript alternative")
 end
 return ____exports
 
@@ -3660,7 +3660,7 @@ local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
 local __TS__New = ____lualib.__TS__New
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
-__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["7"] = 1,["8"] = 1,["9"] = 2,["10"] = 2,["11"] = 4,["12"] = 4,["13"] = 4,["14"] = 7,["15"] = 8,["16"] = 7,["17"] = 11,["18"] = 12,["19"] = 11,["20"] = 15,["21"] = 18,["22"] = 19,["24"] = 20,["25"] = 15,["26"] = 23,["27"] = 24,["28"] = 23,["29"] = 27,["30"] = 28,["31"] = 27,["32"] = 31,["33"] = 32,["34"] = 31,["35"] = 35,["36"] = 36,["37"] = 37,["39"] = 38,["40"] = 35,["41"] = 41,["42"] = 42,["43"] = 42,["44"] = 42,["46"] = 42,["47"] = 41,["48"] = 45,["49"] = 48,["50"] = 48,["52"] = 49,["53"] = 45,["54"] = 52,["55"] = 53,["56"] = 53,["58"] = 54,["59"] = 52,["60"] = 57,["61"] = 58,["62"] = 58,["64"] = 59,["65"] = 57,["66"] = 62,["67"] = 63,["68"] = 63,["69"] = 63,["71"] = 63,["73"] = 63,["74"] = 62,["75"] = 66,["76"] = 67,["77"] = 67,["79"] = 68,["80"] = 66});
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["7"] = 1,["8"] = 1,["9"] = 2,["10"] = 2,["11"] = 4,["12"] = 4,["13"] = 4,["14"] = 7,["15"] = 8,["16"] = 7,["17"] = 11,["18"] = 12,["19"] = 11,["20"] = 15,["21"] = 18,["22"] = 19,["24"] = 20,["25"] = 15,["26"] = 23,["27"] = 24,["28"] = 23,["29"] = 27,["30"] = 28,["31"] = 27,["32"] = 31,["33"] = 32,["34"] = 31,["35"] = 35,["36"] = 36,["37"] = 37,["39"] = 39,["40"] = 35,["41"] = 42,["42"] = 43,["43"] = 43,["44"] = 43,["46"] = 43,["47"] = 42,["48"] = 46,["49"] = 49,["50"] = 49,["52"] = 50,["53"] = 46,["54"] = 53,["55"] = 54,["56"] = 54,["58"] = 55,["59"] = 53,["60"] = 58,["61"] = 59,["62"] = 59,["64"] = 60,["65"] = 58,["66"] = 63,["67"] = 64,["68"] = 64,["69"] = 64,["71"] = 64,["73"] = 64,["74"] = 63,["75"] = 67,["76"] = 68,["77"] = 68,["79"] = 69,["80"] = 67});
 local ____exports = {}
 local ____result = require("src.util.types.result")
 local Result = ____result.Result
@@ -3692,7 +3692,7 @@ function Optional.prototype.isEmpty(self)
 end
 function Optional.prototype.getValueUnsafe(self, message)
     if not self.value then
-        Unsafe:throwUnsafe("EC36 - " .. message or "Cannot unwrap `Optional` value!")
+        Unsafe:throwUnsafe("EC54 - " .. message or "Cannot unwrap `Optional` value!")
     end
     return self.value
 end
@@ -3755,7 +3755,7 @@ local Result = ____exports.Result
 Result.name = "Result"
 function Result.prototype.____constructor(self, value, errorMessage)
     if value == nil and errorMessage == nil then
-        Unsafe:throwUnsafe("EC37 - " .. "Cannot create a result with both undefined values")
+        Unsafe:throwUnsafe("EC55 - " .. "Cannot create a result with both undefined values")
     end
     self.value = value
     self.errorMessage = errorMessage
@@ -3795,7 +3795,7 @@ function Result.prototype.ifError(self, callback)
 end
 function Result.prototype.getValueUnsafe(self, message)
     if not self.value then
-        Unsafe:throwUnsafe("EC38 - " .. message or self.errorMessage or "Cannot unwrap `Result` value")
+        Unsafe:throwUnsafe("EC56 - " .. message or self.errorMessage or "Cannot unwrap `Result` value")
     end
     return self.value
 end
@@ -3951,10 +3951,10 @@ function Entrypoint.prototype.registerRoute(self, name, callback)
     self._routes:set(name, callback)
 end
 function Entrypoint.prototype.dispatchRoute(self)
-    local targetRouteName = ExecutionContext.commandLineArguments:first():getValueUnsafe("The first command line argument (route name) was not provided")
+    local targetRouteName = ExecutionContext.commandLineArguments:first():getValueUnsafe("EC52 - " .. "The first command line argument (route name) was not provided")
     self._routes:get(targetRouteName):ifEmpty(function()
         local validRouteNamesString = ("'" .. self._routes:keys():join("', '")) .. "'"
-        Unsafe:throwUnsafe("EC35 - " .. (("Unknown route: " .. targetRouteName) .. "\nThe first argument must be a valid route name.\nE.g. ") .. validRouteNamesString)
+        Unsafe:throwUnsafe("EC53 - " .. (("Unknown route: " .. targetRouteName) .. "\nThe first argument must be a valid route name.\nE.g. ") .. validRouteNamesString)
     end):ifPresent(function(____, routeFunction) return routeFunction(nil) end)
 end
 function Entrypoint.prototype.onCrash(self, cause)
@@ -3988,7 +3988,7 @@ function DiscordWebhookLogListener.prototype.onLog(self, level, message)
 end
 DiscordWebhookLogListener._webhook = DiscordWebhook:fromUrl(
     "ComputerCraft",
-    Environment:get("DISCORD_WEBHOOK_URL"):getValueUnsafe("Failed to get `DISCORD_WEBHOOK_URL` from environment")
+    Environment:get("DISCORD_WEBHOOK_URL"):getValueUnsafe("EC51 - " .. "Failed to get `DISCORD_WEBHOOK_URL` from environment")
 )
 return ____exports
 
@@ -4027,17 +4027,17 @@ function Environment.get(self, key)
 end
 function Environment.set(self, key, value)
     if not FileUtil:exists(self._path) then
-        FileUtil:writeText(self._path, ""):getValueUnsafe()
+        FileUtil:writeText(self._path, ""):getValueUnsafe("EC33")
     end
-    local content = FileUtil:readText(self._path):getValueUnsafe("Could not read from .env file")
+    local content = FileUtil:readText(self._path):getValueUnsafe("EC34 - " .. "Could not read from .env file")
     content = content .. (("\n" .. key) .. "=") .. value
-    FileUtil:writeText(self._path, content):getValueUnsafe("Could not write to .env file")
+    FileUtil:writeText(self._path, content):getValueUnsafe("EC35 - " .. "Could not write to .env file")
 end
 function Environment.load(self)
     if not FileUtil:exists(self._path) then
-        FileUtil:writeText(self._path, ""):getValueUnsafe()
+        FileUtil:writeText(self._path, ""):getValueUnsafe("EC36")
     end
-    local content = FileUtil:readText(self._path):getValueUnsafe("Could not read from .env file")
+    local content = FileUtil:readText(self._path):getValueUnsafe("EC37 - " .. "Could not read from .env file")
     local lines = __TS__StringSplit(content, "\n")
     local output = LuaMap:empty()
     __TS__ArrayForEach(
@@ -4093,7 +4093,7 @@ function FileUtil.readText(self, path)
     if file:isError() then
         return Result:error(file:getErrorMessage())
     end
-    local handle = file:getValueUnsafe("No file")
+    local handle = file:getValueUnsafe("EC38 - " .. "No file")
     local content = handle:readAllContent()
     handle:close()
     if content == nil then
@@ -4110,7 +4110,7 @@ function FileUtil.writeText(self, path, content)
     if file:isError() then
         return Result:error(file:getErrorMessage())
     end
-    local handle = file:getValueUnsafe("No file")
+    local handle = file:getValueUnsafe("EC39 - " .. "No file")
     do
         local function ____catch(e)
             local ____Result_3 = Result
@@ -4145,7 +4145,7 @@ function FileUtil.appendText(self, path, content)
     if file:isError() then
         return Result:error(file:getErrorMessage())
     end
-    local handle = file:getValueUnsafe("No file")
+    local handle = file:getValueUnsafe("EC40 - " .. "No file")
     do
         local function ____catch(e)
             local ____Result_8 = Result
@@ -4431,7 +4431,7 @@ function FileUtil.removeByteOrderMark(self, path)
     if contentResult:isError() then
         return Result:error(contentResult:getErrorMessage())
     end
-    local content = contentResult:getValueUnsafe("No file")
+    local content = contentResult:getValueUnsafe("EC41 - " .. "No file")
     if not __TS__StringStartsWith(content, "?") then
         return Result:void()
     end
@@ -4760,8 +4760,8 @@ function DiscordWebhook.fromUrl(self, username, url)
 end
 function DiscordWebhook.prototype.sendWebhookData(self, data)
     local headers = {["Content-Type"] = "application/json"}
-    local body = CcTextUtils:serializeJSON(data):getValueUnsafe("Could not serialize POST data for Discord webhook")
-    local response = CcHttp:post(self._url, body, headers):getValueUnsafe("Could not send Discord webhook")
+    local body = CcTextUtils:serializeJSON(data):getValueUnsafe("EC48 - " .. "Could not serialize POST data for Discord webhook")
+    local response = CcHttp:post(self._url, body, headers):getValueUnsafe("EC49 - " .. "Could not send Discord webhook")
     if not __TS__StringStartsWith(
         response:getResponseCode(),
         "2"
@@ -4769,7 +4769,7 @@ function DiscordWebhook.prototype.sendWebhookData(self, data)
         print(("Code: '" .. response:getResponseCode()) .. "'")
         print(("Message: '" .. response:readAllContent()) .. "'")
         error(
-            Unsafe:throwUnsafe("EC34 - " .. ("Discord webhook returned an error: '" .. response:getResponseCode()) .. "'"),
+            Unsafe:throwUnsafe("EC50 - " .. ("Discord webhook returned an error: '" .. response:getResponseCode()) .. "'"),
             0
         )
     end
@@ -5135,8 +5135,8 @@ function Info.prototype.____constructor(self, model)
     self.lifetime = model.lifetime
 end
 function Info.load(self)
-    local contentString = FileUtil:readText(self._path):getValueUnsafe("Could not read info.json")
-    local content = CcTextUtils:unserializeJSON(contentString):getValueUnsafe("Could not parse info.json")
+    local contentString = FileUtil:readText(self._path):getValueUnsafe("EC46 - " .. "Could not read info.json")
+    local content = CcTextUtils:unserializeJSON(contentString):getValueUnsafe("EC47 - " .. "Could not parse info.json")
     return __TS__New(____exports.Info, content)
 end
 Info._path = "info.json"
