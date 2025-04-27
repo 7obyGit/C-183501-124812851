@@ -5108,7 +5108,7 @@ __bundle_register("src.util.reflection", function(require, _LOADED, __bundle_reg
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
-__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["6"] = 1,["7"] = 1,["8"] = 2,["9"] = 2,["10"] = 3,["11"] = 3,["12"] = 4,["13"] = 4,["14"] = 6,["15"] = 6,["16"] = 6,["18"] = 6,["19"] = 7,["20"] = 8,["21"] = 10,["22"] = 11,["23"] = 13,["24"] = 14,["25"] = 15,["26"] = 16,["27"] = 17,["28"] = 19,["29"] = 7,["30"] = 22,["31"] = 23,["32"] = 24,["34"] = 27,["35"] = 28,["36"] = 29,["38"] = 32,["39"] = 22,["40"] = 35,["41"] = 39,["42"] = 35,["43"] = 46,["44"] = 47,["45"] = 49,["46"] = 50,["47"] = 50,["48"] = 54,["49"] = 55,["51"] = 57,["52"] = 58,["53"] = 59,["54"] = 60,["55"] = 60,["56"] = 60,["57"] = 60,["58"] = 61,["59"] = 62,["60"] = 64,["61"] = 46});
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["6"] = 1,["7"] = 1,["8"] = 2,["9"] = 2,["10"] = 3,["11"] = 3,["12"] = 4,["13"] = 4,["14"] = 5,["15"] = 5,["16"] = 7,["17"] = 7,["18"] = 7,["20"] = 7,["21"] = 8,["22"] = 9,["23"] = 11,["24"] = 12,["25"] = 14,["26"] = 15,["27"] = 16,["28"] = 17,["29"] = 18,["30"] = 20,["31"] = 8,["32"] = 23,["33"] = 24,["34"] = 25,["36"] = 28,["37"] = 29,["38"] = 30,["40"] = 33,["41"] = 23,["42"] = 36,["43"] = 40,["44"] = 36,["45"] = 47,["46"] = 48,["47"] = 50,["48"] = 51,["49"] = 54,["50"] = 55,["51"] = 56,["52"] = 57,["53"] = 59,["54"] = 60,["55"] = 60,["56"] = 64,["57"] = 65,["59"] = 67,["60"] = 68,["61"] = 69,["62"] = 70,["63"] = 70,["64"] = 70,["65"] = 70,["66"] = 71,["67"] = 72,["68"] = 74,["69"] = 47});
 local ____exports = {}
 local ____lua = require("src.lua.lua")
 local Lua = ____lua.Lua
@@ -5118,6 +5118,8 @@ local ____luaMap = require("src.util.types.collection.luaMap")
 local LuaMap = ____luaMap.LuaMap
 local ____ccOs = require("src.util.computer.api.tier1.globals.ccOs")
 local CcOs = ____ccOs.CcOs
+local ____ccTextUtils = require("src.util.computer.api.tier1.globals.ccTextUtils")
+local CcTextUtils = ____ccTextUtils.CcTextUtils
 ____exports.Reflection = __TS__Class()
 local Reflection = ____exports.Reflection
 Reflection.name = "Reflection"
@@ -5149,6 +5151,12 @@ function Reflection.getMethod(self, ____table, name)
 end
 function Reflection.getMethods(self, ____table)
     local methods = LuaMap:empty()
+    local metatable = getmetatable(table)
+    local prototype = metatable and metatable.__index or metatable
+    print(prototype)
+    CcOs:sleep(5)
+    print(CcTextUtils:serializeJSON(prototype))
+    CcOs:sleep(5)
     local k = ""
     local function v()
     end
