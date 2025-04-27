@@ -3960,7 +3960,7 @@ function Entrypoint.prototype.registerRoutes(self)
         function(____, key) return print(key) end
     )
     print("PASS")
-    local prototype = Object:getPrototypeOf(self)
+    local prototype = self.constructor.prototype
     __TS__ArrayForEach(
         __TS__ObjectKeys(prototype),
         function(____, key) return print(key) end
