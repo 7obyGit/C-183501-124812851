@@ -3882,6 +3882,7 @@ local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
 local __TS__New = ____lualib.__TS__New
 local __TS__ObjectKeys = ____lualib.__TS__ObjectKeys
+local __TS__ArrayForEach = ____lualib.__TS__ArrayForEach
 local __TS__StringReplace = ____lualib.__TS__StringReplace
 local __TS__StringStartsWith = ____lualib.__TS__StringStartsWith
 local Error = ____lualib.Error
@@ -3891,7 +3892,7 @@ local SyntaxError = ____lualib.SyntaxError
 local TypeError = ____lualib.TypeError
 local URIError = ____lualib.URIError
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
-__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["16"] = 1,["17"] = 1,["18"] = 2,["19"] = 2,["20"] = 3,["21"] = 3,["22"] = 4,["23"] = 4,["24"] = 5,["25"] = 5,["26"] = 7,["27"] = 7,["28"] = 8,["29"] = 8,["33"] = 15,["34"] = 15,["35"] = 15,["37"] = 24,["38"] = 15,["39"] = 31,["40"] = 32,["41"] = 33,["42"] = 34,["45"] = 39,["48"] = 37,["54"] = 42,["55"] = 31,["56"] = 50,["57"] = 51,["58"] = 53,["59"] = 53,["60"] = 54,["62"] = 57,["63"] = 57,["64"] = 58,["66"] = 61,["67"] = 61,["68"] = 62,["70"] = 50,["71"] = 71,["72"] = 72,["73"] = 74,["74"] = 71,["75"] = 89,["76"] = 90,["77"] = 89,["78"] = 109,["79"] = 110,["80"] = 116,["81"] = 119,["83"] = 121,["86"] = 116,["87"] = 109,["88"] = 144,["89"] = 145,["90"] = 144});
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["17"] = 1,["18"] = 1,["19"] = 2,["20"] = 2,["21"] = 3,["22"] = 3,["23"] = 4,["24"] = 4,["25"] = 5,["26"] = 5,["27"] = 7,["28"] = 7,["29"] = 8,["30"] = 8,["34"] = 15,["35"] = 15,["36"] = 15,["38"] = 24,["39"] = 15,["40"] = 31,["41"] = 32,["42"] = 33,["43"] = 34,["46"] = 39,["49"] = 37,["55"] = 42,["56"] = 31,["57"] = 50,["58"] = 51,["59"] = 53,["60"] = 53,["61"] = 54,["63"] = 57,["64"] = 57,["65"] = 58,["67"] = 61,["68"] = 61,["69"] = 62,["71"] = 50,["72"] = 71,["73"] = 72,["74"] = 72,["75"] = 72,["76"] = 72,["77"] = 74,["78"] = 71,["79"] = 89,["80"] = 90,["81"] = 89,["82"] = 109,["83"] = 110,["84"] = 116,["85"] = 119,["87"] = 121,["90"] = 116,["91"] = 109,["92"] = 144,["93"] = 145,["94"] = 144});
 local ____exports = {}
 local ____luaMap = require("src.util.types.collection.luaMap")
 local LuaMap = ____luaMap.LuaMap
@@ -3949,7 +3950,10 @@ function Entrypoint.prototype.applyInfoConfig(self)
     end
 end
 function Entrypoint.prototype.registerRoutes(self)
-    print(__TS__ObjectKeys(self))
+    __TS__ArrayForEach(
+        __TS__ObjectKeys(self),
+        function(____, key) return print(key) end
+    )
     Reflection:getMethods(self):whereKeys(function(____, key) return __TS__StringStartsWith(key, "route") end):selectKeys(function(____, key) return string.lower(__TS__StringReplace(key, "route", "")) end):forEach(function(____, name, route) return self:registerRoute(name, route) end)
 end
 function Entrypoint.prototype.registerRoute(self, name, callback)
