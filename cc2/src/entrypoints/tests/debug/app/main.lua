@@ -4984,7 +4984,7 @@ __bundle_register("src.util.reflection", function(require, _LOADED, __bundle_reg
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
-__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["6"] = 1,["7"] = 1,["8"] = 2,["9"] = 2,["10"] = 3,["11"] = 3,["12"] = 5,["13"] = 5,["14"] = 5,["16"] = 5,["17"] = 6,["18"] = 7,["19"] = 9,["20"] = 10,["21"] = 12,["22"] = 13,["23"] = 14,["24"] = 15,["25"] = 16,["26"] = 18,["27"] = 6,["28"] = 21,["29"] = 22,["30"] = 23,["32"] = 26,["33"] = 27,["34"] = 28,["36"] = 31,["37"] = 21,["38"] = 34,["39"] = 38,["40"] = 34,["41"] = 45,["42"] = 46,["43"] = 48,["44"] = 49,["45"] = 49,["46"] = 53,["48"] = 55,["49"] = 56,["50"] = 57,["51"] = 58,["52"] = 58,["53"] = 58,["54"] = 58,["55"] = 59,["56"] = 60,["57"] = 62,["58"] = 45});
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["6"] = 1,["7"] = 1,["8"] = 2,["9"] = 2,["10"] = 3,["11"] = 3,["12"] = 4,["13"] = 4,["14"] = 6,["15"] = 6,["16"] = 6,["18"] = 6,["19"] = 7,["20"] = 8,["21"] = 10,["22"] = 11,["23"] = 13,["24"] = 14,["25"] = 15,["26"] = 16,["27"] = 17,["28"] = 19,["29"] = 7,["30"] = 22,["31"] = 23,["32"] = 24,["34"] = 27,["35"] = 28,["36"] = 29,["38"] = 32,["39"] = 22,["40"] = 35,["41"] = 39,["42"] = 35,["43"] = 46,["44"] = 47,["45"] = 49,["46"] = 50,["47"] = 50,["48"] = 54,["49"] = 55,["51"] = 57,["52"] = 58,["53"] = 59,["54"] = 60,["55"] = 60,["56"] = 60,["57"] = 60,["58"] = 61,["59"] = 62,["60"] = 64,["61"] = 46});
 local ____exports = {}
 local ____lua = require("src.lua.lua")
 local Lua = ____lua.Lua
@@ -4992,6 +4992,8 @@ local ____result = require("src.util.types.result")
 local Result = ____result.Result
 local ____luaMap = require("src.util.types.collection.luaMap")
 local LuaMap = ____luaMap.LuaMap
+local ____ccOs = require("src.util.computer.api.tier1.globals.ccOs")
+local CcOs = ____ccOs.CcOs
 ____exports.Reflection = __TS__Class()
 local Reflection = ____exports.Reflection
 Reflection.name = "Reflection"
@@ -5027,6 +5029,7 @@ function Reflection.getMethods(self, ____table)
     local function v()
     end
     for k, v in pairs(table) do
+    CcOs:sleep(1)
     print()
     print(k, v)
         if type(v) == 'function' then
@@ -5038,6 +5041,127 @@ function Reflection.getMethods(self, ____table)
         end
     end
     return methods
+end
+return ____exports
+
+end)
+__bundle_register("src.util.computer.api.tier1.globals.ccOs", function(require, _LOADED, __bundle_register, __bundle_modules)
+local ____lualib = require("lualib_bundle")
+local __TS__Class = ____lualib.__TS__Class
+local Error = ____lualib.Error
+local RangeError = ____lualib.RangeError
+local ReferenceError = ____lualib.ReferenceError
+local SyntaxError = ____lualib.SyntaxError
+local TypeError = ____lualib.TypeError
+local URIError = ____lualib.URIError
+local __TS__New = ____lualib.__TS__New
+local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["13"] = 1,["14"] = 1,["15"] = 2,["16"] = 2,["17"] = 4,["18"] = 4,["20"] = 57,["21"] = 57,["22"] = 57,["24"] = 57,["25"] = 64,["26"] = 65,["27"] = 64,["28"] = 73,["29"] = 74,["30"] = 73,["31"] = 82,["32"] = 83,["33"] = 84,["34"] = 85,["35"] = 86,["36"] = 82,["37"] = 98,["38"] = 99,["39"] = 100,["40"] = 101,["41"] = 102,["42"] = 98,["43"] = 113,["44"] = 114,["45"] = 113,["46"] = 121,["47"] = 122,["48"] = 121,["49"] = 133,["50"] = 133,["51"] = 134,["52"] = 135,["53"] = 133,["54"] = 143,["55"] = 143,["56"] = 144,["57"] = 145,["58"] = 143,["59"] = 154,["60"] = 155,["61"] = 154,["62"] = 162,["63"] = 163,["64"] = 162,["65"] = 171,["66"] = 172,["67"] = 171,["68"] = 179,["69"] = 180,["70"] = 179,["71"] = 186,["72"] = 187,["73"] = 186,["74"] = 193,["75"] = 194,["76"] = 193,["77"] = 201,["78"] = 202,["79"] = 201,["80"] = 209,["81"] = 210,["82"] = 209,["83"] = 217,["84"] = 218,["85"] = 219,["86"] = 217,["87"] = 226,["88"] = 227,["89"] = 228,["90"] = 226,["91"] = 235,["92"] = 236,["93"] = 235,["94"] = 243,["95"] = 244,["96"] = 243,["97"] = 257,["98"] = 258,["99"] = 257,["100"] = 270,["101"] = 271,["102"] = 270,["103"] = 283,["104"] = 284,["105"] = 283,["106"] = 297,["107"] = 298,["109"] = 299,["113"] = 303,["114"] = 297,["115"] = 311,["116"] = 312,["117"] = 311});
+local ____exports = {}
+local ____lua = require("src.lua.lua")
+local Lua = ____lua.Lua
+local ____optional = require("src.util.types.optional")
+local Optional = ____optional.Optional
+local ____tableUtil = require("src.util.computer.api.tier1.lua.tableUtil")
+local TableUtil = ____tableUtil.TableUtil
+--- Provides access to ComputerCraft OS functionality
+____exports.CcOs = __TS__Class()
+local CcOs = ____exports.CcOs
+CcOs.name = "CcOs"
+function CcOs.prototype.____constructor(self)
+end
+function CcOs.loadAPI(self, path)
+    return os.loadAPI(path)
+end
+function CcOs.unloadAPI(self, name)
+    os.unloadAPI(name)
+end
+function CcOs.pullEvent(self, filter)
+    local eventData = {os.pullEvent(filter)}
+    local name = eventData[1]
+    local details = eventData:slice(2)
+    return {name = name, details = details}
+end
+function CcOs.pullEventRaw(self, filter)
+    local eventData = {os.pullEventRaw(filter)}
+    local name = eventData[1]
+    local details = eventData:slice(2)
+    return {name = name, details = details}
+end
+function CcOs.sleep(self, time)
+    os.sleep(time)
+end
+function CcOs.version(self)
+    return os.version()
+end
+function CcOs.run(self, env, path, ...)
+    local args = {...}
+    local argsTable = TableUtil:fromArray(args)
+    return os.run(env, path, table.unpack(argsTable))
+end
+function CcOs.queueEvent(self, name, ...)
+    local params = {...}
+    local paramsTable = TableUtil:fromArray(params)
+    os.queueEvent(name, table.unpack(paramsTable))
+end
+function CcOs.startTimer(self, time)
+    return os.startTimer(time)
+end
+function CcOs.cancelTimer(self, token)
+    os.cancelTimer(token)
+end
+function CcOs.setAlarm(self, time)
+    return os.setAlarm(time)
+end
+function CcOs.cancelAlarm(self, token)
+    os.cancelAlarm(token)
+end
+function CcOs.shutdown(self)
+    os.shutdown()
+end
+function CcOs.reboot(self)
+    os.reboot()
+end
+function CcOs.getComputerID(self)
+    return os.getComputerID()
+end
+function CcOs.computerID(self)
+    return os.computerID()
+end
+function CcOs.getComputerLabel(self)
+    local label = os.getComputerLabel()
+    return Optional:ofNullable(label)
+end
+function CcOs.computerLabel(self)
+    local label = os.computerLabel()
+    return Optional:ofNullable(label)
+end
+function CcOs.setComputerLabel(self, label)
+    os.setComputerLabel(label)
+end
+function CcOs.clock(self)
+    return os.clock()
+end
+function CcOs.time(self, locale)
+    return os.time(locale)
+end
+function CcOs.day(self, locale)
+    return os.day(locale)
+end
+function CcOs.epoch(self, locale)
+    return os.epoch(locale)
+end
+function CcOs.date(self, format, time)
+    if format == "!*t" then
+        error(
+            __TS__New(Error, "!*t not supported in `date` - use `dateTable` instead"),
+            0
+        )
+    end
+    return os.date(format, time)
+end
+function CcOs.dateTable(self, time)
+    return os.date("!*t", time)
 end
 return ____exports
 
