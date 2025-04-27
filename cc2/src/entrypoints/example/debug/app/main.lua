@@ -3883,7 +3883,7 @@ local SyntaxError = ____lualib.SyntaxError
 local TypeError = ____lualib.TypeError
 local URIError = ____lualib.URIError
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
-__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["15"] = 1,["16"] = 1,["17"] = 2,["18"] = 2,["19"] = 3,["20"] = 3,["21"] = 4,["22"] = 4,["23"] = 5,["24"] = 5,["25"] = 7,["26"] = 7,["27"] = 8,["28"] = 8,["29"] = 9,["30"] = 9,["31"] = 10,["32"] = 10,["36"] = 17,["37"] = 17,["38"] = 17,["40"] = 26,["41"] = 17,["42"] = 33,["43"] = 34,["44"] = 35,["45"] = 36,["48"] = 41,["51"] = 39,["57"] = 44,["58"] = 33,["59"] = 52,["60"] = 53,["61"] = 55,["62"] = 55,["63"] = 56,["65"] = 59,["66"] = 59,["67"] = 60,["69"] = 63,["70"] = 63,["71"] = 64,["73"] = 52,["74"] = 73,["75"] = 74,["76"] = 75,["78"] = 76,["79"] = 76,["81"] = 77,["82"] = 73,["83"] = 92,["84"] = 93,["85"] = 92,["86"] = 112,["87"] = 113,["88"] = 119,["89"] = 122,["91"] = 124,["94"] = 119,["95"] = 112,["96"] = 147,["97"] = 148,["98"] = 147});
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["15"] = 1,["16"] = 1,["17"] = 2,["18"] = 2,["19"] = 3,["20"] = 3,["21"] = 4,["22"] = 4,["23"] = 5,["24"] = 5,["25"] = 7,["26"] = 7,["27"] = 8,["28"] = 8,["29"] = 9,["30"] = 9,["31"] = 10,["32"] = 10,["36"] = 18,["37"] = 18,["38"] = 18,["40"] = 27,["41"] = 18,["42"] = 34,["43"] = 35,["44"] = 36,["45"] = 37,["48"] = 42,["51"] = 40,["57"] = 45,["58"] = 34,["59"] = 53,["60"] = 54,["61"] = 56,["62"] = 56,["63"] = 57,["65"] = 60,["66"] = 60,["67"] = 61,["69"] = 64,["70"] = 64,["71"] = 65,["73"] = 53,["74"] = 74,["75"] = 75,["76"] = 76,["78"] = 77,["79"] = 77,["81"] = 78,["82"] = 74,["83"] = 93,["84"] = 94,["85"] = 93,["86"] = 113,["87"] = 114,["88"] = 120,["89"] = 123,["91"] = 125,["94"] = 120,["95"] = 113,["96"] = 148,["97"] = 149,["98"] = 148});
 local ____exports = {}
 local ____luaMap = require("src.util.types.collection.luaMap")
 local LuaMap = ____luaMap.LuaMap
@@ -3951,7 +3951,7 @@ function Entrypoint.prototype.registerRoutes(self)
         "ThisJson: ",
         CcTextUtils:serializeJSON(self)
     )
-    Reflection:getMethods(self):whereKeys(function(____, key) return __TS__StringStartsWith(key, "route") end):selectKeys(function(____, key) return string.lower(__TS__StringReplace(key, "route", "")) end):forEach(function(____, name, route) return self:registerRoute(name, route) end)
+    Reflection:getMethods(____exports.Entrypoint):whereKeys(function(____, key) return __TS__StringStartsWith(key, "route") end):selectKeys(function(____, key) return string.lower(__TS__StringReplace(key, "route", "")) end):forEach(function(____, name, route) return self:registerRoute(name, route) end)
 end
 function Entrypoint.prototype.registerRoute(self, name, callback)
     self._routes:set(name, callback)
