@@ -3959,7 +3959,7 @@ function Entrypoint.prototype.registerRoute(self, name, callback)
     self._routes:set(name, callback)
 end
 function Entrypoint.prototype.dispatchRoute(self)
-    local targetRouteName = ExecutionContext.commandLineArguments:first():getValueUnsafe("EC19 - " .. "The first command line argument (route name) was not provided")
+    local targetRouteName = ExecutionContext.commandLineArguments:first():getValueUnsafe("EC21 - " .. "The first command line argument (route name) was not provided")
     self._routes:get(targetRouteName):ifEmpty(function()
         local validRouteNamesString = ("'" .. self._routes:keys():join("', '")) .. "'"
         error(
@@ -3999,7 +3999,7 @@ function DiscordWebhookLogListener.prototype.onLog(self, level, message)
 end
 DiscordWebhookLogListener._webhook = DiscordWebhook:fromUrl(
     "ComputerCraft",
-    Environment:get("DISCORD_WEBHOOK_URL"):getValueUnsafe("EC18 - " .. "Failed to get `DISCORD_WEBHOOK_URL` from environment")
+    Environment:get("DISCORD_WEBHOOK_URL"):getValueUnsafe("EC20 - " .. "Failed to get `DISCORD_WEBHOOK_URL` from environment")
 )
 return ____exports
 
@@ -4748,7 +4748,7 @@ local __TS__Class = ____lualib.__TS__Class
 local __TS__New = ____lualib.__TS__New
 local __TS__ArrayIsArray = ____lualib.__TS__ArrayIsArray
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
-__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["8"] = 1,["9"] = 1,["10"] = 2,["11"] = 2,["12"] = 3,["13"] = 3,["14"] = 33,["15"] = 33,["16"] = 33,["17"] = 39,["18"] = 40,["19"] = 41,["20"] = 39,["21"] = 44,["22"] = 45,["23"] = 44,["24"] = 48,["25"] = 53,["26"] = 53,["27"] = 53,["28"] = 53,["29"] = 48,["30"] = 61,["31"] = 62,["32"] = 67,["33"] = 68,["34"] = 67,["35"] = 61,["36"] = 75,["37"] = 76,["38"] = 77,["39"] = 78,["40"] = 78,["41"] = 78,["43"] = 78,["45"] = 76,["46"] = 75,["47"] = 34});
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["8"] = 1,["9"] = 1,["10"] = 2,["11"] = 2,["12"] = 3,["13"] = 3,["14"] = 35,["15"] = 35,["16"] = 35,["17"] = 41,["18"] = 42,["19"] = 43,["20"] = 41,["21"] = 46,["22"] = 47,["23"] = 46,["24"] = 50,["25"] = 55,["26"] = 55,["27"] = 55,["28"] = 55,["29"] = 62,["30"] = 66,["31"] = 50,["32"] = 72,["33"] = 73,["34"] = 78,["35"] = 79,["36"] = 78,["37"] = 72,["38"] = 86,["39"] = 87,["40"] = 88,["41"] = 89,["42"] = 89,["43"] = 89,["45"] = 89,["47"] = 87,["48"] = 86,["49"] = 36});
 local ____exports = {}
 local ____ccHttp = require("src.util.computer.api.tier1.globals.ccHttp")
 local CcHttp = ____ccHttp.CcHttp
@@ -4767,10 +4767,12 @@ function DiscordWebhook.fromUrl(self, username, url)
     return __TS__New(____exports.DiscordWebhook, username, url)
 end
 function DiscordWebhook.prototype.sendWebhookData(self, data)
-    CcHttp:post(
+    local result = CcHttp:post(
         self._url,
         CcTextUtils:serializeJSON(data):getValueUnsafe("EC17 - " .. "Could not serialize POST data for Discord webhook")
     )
+    local response = result:getValueUnsafe("EC18 - " .. "Could not send Discord webhook")
+    print(CcTextUtils:serializeJSON(response):getValueUnsafe("EC19 - " .. "Could not serialize response"))
 end
 function DiscordWebhook.prototype.sendMessage(self, message)
     local chunks = TextUtil:toChunks(message, ____exports.DiscordWebhook.DISCORD_MESSAGE_LENGTH_LIMIT)
@@ -4798,10 +4800,11 @@ local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
 local __TS__StringSubstring = ____lualib.__TS__StringSubstring
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
-__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["7"] = 1,["8"] = 1,["9"] = 3,["10"] = 3,["11"] = 3,["13"] = 3,["14"] = 4,["15"] = 8,["16"] = 10,["18"] = 11,["19"] = 11,["20"] = 12,["21"] = 13,["22"] = 18,["23"] = 19,["24"] = 11,["27"] = 22,["28"] = 4});
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["7"] = 1,["8"] = 1,["10"] = 6,["11"] = 6,["12"] = 6,["14"] = 6,["15"] = 14,["16"] = 18,["17"] = 20,["19"] = 21,["20"] = 21,["21"] = 22,["22"] = 23,["23"] = 28,["24"] = 29,["25"] = 21,["28"] = 32,["29"] = 14});
 local ____exports = {}
 local ____luaList = require("src.util.types.collection.luaList")
 local LuaList = ____luaList.LuaList
+--- A utility class for text-related operations.
 ____exports.TextUtil = __TS__Class()
 local TextUtil = ____exports.TextUtil
 TextUtil.name = "TextUtil"
