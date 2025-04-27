@@ -3950,7 +3950,7 @@ function Entrypoint.prototype.registerRoute(self, name, callback)
     self._routes:set(name, callback)
 end
 function Entrypoint.prototype.dispatchRoute(self)
-    local targetRouteName = ExecutionContext.commandLineArguments:first():getValueUnsafe("EC20 - " .. "The first command line argument (route name) was not provided")
+    local targetRouteName = ExecutionContext.commandLineArguments:first():getValueUnsafe("EC21 - " .. "The first command line argument (route name) was not provided")
     self._routes:get(targetRouteName):ifEmpty(function()
         local validRouteNamesString = ("'" .. self._routes:keys():join("', '")) .. "'"
         error(
@@ -3990,7 +3990,7 @@ function DiscordWebhookLogListener.prototype.onLog(self, level, message)
 end
 DiscordWebhookLogListener._webhook = DiscordWebhook:fromUrl(
     "ComputerCraft",
-    Environment:get("DISCORD_WEBHOOK_URL"):getValueUnsafe("EC19 - " .. "Failed to get `DISCORD_WEBHOOK_URL` from environment")
+    Environment:get("DISCORD_WEBHOOK_URL"):getValueUnsafe("EC20 - " .. "Failed to get `DISCORD_WEBHOOK_URL` from environment")
 )
 return ____exports
 
@@ -4739,7 +4739,7 @@ local __TS__Class = ____lualib.__TS__Class
 local __TS__New = ____lualib.__TS__New
 local __TS__ArrayIsArray = ____lualib.__TS__ArrayIsArray
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
-__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["8"] = 1,["9"] = 1,["10"] = 2,["11"] = 2,["12"] = 3,["13"] = 3,["14"] = 7,["15"] = 7,["16"] = 37,["17"] = 37,["18"] = 37,["19"] = 43,["20"] = 44,["21"] = 45,["22"] = 43,["23"] = 48,["24"] = 49,["25"] = 48,["26"] = 52,["27"] = 57,["28"] = 57,["29"] = 57,["30"] = 57,["31"] = 64,["32"] = 68,["33"] = 52,["34"] = 72,["35"] = 73,["36"] = 78,["37"] = 79,["38"] = 78,["39"] = 72,["40"] = 86,["41"] = 87,["42"] = 88,["43"] = 89,["44"] = 89,["45"] = 89,["47"] = 89,["49"] = 87,["50"] = 86,["51"] = 38});
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["8"] = 1,["9"] = 1,["10"] = 2,["11"] = 2,["12"] = 3,["13"] = 3,["14"] = 7,["15"] = 7,["16"] = 37,["17"] = 37,["18"] = 37,["19"] = 43,["20"] = 44,["21"] = 45,["22"] = 43,["23"] = 48,["24"] = 49,["25"] = 48,["26"] = 52,["27"] = 57,["28"] = 57,["29"] = 57,["30"] = 57,["31"] = 64,["32"] = 68,["33"] = 52,["34"] = 74,["35"] = 75,["36"] = 80,["37"] = 81,["38"] = 80,["39"] = 74,["40"] = 88,["41"] = 89,["42"] = 90,["43"] = 91,["44"] = 91,["45"] = 91,["47"] = 91,["49"] = 89,["50"] = 88,["51"] = 38});
 local ____exports = {}
 local ____ccHttp = require("src.util.computer.api.tier1.globals.ccHttp")
 local CcHttp = ____ccHttp.CcHttp
@@ -4765,7 +4765,7 @@ function DiscordWebhook.prototype.sendWebhookData(self, data)
         CcTextUtils:serializeJSON(data):getValueUnsafe("EC17 - " .. "Could not serialize POST data for Discord webhook")
     )
     local response = result:getValueUnsafe("EC18 - " .. "Could not send Discord webhook")
-    print(CcTextUtils:serializeJSON(Reflection:getFields(response):keys()))
+    print(CcTextUtils:serializeJSON(Reflection:getFields(response):keys()):getValueUnsafe("EC19"))
 end
 function DiscordWebhook.prototype.sendMessage(self, message)
     local chunks = TextUtil:toChunks(message, ____exports.DiscordWebhook.DISCORD_MESSAGE_LENGTH_LIMIT)
