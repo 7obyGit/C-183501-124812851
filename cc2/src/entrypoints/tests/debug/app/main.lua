@@ -3974,7 +3974,7 @@ local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
 local __TS__ClassExtends = ____lualib.__TS__ClassExtends
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
-__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["7"] = 1,["8"] = 1,["9"] = 2,["10"] = 2,["11"] = 3,["12"] = 3,["13"] = 5,["14"] = 5,["15"] = 5,["16"] = 5,["17"] = 14,["18"] = 15,["19"] = 14,["20"] = 18,["21"] = 19,["22"] = 18,["23"] = 7,["24"] = 7,["25"] = 7,["26"] = 7});
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["7"] = 1,["8"] = 1,["9"] = 2,["10"] = 2,["11"] = 3,["12"] = 3,["13"] = 5,["14"] = 5,["15"] = 5,["16"] = 5,["17"] = 14,["18"] = 15,["19"] = 14,["20"] = 18,["21"] = 19,["22"] = 20,["23"] = 21,["24"] = 18,["25"] = 7,["26"] = 7,["27"] = 7,["28"] = 7});
 local ____exports = {}
 local ____logListener = require("src.util.computer.api.tier2.logging.logListener")
 local LogListener = ____logListener.LogListener
@@ -3990,7 +3990,9 @@ function DiscordWebhookLogListener.prototype.getName(self)
     return "DiscordWebhookLogListener"
 end
 function DiscordWebhookLogListener.prototype.onLog(self, level, message)
+    print("CALLED DISCORD: " .. message)
     ____exports.DiscordWebhookLogListener._webhook:sendMessage((("[" .. level) .. "] ") .. message)
+    print("CALLED DISCORD END: " .. message)
 end
 DiscordWebhookLogListener._webhook = DiscordWebhook:fromUrl(
     "ComputerCraft",
