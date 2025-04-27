@@ -1,5 +1,5 @@
 {
-    "version": "0.0.262",
+    "version": "0.0.263",
     "name": "Example Application",
     "description": "This is an example application.\nIt can have a long description.",
     "startup": {
