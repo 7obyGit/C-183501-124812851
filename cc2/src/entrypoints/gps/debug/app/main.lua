@@ -169,7 +169,7 @@ local __TS__Iterator = ____lualib.__TS__Iterator
 local __TS__Spread = ____lualib.__TS__Spread
 local __TS__ArrayMap = ____lualib.__TS__ArrayMap
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
-__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["12"] = 1,["13"] = 1,["14"] = 2,["15"] = 2,["16"] = 3,["17"] = 3,["18"] = 5,["19"] = 5,["20"] = 5,["22"] = 9,["23"] = 8,["24"] = 12,["25"] = 17,["26"] = 12,["27"] = 20,["28"] = 24,["29"] = 20,["30"] = 27,["31"] = 30,["32"] = 27,["33"] = 33,["34"] = 34,["35"] = 33,["36"] = 37,["37"] = 38,["38"] = 38,["40"] = 39,["41"] = 37,["42"] = 42,["43"] = 43,["44"] = 43,["46"] = 44,["47"] = 42,["48"] = 47,["49"] = 48,["50"] = 49,["51"] = 47,["52"] = 52,["53"] = 53,["54"] = 53,["55"] = 53,["56"] = 53,["57"] = 52,["58"] = 56,["59"] = 61,["60"] = 62,["61"] = 56,["62"] = 65,["63"] = 66,["64"] = 66,["66"] = 67,["67"] = 68,["68"] = 69,["69"] = 65,["70"] = 72,["71"] = 73,["72"] = 74,["73"] = 72,["74"] = 77,["75"] = 78,["76"] = 77,["77"] = 81,["78"] = 82,["79"] = 83,["80"] = 83,["83"] = 85,["84"] = 81,["85"] = 88,["86"] = 89,["87"] = 88,["88"] = 92,["89"] = 93,["90"] = 92,["91"] = 96,["92"] = 97,["93"] = 98,["94"] = 98,["95"] = 98,["96"] = 98,["97"] = 98,["98"] = 98,["99"] = 99,["100"] = 98,["101"] = 97,["102"] = 96,["103"] = 104,["104"] = 105,["105"] = 104,["106"] = 108,["107"] = 109,["108"] = 108,["109"] = 112,["110"] = 113,["111"] = 112,["112"] = 116,["113"] = 119,["114"] = 120,["115"] = 116,["116"] = 123,["117"] = 126,["118"] = 127,["119"] = 123,["120"] = 130,["121"] = 131,["122"] = 132,["123"] = 130,["124"] = 135,["125"] = 136,["126"] = 137,["127"] = 135,["128"] = 140,["129"] = 143,["130"] = 144,["131"] = 145,["132"] = 145,["133"] = 145,["134"] = 145,["135"] = 144,["136"] = 147,["137"] = 140,["138"] = 150,["139"] = 153,["140"] = 154,["141"] = 155,["142"] = 155,["143"] = 155,["144"] = 155,["145"] = 155,["146"] = 155,["147"] = 155,["148"] = 154,["149"] = 157,["150"] = 150,["151"] = 160,["152"] = 163,["153"] = 164,["154"] = 165,["155"] = 165,["156"] = 165,["157"] = 165,["158"] = 164,["159"] = 167,["160"] = 160,["161"] = 170,["162"] = 173,["163"] = 174,["164"] = 175,["165"] = 176,["167"] = 174,["168"] = 179,["169"] = 170,["170"] = 182,["171"] = 185,["172"] = 186,["173"] = 187,["174"] = 188,["176"] = 186,["177"] = 191,["178"] = 182,["179"] = 194,["180"] = 195,["181"] = 196,["182"] = 197,["183"] = 198,["185"] = 196,["186"] = 201,["187"] = 194,["188"] = 204,["189"] = 207,["190"] = 208,["191"] = 209,["192"] = 210,["194"] = 208,["195"] = 213,["196"] = 204,["197"] = 216,["198"] = 217,["199"] = 218,["200"] = 219,["201"] = 218,["202"] = 221,["203"] = 216,["204"] = 224,["205"] = 225,["206"] = 226,["207"] = 227,["208"] = 224});
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["12"] = 1,["13"] = 1,["14"] = 2,["15"] = 2,["16"] = 3,["17"] = 3,["18"] = 4,["19"] = 4,["20"] = 6,["21"] = 6,["22"] = 6,["24"] = 10,["25"] = 9,["26"] = 13,["27"] = 14,["28"] = 15,["29"] = 16,["30"] = 17,["31"] = 13,["32"] = 20,["33"] = 21,["34"] = 22,["35"] = 23,["36"] = 20,["37"] = 26,["38"] = 27,["39"] = 28,["40"] = 29,["41"] = 26,["42"] = 32,["43"] = 37,["44"] = 32,["45"] = 40,["46"] = 44,["47"] = 40,["48"] = 47,["49"] = 50,["50"] = 47,["51"] = 53,["52"] = 54,["53"] = 53,["54"] = 57,["55"] = 58,["56"] = 58,["58"] = 59,["59"] = 57,["60"] = 62,["61"] = 63,["62"] = 63,["64"] = 64,["65"] = 62,["66"] = 67,["67"] = 68,["68"] = 69,["69"] = 67,["70"] = 72,["71"] = 73,["72"] = 73,["73"] = 73,["74"] = 73,["75"] = 72,["76"] = 76,["77"] = 81,["78"] = 82,["79"] = 76,["80"] = 85,["81"] = 86,["82"] = 86,["84"] = 87,["85"] = 88,["86"] = 89,["87"] = 85,["88"] = 92,["89"] = 93,["90"] = 94,["91"] = 92,["92"] = 97,["93"] = 98,["94"] = 97,["95"] = 101,["96"] = 102,["97"] = 103,["98"] = 103,["101"] = 105,["102"] = 101,["103"] = 108,["104"] = 109,["105"] = 108,["106"] = 112,["107"] = 113,["108"] = 112,["109"] = 116,["110"] = 117,["111"] = 118,["112"] = 118,["113"] = 118,["114"] = 118,["115"] = 118,["116"] = 118,["117"] = 119,["118"] = 118,["119"] = 117,["120"] = 116,["121"] = 124,["122"] = 125,["123"] = 124,["124"] = 128,["125"] = 129,["126"] = 128,["127"] = 132,["128"] = 133,["129"] = 132,["130"] = 136,["131"] = 139,["132"] = 140,["133"] = 136,["134"] = 143,["135"] = 146,["136"] = 147,["137"] = 143,["138"] = 150,["139"] = 151,["140"] = 152,["141"] = 150,["142"] = 155,["143"] = 156,["144"] = 157,["145"] = 155,["146"] = 160,["147"] = 163,["148"] = 164,["149"] = 165,["150"] = 165,["151"] = 165,["152"] = 165,["153"] = 164,["154"] = 167,["155"] = 160,["156"] = 170,["157"] = 173,["158"] = 174,["159"] = 175,["160"] = 175,["161"] = 175,["162"] = 175,["163"] = 175,["164"] = 175,["165"] = 175,["166"] = 174,["167"] = 177,["168"] = 170,["169"] = 180,["170"] = 183,["171"] = 184,["172"] = 185,["173"] = 185,["174"] = 185,["175"] = 185,["176"] = 184,["177"] = 187,["178"] = 180,["179"] = 190,["180"] = 193,["181"] = 194,["182"] = 195,["183"] = 196,["185"] = 194,["186"] = 199,["187"] = 190,["188"] = 202,["189"] = 205,["190"] = 206,["191"] = 207,["192"] = 208,["194"] = 206,["195"] = 211,["196"] = 202,["197"] = 214,["198"] = 215,["199"] = 216,["200"] = 217,["201"] = 218,["203"] = 216,["204"] = 221,["205"] = 214,["206"] = 224,["207"] = 227,["208"] = 228,["209"] = 229,["210"] = 230,["212"] = 228,["213"] = 233,["214"] = 224,["215"] = 236,["216"] = 237,["217"] = 238,["218"] = 239,["219"] = 238,["220"] = 241,["221"] = 236,["222"] = 244,["223"] = 245,["224"] = 246,["225"] = 247,["226"] = 244});
 local ____exports = {}
 local ____optional = require("src.util.types.optional")
 local Optional = ____optional.Optional
@@ -177,11 +177,29 @@ local ____luaList = require("src.util.types.collection.luaList")
 local LuaList = ____luaList.LuaList
 local ____luaMapEntry = require("src.util.types.collection.luaMapEntry")
 local LuaMapEntry = ____luaMapEntry.LuaMapEntry
+local ____reflection = require("src.util.reflection")
+local Reflection = ____reflection.Reflection
 ____exports.LuaMap = __TS__Class()
 local LuaMap = ____exports.LuaMap
 LuaMap.name = "LuaMap"
 function LuaMap.prototype.____constructor(self)
     self.map = __TS__New(Map)
+end
+function LuaMap.ofTable(self, ____table)
+    local result = __TS__New(____exports.LuaMap)
+    Reflection:getFields(____table):forEachEntry(result.setEntry)
+    Reflection:getMethods(____table):forEachEntry(result.setEntry)
+    return result
+end
+function LuaMap.ofTableFields(self, ____table)
+    local result = __TS__New(____exports.LuaMap)
+    Reflection:getFields(____table):forEachEntry(result.setEntry)
+    return result
+end
+function LuaMap.ofTableMethods(self, ____table)
+    local result = __TS__New(____exports.LuaMap)
+    Reflection:getMethods(____table):forEachEntry(result.setEntry)
+    return result
 end
 function LuaMap.ofEntries(self, entries)
     return __TS__New(____exports.LuaMap):setAllEntries(entries)
@@ -371,28 +389,243 @@ end
 return ____exports
 
 end)
-__bundle_register("src.util.types.collection.luaMapEntry", function(require, _LOADED, __bundle_register, __bundle_modules)
+__bundle_register("src.util.reflection", function(require, _LOADED, __bundle_register, __bundle_modules)
+local ____lualib = require("lualib_bundle")
+local __TS__Class = ____lualib.__TS__Class
+local __TS__ObjectKeys = ____lualib.__TS__ObjectKeys
+local __TS__ArrayForEach = ____lualib.__TS__ArrayForEach
+local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["8"] = 1,["9"] = 1,["10"] = 2,["11"] = 2,["12"] = 3,["13"] = 3,["14"] = 5,["15"] = 5,["16"] = 5,["18"] = 5,["19"] = 6,["20"] = 7,["21"] = 9,["22"] = 9,["23"] = 9,["24"] = 9,["25"] = 11,["26"] = 6,["27"] = 14,["28"] = 15,["29"] = 16,["31"] = 19,["32"] = 20,["33"] = 21,["35"] = 24,["36"] = 14,["37"] = 27,["38"] = 31,["39"] = 27,["40"] = 38,["41"] = 39,["42"] = 41,["43"] = 43,["44"] = 43,["45"] = 43,["46"] = 44,["47"] = 45,["48"] = 45,["49"] = 45,["50"] = 45,["51"] = 43,["52"] = 43,["53"] = 48,["54"] = 38});
+local ____exports = {}
+local ____lua = require("src.lua.lua")
+local Lua = ____lua.Lua
+local ____result = require("src.util.types.result")
+local Result = ____result.Result
+local ____luaMap = require("src.util.types.collection.luaMap")
+local LuaMap = ____luaMap.LuaMap
+____exports.Reflection = __TS__Class()
+local Reflection = ____exports.Reflection
+Reflection.name = "Reflection"
+function Reflection.prototype.____constructor(self)
+end
+function Reflection.getFields(self, ____table)
+    local fields = LuaMap:empty()
+    __TS__ArrayForEach(
+        __TS__ObjectKeys(____table),
+        function(____, key) return fields:set(key, ____table[key]) end
+    )
+    return fields
+end
+function Reflection.getField(self, ____table, name)
+    if type(table) ~= 'table' then
+        return Result:error(("'" .. tostring(____table)) .. "' is not a table")
+    end
+    local value = table[name]
+    if value == nil or value == nil then
+        return Result:error(((("'" .. name) .. "' is not a field of '") .. tostring(____table)) .. "'")
+    end
+    return Result:of(value)
+end
+function Reflection.getMethod(self, ____table, name)
+    return self:getMethods(____table):get(name):toResult(((("'" .. name) .. "' is not a method of '") .. tostring(____table)) .. "'")
+end
+function Reflection.getMethods(self, ____table)
+    local methods = LuaMap:empty()
+    local prototype = ____table.constructor.prototype
+    __TS__ArrayForEach(
+        __TS__ObjectKeys(prototype),
+        function(____, key)
+            local method = prototype[key]
+            methods:set(
+                key,
+                function(____, ...) return method(nil, ____table, ...) end
+            )
+        end
+    )
+    return methods
+end
+return ____exports
+
+end)
+__bundle_register("src.util.types.result", function(require, _LOADED, __bundle_register, __bundle_modules)
+local ____lualib = require("lualib_bundle")
+local __TS__Class = ____lualib.__TS__Class
+local Error = ____lualib.Error
+local RangeError = ____lualib.RangeError
+local ReferenceError = ____lualib.ReferenceError
+local SyntaxError = ____lualib.SyntaxError
+local TypeError = ____lualib.TypeError
+local URIError = ____lualib.URIError
+local __TS__New = ____lualib.__TS__New
+local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["13"] = 1,["14"] = 1,["15"] = 3,["16"] = 3,["17"] = 3,["18"] = 8,["19"] = 11,["21"] = 12,["25"] = 16,["26"] = 17,["27"] = 7,["28"] = 20,["29"] = 21,["30"] = 20,["31"] = 24,["32"] = 28,["33"] = 24,["34"] = 31,["35"] = 32,["36"] = 31,["37"] = 35,["38"] = 36,["39"] = 35,["40"] = 42,["41"] = 46,["42"] = 42,["43"] = 49,["44"] = 50,["45"] = 49,["46"] = 53,["47"] = 54,["48"] = 53,["49"] = 57,["50"] = 58,["51"] = 58,["53"] = 59,["54"] = 57,["55"] = 62,["56"] = 63,["57"] = 63,["59"] = 64,["60"] = 62,["61"] = 67,["62"] = 68,["64"] = 69,["68"] = 72,["69"] = 67,["70"] = 75,["71"] = 76,["72"] = 76,["73"] = 76,["75"] = 76,["76"] = 75,["77"] = 79,["78"] = 80,["79"] = 79,["80"] = 83,["81"] = 84,["82"] = 83,["83"] = 87,["84"] = 90,["85"] = 90,["87"] = 91,["88"] = 87});
+local ____exports = {}
+local ____optional = require("src.util.types.optional")
+local Optional = ____optional.Optional
+____exports.Result = __TS__Class()
+local Result = ____exports.Result
+Result.name = "Result"
+function Result.prototype.____constructor(self, value, errorMessage)
+    if value == nil and errorMessage == nil then
+        error(
+            __TS__New(Error, "Cannot create a result with both undefined values"),
+            0
+        )
+    end
+    self.value = value
+    self.errorMessage = errorMessage
+end
+function Result.of(self, value)
+    return __TS__New(____exports.Result, value, nil)
+end
+function Result.ofError(self, value, errorMessage)
+    return __TS__New(____exports.Result, value, errorMessage)
+end
+function Result.void(self)
+    return __TS__New(____exports.Result, "No value", nil)
+end
+function Result.error(self, errorMessage)
+    return __TS__New(____exports.Result, nil, errorMessage or "No error message given")
+end
+function Result.errorValue(self, value, errorMessage)
+    return __TS__New(____exports.Result, value, errorMessage)
+end
+function Result.prototype.isSuccess(self)
+    return self.errorMessage == nil
+end
+function Result.prototype.isError(self)
+    return not self:isSuccess()
+end
+function Result.prototype.ifSuccess(self, callback)
+    if self:isSuccess() then
+        callback(nil, self.value)
+    end
+    return self
+end
+function Result.prototype.ifError(self, callback)
+    if self:isError() then
+        callback(nil, self.errorMessage)
+    end
+    return self
+end
+function Result.prototype.getValueUnsafe(self, message)
+    if not self.value then
+        error(
+            __TS__New(Error, message or self.errorMessage or "Cannot unwrap `Result` value"),
+            0
+        )
+    end
+    return self.value
+end
+function Result.prototype.getValueOrDefault(self, defaultValue)
+    local ____self_value_0 = self.value
+    if ____self_value_0 == nil then
+        ____self_value_0 = defaultValue
+    end
+    return ____self_value_0
+end
+function Result.prototype.getErrorMessage(self)
+    return self.errorMessage
+end
+function Result.prototype.asOptional(self)
+    return Optional:of(self.value)
+end
+Result.prototype["then"] = function(self, callback)
+    if not self.value then
+        return ____exports.Result:error(self.errorMessage)
+    end
+    return ____exports.Result:of(callback(nil, self.value))
+end
+return ____exports
+
+end)
+__bundle_register("src.util.types.optional", function(require, _LOADED, __bundle_register, __bundle_modules)
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
 local __TS__New = ____lualib.__TS__New
+local Error = ____lualib.Error
+local RangeError = ____lualib.RangeError
+local ReferenceError = ____lualib.ReferenceError
+local SyntaxError = ____lualib.SyntaxError
+local TypeError = ____lualib.TypeError
+local URIError = ____lualib.URIError
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
-__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["7"] = 1,["8"] = 1,["9"] = 1,["10"] = 5,["11"] = 6,["12"] = 7,["13"] = 5,["14"] = 10,["15"] = 14,["16"] = 10,["17"] = 17,["18"] = 18,["19"] = 17,["20"] = 21,["21"] = 22,["22"] = 21});
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["13"] = 1,["14"] = 1,["15"] = 3,["16"] = 3,["17"] = 3,["18"] = 6,["19"] = 7,["20"] = 6,["21"] = 10,["22"] = 11,["23"] = 10,["24"] = 14,["25"] = 17,["26"] = 18,["28"] = 19,["29"] = 14,["30"] = 22,["31"] = 23,["32"] = 22,["33"] = 26,["34"] = 27,["35"] = 26,["36"] = 30,["37"] = 31,["38"] = 30,["39"] = 34,["40"] = 35,["42"] = 36,["46"] = 37,["47"] = 34,["48"] = 40,["49"] = 41,["50"] = 41,["51"] = 41,["53"] = 41,["54"] = 40,["55"] = 44,["56"] = 47,["57"] = 47,["59"] = 48,["60"] = 44,["61"] = 51,["62"] = 52,["63"] = 52,["65"] = 53,["66"] = 51,["67"] = 56,["68"] = 57,["69"] = 57,["71"] = 58,["72"] = 56,["73"] = 61,["74"] = 62,["75"] = 62,["76"] = 62,["78"] = 62,["80"] = 62,["81"] = 61,["82"] = 65,["83"] = 66,["84"] = 66,["86"] = 67,["87"] = 65});
 local ____exports = {}
-____exports.LuaMapEntry = __TS__Class()
-local LuaMapEntry = ____exports.LuaMapEntry
-LuaMapEntry.name = "LuaMapEntry"
-function LuaMapEntry.prototype.____constructor(self, key, value)
-    self.key = key
+local ____result = require("src.util.types.result")
+local Result = ____result.Result
+____exports.Optional = __TS__Class()
+local Optional = ____exports.Optional
+Optional.name = "Optional"
+function Optional.prototype.____constructor(self, value)
     self.value = value
 end
-function LuaMapEntry.of(self, key, value)
-    return __TS__New(____exports.LuaMapEntry, key, value)
+function Optional.of(self, value)
+    return __TS__New(____exports.Optional, value)
 end
-function LuaMapEntry.prototype.getKey(self)
-    return self.key
+function Optional.ofNullable(self, value)
+    if value == nil or value == nil then
+        return ____exports.Optional:empty()
+    end
+    return ____exports.Optional:of(value)
 end
-function LuaMapEntry.prototype.getValue(self)
+function Optional.empty(self)
+    return __TS__New(____exports.Optional, nil)
+end
+function Optional.prototype.isPresent(self)
+    return self.value ~= nil
+end
+function Optional.prototype.isEmpty(self)
+    return self.value == nil
+end
+function Optional.prototype.getValueUnsafe(self, message)
+    if not self.value then
+        error(
+            __TS__New(Error, message or "Cannot unwrap `Optional` value!"),
+            0
+        )
+    end
     return self.value
+end
+function Optional.prototype.getValueOrDefault(self, defaultValue)
+    local ____self_value_0 = self.value
+    if ____self_value_0 == nil then
+        ____self_value_0 = defaultValue
+    end
+    return ____self_value_0
+end
+Optional.prototype["then"] = function(self, callback)
+    if not self.value then
+        return ____exports.Optional:empty()
+    end
+    return ____exports.Optional:of(callback(nil, self.value))
+end
+function Optional.prototype.ifPresent(self, callback)
+    if self.value then
+        callback(nil, self.value)
+    end
+    return self
+end
+function Optional.prototype.ifEmpty(self, callback)
+    if not self.value then
+        callback(nil)
+    end
+    return self
+end
+Optional.prototype["or"] = function(self, other)
+    local ____table_value_1
+    if self.value then
+        ____table_value_1 = self
+    else
+        ____table_value_1 = other
+    end
+    return ____table_value_1
+end
+function Optional.prototype.toResult(self, errorMessage)
+    if self.value then
+        return Result:of(self.value)
+    end
+    return Result:ofError(self.value, errorMessage)
 end
 return ____exports
 
@@ -3133,6 +3366,59 @@ return {
 }
 
 end)
+__bundle_register("src.lua.lua", function(require, _LOADED, __bundle_register, __bundle_modules)
+local ____lualib = require("lualib_bundle")
+local __TS__Class = ____lualib.__TS__Class
+local Error = ____lualib.Error
+local RangeError = ____lualib.RangeError
+local ReferenceError = ____lualib.ReferenceError
+local SyntaxError = ____lualib.SyntaxError
+local TypeError = ____lualib.TypeError
+local URIError = ____lualib.URIError
+local __TS__New = ____lualib.__TS__New
+local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["13"] = 1,["14"] = 1,["15"] = 1,["17"] = 1,["18"] = 2,["20"] = 3,["23"] = 2});
+local ____exports = {}
+____exports.Lua = __TS__Class()
+local Lua = ____exports.Lua
+Lua.name = "Lua"
+function Lua.prototype.____constructor(self)
+end
+function Lua.literal(self, luaVersion)
+    error(
+        __TS__New(Error, ("Lua.literal(" .. luaVersion) .. ") has no Typescript alternative"),
+        0
+    )
+end
+return ____exports
+
+end)
+__bundle_register("src.util.types.collection.luaMapEntry", function(require, _LOADED, __bundle_register, __bundle_modules)
+local ____lualib = require("lualib_bundle")
+local __TS__Class = ____lualib.__TS__Class
+local __TS__New = ____lualib.__TS__New
+local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["7"] = 1,["8"] = 1,["9"] = 1,["10"] = 5,["11"] = 6,["12"] = 7,["13"] = 5,["14"] = 10,["15"] = 14,["16"] = 10,["17"] = 17,["18"] = 18,["19"] = 17,["20"] = 21,["21"] = 22,["22"] = 21});
+local ____exports = {}
+____exports.LuaMapEntry = __TS__Class()
+local LuaMapEntry = ____exports.LuaMapEntry
+LuaMapEntry.name = "LuaMapEntry"
+function LuaMapEntry.prototype.____constructor(self, key, value)
+    self.key = key
+    self.value = value
+end
+function LuaMapEntry.of(self, key, value)
+    return __TS__New(____exports.LuaMapEntry, key, value)
+end
+function LuaMapEntry.prototype.getKey(self)
+    return self.key
+end
+function LuaMapEntry.prototype.getValue(self)
+    return self.value
+end
+return ____exports
+
+end)
 __bundle_register("src.util.types.collection.luaList", function(require, _LOADED, __bundle_register, __bundle_modules)
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
@@ -3496,33 +3782,6 @@ end
 return ____exports
 
 end)
-__bundle_register("src.lua.lua", function(require, _LOADED, __bundle_register, __bundle_modules)
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local Error = ____lualib.Error
-local RangeError = ____lualib.RangeError
-local ReferenceError = ____lualib.ReferenceError
-local SyntaxError = ____lualib.SyntaxError
-local TypeError = ____lualib.TypeError
-local URIError = ____lualib.URIError
-local __TS__New = ____lualib.__TS__New
-local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
-__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["13"] = 1,["14"] = 1,["15"] = 1,["17"] = 1,["18"] = 2,["20"] = 3,["23"] = 2});
-local ____exports = {}
-____exports.Lua = __TS__Class()
-local Lua = ____exports.Lua
-Lua.name = "Lua"
-function Lua.prototype.____constructor(self)
-end
-function Lua.literal(self, luaVersion)
-    error(
-        __TS__New(Error, ("Lua.literal(" .. luaVersion) .. ") has no Typescript alternative"),
-        0
-    )
-end
-return ____exports
-
-end)
 __bundle_register("src.util.types.collection.luaSet", function(require, _LOADED, __bundle_register, __bundle_modules)
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
@@ -3638,189 +3897,6 @@ function LuaSet.prototype.isStrictSupersetOf(self, other)
 end
 function LuaSet.prototype.toArray(self)
     return {__TS__Spread(self.elements)}
-end
-return ____exports
-
-end)
-__bundle_register("src.util.types.optional", function(require, _LOADED, __bundle_register, __bundle_modules)
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local __TS__New = ____lualib.__TS__New
-local Error = ____lualib.Error
-local RangeError = ____lualib.RangeError
-local ReferenceError = ____lualib.ReferenceError
-local SyntaxError = ____lualib.SyntaxError
-local TypeError = ____lualib.TypeError
-local URIError = ____lualib.URIError
-local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
-__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["13"] = 1,["14"] = 1,["15"] = 3,["16"] = 3,["17"] = 3,["18"] = 6,["19"] = 7,["20"] = 6,["21"] = 10,["22"] = 11,["23"] = 10,["24"] = 14,["25"] = 17,["26"] = 18,["28"] = 19,["29"] = 14,["30"] = 22,["31"] = 23,["32"] = 22,["33"] = 26,["34"] = 27,["35"] = 26,["36"] = 30,["37"] = 31,["38"] = 30,["39"] = 34,["40"] = 35,["42"] = 36,["46"] = 37,["47"] = 34,["48"] = 40,["49"] = 41,["50"] = 41,["51"] = 41,["53"] = 41,["54"] = 40,["55"] = 44,["56"] = 47,["57"] = 47,["59"] = 48,["60"] = 44,["61"] = 51,["62"] = 52,["63"] = 52,["65"] = 53,["66"] = 51,["67"] = 56,["68"] = 57,["69"] = 57,["71"] = 58,["72"] = 56,["73"] = 61,["74"] = 62,["75"] = 62,["76"] = 62,["78"] = 62,["80"] = 62,["81"] = 61,["82"] = 65,["83"] = 66,["84"] = 66,["86"] = 67,["87"] = 65});
-local ____exports = {}
-local ____result = require("src.util.types.result")
-local Result = ____result.Result
-____exports.Optional = __TS__Class()
-local Optional = ____exports.Optional
-Optional.name = "Optional"
-function Optional.prototype.____constructor(self, value)
-    self.value = value
-end
-function Optional.of(self, value)
-    return __TS__New(____exports.Optional, value)
-end
-function Optional.ofNullable(self, value)
-    if value == nil or value == nil then
-        return ____exports.Optional:empty()
-    end
-    return ____exports.Optional:of(value)
-end
-function Optional.empty(self)
-    return __TS__New(____exports.Optional, nil)
-end
-function Optional.prototype.isPresent(self)
-    return self.value ~= nil
-end
-function Optional.prototype.isEmpty(self)
-    return self.value == nil
-end
-function Optional.prototype.getValueUnsafe(self, message)
-    if not self.value then
-        error(
-            __TS__New(Error, message or "Cannot unwrap `Optional` value!"),
-            0
-        )
-    end
-    return self.value
-end
-function Optional.prototype.getValueOrDefault(self, defaultValue)
-    local ____self_value_0 = self.value
-    if ____self_value_0 == nil then
-        ____self_value_0 = defaultValue
-    end
-    return ____self_value_0
-end
-Optional.prototype["then"] = function(self, callback)
-    if not self.value then
-        return ____exports.Optional:empty()
-    end
-    return ____exports.Optional:of(callback(nil, self.value))
-end
-function Optional.prototype.ifPresent(self, callback)
-    if self.value then
-        callback(nil, self.value)
-    end
-    return self
-end
-function Optional.prototype.ifEmpty(self, callback)
-    if not self.value then
-        callback(nil)
-    end
-    return self
-end
-Optional.prototype["or"] = function(self, other)
-    local ____table_value_1
-    if self.value then
-        ____table_value_1 = self
-    else
-        ____table_value_1 = other
-    end
-    return ____table_value_1
-end
-function Optional.prototype.toResult(self, errorMessage)
-    if self.value then
-        return Result:of(self.value)
-    end
-    return Result:ofError(self.value, errorMessage)
-end
-return ____exports
-
-end)
-__bundle_register("src.util.types.result", function(require, _LOADED, __bundle_register, __bundle_modules)
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local Error = ____lualib.Error
-local RangeError = ____lualib.RangeError
-local ReferenceError = ____lualib.ReferenceError
-local SyntaxError = ____lualib.SyntaxError
-local TypeError = ____lualib.TypeError
-local URIError = ____lualib.URIError
-local __TS__New = ____lualib.__TS__New
-local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
-__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["13"] = 1,["14"] = 1,["15"] = 3,["16"] = 3,["17"] = 3,["18"] = 8,["19"] = 11,["21"] = 12,["25"] = 16,["26"] = 17,["27"] = 7,["28"] = 20,["29"] = 21,["30"] = 20,["31"] = 24,["32"] = 28,["33"] = 24,["34"] = 31,["35"] = 32,["36"] = 31,["37"] = 35,["38"] = 36,["39"] = 35,["40"] = 42,["41"] = 46,["42"] = 42,["43"] = 49,["44"] = 50,["45"] = 49,["46"] = 53,["47"] = 54,["48"] = 53,["49"] = 57,["50"] = 58,["51"] = 58,["53"] = 59,["54"] = 57,["55"] = 62,["56"] = 63,["57"] = 63,["59"] = 64,["60"] = 62,["61"] = 67,["62"] = 68,["64"] = 69,["68"] = 72,["69"] = 67,["70"] = 75,["71"] = 76,["72"] = 76,["73"] = 76,["75"] = 76,["76"] = 75,["77"] = 79,["78"] = 80,["79"] = 79,["80"] = 83,["81"] = 84,["82"] = 83,["83"] = 87,["84"] = 90,["85"] = 90,["87"] = 91,["88"] = 87});
-local ____exports = {}
-local ____optional = require("src.util.types.optional")
-local Optional = ____optional.Optional
-____exports.Result = __TS__Class()
-local Result = ____exports.Result
-Result.name = "Result"
-function Result.prototype.____constructor(self, value, errorMessage)
-    if value == nil and errorMessage == nil then
-        error(
-            __TS__New(Error, "Cannot create a result with both undefined values"),
-            0
-        )
-    end
-    self.value = value
-    self.errorMessage = errorMessage
-end
-function Result.of(self, value)
-    return __TS__New(____exports.Result, value, nil)
-end
-function Result.ofError(self, value, errorMessage)
-    return __TS__New(____exports.Result, value, errorMessage)
-end
-function Result.void(self)
-    return __TS__New(____exports.Result, "No value", nil)
-end
-function Result.error(self, errorMessage)
-    return __TS__New(____exports.Result, nil, errorMessage or "No error message given")
-end
-function Result.errorValue(self, value, errorMessage)
-    return __TS__New(____exports.Result, value, errorMessage)
-end
-function Result.prototype.isSuccess(self)
-    return self.errorMessage == nil
-end
-function Result.prototype.isError(self)
-    return not self:isSuccess()
-end
-function Result.prototype.ifSuccess(self, callback)
-    if self:isSuccess() then
-        callback(nil, self.value)
-    end
-    return self
-end
-function Result.prototype.ifError(self, callback)
-    if self:isError() then
-        callback(nil, self.errorMessage)
-    end
-    return self
-end
-function Result.prototype.getValueUnsafe(self, message)
-    if not self.value then
-        error(
-            __TS__New(Error, message or self.errorMessage or "Cannot unwrap `Result` value"),
-            0
-        )
-    end
-    return self.value
-end
-function Result.prototype.getValueOrDefault(self, defaultValue)
-    local ____self_value_0 = self.value
-    if ____self_value_0 == nil then
-        ____self_value_0 = defaultValue
-    end
-    return ____self_value_0
-end
-function Result.prototype.getErrorMessage(self)
-    return self.errorMessage
-end
-function Result.prototype.asOptional(self)
-    return Optional:of(self.value)
-end
-Result.prototype["then"] = function(self, callback)
-    if not self.value then
-        return ____exports.Result:error(self.errorMessage)
-    end
-    return ____exports.Result:of(callback(nil, self.value))
 end
 return ____exports
 
@@ -3959,7 +4035,7 @@ function Entrypoint.prototype.registerRoute(self, name, callback)
     self._routes:set(name, callback)
 end
 function Entrypoint.prototype.dispatchRoute(self)
-    local targetRouteName = ExecutionContext.commandLineArguments:first():getValueUnsafe("EC21 - " .. "The first command line argument (route name) was not provided")
+    local targetRouteName = ExecutionContext.commandLineArguments:first():getValueUnsafe("EC20 - " .. "The first command line argument (route name) was not provided")
     self._routes:get(targetRouteName):ifEmpty(function()
         local validRouteNamesString = ("'" .. self._routes:keys():join("', '")) .. "'"
         error(
@@ -3999,7 +4075,7 @@ function DiscordWebhookLogListener.prototype.onLog(self, level, message)
 end
 DiscordWebhookLogListener._webhook = DiscordWebhook:fromUrl(
     "ComputerCraft",
-    Environment:get("DISCORD_WEBHOOK_URL"):getValueUnsafe("EC20 - " .. "Failed to get `DISCORD_WEBHOOK_URL` from environment")
+    Environment:get("DISCORD_WEBHOOK_URL"):getValueUnsafe("EC19 - " .. "Failed to get `DISCORD_WEBHOOK_URL` from environment")
 )
 return ____exports
 
@@ -4748,7 +4824,7 @@ local __TS__Class = ____lualib.__TS__Class
 local __TS__New = ____lualib.__TS__New
 local __TS__ArrayIsArray = ____lualib.__TS__ArrayIsArray
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
-__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["8"] = 1,["9"] = 1,["10"] = 2,["11"] = 2,["12"] = 3,["13"] = 3,["14"] = 35,["15"] = 35,["16"] = 35,["17"] = 41,["18"] = 42,["19"] = 43,["20"] = 41,["21"] = 46,["22"] = 47,["23"] = 46,["24"] = 50,["25"] = 55,["26"] = 55,["27"] = 55,["28"] = 55,["29"] = 62,["30"] = 66,["31"] = 50,["32"] = 72,["33"] = 73,["34"] = 78,["35"] = 79,["36"] = 78,["37"] = 72,["38"] = 86,["39"] = 87,["40"] = 88,["41"] = 89,["42"] = 89,["43"] = 89,["45"] = 89,["47"] = 87,["48"] = 86,["49"] = 36});
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["8"] = 1,["9"] = 1,["10"] = 2,["11"] = 2,["12"] = 3,["13"] = 3,["14"] = 6,["15"] = 6,["16"] = 36,["17"] = 36,["18"] = 36,["19"] = 42,["20"] = 43,["21"] = 44,["22"] = 42,["23"] = 47,["24"] = 48,["25"] = 47,["26"] = 51,["27"] = 56,["28"] = 56,["29"] = 56,["30"] = 56,["31"] = 63,["32"] = 66,["33"] = 51,["34"] = 69,["35"] = 70,["36"] = 75,["37"] = 76,["38"] = 75,["39"] = 69,["40"] = 83,["41"] = 84,["42"] = 85,["43"] = 86,["44"] = 86,["45"] = 86,["47"] = 86,["49"] = 84,["50"] = 83,["51"] = 37});
 local ____exports = {}
 local ____ccHttp = require("src.util.computer.api.tier1.globals.ccHttp")
 local CcHttp = ____ccHttp.CcHttp
@@ -4756,6 +4832,8 @@ local ____ccTextUtils = require("src.util.computer.api.tier1.globals.ccTextUtils
 local CcTextUtils = ____ccTextUtils.CcTextUtils
 local ____textUtil = require("src.util.computer.api.tier2.text.textUtil")
 local TextUtil = ____textUtil.TextUtil
+local ____luaMap = require("src.util.types.collection.luaMap")
+local LuaMap = ____luaMap.LuaMap
 ____exports.DiscordWebhook = __TS__Class()
 local DiscordWebhook = ____exports.DiscordWebhook
 DiscordWebhook.name = "DiscordWebhook"
@@ -4772,7 +4850,7 @@ function DiscordWebhook.prototype.sendWebhookData(self, data)
         CcTextUtils:serializeJSON(data):getValueUnsafe("EC17 - " .. "Could not serialize POST data for Discord webhook")
     )
     local response = result:getValueUnsafe("EC18 - " .. "Could not send Discord webhook")
-    print(CcTextUtils:serialize(response):getValueUnsafe("EC19 - " .. "Could not serialize response"))
+    print(LuaMap:ofTableFields(response))
 end
 function DiscordWebhook.prototype.sendMessage(self, message)
     local chunks = TextUtil:toChunks(message, ____exports.DiscordWebhook.DISCORD_MESSAGE_LENGTH_LIMIT)
@@ -5022,64 +5100,6 @@ function HttpResponse.prototype.getResponseCode(self)
 end
 function HttpResponse.prototype.getResponseHeaders(self)
     return self.handle.getResponseHeaders()
-end
-return ____exports
-
-end)
-__bundle_register("src.util.reflection", function(require, _LOADED, __bundle_register, __bundle_modules)
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local __TS__ObjectKeys = ____lualib.__TS__ObjectKeys
-local __TS__ArrayForEach = ____lualib.__TS__ArrayForEach
-local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
-__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["8"] = 1,["9"] = 1,["10"] = 2,["11"] = 2,["12"] = 3,["13"] = 3,["14"] = 5,["15"] = 5,["16"] = 5,["18"] = 5,["19"] = 6,["20"] = 7,["21"] = 9,["22"] = 9,["23"] = 9,["24"] = 9,["25"] = 11,["26"] = 6,["27"] = 14,["28"] = 15,["29"] = 16,["31"] = 19,["32"] = 20,["33"] = 21,["35"] = 24,["36"] = 14,["37"] = 27,["38"] = 31,["39"] = 27,["40"] = 38,["41"] = 39,["42"] = 41,["43"] = 43,["44"] = 43,["45"] = 43,["46"] = 44,["47"] = 45,["48"] = 45,["49"] = 45,["50"] = 45,["51"] = 43,["52"] = 43,["53"] = 48,["54"] = 38});
-local ____exports = {}
-local ____lua = require("src.lua.lua")
-local Lua = ____lua.Lua
-local ____result = require("src.util.types.result")
-local Result = ____result.Result
-local ____luaMap = require("src.util.types.collection.luaMap")
-local LuaMap = ____luaMap.LuaMap
-____exports.Reflection = __TS__Class()
-local Reflection = ____exports.Reflection
-Reflection.name = "Reflection"
-function Reflection.prototype.____constructor(self)
-end
-function Reflection.getFields(self, ____table)
-    local fields = LuaMap:empty()
-    __TS__ArrayForEach(
-        __TS__ObjectKeys(____table),
-        function(____, key) return fields:set(key, ____table[key]) end
-    )
-    return fields
-end
-function Reflection.getField(self, ____table, name)
-    if type(table) ~= 'table' then
-        return Result:error(("'" .. tostring(____table)) .. "' is not a table")
-    end
-    local value = table[name]
-    if value == nil or value == nil then
-        return Result:error(((("'" .. name) .. "' is not a field of '") .. tostring(____table)) .. "'")
-    end
-    return Result:of(value)
-end
-function Reflection.getMethod(self, ____table, name)
-    return self:getMethods(____table):get(name):toResult(((("'" .. name) .. "' is not a method of '") .. tostring(____table)) .. "'")
-end
-function Reflection.getMethods(self, ____table)
-    local methods = LuaMap:empty()
-    local prototype = ____table.constructor.prototype
-    __TS__ArrayForEach(
-        __TS__ObjectKeys(prototype),
-        function(____, key)
-            local method = prototype[key]
-            methods:set(
-                key,
-                function(____, ...) return method(nil, ____table, ...) end
-            )
-        end
-    )
-    return methods
 end
 return ____exports
 
