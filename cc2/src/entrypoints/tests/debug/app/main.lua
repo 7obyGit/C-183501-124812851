@@ -4746,7 +4746,7 @@ local __TS__Class = ____lualib.__TS__Class
 local __TS__New = ____lualib.__TS__New
 local __TS__ArrayIsArray = ____lualib.__TS__ArrayIsArray
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
-__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["8"] = 1,["9"] = 1,["10"] = 2,["11"] = 2,["12"] = 3,["13"] = 3,["14"] = 7,["15"] = 7,["16"] = 37,["17"] = 37,["18"] = 37,["19"] = 43,["20"] = 44,["21"] = 45,["22"] = 43,["23"] = 48,["24"] = 49,["25"] = 48,["26"] = 52,["27"] = 57,["28"] = 57,["29"] = 57,["30"] = 57,["31"] = 64,["32"] = 68,["33"] = 52,["34"] = 74,["35"] = 75,["36"] = 80,["37"] = 81,["38"] = 80,["39"] = 74,["40"] = 88,["41"] = 89,["42"] = 90,["43"] = 91,["44"] = 91,["45"] = 91,["47"] = 91,["49"] = 89,["50"] = 88,["51"] = 38});
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["8"] = 1,["9"] = 1,["10"] = 2,["11"] = 2,["12"] = 3,["13"] = 3,["14"] = 37,["15"] = 37,["16"] = 37,["17"] = 43,["18"] = 44,["19"] = 45,["20"] = 43,["21"] = 48,["22"] = 49,["23"] = 48,["24"] = 52,["25"] = 57,["26"] = 57,["27"] = 57,["28"] = 57,["29"] = 64,["30"] = 65,["31"] = 66,["32"] = 52,["33"] = 69,["34"] = 70,["35"] = 75,["36"] = 76,["37"] = 75,["38"] = 69,["39"] = 83,["40"] = 84,["41"] = 85,["42"] = 86,["43"] = 86,["44"] = 86,["46"] = 86,["48"] = 84,["49"] = 83,["50"] = 38});
 local ____exports = {}
 local ____ccHttp = require("src.util.computer.api.tier1.globals.ccHttp")
 local CcHttp = ____ccHttp.CcHttp
@@ -4754,8 +4754,6 @@ local ____ccTextUtils = require("src.util.computer.api.tier1.globals.ccTextUtils
 local CcTextUtils = ____ccTextUtils.CcTextUtils
 local ____textUtil = require("src.util.computer.api.tier2.text.textUtil")
 local TextUtil = ____textUtil.TextUtil
-local ____reflection = require("src.util.reflection")
-local Reflection = ____reflection.Reflection
 ____exports.DiscordWebhook = __TS__Class()
 local DiscordWebhook = ____exports.DiscordWebhook
 DiscordWebhook.name = "DiscordWebhook"
@@ -4767,12 +4765,13 @@ function DiscordWebhook.fromUrl(self, username, url)
     return __TS__New(____exports.DiscordWebhook, username, url)
 end
 function DiscordWebhook.prototype.sendWebhookData(self, data)
-    local result = CcHttp:post(
+    local response = CcHttp:post(
         self._url,
         CcTextUtils:serializeJSON(data):getValueUnsafe("EC17 - " .. "Could not serialize POST data for Discord webhook")
-    )
-    local response = result:getValueUnsafe("EC18 - " .. "Could not send Discord webhook")
-    print(tostring(Reflection:getMethods(response):keys()))
+    ):getValueUnsafe("EC18 - " .. "Could not send Discord webhook")
+    console:debug(("Code: '" .. tostring(response:getResponseCode())) .. "'")
+    console:debug(("Headers: '" .. tostring(response:getResponseHeaders())) .. "'")
+    console:debug(("Message: '" .. response:readAllContent()) .. "'")
 end
 function DiscordWebhook.prototype.sendMessage(self, message)
     local chunks = TextUtil:toChunks(message, ____exports.DiscordWebhook.DISCORD_MESSAGE_LENGTH_LIMIT)
@@ -4792,64 +4791,6 @@ function DiscordWebhook.prototype.sendEmbed(self, embeds)
     ____self_sendWebhookData_2(self, {username = ____self__username_1, embeds = ____Array_isArray_result_0})
 end
 DiscordWebhook.DISCORD_MESSAGE_LENGTH_LIMIT = 2000
-return ____exports
-
-end)
-__bundle_register("src.util.reflection", function(require, _LOADED, __bundle_register, __bundle_modules)
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local __TS__ObjectKeys = ____lualib.__TS__ObjectKeys
-local __TS__ArrayForEach = ____lualib.__TS__ArrayForEach
-local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
-__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["8"] = 1,["9"] = 1,["10"] = 2,["11"] = 2,["12"] = 3,["13"] = 3,["14"] = 5,["15"] = 5,["16"] = 5,["18"] = 5,["19"] = 6,["20"] = 7,["21"] = 9,["22"] = 9,["23"] = 9,["24"] = 9,["25"] = 11,["26"] = 6,["27"] = 14,["28"] = 15,["29"] = 16,["31"] = 19,["32"] = 20,["33"] = 21,["35"] = 24,["36"] = 14,["37"] = 27,["38"] = 31,["39"] = 27,["40"] = 38,["41"] = 39,["42"] = 41,["43"] = 43,["44"] = 43,["45"] = 43,["46"] = 44,["47"] = 45,["48"] = 45,["49"] = 45,["50"] = 45,["51"] = 43,["52"] = 43,["53"] = 48,["54"] = 38});
-local ____exports = {}
-local ____lua = require("src.lua.lua")
-local Lua = ____lua.Lua
-local ____result = require("src.util.types.result")
-local Result = ____result.Result
-local ____luaMap = require("src.util.types.collection.luaMap")
-local LuaMap = ____luaMap.LuaMap
-____exports.Reflection = __TS__Class()
-local Reflection = ____exports.Reflection
-Reflection.name = "Reflection"
-function Reflection.prototype.____constructor(self)
-end
-function Reflection.getFields(self, ____table)
-    local fields = LuaMap:empty()
-    __TS__ArrayForEach(
-        __TS__ObjectKeys(____table),
-        function(____, key) return fields:set(key, ____table[key]) end
-    )
-    return fields
-end
-function Reflection.getField(self, ____table, name)
-    if type(table) ~= 'table' then
-        return Result:error(("'" .. tostring(____table)) .. "' is not a table")
-    end
-    local value = table[name]
-    if value == nil or value == nil then
-        return Result:error(((("'" .. name) .. "' is not a field of '") .. tostring(____table)) .. "'")
-    end
-    return Result:of(value)
-end
-function Reflection.getMethod(self, ____table, name)
-    return self:getMethods(____table):get(name):toResult(((("'" .. name) .. "' is not a method of '") .. tostring(____table)) .. "'")
-end
-function Reflection.getMethods(self, ____table)
-    local methods = LuaMap:empty()
-    local prototype = ____table.constructor.prototype
-    __TS__ArrayForEach(
-        __TS__ObjectKeys(prototype),
-        function(____, key)
-            local method = prototype[key]
-            methods:set(
-                key,
-                function(____, ...) return method(nil, ____table, ...) end
-            )
-        end
-    )
-    return methods
-end
 return ____exports
 
 end)
@@ -5080,6 +5021,64 @@ function HttpResponse.prototype.getResponseCode(self)
 end
 function HttpResponse.prototype.getResponseHeaders(self)
     return self.handle.getResponseHeaders()
+end
+return ____exports
+
+end)
+__bundle_register("src.util.reflection", function(require, _LOADED, __bundle_register, __bundle_modules)
+local ____lualib = require("lualib_bundle")
+local __TS__Class = ____lualib.__TS__Class
+local __TS__ObjectKeys = ____lualib.__TS__ObjectKeys
+local __TS__ArrayForEach = ____lualib.__TS__ArrayForEach
+local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["8"] = 1,["9"] = 1,["10"] = 2,["11"] = 2,["12"] = 3,["13"] = 3,["14"] = 5,["15"] = 5,["16"] = 5,["18"] = 5,["19"] = 6,["20"] = 7,["21"] = 9,["22"] = 9,["23"] = 9,["24"] = 9,["25"] = 11,["26"] = 6,["27"] = 14,["28"] = 15,["29"] = 16,["31"] = 19,["32"] = 20,["33"] = 21,["35"] = 24,["36"] = 14,["37"] = 27,["38"] = 31,["39"] = 27,["40"] = 38,["41"] = 39,["42"] = 41,["43"] = 43,["44"] = 43,["45"] = 43,["46"] = 44,["47"] = 45,["48"] = 45,["49"] = 45,["50"] = 45,["51"] = 43,["52"] = 43,["53"] = 48,["54"] = 38});
+local ____exports = {}
+local ____lua = require("src.lua.lua")
+local Lua = ____lua.Lua
+local ____result = require("src.util.types.result")
+local Result = ____result.Result
+local ____luaMap = require("src.util.types.collection.luaMap")
+local LuaMap = ____luaMap.LuaMap
+____exports.Reflection = __TS__Class()
+local Reflection = ____exports.Reflection
+Reflection.name = "Reflection"
+function Reflection.prototype.____constructor(self)
+end
+function Reflection.getFields(self, ____table)
+    local fields = LuaMap:empty()
+    __TS__ArrayForEach(
+        __TS__ObjectKeys(____table),
+        function(____, key) return fields:set(key, ____table[key]) end
+    )
+    return fields
+end
+function Reflection.getField(self, ____table, name)
+    if type(table) ~= 'table' then
+        return Result:error(("'" .. tostring(____table)) .. "' is not a table")
+    end
+    local value = table[name]
+    if value == nil or value == nil then
+        return Result:error(((("'" .. name) .. "' is not a field of '") .. tostring(____table)) .. "'")
+    end
+    return Result:of(value)
+end
+function Reflection.getMethod(self, ____table, name)
+    return self:getMethods(____table):get(name):toResult(((("'" .. name) .. "' is not a method of '") .. tostring(____table)) .. "'")
+end
+function Reflection.getMethods(self, ____table)
+    local methods = LuaMap:empty()
+    local prototype = ____table.constructor.prototype
+    __TS__ArrayForEach(
+        __TS__ObjectKeys(prototype),
+        function(____, key)
+            local method = prototype[key]
+            methods:set(
+                key,
+                function(____, ...) return method(nil, ____table, ...) end
+            )
+        end
+    )
+    return methods
 end
 return ____exports
 
