@@ -4769,9 +4769,9 @@ function DiscordWebhook.prototype.sendWebhookData(self, data)
         self._url,
         CcTextUtils:serializeJSON(data):getValueUnsafe("EC17 - " .. "Could not serialize POST data for Discord webhook")
     ):getValueUnsafe("EC18 - " .. "Could not send Discord webhook")
-    console:debug(("Code: '" .. tostring(response:getResponseCode())) .. "'")
-    console:debug(("Headers: '" .. tostring(response:getResponseHeaders())) .. "'")
-    console:debug(("Message: '" .. response:readAllContent()) .. "'")
+    print(("Code: '" .. tostring(response:getResponseCode())) .. "'")
+    print(("Headers: '" .. tostring(response:getResponseHeaders())) .. "'")
+    print(("Message: '" .. response:readAllContent()) .. "'")
 end
 function DiscordWebhook.prototype.sendMessage(self, message)
     local chunks = TextUtil:toChunks(message, ____exports.DiscordWebhook.DISCORD_MESSAGE_LENGTH_LIMIT)
