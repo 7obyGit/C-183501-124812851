@@ -4758,7 +4758,7 @@ local TypeError = ____lualib.TypeError
 local URIError = ____lualib.URIError
 local __TS__ArrayIsArray = ____lualib.__TS__ArrayIsArray
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
-__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["15"] = 1,["16"] = 1,["17"] = 2,["18"] = 2,["19"] = 3,["20"] = 3,["21"] = 37,["22"] = 37,["23"] = 37,["24"] = 43,["25"] = 44,["26"] = 45,["27"] = 43,["28"] = 48,["29"] = 49,["30"] = 48,["31"] = 52,["32"] = 57,["33"] = 58,["34"] = 60,["35"] = 64,["36"] = 68,["37"] = 70,["38"] = 76,["39"] = 76,["40"] = 76,["41"] = 76,["42"] = 77,["43"] = 78,["45"] = 80,["46"] = 80,["47"] = 80,["48"] = 80,["52"] = 85,["53"] = 52,["54"] = 88,["55"] = 89,["56"] = 94,["57"] = 95,["58"] = 94,["59"] = 88,["60"] = 102,["61"] = 103,["62"] = 104,["63"] = 105,["64"] = 105,["65"] = 105,["67"] = 105,["69"] = 103,["70"] = 102,["71"] = 38});
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["15"] = 1,["16"] = 1,["17"] = 2,["18"] = 2,["19"] = 3,["20"] = 3,["21"] = 37,["22"] = 37,["23"] = 37,["24"] = 43,["25"] = 44,["26"] = 45,["27"] = 43,["28"] = 48,["29"] = 49,["30"] = 48,["31"] = 52,["32"] = 57,["33"] = 61,["34"] = 65,["35"] = 71,["36"] = 71,["37"] = 71,["38"] = 71,["39"] = 72,["40"] = 73,["42"] = 75,["43"] = 75,["44"] = 75,["45"] = 75,["49"] = 80,["50"] = 52,["51"] = 83,["52"] = 84,["53"] = 89,["54"] = 90,["55"] = 89,["56"] = 83,["57"] = 97,["58"] = 98,["59"] = 99,["60"] = 100,["61"] = 100,["62"] = 100,["64"] = 100,["66"] = 98,["67"] = 97,["68"] = 38});
 local ____exports = {}
 local ____ccHttp = require("src.util.computer.api.tier1.globals.ccHttp")
 local CcHttp = ____ccHttp.CcHttp
@@ -4777,11 +4777,8 @@ function DiscordWebhook.fromUrl(self, username, url)
     return __TS__New(____exports.DiscordWebhook, username, url)
 end
 function DiscordWebhook.prototype.sendWebhookData(self, data)
-    print(("Username: '" .. data.username) .. "'")
-    print(("Content: '" .. data.content) .. "'")
     local headers = {}
     local body = CcTextUtils:serializeJSON(data):getValueUnsafe("EC17 - " .. "Could not serialize POST data for Discord webhook")
-    print(("Body: '" .. body) .. "'")
     local response = CcHttp:post(self._url, body, headers):getValueUnsafe("EC18 - " .. "Could not send Discord webhook")
     if not __TS__StringStartsWith(
         response:getResponseCode(),
