@@ -3644,7 +3644,7 @@ local SyntaxError = ____lualib.SyntaxError
 local TypeError = ____lualib.TypeError
 local URIError = ____lualib.URIError
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
-__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["13"] = 1,["14"] = 1,["15"] = 3,["16"] = 3,["17"] = 3,["18"] = 6,["19"] = 7,["20"] = 6,["21"] = 10,["22"] = 11,["23"] = 10,["24"] = 14,["25"] = 17,["26"] = 18,["28"] = 19,["29"] = 14,["30"] = 22,["31"] = 23,["32"] = 22,["33"] = 26,["34"] = 27,["35"] = 26,["36"] = 30,["37"] = 31,["38"] = 30,["39"] = 34,["40"] = 34,["41"] = 34,["42"] = 34,["43"] = 34,["45"] = 34,["47"] = 34,["49"] = 35,["50"] = 36,["51"] = 36,["52"] = 36,["53"] = 36,["56"] = 36,["60"] = 37,["62"] = 40,["63"] = 40,["65"] = 41,["66"] = 41,["67"] = 41,["69"] = 41,["71"] = 44,["72"] = 44,["73"] = 44,["74"] = 44,["75"] = 44,["76"] = 46,["77"] = 47,["78"] = 46,["79"] = 46,["80"] = 46,["81"] = 46,["82"] = 46,["83"] = 51,["84"] = 51,["85"] = 51,["86"] = 51,["87"] = 51,["88"] = 51,["89"] = 51,["90"] = 51,["91"] = 51,["92"] = 52,["93"] = 51,["94"] = 51,["95"] = 52,["96"] = 51,["97"] = 51,["98"] = 51,["99"] = 51,["100"] = 56,["101"] = 56,["102"] = 56,["103"] = 56,["104"] = 56,["105"] = 56,["106"] = 56,["107"] = 56,["108"] = 56,["109"] = 57,["110"] = 56,["111"] = 56,["112"] = 56,["113"] = 56,["114"] = 56,["115"] = 61,["116"] = 61,["117"] = 62,["118"] = 62,["119"] = 62,["121"] = 62,["123"] = 61,["124"] = 65,["125"] = 65,["126"] = 65,["127"] = 65,["129"] = 65,["131"] = 65,["132"] = 65,["133"] = 66,["134"] = 65,["135"] = 65,["136"] = 65,["137"] = 65,["138"] = 65});
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["13"] = 1,["14"] = 1,["15"] = 3,["16"] = 3,["17"] = 3,["18"] = 6,["19"] = 7,["20"] = 6,["21"] = 10,["22"] = 11,["23"] = 10,["24"] = 14,["25"] = 17,["26"] = 18,["28"] = 19,["29"] = 14,["30"] = 22,["31"] = 23,["32"] = 22,["33"] = 26,["34"] = 27,["35"] = 26,["36"] = 30,["37"] = 31,["38"] = 30,["39"] = 34,["40"] = 35,["42"] = 36,["46"] = 37,["47"] = 34,["48"] = 40,["49"] = 41,["50"] = 41,["51"] = 41,["53"] = 41,["54"] = 40,["55"] = 44,["56"] = 47,["57"] = 47,["59"] = 48,["60"] = 44,["61"] = 51,["62"] = 52,["63"] = 52,["65"] = 53,["66"] = 51,["67"] = 56,["68"] = 57,["69"] = 57,["71"] = 58,["72"] = 56,["73"] = 61,["74"] = 62,["75"] = 62,["76"] = 62,["78"] = 62,["80"] = 62,["81"] = 61,["82"] = 65,["83"] = 66,["84"] = 66,["86"] = 67,["87"] = 65});
 local ____exports = {}
 local ____result = require("src.util.types.result")
 local Result = ____result.Result
@@ -3672,106 +3672,55 @@ end
 function Optional.prototype.isEmpty(self)
     return self.value == nil
 end
-function Optional.prototype.getValueUnsafe(self, ____)
-end
-local ____temp_0
-if message then
-    ____temp_0 = ____
-else
-    ____temp_0 = string
-end
-local ____ = TValue
-do
+function Optional.prototype.getValueUnsafe(self, message)
     if not self.value then
-        local ____Error_2 = Error
-        local ____message_1 = message
-        if ____message_1 == nil then
-            ____message_1 = "Cannot unwrap `Optional` value!"
-        end
         error(
-            __TS__New(____Error_2, ____message_1),
+            __TS__New(Error, message or "Cannot unwrap `Optional` value!"),
             0
         )
     end
     return self.value
 end
-getValueOrDefault(nil, defaultValue, TValue)
-local ____ = TValue
-do
-    local ____self_value_3 = self.value
-    if ____self_value_3 == nil then
-        ____self_value_3 = defaultValue
+function Optional.prototype.getValueOrDefault(self, defaultValue)
+    local ____self_value_0 = self.value
+    if ____self_value_0 == nil then
+        ____self_value_0 = defaultValue
     end
-    return ____self_value_3
+    return ____self_value_0
 end
-____then(
-    nil,
-    callback,
-    function(____, value) return TResult end
-)
-local ____ = ____exports.Optional < TResult > ({
-    ["if"] = function(self, ____)
-    end,
-    [""] = ____.value,
-    ["return"] = ____exports.Optional:empty(),
-    ["return"] = ____exports.Optional:of(callback(nil, self.value))
-})
-ifPresent(
-    nil,
-    callback,
-    function(____, value)
-        local ____ = ____
-        return nil
+Optional.prototype["then"] = function(self, callback)
+    if not self.value then
+        return ____exports.Optional:empty()
     end
-)
-local ____ = ____exports.Optional < TValue > ({
-    ["if"] = function(self)
-    end,
-    [""] = ____.value,
-    callback = function(self)
-    end,
-    [""] = ____.value,
-    ["return"] = self
-})
-ifEmpty(
-    nil,
-    callback,
-    function()
-        local ____ = ____
-        return nil
+    return ____exports.Optional:of(callback(nil, self.value))
+end
+function Optional.prototype.ifPresent(self, callback)
+    if self.value then
+        callback(nil, self.value)
     end
-)
-local ____ = ____exports.Optional < TValue > ({
-    ["if"] = function(self, ____)
-    end,
-    [""] = ____.value,
-    callback = nil,
-    ["return"] = self
-})
-____or(nil, other, ____exports.Optional)
-local ____temp_5 = ____exports.Optional < TValue
-local ____table_value_4
-if self.value then
-    ____table_value_4 = self
-else
-    ____table_value_4 = other
+    return self
 end
-local ____ = ____temp_5 > ({["return"] = ____table_value_4})
-local ____toResult_7 = toResult
-local ____errorMessage_6
-if errorMessage then
-    ____errorMessage_6 = ____
-else
-    ____errorMessage_6 = string
+function Optional.prototype.ifEmpty(self, callback)
+    if not self.value then
+        callback(nil)
+    end
+    return self
 end
-____toResult_7(nil, ____errorMessage_6)
-local ____ = Result < TValue > ({
-    ["if"] = function(self)
-    end,
-    [""] = ____.value,
-    ["return"] = Result:of(self.value),
-    ["return"] = Result:ofError(self.value, errorMessage)
-})
+Optional.prototype["or"] = function(self, other)
+    local ____table_value_1
+    if self.value then
+        ____table_value_1 = self
+    else
+        ____table_value_1 = other
+    end
+    return ____table_value_1
+end
+function Optional.prototype.toResult(self, errorMessage)
+    if self.value then
+        return Result:of(self.value)
+    end
+    return Result:ofError(self.value, errorMessage)
+end
 return ____exports
 
 end)
@@ -3786,7 +3735,7 @@ local TypeError = ____lualib.TypeError
 local URIError = ____lualib.URIError
 local __TS__New = ____lualib.__TS__New
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
-__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["13"] = 1,["14"] = 1,["15"] = 3,["16"] = 3,["17"] = 3,["18"] = 8,["19"] = 11,["21"] = 12,["25"] = 16,["26"] = 17,["27"] = 7,["28"] = 20,["29"] = 21,["30"] = 20,["31"] = 24,["32"] = 28,["33"] = 24,["34"] = 31,["35"] = 32,["36"] = 31,["37"] = 35,["38"] = 36,["39"] = 35,["40"] = 42,["41"] = 46,["42"] = 42,["43"] = 49,["44"] = 50,["45"] = 49,["46"] = 53,["47"] = 54,["48"] = 53,["49"] = 57,["50"] = 58,["51"] = 58,["53"] = 59,["54"] = 57,["55"] = 62,["56"] = 63,["57"] = 63,["59"] = 64,["60"] = 62,["61"] = 67,["62"] = 67,["63"] = 67,["64"] = 67,["65"] = 67,["67"] = 67,["69"] = 67,["71"] = 68,["72"] = 69,["73"] = 70,["74"] = 70,["75"] = 70,["77"] = 70,["78"] = 70,["79"] = 70,["82"] = 69,["86"] = 72,["88"] = 75,["89"] = 75,["91"] = 76,["92"] = 76,["93"] = 76,["95"] = 76,["97"] = 79,["98"] = 79,["100"] = 80,["102"] = 83,["103"] = 83,["104"] = 87,["105"] = 87,["106"] = 87,["107"] = 87,["108"] = 87,["109"] = 89,["110"] = 90,["111"] = 89,["112"] = 89,["113"] = 89,["114"] = 89,["115"] = 89});
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["13"] = 1,["14"] = 1,["15"] = 3,["16"] = 3,["17"] = 3,["18"] = 8,["19"] = 11,["21"] = 12,["25"] = 16,["26"] = 17,["27"] = 7,["28"] = 20,["29"] = 21,["30"] = 20,["31"] = 24,["32"] = 28,["33"] = 24,["34"] = 31,["35"] = 32,["36"] = 31,["37"] = 35,["38"] = 36,["39"] = 35,["40"] = 42,["41"] = 46,["42"] = 42,["43"] = 49,["44"] = 50,["45"] = 49,["46"] = 53,["47"] = 54,["48"] = 53,["49"] = 57,["50"] = 58,["51"] = 58,["53"] = 59,["54"] = 57,["55"] = 62,["56"] = 63,["57"] = 63,["59"] = 64,["60"] = 62,["61"] = 67,["62"] = 68,["64"] = 69,["68"] = 72,["69"] = 67,["70"] = 75,["71"] = 76,["72"] = 76,["73"] = 76,["75"] = 76,["76"] = 75,["77"] = 79,["78"] = 80,["79"] = 79,["80"] = 83,["81"] = 84,["82"] = 83,["83"] = 87,["84"] = 90,["85"] = 90,["87"] = 91,["88"] = 87});
 local ____exports = {}
 local ____optional = require("src.util.types.optional")
 local Optional = ____optional.Optional
@@ -3836,61 +3785,34 @@ function Result.prototype.ifError(self, callback)
     end
     return self
 end
-function Result.prototype.getValueUnsafe(self, ____)
-end
-local ____temp_0
-if message then
-    ____temp_0 = ____
-else
-    ____temp_0 = string
-end
-local ____ = TValue
-do
+function Result.prototype.getValueUnsafe(self, message)
     if not self.value then
-        local ____Error_3 = Error
-        local ____message_1 = message
-        if ____message_1 == nil then
-            ____message_1 = self.errorMessage
-        end
-        local ____message_1_2 = ____message_1
-        if ____message_1_2 == nil then
-            ____message_1_2 = "Cannot unwrap `Result` value"
-        end
         error(
-            __TS__New(____Error_3, ____message_1_2),
+            __TS__New(Error, message or self.errorMessage or "Cannot unwrap `Result` value"),
             0
         )
     end
     return self.value
 end
-getValueOrDefault(nil, defaultValue, TValue)
-local ____ = TValue
-do
-    local ____self_value_4 = self.value
-    if ____self_value_4 == nil then
-        ____self_value_4 = defaultValue
+function Result.prototype.getValueOrDefault(self, defaultValue)
+    local ____self_value_0 = self.value
+    if ____self_value_0 == nil then
+        ____self_value_0 = defaultValue
     end
-    return ____self_value_4
+    return ____self_value_0
 end
-getErrorMessage(nil)
-bit.bor(string, nil)
-do
+function Result.prototype.getErrorMessage(self)
     return self.errorMessage
 end
-asOptional(nil)
-local ____ = Optional < TValue > ({["return"] = Optional:of(self.value)})
-____then(
-    nil,
-    callback,
-    function(____, value) return TResult end
-)
-local ____ = ____exports.Result < TResult > ({
-    ["if"] = function(self, ____)
-    end,
-    [""] = ____.value,
-    ["return"] = ____exports.Result:error(self.errorMessage),
-    ["return"] = ____exports.Result:of(callback(nil, self.value))
-})
+function Result.prototype.asOptional(self)
+    return Optional:of(self.value)
+end
+Result.prototype["then"] = function(self, callback)
+    if not self.value then
+        return ____exports.Result:error(self.errorMessage)
+    end
+    return ____exports.Result:of(callback(nil, self.value))
+end
 return ____exports
 
 end)
@@ -4028,7 +3950,7 @@ function Entrypoint.prototype.registerRoute(self, name, callback)
     self._routes:set(name, callback)
 end
 function Entrypoint.prototype.dispatchRoute(self)
-    local targetRouteName = ExecutionContext.commandLineArguments:first():getValueUnsafe("EC23 - " .. "The first command line argument (route name) was not provided")
+    local targetRouteName = ExecutionContext.commandLineArguments:first():getValueUnsafe("EC20 - " .. "The first command line argument (route name) was not provided")
     self._routes:get(targetRouteName):ifEmpty(function()
         local validRouteNamesString = ("'" .. self._routes:keys():join("', '")) .. "'"
         error(
@@ -4068,7 +3990,7 @@ function DiscordWebhookLogListener.prototype.onLog(self, level, message)
 end
 DiscordWebhookLogListener._webhook = DiscordWebhook:fromUrl(
     "ComputerCraft",
-    Environment:get("DISCORD_WEBHOOK_URL"):getValueUnsafe("EC22 - " .. "Failed to get `DISCORD_WEBHOOK_URL` from environment")
+    Environment:get("DISCORD_WEBHOOK_URL"):getValueUnsafe("EC19 - " .. "Failed to get `DISCORD_WEBHOOK_URL` from environment")
 )
 return ____exports
 
@@ -4107,17 +4029,17 @@ function Environment.get(self, key)
 end
 function Environment.set(self, key, value)
     if not FileUtil:exists(self._path) then
-        FileUtil:writeText(self._path, ""):getValueUnsafe("EC5")
+        FileUtil:writeText(self._path, ""):getValueUnsafe("EC2")
     end
-    local content = FileUtil:readText(self._path):getValueUnsafe("EC6 - " .. "Could not read from .env file")
+    local content = FileUtil:readText(self._path):getValueUnsafe("EC3 - " .. "Could not read from .env file")
     content = content .. (("\n" .. key) .. "=") .. value
-    FileUtil:writeText(self._path, content):getValueUnsafe("EC7 - " .. "Could not write to .env file")
+    FileUtil:writeText(self._path, content):getValueUnsafe("EC4 - " .. "Could not write to .env file")
 end
 function Environment.load(self)
     if not FileUtil:exists(self._path) then
-        FileUtil:writeText(self._path, ""):getValueUnsafe("EC8")
+        FileUtil:writeText(self._path, ""):getValueUnsafe("EC5")
     end
-    local content = FileUtil:readText(self._path):getValueUnsafe("EC9 - " .. "Could not read from .env file")
+    local content = FileUtil:readText(self._path):getValueUnsafe("EC6 - " .. "Could not read from .env file")
     local lines = __TS__StringSplit(content, "\n")
     local output = LuaMap:empty()
     __TS__ArrayForEach(
@@ -4173,7 +4095,7 @@ function FileUtil.readText(self, path)
     if file:isError() then
         return Result:error(file:getErrorMessage())
     end
-    local handle = file:getValueUnsafe("EC10 - " .. "No file")
+    local handle = file:getValueUnsafe("EC7 - " .. "No file")
     local content = handle:readAllContent()
     handle:close()
     if content == nil then
@@ -4190,7 +4112,7 @@ function FileUtil.writeText(self, path, content)
     if file:isError() then
         return Result:error(file:getErrorMessage())
     end
-    local handle = file:getValueUnsafe("EC11 - " .. "No file")
+    local handle = file:getValueUnsafe("EC8 - " .. "No file")
     do
         local function ____catch(e)
             local ____Result_3 = Result
@@ -4225,7 +4147,7 @@ function FileUtil.appendText(self, path, content)
     if file:isError() then
         return Result:error(file:getErrorMessage())
     end
-    local handle = file:getValueUnsafe("EC12 - " .. "No file")
+    local handle = file:getValueUnsafe("EC9 - " .. "No file")
     do
         local function ____catch(e)
             local ____Result_8 = Result
@@ -4333,7 +4255,7 @@ function FileUtil.getFileSize(self, path)
     local ____self_25 = ____exports.FileUtil:readText(path)
     return ____self_25["then"](
         ____self_25,
-        function(____, content) return content.length end
+        function(____, content) return #content end
     )
 end
 function FileUtil.getFiles(self, path)
@@ -4511,7 +4433,7 @@ function FileUtil.removeByteOrderMark(self, path)
     if contentResult:isError() then
         return Result:error(contentResult:getErrorMessage())
     end
-    local content = contentResult:getValueUnsafe("EC13 - " .. "No file")
+    local content = contentResult:getValueUnsafe("EC10 - " .. "No file")
     if not __TS__StringStartsWith(content, "?") then
         return Result:void()
     end
@@ -4840,8 +4762,8 @@ function DiscordWebhook.fromUrl(self, username, url)
 end
 function DiscordWebhook.prototype.sendWebhookData(self, data)
     local headers = {["Content-Type"] = "application/json"}
-    local body = CcTextUtils:serializeJSON(data):getValueUnsafe("EC19 - " .. "Could not serialize POST data for Discord webhook")
-    local response = CcHttp:post(self._url, body, headers):getValueUnsafe("EC20 - " .. "Could not send Discord webhook")
+    local body = CcTextUtils:serializeJSON(data):getValueUnsafe("EC16 - " .. "Could not serialize POST data for Discord webhook")
+    local response = CcHttp:post(self._url, body, headers):getValueUnsafe("EC17 - " .. "Could not send Discord webhook")
     if not __TS__StringStartsWith(
         response:getResponseCode(),
         "2"
@@ -4849,7 +4771,7 @@ function DiscordWebhook.prototype.sendWebhookData(self, data)
         print(("Code: '" .. response:getResponseCode()) .. "'")
         print(("Message: '" .. response:readAllContent()) .. "'")
         error(
-            Unsafe:throwUnsafe("EC21 - " .. ("Discord webhook returned an error: '" .. response:getResponseCode()) .. "'"),
+            Unsafe:throwUnsafe("EC18 - " .. ("Discord webhook returned an error: '" .. response:getResponseCode()) .. "'"),
             0
         )
     end
@@ -4887,7 +4809,7 @@ local TypeError = ____lualib.TypeError
 local URIError = ____lualib.URIError
 local __TS__New = ____lualib.__TS__New
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
-__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["17"] = 7,["18"] = 7,["19"] = 7,["21"] = 7,["22"] = 14,["23"] = 14,["24"] = 14,["25"] = 14,["26"] = 14,["28"] = 14,["30"] = 14,["32"] = 15,["33"] = 15,["34"] = 15,["35"] = 15,["38"] = 15});
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["17"] = 7,["18"] = 7,["19"] = 7,["21"] = 7,["22"] = 14,["24"] = 15,["27"] = 14});
 local ____exports = {}
 --- The Unsafe class provides utility methods that intentionally perform unsafe operations,
 -- such as throwing errors, to signal misuse or prevent unintended behavior.
@@ -4898,23 +4820,9 @@ local Unsafe = ____exports.Unsafe
 Unsafe.name = "Unsafe"
 function Unsafe.prototype.____constructor(self)
 end
-function Unsafe.throwUnsafe(self, ____)
-end
-local ____temp_0
-if message then
-    ____temp_0 = ____
-else
-    ____temp_0 = string
-end
-local ____ = never
-do
-    local ____Error_2 = Error
-    local ____message_1 = message
-    if ____message_1 == nil then
-        ____message_1 = "Unsafe operation"
-    end
+function Unsafe.throwUnsafe(self, message)
     error(
-        __TS__New(____Error_2, ____message_1),
+        __TS__New(Error, message or "Unsafe operation"),
         0
     )
 end
@@ -5260,8 +5168,8 @@ function Info.prototype.____constructor(self, model)
     self.lifetime = model.lifetime
 end
 function Info.load(self)
-    local contentString = FileUtil:readText(self._path):getValueUnsafe("EC17 - " .. "Could not read info.json")
-    local content = CcTextUtils:unserializeJSON(contentString):getValueUnsafe("EC18 - " .. "Could not parse info.json")
+    local contentString = FileUtil:readText(self._path):getValueUnsafe("EC14 - " .. "Could not read info.json")
+    local content = CcTextUtils:unserializeJSON(contentString):getValueUnsafe("EC15 - " .. "Could not parse info.json")
     return __TS__New(____exports.Info, content)
 end
 Info._path = "info.json"
