@@ -3132,12 +3132,6 @@ local __TS__ArrayFrom = ____lualib.__TS__ArrayFrom
 local __TS__ArrayJoin = ____lualib.__TS__ArrayJoin
 local __TS__ArrayForEach = ____lualib.__TS__ArrayForEach
 local __TS__ArrayUnshift = ____lualib.__TS__ArrayUnshift
-local Error = ____lualib.Error
-local RangeError = ____lualib.RangeError
-local ReferenceError = ____lualib.ReferenceError
-local SyntaxError = ____lualib.SyntaxError
-local TypeError = ____lualib.TypeError
-local URIError = ____lualib.URIError
 local __TS__ArraySplice = ____lualib.__TS__ArraySplice
 local __TS__ArrayIndexOf = ____lualib.__TS__ArrayIndexOf
 local __TS__ArrayIncludes = ____lualib.__TS__ArrayIncludes
@@ -3154,7 +3148,7 @@ local __TS__ArraySlice = ____lualib.__TS__ArraySlice
 local Set = ____lualib.Set
 local __TS__Spread = ____lualib.__TS__Spread
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
-__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["32"] = 1,["33"] = 1,["34"] = 2,["35"] = 2,["36"] = 3,["37"] = 3,["38"] = 5,["39"] = 5,["40"] = 7,["41"] = 7,["42"] = 7,["43"] = 10,["44"] = 8,["45"] = 11,["46"] = 10,["47"] = 14,["48"] = 15,["49"] = 14,["50"] = 18,["51"] = 19,["52"] = 20,["53"] = 21,["54"] = 22,["55"] = 23,["56"] = 18,["57"] = 26,["58"] = 27,["59"] = 26,["60"] = 30,["61"] = 31,["62"] = 31,["63"] = 31,["64"] = 31,["65"] = 31,["66"] = 31,["67"] = 31,["68"] = 30,["69"] = 34,["70"] = 35,["71"] = 35,["72"] = 35,["73"] = 35,["74"] = 34,["75"] = 38,["76"] = 39,["77"] = 38,["78"] = 42,["79"] = 43,["80"] = 42,["81"] = 46,["82"] = 47,["83"] = 46,["84"] = 50,["85"] = 51,["86"] = 51,["87"] = 52,["88"] = 50,["89"] = 55,["90"] = 58,["91"] = 59,["92"] = 55,["93"] = 62,["94"] = 63,["95"] = 64,["96"] = 62,["97"] = 67,["98"] = 68,["99"] = 69,["100"] = 67,["101"] = 72,["102"] = 73,["103"] = 73,["105"] = 74,["106"] = 72,["107"] = 77,["108"] = 78,["109"] = 78,["111"] = 79,["112"] = 77,["113"] = 82,["114"] = 83,["116"] = 84,["120"] = 85,["121"] = 82,["122"] = 88,["123"] = 89,["124"] = 90,["125"] = 90,["127"] = 91,["128"] = 92,["129"] = 88,["130"] = 95,["131"] = 96,["132"] = 97,["133"] = 95,["134"] = 100,["135"] = 101,["136"] = 100,["137"] = 104,["138"] = 105,["139"] = 105,["140"] = 105,["141"] = 105,["142"] = 104,["143"] = 108,["144"] = 109,["145"] = 109,["146"] = 109,["147"] = 109,["148"] = 108,["149"] = 112,["150"] = 113,["151"] = 112,["152"] = 116,["153"] = 117,["154"] = 116,["155"] = 120,["156"] = 121,["157"] = 120,["158"] = 124,["159"] = 125,["160"] = 125,["161"] = 125,["162"] = 125,["163"] = 124,["164"] = 128,["165"] = 131,["166"] = 131,["167"] = 131,["168"] = 131,["169"] = 128,["170"] = 134,["171"] = 135,["172"] = 134,["173"] = 138,["174"] = 139,["175"] = 139,["176"] = 139,["177"] = 139,["178"] = 138,["179"] = 144,["180"] = 145,["181"] = 144,["182"] = 148,["183"] = 149,["184"] = 150,["185"] = 148,["186"] = 153,["187"] = 156,["188"] = 156,["189"] = 156,["190"] = 156,["191"] = 153,["192"] = 159,["193"] = 160,["194"] = 160,["195"] = 160,["196"] = 160,["197"] = 159,["198"] = 163,["199"] = 167,["200"] = 163,["201"] = 170,["202"] = 171,["203"] = 171,["205"] = 172,["206"] = 170,["207"] = 175,["208"] = 176,["209"] = 176,["211"] = 177,["212"] = 175,["213"] = 180,["214"] = 181,["215"] = 181,["217"] = 182,["218"] = 180,["219"] = 185,["220"] = 186,["221"] = 186,["223"] = 187,["224"] = 185,["225"] = 190,["226"] = 191,["227"] = 190,["228"] = 194,["229"] = 195,["230"] = 194,["231"] = 198,["232"] = 199,["233"] = 199,["234"] = 199,["235"] = 199,["236"] = 198,["237"] = 205,["238"] = 206,["239"] = 206,["241"] = 207,["242"] = 205,["243"] = 210,["244"] = 211,["245"] = 211,["247"] = 212,["248"] = 210,["249"] = 215,["250"] = 216,["251"] = 216,["253"] = 218,["254"] = 219,["256"] = 221,["257"] = 221,["258"] = 222,["259"] = 223,["260"] = 225,["261"] = 226,["262"] = 227,["264"] = 221,["267"] = 231,["268"] = 215,["269"] = 234,["270"] = 235,["271"] = 235,["273"] = 236,["274"] = 234,["275"] = 239,["276"] = 240,["277"] = 240,["279"] = 242,["280"] = 243,["282"] = 245,["283"] = 245,["284"] = 246,["285"] = 247,["286"] = 249,["287"] = 250,["288"] = 251,["290"] = 245,["293"] = 255,["294"] = 239,["295"] = 258,["296"] = 259,["297"] = 259,["298"] = 259,["299"] = 259,["300"] = 258,["301"] = 262,["302"] = 263,["303"] = 263,["304"] = 263,["305"] = 263,["306"] = 262,["307"] = 266,["308"] = 267,["309"] = 267,["310"] = 267,["311"] = 267,["312"] = 266,["313"] = 270,["314"] = 271,["315"] = 271,["316"] = 271,["317"] = 271,["318"] = 270,["319"] = 274,["320"] = 275,["321"] = 274,["322"] = 278,["323"] = 279,["324"] = 278,["325"] = 282,["326"] = 283,["327"] = 282});
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["26"] = 1,["27"] = 1,["28"] = 2,["29"] = 2,["30"] = 3,["31"] = 3,["32"] = 5,["33"] = 5,["34"] = 6,["35"] = 6,["36"] = 8,["37"] = 8,["38"] = 8,["39"] = 11,["40"] = 9,["41"] = 12,["42"] = 11,["43"] = 15,["44"] = 16,["45"] = 15,["46"] = 19,["47"] = 20,["48"] = 21,["49"] = 22,["50"] = 23,["51"] = 24,["52"] = 19,["53"] = 27,["54"] = 28,["55"] = 27,["56"] = 31,["57"] = 32,["58"] = 32,["59"] = 32,["60"] = 32,["61"] = 32,["62"] = 32,["63"] = 32,["64"] = 31,["65"] = 35,["66"] = 36,["67"] = 36,["68"] = 36,["69"] = 36,["70"] = 35,["71"] = 39,["72"] = 40,["73"] = 39,["74"] = 43,["75"] = 44,["76"] = 43,["77"] = 47,["78"] = 48,["79"] = 47,["80"] = 51,["81"] = 52,["82"] = 52,["83"] = 53,["84"] = 51,["85"] = 56,["86"] = 59,["87"] = 60,["88"] = 56,["89"] = 63,["90"] = 64,["91"] = 65,["92"] = 63,["93"] = 68,["94"] = 69,["95"] = 70,["96"] = 68,["97"] = 73,["98"] = 74,["99"] = 74,["101"] = 75,["102"] = 73,["103"] = 78,["104"] = 79,["105"] = 79,["107"] = 80,["108"] = 78,["109"] = 83,["110"] = 84,["111"] = 85,["113"] = 86,["114"] = 83,["115"] = 89,["116"] = 90,["117"] = 91,["118"] = 91,["120"] = 92,["121"] = 93,["122"] = 89,["123"] = 96,["124"] = 97,["125"] = 98,["126"] = 96,["127"] = 101,["128"] = 102,["129"] = 101,["130"] = 105,["131"] = 106,["132"] = 106,["133"] = 106,["134"] = 106,["135"] = 105,["136"] = 109,["137"] = 110,["138"] = 110,["139"] = 110,["140"] = 110,["141"] = 109,["142"] = 113,["143"] = 114,["144"] = 113,["145"] = 117,["146"] = 118,["147"] = 117,["148"] = 121,["149"] = 122,["150"] = 121,["151"] = 125,["152"] = 126,["153"] = 126,["154"] = 126,["155"] = 126,["156"] = 125,["157"] = 129,["158"] = 132,["159"] = 132,["160"] = 132,["161"] = 132,["162"] = 129,["163"] = 135,["164"] = 136,["165"] = 135,["166"] = 139,["167"] = 140,["168"] = 140,["169"] = 140,["170"] = 140,["171"] = 139,["172"] = 145,["173"] = 146,["174"] = 145,["175"] = 149,["176"] = 150,["177"] = 151,["178"] = 149,["179"] = 154,["180"] = 157,["181"] = 157,["182"] = 157,["183"] = 157,["184"] = 154,["185"] = 160,["186"] = 161,["187"] = 161,["188"] = 161,["189"] = 161,["190"] = 160,["191"] = 164,["192"] = 168,["193"] = 164,["194"] = 171,["195"] = 172,["196"] = 172,["198"] = 173,["199"] = 171,["200"] = 176,["201"] = 177,["202"] = 177,["204"] = 178,["205"] = 176,["206"] = 181,["207"] = 182,["208"] = 182,["210"] = 183,["211"] = 181,["212"] = 186,["213"] = 187,["214"] = 187,["216"] = 188,["217"] = 186,["218"] = 191,["219"] = 192,["220"] = 191,["221"] = 195,["222"] = 196,["223"] = 195,["224"] = 199,["225"] = 200,["226"] = 200,["227"] = 200,["228"] = 200,["229"] = 199,["230"] = 206,["231"] = 207,["232"] = 207,["234"] = 208,["235"] = 206,["236"] = 211,["237"] = 212,["238"] = 212,["240"] = 213,["241"] = 211,["242"] = 216,["243"] = 217,["244"] = 217,["246"] = 219,["247"] = 220,["249"] = 222,["250"] = 222,["251"] = 223,["252"] = 224,["253"] = 226,["254"] = 227,["255"] = 228,["257"] = 222,["260"] = 232,["261"] = 216,["262"] = 235,["263"] = 236,["264"] = 236,["266"] = 237,["267"] = 235,["268"] = 240,["269"] = 241,["270"] = 241,["272"] = 243,["273"] = 244,["275"] = 246,["276"] = 246,["277"] = 247,["278"] = 248,["279"] = 250,["280"] = 251,["281"] = 252,["283"] = 246,["286"] = 256,["287"] = 240,["288"] = 259,["289"] = 260,["290"] = 260,["291"] = 260,["292"] = 260,["293"] = 259,["294"] = 263,["295"] = 264,["296"] = 264,["297"] = 264,["298"] = 264,["299"] = 263,["300"] = 267,["301"] = 268,["302"] = 268,["303"] = 268,["304"] = 268,["305"] = 267,["306"] = 271,["307"] = 272,["308"] = 272,["309"] = 272,["310"] = 272,["311"] = 271,["312"] = 275,["313"] = 276,["314"] = 275,["315"] = 279,["316"] = 280,["317"] = 279,["318"] = 283,["319"] = 284,["320"] = 283});
 local ____exports = {}
 local ____optional = require("src.util.types.optional")
 local Optional = ____optional.Optional
@@ -3164,6 +3158,8 @@ local ____lua = require("src.lua.lua")
 local Lua = ____lua.Lua
 local ____tableUtil = require("src.util.computer.api.tier1.lua.tableUtil")
 local TableUtil = ____tableUtil.TableUtil
+local ____unsafe = require("src.util.types.unsafe")
+local Unsafe = ____unsafe.Unsafe
 ____exports.LuaList = __TS__Class()
 local LuaList = ____exports.LuaList
 LuaList.name = "LuaList"
@@ -3239,10 +3235,7 @@ function LuaList.prototype.removeLast(self)
 end
 function LuaList.prototype.removeAt(self, index)
     if index < 0 or index >= #self.elements then
-        error(
-            __TS__New(Error, "Index was out of range"),
-            0
-        )
+        Unsafe:throwUnsafe("EC39 - " .. "Index was out of range")
     end
     return __TS__ArraySplice(self.elements, index, 1)[1]
 end
@@ -3455,6 +3448,43 @@ end
 return ____exports
 
 end)
+__bundle_register("src.util.types.unsafe", function(require, _LOADED, __bundle_register, __bundle_modules)
+local ____lualib = require("lualib_bundle")
+local __TS__Class = ____lualib.__TS__Class
+local Error = ____lualib.Error
+local RangeError = ____lualib.RangeError
+local ReferenceError = ____lualib.ReferenceError
+local SyntaxError = ____lualib.SyntaxError
+local TypeError = ____lualib.TypeError
+local URIError = ____lualib.URIError
+local __TS__New = ____lualib.__TS__New
+local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["17"] = 7,["18"] = 7,["19"] = 7,["21"] = 7,["22"] = 15,["24"] = 16,["27"] = 15,["28"] = 25,["30"] = 26,["33"] = 25});
+local ____exports = {}
+--- The Unsafe class provides utility methods that intentionally perform unsafe operations,
+-- such as throwing errors, to signal misuse or prevent unintended behavior.
+-- 
+-- Integrates with the build process to ensure that useful error codes are generated.
+____exports.Unsafe = __TS__Class()
+local Unsafe = ____exports.Unsafe
+Unsafe.name = "Unsafe"
+function Unsafe.prototype.____constructor(self)
+end
+function Unsafe.throwUnsafe(self, message)
+    error(
+        __TS__New(Error, message or "Unsafe operation"),
+        0
+    )
+end
+function Unsafe.throwWithoutErrorCode(self, message)
+    error(
+        __TS__New(Error, message or "Unsafe operation"),
+        0
+    )
+end
+return ____exports
+
+end)
 __bundle_register("src.util.computer.api.tier1.lua.tableUtil", function(require, _LOADED, __bundle_register, __bundle_modules)
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
@@ -3490,26 +3520,18 @@ end)
 __bundle_register("src.lua.lua", function(require, _LOADED, __bundle_register, __bundle_modules)
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
-local Error = ____lualib.Error
-local RangeError = ____lualib.RangeError
-local ReferenceError = ____lualib.ReferenceError
-local SyntaxError = ____lualib.SyntaxError
-local TypeError = ____lualib.TypeError
-local URIError = ____lualib.URIError
-local __TS__New = ____lualib.__TS__New
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
-__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["13"] = 1,["14"] = 1,["15"] = 1,["17"] = 1,["18"] = 2,["20"] = 3,["23"] = 2});
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["6"] = 1,["7"] = 1,["8"] = 3,["9"] = 3,["10"] = 3,["12"] = 3,["13"] = 4,["14"] = 5,["15"] = 4});
 local ____exports = {}
+local ____unsafe = require("src.util.types.unsafe")
+local Unsafe = ____unsafe.Unsafe
 ____exports.Lua = __TS__Class()
 local Lua = ____exports.Lua
 Lua.name = "Lua"
 function Lua.prototype.____constructor(self)
 end
 function Lua.literal(self, luaVersion)
-    error(
-        __TS__New(Error, ("Lua.literal(" .. luaVersion) .. ") has no Typescript alternative"),
-        0
-    )
+    Unsafe:throwUnsafe("EC1 - " .. ("Lua.literal(" .. luaVersion) .. ") has no Typescript alternative")
 end
 return ____exports
 
@@ -3637,17 +3659,13 @@ __bundle_register("src.util.types.optional", function(require, _LOADED, __bundle
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
 local __TS__New = ____lualib.__TS__New
-local Error = ____lualib.Error
-local RangeError = ____lualib.RangeError
-local ReferenceError = ____lualib.ReferenceError
-local SyntaxError = ____lualib.SyntaxError
-local TypeError = ____lualib.TypeError
-local URIError = ____lualib.URIError
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
-__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["13"] = 1,["14"] = 1,["15"] = 3,["16"] = 3,["17"] = 3,["18"] = 6,["19"] = 7,["20"] = 6,["21"] = 10,["22"] = 11,["23"] = 10,["24"] = 14,["25"] = 17,["26"] = 18,["28"] = 19,["29"] = 14,["30"] = 22,["31"] = 23,["32"] = 22,["33"] = 26,["34"] = 27,["35"] = 26,["36"] = 30,["37"] = 31,["38"] = 30,["39"] = 34,["40"] = 35,["42"] = 36,["46"] = 37,["47"] = 34,["48"] = 40,["49"] = 41,["50"] = 41,["51"] = 41,["53"] = 41,["54"] = 40,["55"] = 44,["56"] = 47,["57"] = 47,["59"] = 48,["60"] = 44,["61"] = 51,["62"] = 52,["63"] = 52,["65"] = 53,["66"] = 51,["67"] = 56,["68"] = 57,["69"] = 57,["71"] = 58,["72"] = 56,["73"] = 61,["74"] = 62,["75"] = 62,["76"] = 62,["78"] = 62,["80"] = 62,["81"] = 61,["82"] = 65,["83"] = 66,["84"] = 66,["86"] = 67,["87"] = 65});
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["7"] = 1,["8"] = 1,["9"] = 2,["10"] = 2,["11"] = 4,["12"] = 4,["13"] = 4,["14"] = 7,["15"] = 8,["16"] = 7,["17"] = 11,["18"] = 12,["19"] = 11,["20"] = 15,["21"] = 18,["22"] = 19,["24"] = 20,["25"] = 15,["26"] = 23,["27"] = 24,["28"] = 23,["29"] = 27,["30"] = 28,["31"] = 27,["32"] = 31,["33"] = 32,["34"] = 31,["35"] = 35,["36"] = 36,["37"] = 37,["39"] = 38,["40"] = 35,["41"] = 41,["42"] = 42,["43"] = 42,["44"] = 42,["46"] = 42,["47"] = 41,["48"] = 45,["49"] = 48,["50"] = 48,["52"] = 49,["53"] = 45,["54"] = 52,["55"] = 53,["56"] = 53,["58"] = 54,["59"] = 52,["60"] = 57,["61"] = 58,["62"] = 58,["64"] = 59,["65"] = 57,["66"] = 62,["67"] = 63,["68"] = 63,["69"] = 63,["71"] = 63,["73"] = 63,["74"] = 62,["75"] = 66,["76"] = 67,["77"] = 67,["79"] = 68,["80"] = 66});
 local ____exports = {}
 local ____result = require("src.util.types.result")
 local Result = ____result.Result
+local ____unsafe = require("src.util.types.unsafe")
+local Unsafe = ____unsafe.Unsafe
 ____exports.Optional = __TS__Class()
 local Optional = ____exports.Optional
 Optional.name = "Optional"
@@ -3674,10 +3692,7 @@ function Optional.prototype.isEmpty(self)
 end
 function Optional.prototype.getValueUnsafe(self, message)
     if not self.value then
-        error(
-            __TS__New(Error, message or "Cannot unwrap `Optional` value!"),
-            0
-        )
+        Unsafe:throwUnsafe("EC36 - " .. message or "Cannot unwrap `Optional` value!")
     end
     return self.value
 end
@@ -3727,27 +3742,20 @@ end)
 __bundle_register("src.util.types.result", function(require, _LOADED, __bundle_register, __bundle_modules)
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
-local Error = ____lualib.Error
-local RangeError = ____lualib.RangeError
-local ReferenceError = ____lualib.ReferenceError
-local SyntaxError = ____lualib.SyntaxError
-local TypeError = ____lualib.TypeError
-local URIError = ____lualib.URIError
 local __TS__New = ____lualib.__TS__New
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
-__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["13"] = 1,["14"] = 1,["15"] = 3,["16"] = 3,["17"] = 3,["18"] = 8,["19"] = 11,["21"] = 12,["25"] = 16,["26"] = 17,["27"] = 7,["28"] = 20,["29"] = 21,["30"] = 20,["31"] = 24,["32"] = 28,["33"] = 24,["34"] = 31,["35"] = 32,["36"] = 31,["37"] = 35,["38"] = 36,["39"] = 35,["40"] = 42,["41"] = 46,["42"] = 42,["43"] = 49,["44"] = 50,["45"] = 49,["46"] = 53,["47"] = 54,["48"] = 53,["49"] = 57,["50"] = 58,["51"] = 58,["53"] = 59,["54"] = 57,["55"] = 62,["56"] = 63,["57"] = 63,["59"] = 64,["60"] = 62,["61"] = 67,["62"] = 68,["64"] = 69,["68"] = 72,["69"] = 67,["70"] = 75,["71"] = 76,["72"] = 76,["73"] = 76,["75"] = 76,["76"] = 75,["77"] = 79,["78"] = 80,["79"] = 79,["80"] = 83,["81"] = 84,["82"] = 83,["83"] = 87,["84"] = 90,["85"] = 90,["87"] = 91,["88"] = 87});
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["7"] = 1,["8"] = 1,["9"] = 2,["10"] = 2,["11"] = 4,["12"] = 4,["13"] = 4,["14"] = 9,["15"] = 12,["16"] = 13,["18"] = 17,["19"] = 18,["20"] = 8,["21"] = 21,["22"] = 22,["23"] = 21,["24"] = 25,["25"] = 29,["26"] = 25,["27"] = 32,["28"] = 33,["29"] = 32,["30"] = 36,["31"] = 37,["32"] = 36,["33"] = 43,["34"] = 47,["35"] = 43,["36"] = 50,["37"] = 51,["38"] = 50,["39"] = 54,["40"] = 55,["41"] = 54,["42"] = 58,["43"] = 59,["44"] = 59,["46"] = 60,["47"] = 58,["48"] = 63,["49"] = 64,["50"] = 64,["52"] = 65,["53"] = 63,["54"] = 68,["55"] = 69,["56"] = 70,["58"] = 73,["59"] = 68,["60"] = 76,["61"] = 77,["62"] = 77,["63"] = 77,["65"] = 77,["66"] = 76,["67"] = 80,["68"] = 81,["69"] = 80,["70"] = 84,["71"] = 85,["72"] = 84,["73"] = 88,["74"] = 91,["75"] = 91,["77"] = 92,["78"] = 88});
 local ____exports = {}
 local ____optional = require("src.util.types.optional")
 local Optional = ____optional.Optional
+local ____unsafe = require("src.util.types.unsafe")
+local Unsafe = ____unsafe.Unsafe
 ____exports.Result = __TS__Class()
 local Result = ____exports.Result
 Result.name = "Result"
 function Result.prototype.____constructor(self, value, errorMessage)
     if value == nil and errorMessage == nil then
-        error(
-            __TS__New(Error, "Cannot create a result with both undefined values"),
-            0
-        )
+        Unsafe:throwUnsafe("EC37 - " .. "Cannot create a result with both undefined values")
     end
     self.value = value
     self.errorMessage = errorMessage
@@ -3787,10 +3795,7 @@ function Result.prototype.ifError(self, callback)
 end
 function Result.prototype.getValueUnsafe(self, message)
     if not self.value then
-        error(
-            __TS__New(Error, message or self.errorMessage or "Cannot unwrap `Result` value"),
-            0
-        )
+        Unsafe:throwUnsafe("EC38 - " .. message or self.errorMessage or "Cannot unwrap `Result` value")
     end
     return self.value
 end
@@ -3879,14 +3884,8 @@ local __TS__Class = ____lualib.__TS__Class
 local __TS__New = ____lualib.__TS__New
 local __TS__StringReplace = ____lualib.__TS__StringReplace
 local __TS__StringStartsWith = ____lualib.__TS__StringStartsWith
-local Error = ____lualib.Error
-local RangeError = ____lualib.RangeError
-local ReferenceError = ____lualib.ReferenceError
-local SyntaxError = ____lualib.SyntaxError
-local TypeError = ____lualib.TypeError
-local URIError = ____lualib.URIError
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
-__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["15"] = 1,["16"] = 1,["17"] = 2,["18"] = 2,["19"] = 3,["20"] = 3,["21"] = 4,["22"] = 4,["23"] = 5,["24"] = 5,["25"] = 7,["26"] = 7,["27"] = 8,["28"] = 8,["32"] = 15,["33"] = 15,["34"] = 15,["36"] = 24,["37"] = 15,["38"] = 31,["39"] = 32,["40"] = 33,["41"] = 34,["44"] = 39,["47"] = 37,["53"] = 42,["54"] = 31,["55"] = 50,["56"] = 51,["57"] = 53,["58"] = 53,["59"] = 54,["61"] = 57,["62"] = 57,["63"] = 58,["65"] = 61,["66"] = 61,["67"] = 62,["69"] = 50,["70"] = 71,["71"] = 72,["72"] = 71,["73"] = 87,["74"] = 88,["75"] = 87,["76"] = 107,["77"] = 108,["78"] = 114,["79"] = 117,["81"] = 119,["84"] = 114,["85"] = 107,["86"] = 142,["87"] = 143,["88"] = 142});
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["9"] = 1,["10"] = 1,["11"] = 2,["12"] = 2,["13"] = 3,["14"] = 3,["15"] = 4,["16"] = 4,["17"] = 5,["18"] = 5,["19"] = 7,["20"] = 7,["21"] = 8,["22"] = 8,["23"] = 9,["24"] = 9,["28"] = 16,["29"] = 16,["30"] = 16,["32"] = 25,["33"] = 16,["34"] = 32,["35"] = 33,["36"] = 34,["37"] = 35,["40"] = 40,["43"] = 38,["49"] = 43,["50"] = 32,["51"] = 51,["52"] = 52,["53"] = 54,["54"] = 54,["55"] = 55,["57"] = 58,["58"] = 58,["59"] = 59,["61"] = 62,["62"] = 62,["63"] = 63,["65"] = 51,["66"] = 72,["67"] = 73,["68"] = 72,["69"] = 88,["70"] = 89,["71"] = 88,["72"] = 108,["73"] = 109,["74"] = 115,["75"] = 118,["76"] = 120,["77"] = 115,["78"] = 108,["79"] = 143,["80"] = 144,["81"] = 143});
 local ____exports = {}
 local ____luaMap = require("src.util.types.collection.luaMap")
 local LuaMap = ____luaMap.LuaMap
@@ -3902,6 +3901,8 @@ local ____reflection = require("src.util.reflection")
 local Reflection = ____reflection.Reflection
 local ____discordWebhookLogListener = require("src.util.computer.api.tier2.logging.listeners.discordWebhookLogListener")
 local DiscordWebhookLogListener = ____discordWebhookLogListener.DiscordWebhookLogListener
+local ____unsafe = require("src.util.types.unsafe")
+local Unsafe = ____unsafe.Unsafe
 --- Abstract base class representing an application entry point.
 -- Provides functionality for registering and dispatching routes, as well as lifecycle hooks for application startup, shutdown, and error handling.
 -- Classes extending this should implement abstract methods and optionally override other lifecycle methods to define specific behavior.
@@ -3950,13 +3951,10 @@ function Entrypoint.prototype.registerRoute(self, name, callback)
     self._routes:set(name, callback)
 end
 function Entrypoint.prototype.dispatchRoute(self)
-    local targetRouteName = ExecutionContext.commandLineArguments:first():getValueUnsafe("EC20 - " .. "The first command line argument (route name) was not provided")
+    local targetRouteName = ExecutionContext.commandLineArguments:first():getValueUnsafe("The first command line argument (route name) was not provided")
     self._routes:get(targetRouteName):ifEmpty(function()
         local validRouteNamesString = ("'" .. self._routes:keys():join("', '")) .. "'"
-        error(
-            __TS__New(Error, (("Unknown route: " .. targetRouteName) .. "\nThe first argument must be a valid route name.\nE.g. ") .. validRouteNamesString),
-            0
-        )
+        Unsafe:throwUnsafe("EC35 - " .. (("Unknown route: " .. targetRouteName) .. "\nThe first argument must be a valid route name.\nE.g. ") .. validRouteNamesString)
     end):ifPresent(function(____, routeFunction) return routeFunction(nil) end)
 end
 function Entrypoint.prototype.onCrash(self, cause)
@@ -3990,7 +3988,7 @@ function DiscordWebhookLogListener.prototype.onLog(self, level, message)
 end
 DiscordWebhookLogListener._webhook = DiscordWebhook:fromUrl(
     "ComputerCraft",
-    Environment:get("DISCORD_WEBHOOK_URL"):getValueUnsafe("EC19 - " .. "Failed to get `DISCORD_WEBHOOK_URL` from environment")
+    Environment:get("DISCORD_WEBHOOK_URL"):getValueUnsafe("Failed to get `DISCORD_WEBHOOK_URL` from environment")
 )
 return ____exports
 
@@ -4029,17 +4027,17 @@ function Environment.get(self, key)
 end
 function Environment.set(self, key, value)
     if not FileUtil:exists(self._path) then
-        FileUtil:writeText(self._path, ""):getValueUnsafe("EC2")
+        FileUtil:writeText(self._path, ""):getValueUnsafe()
     end
-    local content = FileUtil:readText(self._path):getValueUnsafe("EC3 - " .. "Could not read from .env file")
+    local content = FileUtil:readText(self._path):getValueUnsafe("Could not read from .env file")
     content = content .. (("\n" .. key) .. "=") .. value
-    FileUtil:writeText(self._path, content):getValueUnsafe("EC4 - " .. "Could not write to .env file")
+    FileUtil:writeText(self._path, content):getValueUnsafe("Could not write to .env file")
 end
 function Environment.load(self)
     if not FileUtil:exists(self._path) then
-        FileUtil:writeText(self._path, ""):getValueUnsafe("EC5")
+        FileUtil:writeText(self._path, ""):getValueUnsafe()
     end
-    local content = FileUtil:readText(self._path):getValueUnsafe("EC6 - " .. "Could not read from .env file")
+    local content = FileUtil:readText(self._path):getValueUnsafe("Could not read from .env file")
     local lines = __TS__StringSplit(content, "\n")
     local output = LuaMap:empty()
     __TS__ArrayForEach(
@@ -4095,7 +4093,7 @@ function FileUtil.readText(self, path)
     if file:isError() then
         return Result:error(file:getErrorMessage())
     end
-    local handle = file:getValueUnsafe("EC7 - " .. "No file")
+    local handle = file:getValueUnsafe("No file")
     local content = handle:readAllContent()
     handle:close()
     if content == nil then
@@ -4112,7 +4110,7 @@ function FileUtil.writeText(self, path, content)
     if file:isError() then
         return Result:error(file:getErrorMessage())
     end
-    local handle = file:getValueUnsafe("EC8 - " .. "No file")
+    local handle = file:getValueUnsafe("No file")
     do
         local function ____catch(e)
             local ____Result_3 = Result
@@ -4147,7 +4145,7 @@ function FileUtil.appendText(self, path, content)
     if file:isError() then
         return Result:error(file:getErrorMessage())
     end
-    local handle = file:getValueUnsafe("EC9 - " .. "No file")
+    local handle = file:getValueUnsafe("No file")
     do
         local function ____catch(e)
             local ____Result_8 = Result
@@ -4433,7 +4431,7 @@ function FileUtil.removeByteOrderMark(self, path)
     if contentResult:isError() then
         return Result:error(contentResult:getErrorMessage())
     end
-    local content = contentResult:getValueUnsafe("EC10 - " .. "No file")
+    local content = contentResult:getValueUnsafe("No file")
     if not __TS__StringStartsWith(content, "?") then
         return Result:void()
     end
@@ -4762,8 +4760,8 @@ function DiscordWebhook.fromUrl(self, username, url)
 end
 function DiscordWebhook.prototype.sendWebhookData(self, data)
     local headers = {["Content-Type"] = "application/json"}
-    local body = CcTextUtils:serializeJSON(data):getValueUnsafe("EC16 - " .. "Could not serialize POST data for Discord webhook")
-    local response = CcHttp:post(self._url, body, headers):getValueUnsafe("EC17 - " .. "Could not send Discord webhook")
+    local body = CcTextUtils:serializeJSON(data):getValueUnsafe("Could not serialize POST data for Discord webhook")
+    local response = CcHttp:post(self._url, body, headers):getValueUnsafe("Could not send Discord webhook")
     if not __TS__StringStartsWith(
         response:getResponseCode(),
         "2"
@@ -4771,7 +4769,7 @@ function DiscordWebhook.prototype.sendWebhookData(self, data)
         print(("Code: '" .. response:getResponseCode()) .. "'")
         print(("Message: '" .. response:readAllContent()) .. "'")
         error(
-            Unsafe:throwUnsafe("EC18 - " .. ("Discord webhook returned an error: '" .. response:getResponseCode()) .. "'"),
+            Unsafe:throwUnsafe("EC34 - " .. ("Discord webhook returned an error: '" .. response:getResponseCode()) .. "'"),
             0
         )
     end
@@ -4795,37 +4793,6 @@ function DiscordWebhook.prototype.sendEmbed(self, embeds)
     ____self_sendWebhookData_2(self, {username = ____self__username_1, embeds = ____Array_isArray_result_0})
 end
 DiscordWebhook.DISCORD_MESSAGE_LENGTH_LIMIT = 2000
-return ____exports
-
-end)
-__bundle_register("src.util.types.unsafe", function(require, _LOADED, __bundle_register, __bundle_modules)
-local ____lualib = require("lualib_bundle")
-local __TS__Class = ____lualib.__TS__Class
-local Error = ____lualib.Error
-local RangeError = ____lualib.RangeError
-local ReferenceError = ____lualib.ReferenceError
-local SyntaxError = ____lualib.SyntaxError
-local TypeError = ____lualib.TypeError
-local URIError = ____lualib.URIError
-local __TS__New = ____lualib.__TS__New
-local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
-__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["17"] = 7,["18"] = 7,["19"] = 7,["21"] = 7,["22"] = 14,["24"] = 15,["27"] = 14});
-local ____exports = {}
---- The Unsafe class provides utility methods that intentionally perform unsafe operations,
--- such as throwing errors, to signal misuse or prevent unintended behavior.
--- 
--- Integrates with the build process to ensure that useful error codes are generated.
-____exports.Unsafe = __TS__Class()
-local Unsafe = ____exports.Unsafe
-Unsafe.name = "Unsafe"
-function Unsafe.prototype.____constructor(self)
-end
-function Unsafe.throwUnsafe(self, message)
-    error(
-        __TS__New(Error, message or "Unsafe operation"),
-        0
-    )
-end
 return ____exports
 
 end)
@@ -5168,8 +5135,8 @@ function Info.prototype.____constructor(self, model)
     self.lifetime = model.lifetime
 end
 function Info.load(self)
-    local contentString = FileUtil:readText(self._path):getValueUnsafe("EC14 - " .. "Could not read info.json")
-    local content = CcTextUtils:unserializeJSON(contentString):getValueUnsafe("EC15 - " .. "Could not parse info.json")
+    local contentString = FileUtil:readText(self._path):getValueUnsafe("Could not read info.json")
+    local content = CcTextUtils:unserializeJSON(contentString):getValueUnsafe("Could not parse info.json")
     return __TS__New(____exports.Info, content)
 end
 Info._path = "info.json"
@@ -5260,18 +5227,14 @@ end)
 __bundle_register("src.util.computer.api.tier1.globals.ccPeripheral", function(require, _LOADED, __bundle_register, __bundle_modules)
 local ____lualib = require("lualib_bundle")
 local __TS__Class = ____lualib.__TS__Class
-local Error = ____lualib.Error
-local RangeError = ____lualib.RangeError
-local ReferenceError = ____lualib.ReferenceError
-local SyntaxError = ____lualib.SyntaxError
-local TypeError = ____lualib.TypeError
-local URIError = ____lualib.URIError
 local __TS__New = ____lualib.__TS__New
 local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
-__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["13"] = 1,["14"] = 1,["18"] = 8,["19"] = 8,["20"] = 8,["21"] = 11,["22"] = 12,["23"] = 11,["24"] = 20,["25"] = 21,["26"] = 20,["27"] = 31,["28"] = 35,["29"] = 38,["31"] = 39,["35"] = 42,["36"] = 31,["37"] = 50,["38"] = 51,["39"] = 50,["40"] = 60,["41"] = 61,["42"] = 60,["43"] = 70,["44"] = 71,["45"] = 70,["46"] = 81,["47"] = 85,["48"] = 81,["49"] = 94,["50"] = 95,["51"] = 94,["52"] = 104,["53"] = 105,["54"] = 104,["55"] = 116,["56"] = 117,["57"] = 116,["58"] = 126,["59"] = 127,["60"] = 126,["61"] = 136,["62"] = 137,["63"] = 136,["64"] = 147,["65"] = 148,["66"] = 147,["67"] = 156,["68"] = 157,["69"] = 156,["70"] = 167,["71"] = 168,["72"] = 167,["73"] = 178,["74"] = 179,["75"] = 178});
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["7"] = 1,["8"] = 1,["9"] = 2,["10"] = 2,["14"] = 9,["15"] = 9,["16"] = 9,["17"] = 12,["18"] = 13,["19"] = 12,["20"] = 21,["21"] = 22,["22"] = 21,["23"] = 32,["24"] = 36,["25"] = 39,["26"] = 40,["28"] = 45,["29"] = 32,["30"] = 53,["31"] = 54,["32"] = 53,["33"] = 63,["34"] = 64,["35"] = 63,["36"] = 73,["37"] = 74,["38"] = 73,["39"] = 84,["40"] = 88,["41"] = 84,["42"] = 97,["43"] = 98,["44"] = 97,["45"] = 107,["46"] = 108,["47"] = 107,["48"] = 119,["49"] = 120,["50"] = 119,["51"] = 129,["52"] = 130,["53"] = 129,["54"] = 139,["55"] = 140,["56"] = 139,["57"] = 150,["58"] = 151,["59"] = 150,["60"] = 159,["61"] = 160,["62"] = 159,["63"] = 170,["64"] = 171,["65"] = 170,["66"] = 181,["67"] = 182,["68"] = 181});
 local ____exports = {}
 local ____lua = require("src.lua.lua")
 local Lua = ____lua.Lua
+local ____unsafe = require("src.util.types.unsafe")
+local Unsafe = ____unsafe.Unsafe
 --- A wrapper for the ComputerCraft `peripheral` API.
 -- Provides utilities to find, call, and inspect peripherals attached to a computer.
 -- Based on documentation from: https://tweaked.cc/module/peripheral.html
@@ -5287,10 +5250,7 @@ end
 function CcPeripheral.find(self, peripheralName, filter)
     local internalPeripheral = peripheral.find(peripheralName, filter)
     if internalPeripheral == nil then
-        error(
-            __TS__New(Error, ("No peripheral of type \"" .. peripheralName) .. "\" found."),
-            0
-        )
+        Unsafe:throwUnsafe("EC32 - " .. ("No peripheral of type \"" .. peripheralName) .. "\" found.")
     end
     return __TS__New(____exports.CcPeripheral, internalPeripheral)
 end
