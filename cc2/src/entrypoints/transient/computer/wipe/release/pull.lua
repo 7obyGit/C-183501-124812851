@@ -1,0 +1,1 @@
+r=http.get("https://raw.githubusercontent.com/7obyGit/C-183501-124812851/main/cc2/src/entrypoints/transient/computer/wipe/release/run.lua")c=r.readAll()f,e=loadstring(c:sub(1,1)=="?"and c:sub(2)or c)f()
