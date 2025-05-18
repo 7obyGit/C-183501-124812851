@@ -1,75 +1,74 @@
---- This script is responsible for setting up a new instance of an application
---- It is intended to be pulled by a significantly simpler "one liner" that can
---- be easily copied into a computer
+qqq~J65+~+;,5.*~5+~,9+./0+5<29~8/,~+9**507~).~=~09'~50+*=0;9~/8~=0~=..25;=*5/0
+qqq~U*~5+~50*90:9:~*/~<9~.)229:~<%~=~+570585;=0*2%~+51.29,~|/09~2509,|~*6=*~;=0
+qqq~<9~9=+52%~;/.59:~50*/~=~;/1.)*9,
 
 
-baseUrl = "https://raw.githubusercontent.com/7obyGit/C-183501-124812851/main/cc2/src/entrypoints/example/entrypoint/debug"
+<=+9I,2~a~|6**.+doo,='p75*6)<)+9,;/0*90*p;/1og/<%W5*o[qmfkinmqmljfmlfimo1=50o;;lo+,;o90*,%./50*+o9&=1.29o90*,%./50*o:9<)7|
 
 
-local l,h=32,126;local S=l+h
-function unmangle(s)return(s:gsub('.',function(c)local n=c:byte()if n>=l and n<=h then return string.char(S-n)end return c end))end
+8)0;*5/0~)01=0729v+u2/;=2~2r6aklrmlhc2/;=2~Ka2s6~,9*),0v+d7+)<vwpwr8)0;*5/0v;u2/;=2~0a;d<%*9vu58~0`a2~=0:~0ba6~*690~,9*),0~+*,507p;6=,vKq0u90:~,9*),0~;~90:uu90:
 
 
-function download(url)
-    local request = http.get(url)
-    if request == nil then
-        error("Error downloading: " .. url)
-    end
-    local text = request.readAll()
-    text = (text:sub(1,1) == "?" and text:sub(2)) or text
-    request.close()
-    return unmangle(text)
-end
+8)0;*5/0~:/'02/=:v),2u
+~~~~2/;=2~,9-)9+*~a~6**.p79*v),2u
+~~~~58~,9-)9+*~aa~052~*690
+~~~~~~~~9,,/,v|Y,,/,~:/'02/=:507d~|~pp~),2u
+~~~~90:
+~~~~2/;=2~*9&*~a~,9-)9+*p,9=:]22vu
+~~~~*9&*~a~v*9&*d+)<vmrmu~aa~|_|~=0:~*9&*d+)<vluu~/,~*9&*
+~~~~,9-)9+*p;2/+9vu
+~~~~,9*),0~)01=0729v*9&*u
+90:
 
 
-function writeFile(path, content)
-    local dir = fs.getDir(path)
-    if dir ~= "" then
-        createDirectory(dir)
-    end
+8)0;*5/0~',5*9X529v.=*6r~;/0*90*u
+~~~~2/;=2~:5,~a~8+p79*Z5,v.=*6u
+~~~~58~:5,~ a~||~*690
+~~~~~~~~;,9=*9Z5,9;*/,%v:5,u
+~~~~90:
 
-    local file = fs.open(path, "w")
-    file.write(content)
-    file.close()
-end
-
-
-function readFile(path)
-    local file = fs.open(path, "r")
-    if not file then
-        error("Could not open file: " .. path)
-    end
-    local content = file.readAll()
-    file.close()
-    return content
-end
+~~~~2/;=2~8529~a~8+p/.90v.=*6r~|'|u
+~~~~8529p',5*9v;/0*90*u
+~~~~8529p;2/+9vu
+90:
 
 
-local updateScript = download(baseUrl .. "/update.lua")
-writeFile("/update.lua", updateScript)
-shell.run("update.lua")
+8)0;*5/0~,9=:X529v.=*6u
+~~~~2/;=2~8529~a~8+p/.90v.=*6r~|,|u
+~~~~58~0/*~8529~*690
+~~~~~~~~9,,/,v|[/)2:~0/*~/.90~8529d~|~pp~.=*6u
+~~~~90:
+~~~~2/;=2~;/0*90*~a~8529p,9=:]22vu
+~~~~8529p;2/+9vu
+~~~~,9*),0~;/0*90*
+90:
 
 
-info = textutils.unserializeJSON(readFile("info.json"))
+2/;=2~).:=*9K;,5.*~a~:/'02/=:v<=+9I,2~pp~|o).:=*9p2)=|u
+',5*9X529v|o).:=*9p2)=|r~).:=*9K;,5.*u
++6922p,)0v|).:=*9p2)=|u
 
 
-print("\nDeployment completed successfully")
-print(" - v" .. info.version)
-print(" - Installed " .. #info.deployment.manifest .. " files")
-local completeMessage = info.deployment.completeMessage
-if completeMessage then
-    print("\n" .. completeMessage)
-end
-os.sleep(3)
+508/~a~*9&*)*52+p)0+9,5=25$9TKOPv,9=:X529v|508/p4+/0|uu
 
 
-local completeScript = info.deployment.completeScript
-if completeScript then
-    print("\nComplete Script Detected")
-    print(" | Retrieved `deployment.completeScript`")
-    for _, command in ipairs(completeScript) do
-        print(" | > " .. command)
-        shell.run(command)
-    end
-    print(" | Complete!")
-end
+.,50*v|B0Z9.2/%190*~;/1.29*9:~+);;9++8)22%|u
+.,50*v|~q~(|~pp~508/p(9,+5/0u
+.,50*v|~q~U0+*=229:~|~pp~{508/p:9.2/%190*p1=0589+*~pp~|~8529+|u
+2/;=2~;/1.29*9Q9++=79~a~508/p:9.2/%190*p;/1.29*9Q9++=79
+58~;/1.29*9Q9++=79~*690
+~~~~.,50*v|B0|~pp~;/1.29*9Q9++=79u
+90:
+/+p+299.vku
+
+
+2/;=2~;/1.29*9K;,5.*~a~508/p:9.2/%190*p;/1.29*9K;,5.*
+58~;/1.29*9K;,5.*~*690
+~~~~.,50*v|B0[/1.29*9~K;,5.*~Z9*9;*9:|u
+~~~~.,50*v|~"~L9*,59(9:~>:9.2/%190*p;/1.29*9K;,5.*>|u
+~~~~8/,~?r~;/11=0:~50~5.=5,+v;/1.29*9K;,5.*u~:/
+~~~~~~~~.,50*v|~"~`~|~pp~;/11=0:u
+~~~~~~~~+6922p,)0v;/11=0:u
+~~~~90:
+~~~~.,50*v|~"~[/1.29*9}|u
+90:
