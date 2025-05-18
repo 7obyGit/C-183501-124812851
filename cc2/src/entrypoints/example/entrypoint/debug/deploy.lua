@@ -12,6 +12,9 @@ function unmangle(s)return(s:gsub('.',function(c)local n=c:byte()if n>=l and n<=
 
 function download(url)
     local request = http.get(url)
+    if request == nil then
+        error("Error downloading: " .. url)
+    end
     local text = request.readAll()
     text = (text:sub(1,1) == "?" and text:sub(2)) or text
     request.close()
